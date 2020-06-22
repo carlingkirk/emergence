@@ -1,0 +1,15 @@
+#Data Design
+- PlantProfile
+  - Taxonomy
+    - 
+  - CommonName
+    - List
+- Item
+  - Specimen
+- Source
+  - Name
+  - RelatedType: Item, Info
+  - Type: Person, Event, Nursery, Store, Area
+  - Description
+  - Location
+  - URL
