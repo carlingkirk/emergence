@@ -1,5 +1,6 @@
 ﻿using Emergence.Data.Models;
 using System.Collections.Generic;
+using System.Net.Mail;
 
 namespace Emergence.Test.Fakes
 {
@@ -34,36 +35,57 @@ namespace Emergence.Test.Fakes
                         Variety = "spicata",
                         Form = null
                     },
-                    BloomTime = "Jul-Aug",
-                    Height = "",
-                    Spread = "",
+                    BloomTime = new BloomTime
+                    {
+                        MinimumBloomTime = Month.Jul,
+                        MaximumBloomTime = Month.Aug
+                    },
+                    Height = new Height
+                    {
+                        MinimumHeight = 1,
+                        MaximumHeight = 2,
+                        Unit = Unit.Feet
+                    },
+                    Spread = new Spread
+                    {
+                        MinimumSpread = .75,
+                        MaximumSpread = 1.5,
+                        Unit = Unit.Feet
+                    },
                     Requirements = new Requirements
                     {
                         LightRequirements = new LightRequirements
                         {
-                            MinimumLight = LightTypes.PartShade,
-                            MaximumLight = LightTypes.FullSun
+                            MinimumLight = LightType.PartShade,
+                            MaximumLight = LightType.FullSun
                         },
                         WaterRequirements = new WaterRequirements
                         {
-                            MinimumWater = WaterTypes.Medium,
-                            MaximumWater = WaterTypes.Medium
+                            MinimumWater = WaterType.Medium,
+                            MaximumWater = WaterType.Medium
                         },
                         SoilRequirements = null,
-                        ScarificationRequirements = "Nick",
+                        ScarificationRequirements = new ScarificationRequirements
+                        {
+                            ScarificationTypes = new List<ScarificationType>() { ScarificationType.Nick }
+                        },
                         StratificationRequirements = new StratificationRequirements
                         {
                             StratificationStages = new Dictionary<int, StratificationStage>()
-                        {
                             {
-                                0,
-                                new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43 }
+                                {
+                                    0,
+                                    new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43 }
+                                }
                             }
-                        }
                         },
-                        SeedStorageRequirements = null
-                    },
-                    Zones = "3-8"
+                        SeedStorageRequirements = new SeedStorageRequirements { Refrigerate = false },
+                        ZoneRequirements = new ZoneRequirements
+                        {
+                            MinimumZone = new Zone { Number = 3 },
+                            MaximumZone = new Zone { Number = 8 }
+                        }
+                    }
                 }
             };
 
