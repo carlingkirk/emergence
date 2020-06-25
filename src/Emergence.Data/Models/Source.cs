@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 
-namespace Emergence.Data
+namespace Emergence.Data.Models
 {
     public class Source
     {

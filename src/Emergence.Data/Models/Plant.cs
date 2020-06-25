@@ -58,7 +58,7 @@ namespace Emergence.Data.Models
     {
         Inches,
         Feet,
-        Centieters,
+        Centimeters,
         Meters
     }
 }

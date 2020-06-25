@@ -15,26 +15,6 @@ namespace Emergence.Test.Fakes
                     LifeformId = 0,
                     CommonName = "Dense Blazing Star",
                     ScientificName = "Liatris spicata",
-                    Taxon = new Taxon
-                    {
-                        Kingdom = "Plantae",
-                        Phylum = "Tracheophyta",
-                        Subphylum = "Angiospermae",
-                        Class = "Magnoliopsida",
-                        Subclass = null,
-                        Order = "Asterales",
-                        Superfamily = null,
-                        Family = "Asteraceae",
-                        Subfamily = "Asteroideae",
-                        Tribe = "Eupatorieae",
-                        Subtribe = "Liatrinae",
-                        Genus = "Liatris",
-                        Subgenus = null,
-                        Species = "spicata",
-                        Subspecies = null,
-                        Variety = "spicata",
-                        Form = null
-                    },
                     BloomTime = new BloomTime
                     {
                         MinimumBloomTime = Month.Jul,
