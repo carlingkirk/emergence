@@ -32,3 +32,7 @@
   - Auto-scheduling on certain propogation activity
 - Picture information
   - Growth stage
+- Social
+  - I want to share my propogation activities with my group of like minded people
+- Commercial
+  - I want to be able to sell my plants to users

@@ -20,6 +20,9 @@ As a propogator, I want to check my wishlist when I'm shopping so I can acquire 
       - Pots, trays, space?
  - Status
  - DateAcquired
+ - Origin
+   - Source
+   - An origin is a higher level of specificty than a Source
  - Source
    - Source - 
      - Type:
