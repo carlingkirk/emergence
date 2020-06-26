@@ -21,9 +21,17 @@ namespace Emergence.Transform
         {
             (string Genus, string Species, string Author, string Variant) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
 
+            var origin = new Origin
+            {
+                ParentOriginId = Origin.OriginId,
+                Name = Author,
+                ExternalId = source.Symbol,
+                AltExternalId = source.SynonymSymbol
+            };
+
             return new Lifeform
             {
-                Origin = Origin,
+                Origin = origin,
                 PlantInfo = new PlantInfo
                 {
                     CommonName = source.CommonName,
@@ -35,13 +43,6 @@ namespace Emergence.Transform
                     Genus = Genus,
                     Species = Species,
                     Variety = Variant
-                },
-                Source = new Source
-                {
-                    OriginId = Origin.OriginId,
-                    Name = Author,
-                    ExternalId = source.Symbol,
-                    AltExternalId = source.SynonymSymbol
                 }
             };
         }

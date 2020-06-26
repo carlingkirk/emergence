@@ -21,6 +21,11 @@ namespace Emergence.Transform.Data
 
         public Lifeform Transform(Observation source)
         {
+            var origin = new Origin
+            {
+                ParentOriginId = Origin.OriginId,
+                Uri = new Uri(source.uri)
+            };
             return new Lifeform
             {
                 PlantInfo = new PlantInfo
@@ -28,9 +33,8 @@ namespace Emergence.Transform.Data
                     CommonName = source.taxon?.preferred_common_name,
                     OriginId = Origin.OriginId
                 },
-                Source = new Source { OriginId = Origin.OriginId, Uri = new Uri(source.uri) },
                 Taxon = GetFullTaxon(source),
-                Origin = Origin
+                Origin = origin
             };
         }
 

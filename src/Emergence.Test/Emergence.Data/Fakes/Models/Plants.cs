@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Mail;
 
-namespace Emergence.Test.Fakes
+namespace Emergence.Test.Data.Fakes.Models.Plants
 {
     public static class Get
     {
@@ -65,6 +65,10 @@ namespace Emergence.Test.Fakes
                             MinimumZone = new Zone { Number = 3 },
                             MaximumZone = new Zone { Number = 8 }
                         }
+                    },
+                    Taxon = new Taxon
+                    {
+
                     }
                 }
             };

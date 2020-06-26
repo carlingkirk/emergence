@@ -6,7 +6,6 @@ namespace Emergence.Transform.Data
     {
         public PlantInfo PlantInfo { get; set; }
         public Taxon Taxon { get; set; }
-        public Source Source { get; set; }
         public Origin Origin { get; set; }
     }
 }
