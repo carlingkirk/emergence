@@ -8,7 +8,6 @@ namespace Emergence.Transform
 {
     public interface ITextImporter<T> : IImporter<T>
     {
-        public IAsyncEnumerable<T> Import();
     }
 
     public class TextImporter<T> : ITextImporter<T>

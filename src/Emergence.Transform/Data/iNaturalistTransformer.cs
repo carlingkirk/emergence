@@ -13,7 +13,7 @@ namespace Emergence.Transform.Data
     {
         public Origin Origin => new Origin
         {
-            OriginId = 0, 
+            Id = 0, 
             Name = "iNaturalist", 
             Description = "iNaturalist is an online social network of people sharing biodiversity information to help each other learn about nature", 
             Uri = new Uri("https://www.inaturalist.org/") 
@@ -23,7 +23,7 @@ namespace Emergence.Transform.Data
         {
             var origin = new Origin
             {
-                ParentOriginId = Origin.OriginId,
+                ParentId = Origin.Id,
                 Uri = new Uri(source.uri)
             };
             return new Lifeform
@@ -31,7 +31,7 @@ namespace Emergence.Transform.Data
                 PlantInfo = new PlantInfo
                 {
                     CommonName = source.taxon?.preferred_common_name,
-                    OriginId = Origin.OriginId
+                    OriginId = Origin.Id
                 },
                 Taxon = GetFullTaxon(source),
                 Origin = origin

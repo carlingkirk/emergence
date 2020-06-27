@@ -1,7 +1,6 @@
-﻿using Emergence.Data.Models;
+﻿using Emergence.Data.Shared.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Emergence.Test.Data.Fakes.Models.Inventories
 {

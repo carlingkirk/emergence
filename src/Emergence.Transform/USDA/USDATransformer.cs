@@ -11,7 +11,7 @@ namespace Emergence.Transform
     {
         public Origin Origin => new Origin
         {
-            OriginId = 1,
+            Id = 1,
             Name = "USDA Checklist",
             Description = "",
             Uri = new Uri("https://plants.sc.egov.usda.gov/dl_all.html")
@@ -23,7 +23,7 @@ namespace Emergence.Transform
 
             var origin = new Origin
             {
-                ParentOriginId = Origin.OriginId,
+                ParentId = Origin.Id,
                 Name = Author,
                 ExternalId = source.Symbol,
                 AltExternalId = source.SynonymSymbol

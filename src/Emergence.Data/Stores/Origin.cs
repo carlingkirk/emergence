@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Emergence.Data.Stores
 {
     public class Origin
     {
-        public long OriginId { get; set; }
-        public long ParentOriginId { get; set; }
+        public int Id { get; set; }
+        public int ParentId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }

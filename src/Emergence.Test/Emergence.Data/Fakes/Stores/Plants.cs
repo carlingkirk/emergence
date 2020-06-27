@@ -12,7 +12,7 @@ namespace Emergence.Test.Fakes.Stores
             {
                 new Plant
                 {
-                    PlantId = 0,
+                    Id = 0,
                     CommonName = "Dense Blazing Star",
                     ScientificName = "Liatris spicata"
                 }
@@ -28,7 +28,7 @@ namespace Emergence.Test.Fakes.Stores
                 new PlantInfo
                 {
                     PlantId = 0,
-                    PlantInfoId = 0,
+                    Id = 0,
                     OriginId = 0,
                     TaxonId = 0,
                     CommonName = "",

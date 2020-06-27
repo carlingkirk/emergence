@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Emergence.Data.Stores
 {
     public class PlantInfo
     {
-        public long PlantInfoId { get; set; }
-        public long PlantId { get; set; }
+        public int Id { get; set; }
+        public int PlantId { get; set; }
         public long OriginId { get; set; }
         public long TaxonId { get; set; }
         public string ScientificName { get; set; }

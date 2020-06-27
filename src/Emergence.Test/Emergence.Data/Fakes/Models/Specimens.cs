@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Models;
+﻿using Emergence.Data.Shared.Models;
 using System;
 using System.Collections.Generic;
 

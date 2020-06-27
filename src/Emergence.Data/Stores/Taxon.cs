@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
-
-namespace Emergence.Data.Stores
+﻿namespace Emergence.Data.Stores
 {
     public class Taxon
     {
-        public long TaxonId { get; set; }
+        public long Id { get; set; }
         public string Kingdom { get; set; }
         public string Phylum { get; set; }
         public string Subphylum { get; set; }
