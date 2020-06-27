@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using Emergence.Server.Data;
 using Emergence.Data;
-using Emergence.Data.Stores;
+using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 
 namespace Emergence.Server
