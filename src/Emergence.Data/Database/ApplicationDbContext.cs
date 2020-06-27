@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Stores;
+﻿using Emergence.Data.Identity;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;

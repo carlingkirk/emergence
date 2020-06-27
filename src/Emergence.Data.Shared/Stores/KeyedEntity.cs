@@ -1,4 +1,4 @@
-﻿namespace Emergence.Data.Database
+﻿namespace Emergence.Data.Shared.Stores
 {
     public interface IKeyable
     {

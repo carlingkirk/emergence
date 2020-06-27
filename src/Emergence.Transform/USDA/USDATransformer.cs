@@ -1,5 +1,5 @@
 ﻿using Emergence.Data.External.USDA;
-using Emergence.Data.Stores;
+using Emergence.Data.Shared.Stores;
 using Emergence.Transform.Data;
 using Emergence.Transform.USDA;
 using System;

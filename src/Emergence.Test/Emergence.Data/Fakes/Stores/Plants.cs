@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Stores;
+﻿using Emergence.Data.Shared.Stores;
 using System.Collections.Generic;
 using System.Net.Mail;
 

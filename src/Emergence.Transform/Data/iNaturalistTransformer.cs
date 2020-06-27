@@ -1,11 +1,8 @@
-﻿using Emergence.Data;
-using Emergence.Data.External.iNaturalist;
-using Emergence.Data.Stores;
+﻿using Emergence.Data.External.iNaturalist;
+using Emergence.Data.Shared.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace Emergence.Transform.Data
 {
@@ -13,10 +10,10 @@ namespace Emergence.Transform.Data
     {
         public Origin Origin => new Origin
         {
-            Id = 0, 
-            Name = "iNaturalist", 
-            Description = "iNaturalist is an online social network of people sharing biodiversity information to help each other learn about nature", 
-            Uri = new Uri("https://www.inaturalist.org/") 
+            Id = 0,
+            Name = "iNaturalist",
+            Description = "iNaturalist is an online social network of people sharing biodiversity information to help each other learn about nature",
+            Uri = new Uri("https://www.inaturalist.org/")
         };
 
         public Lifeform Transform(Observation source)
@@ -38,11 +35,11 @@ namespace Emergence.Transform.Data
             };
         }
 
-        public static Emergence.Data.Stores.Taxon GetFullTaxon(Observation observation)
+        public static Emergence.Data.Shared.Stores.Taxon GetFullTaxon(Observation observation)
         {
             var bestId = observation.identifications?.Where(id => id.own_observation).FirstOrDefault() ?? observation.identifications?.FirstOrDefault();
             var ancestors = bestId?.taxon?.ancestors?.ToList();
-            var taxon = new Emergence.Data.Stores.Taxon
+            var taxon = new Emergence.Data.Shared.Stores.Taxon
             {
                 Kingdom = GetAncestor(ancestors, Rank.Kingdom)?.name,
                 Phylum = GetAncestor(ancestors, Rank.Phylum)?.name,

@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Stores;
+﻿using Emergence.Data.Shared.Stores;
 using Microsoft.EntityFrameworkCore;
 
 namespace Emergence.Data.Repository

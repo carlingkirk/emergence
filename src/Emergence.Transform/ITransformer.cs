@@ -1,5 +1,4 @@
-﻿using Emergence.Data;
-using Emergence.Data.Stores;
+﻿using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Transform
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Emergence.Data.Stores
+namespace Emergence.Data.Shared.Stores
 {
     public class PlantInfo
     {

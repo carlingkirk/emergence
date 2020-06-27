@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Database;
+﻿using Emergence.Data.Shared.Stores;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,7 @@ namespace Emergence.Data.Repository
         public async IAsyncEnumerable<T> GetSome(Expression<Func<T, bool>> predicate, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
+            var items = _context.Inventories.Where(i => i.Id == 0).ToList();
 
             if (!track)
             {
@@ -42,6 +43,11 @@ namespace Emergence.Data.Repository
             };
 
             return await entities.FirstOrDefaultAsync();
+        }
+
+        public async Task<T> Get(object key, bool track = false)
+        {
+            return await Get(e => e.Key == key, track);
         }
 
         public async Task<T> AddOrUpdate(Expression<Func<T, bool>> key, T entity)

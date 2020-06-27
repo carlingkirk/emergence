@@ -1,7 +1,6 @@
-﻿using Emergence.Data.Database;
-using System;
+﻿using System;
 
-namespace Emergence.Data.Stores
+namespace Emergence.Data.Shared.Stores
 {
     public class Inventory : IKeyable
     {

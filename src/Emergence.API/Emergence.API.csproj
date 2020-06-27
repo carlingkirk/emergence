@@ -4,5 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Emergence.Data.Shared\Emergence.Data.Shared.csproj" />
+    <ProjectReference Include="..\Emergence.Data\Emergence.Data.csproj" />
+    <ProjectReference Include="..\Emergence.Transform\Emergence.Transform.csproj" />
+  </ItemGroup>
+
 
 </Project>
