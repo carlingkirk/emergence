@@ -7,14 +7,14 @@ namespace Emergence.Data
 {
     public interface IRepository<T>
     {
-        Task<T> Get(Expression<Func<T, bool>> predicate, bool track = false);
-        Task<T> Get(object key, bool track = false);
-        IAsyncEnumerable<T> GetSome(Expression<Func<T, bool>> predicate, bool track = false);
-        Task<T> AddOrUpdate(Expression<Func<T, bool>> key, T entity);
-        Task<T> AddOrUpdate(object key, T entity);
-        Task AddSome(IEnumerable<T> source);
-        Task Add(T entity);
-        Task UpdateSome(IEnumerable<T> source);
-        Task Update(T entity);
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false);
+        Task<T> GetAsync(object key, bool track = false);
+        IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, bool track = false);
+        Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity);
+        Task<T> AddOrUpdateAsync(object key, T entity);
+        Task AddSomeAsync(IEnumerable<T> source);
+        Task AddAsync(T entity);
+        Task UpdateSomeAsync(IEnumerable<T> source);
+        Task UpdateAsync(T entity);
     }
 }

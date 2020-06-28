@@ -18,8 +18,10 @@ namespace Emergence.Data.Shared.Models
         public string Name { get; set; }
         public int Quantity { get; set; }
         public Status Status { get; set; }
-        public DateTime? DateAcquired { get; set; }
         public Origin Origin { get; set; }
+        public DateTime? DateAcquired { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
     }
 
     public enum ItemType

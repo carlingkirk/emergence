@@ -17,7 +17,7 @@ namespace Emergence.Data.Repository
             _context = context;
         }
 
-        public async IAsyncEnumerable<T> GetSome(Expression<Func<T, bool>> predicate, bool track = false)
+        public async IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
             var items = _context.Inventories.Where(i => i.Id == 0).ToList();
@@ -33,7 +33,7 @@ namespace Emergence.Data.Repository
             }
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> predicate, bool track = false)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
 
@@ -45,12 +45,12 @@ namespace Emergence.Data.Repository
             return await entities.FirstOrDefaultAsync();
         }
 
-        public async Task<T> Get(object key, bool track = false)
+        public async Task<T> GetAsync(object key, bool track = false)
         {
-            return await Get(e => e.Key == key, track);
+            return await GetAsync(e => e.Key == key, track);
         }
 
-        public async Task<T> AddOrUpdate(Expression<Func<T, bool>> key, T entity)
+        public async Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity)
         {
             T dbEntity;
 
@@ -66,30 +66,30 @@ namespace Emergence.Data.Repository
             return dbEntity;
         }
 
-        public async Task<T> AddOrUpdate(object key, T entity)
+        public async Task<T> AddOrUpdateAsync(object key, T entity)
         {
-            return await AddOrUpdate(e => e.Key == key, entity);
+            return await AddOrUpdateAsync(e => e.Key == key, entity);
         }
 
-        public async Task AddSome(IEnumerable<T> source)
+        public async Task AddSomeAsync(IEnumerable<T> source)
         {
             await _context.Set<T>().AddRangeAsync(source);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Add(T entity)
+        public async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateSome(IEnumerable<T> source)
+        public async Task UpdateSomeAsync(IEnumerable<T> source)
         {
             _context.Set<T>().UpdateRange(source);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();

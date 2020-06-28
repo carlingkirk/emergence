@@ -1,8 +1,7 @@
-﻿using Emergence.Data.Shared.Stores;
-using System.Collections.Generic;
-using System.Net.Mail;
+﻿using System.Collections.Generic;
+using Emergence.Data.Shared.Stores;
 
-namespace Emergence.Test.Fakes.Stores
+namespace Emergence.Test.Data.Fakes.Stores
 {
     public static class Get
     {
