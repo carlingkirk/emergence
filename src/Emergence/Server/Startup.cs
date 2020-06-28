@@ -1,20 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Emergence.Data.Identity;
+using Emergence.Data.Repository;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
-using Emergence.Server.Data;
-using Emergence.Data;
-using Emergence.Data.Identity;
-using Emergence.Data.Repository;
+using Microsoft.OpenApi.Models;
 
 namespace Emergence.Server
 {
@@ -40,6 +32,12 @@ namespace Emergence.Server
             services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
             services.AddAuthentication().AddIdentityServerJwt();
 
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Emergence API", Version = "v1" });
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -59,6 +57,16 @@ namespace Emergence.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Emergence V1");
+            });
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();

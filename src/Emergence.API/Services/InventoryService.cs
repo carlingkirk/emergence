@@ -1,13 +1,13 @@
-﻿using Emergence.Data;
-using Emergence.Data.Shared.Stores;
-using NetTopologySuite.Noding;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.API.Services.Interfaces;
+using Emergence.Data;
+using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Stores;
 
 namespace Emergence.API.Services
 {
-    public class InventoryService
+    public class InventoryService : IInventoryService
     {
         private IRepository<Inventory> _inventoryRepository;
         private IRepository<InventoryItem> _inventoryItemRepository;
@@ -20,14 +20,8 @@ namespace Emergence.API.Services
         public async Task<Data.Shared.Models.Inventory> GetInventoryAsync(int id)
         {
             var result = await _inventoryRepository.GetAsync(id);
-            var items = await GetInventoryItemsAsync(id);
-            var inventory = new Data.Shared.Models.Inventory
-            {
-                InventoryId = result.Id,
-                UserId = result.UserId,
-                Items = items
-            };
-
+            var inventory = result.AsModel();
+            inventory.Items = await GetInventoryItemsAsync(id);
             return inventory;
         }
 
@@ -35,23 +29,17 @@ namespace Emergence.API.Services
         {
             var itemResult = _inventoryItemRepository.GetSomeAsync(i => i.InventoryId == inventoryId);
             var items = new List<Data.Shared.Models.InventoryItem>();
-            await foreach(var item in itemResult)
+            await foreach (var item in itemResult)
             {
-                items.Add(new Data.Shared.Models.InventoryItem
-                {
-                    InventoryItemId = item.Id,
-                    InventoryId = item.InventoryId,
-                    Name = item.Name,
-                    Origin = new Data.Shared.Models.Origin { OriginId = item.OriginId },
-                    ItemType = Enum.Parse<Data.Shared.Models.ItemType>(item.ItemType),
-                    Status = Enum.Parse<Data.Shared.Models.Status>(item.Status),
-                    Quantity = item.Quantity,
-                    DateAcquired = item.DateAcquired,
-                    DateCreated = item.DateCreated,
-                    DateModified = item.DateModified
-                });
+                items.Add(item.AsModel());
             }
             return items;
+        }
+
+        public async Task<Data.Shared.Models.Inventory> AddOrUpdateAsync(Data.Shared.Models.Inventory inventory)
+        {
+            var result = await _inventoryRepository.AddOrUpdateAsync(inventory.InventoryId, inventory.AsStore());
+            return result.AsModel();
         }
     }
 }

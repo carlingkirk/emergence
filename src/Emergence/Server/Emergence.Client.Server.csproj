@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Emergence.API\Emergence.API.csproj" />
     <ProjectReference Include="..\..\Emergence.Data\Emergence.Data.csproj" />
     <ProjectReference Include="..\Client\Emergence.Client.csproj" />
   </ItemGroup>

@@ -13,7 +13,7 @@ namespace Emergence.Data.Shared.Stores
     {
         public int InventoryId { get; set; }
         public long Id { get; set; }
-        public long OriginId { get; set; }
+        public long? OriginId { get; set; }
         public string ItemType { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
