@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emergence.Transform", "Emer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emergence.Transform.Runner", "Emergence.Transform.Runner\Emergence.Transform.Runner.csproj", "{ECA42003-E141-4281-B97F-61FB7B19C2DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emergence.Data.Shared", "Emergence.Data.Shared\Emergence.Data.Shared.csproj", "{5393FB4F-7CB0-4766-ABEE-07EE800E4C89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emergence.Data.Shared", "Emergence.Data.Shared\Emergence.Data.Shared.csproj", "{5393FB4F-7CB0-4766-ABEE-07EE800E4C89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59A921FA-FC96-446D-8A73-4A83EB59CEC6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
