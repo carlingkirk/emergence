@@ -12,6 +12,18 @@ namespace Emergence.Test.Data.Fakes.Stores
                 Id = 0,
                 InventoryItemId = 0,
                 SpecimenStage = "Seed"
+            },
+            new Specimen
+            {
+                Id = 1,
+                InventoryItemId = 1,
+                SpecimenStage = "Stratification"
+            },
+            new Specimen
+            {
+                Id = 2,
+                InventoryItemId = 2,
+                SpecimenStage = "Growing"
             }
         };
     }
