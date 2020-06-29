@@ -1,6 +1,6 @@
-﻿namespace Emergence.Data.Shared.Interfaces
+namespace Emergence.Data.Shared.Interfaces
 {
-    interface IClassifiable
+    public interface IClassifiable
     {
         string Kingdom { get; set; }
         string Phylum { get; set; }

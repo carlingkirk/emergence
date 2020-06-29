@@ -1,7 +1,4 @@
-﻿using Emergence.Transform;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Emergence.Transform;
 using Xunit;
 
 namespace Emergence.Test.Transform

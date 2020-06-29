@@ -1,9 +1,8 @@
+using System;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared.Stores;
 using Emergence.Transform.Data;
 using Emergence.Transform.USDA;
-using System;
-using System.Linq;
 
 namespace Emergence.Transform
 {
@@ -47,6 +46,6 @@ namespace Emergence.Transform
             };
         }
 
-        
+
     }
 }

@@ -1,8 +1,8 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace Emergence.Transform
 {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Emergence.Transform.USDA;
 using FluentAssertions;
-using Microsoft.VisualBasic;
 using Xunit;
 
 namespace Emergence.Test.Emergence.Transform
@@ -13,7 +12,7 @@ namespace Emergence.Test.Emergence.Transform
         public void ChecklistParserTest(string scientificNameWithAuthor, string genus, string species, string author, string variant)
         {
             var (Genus, Species, Author, Variant) = ChecklistParser.ParseScientificNameWithAuthor(scientificNameWithAuthor);
-            
+
             Genus.Should().Be(genus);
             Species.Should().Be(species);
             Author.Should().Be(author);

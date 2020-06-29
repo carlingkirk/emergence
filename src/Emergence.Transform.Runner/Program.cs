@@ -1,10 +1,9 @@
-﻿using Emergence.Data.External.USDA;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
+using Emergence.Data.External.USDA;
+using Microsoft.Extensions.Configuration;
 
 namespace Emergence.Transform.Runner
 {
@@ -21,7 +20,7 @@ namespace Emergence.Transform.Runner
                 {
                     var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
                     var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
-                    await foreach(var result in textImporter.Import())
+                    await foreach (var result in textImporter.Import())
                     {
                         Console.WriteLine(result.ScientificNameWithAuthor);
                     }
@@ -33,7 +32,7 @@ namespace Emergence.Transform.Runner
         static IEnumerable<ImporterConfiguration> LoadImporters(IConfigurationRoot configuration)
         {
             var importers = configuration.GetSection("importers").GetChildren();
-            foreach(var importer in importers)
+            foreach (var importer in importers)
             {
                 yield return new ImporterConfiguration
                 {
