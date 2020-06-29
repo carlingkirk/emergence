@@ -1,4 +1,4 @@
-﻿using Emergence.API.Services;
+using Emergence.API.Services;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Identity;
@@ -51,10 +51,7 @@ namespace Emergence.API
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

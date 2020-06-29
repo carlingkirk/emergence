@@ -1,4 +1,4 @@
-﻿using Emergence.Data.External.USDA;
+using Emergence.Data.External.USDA;
 using Emergence.Data.Shared.Stores;
 using Emergence.Transform.Data;
 using Emergence.Transform.USDA;
@@ -19,7 +19,7 @@ namespace Emergence.Transform
 
         public Lifeform Transform(Checklist source)
         {
-            (string Genus, string Species, string Author, string Variant) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
+            (var Genus, var Species, var Author, var Variant) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
 
             var origin = new Origin
             {

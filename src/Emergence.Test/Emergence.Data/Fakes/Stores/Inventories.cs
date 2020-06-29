@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Emergence.Data.Shared.Stores;
 
@@ -6,9 +6,7 @@ namespace Emergence.Test.Data.Fakes.Stores
 {
     public static class FakeInventories
     {
-        public static IEnumerable<Inventory> Get()
-        {
-            return new List<Inventory>
+        public static IEnumerable<Inventory> Get() => new List<Inventory>
             {
                 new Inventory
                 {
@@ -16,11 +14,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     UserId = 0
                 }
             };
-        }
 
-        public static IEnumerable<InventoryItem> GetItems()
-        {
-            return new List<InventoryItem>
+        public static IEnumerable<InventoryItem> GetItems() => new List<InventoryItem>
             {
                 new InventoryItem
                 {
@@ -62,6 +57,5 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateModified = null
                 },
             };
-        }
     }
 }

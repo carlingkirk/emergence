@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data;
@@ -9,8 +9,8 @@ namespace Emergence.API.Services
 {
     public class InventoryService : IInventoryService
     {
-        private IRepository<Inventory> _inventoryRepository;
-        private IRepository<InventoryItem> _inventoryItemRepository;
+        private readonly IRepository<Inventory> _inventoryRepository;
+        private readonly IRepository<InventoryItem> _inventoryItemRepository;
         public InventoryService(IRepository<Inventory> inventoryRepository, IRepository<InventoryItem> inventoryItemRepository)
         {
             _inventoryRepository = inventoryRepository;

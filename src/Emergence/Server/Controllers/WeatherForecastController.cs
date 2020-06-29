@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Shared;
+using Emergence.Data.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +27,6 @@ namespace Emergence.Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return Summaries;
-        }
+        public IEnumerable<string> Get() => Summaries;
     }
 }

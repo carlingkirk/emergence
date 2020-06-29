@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -58,28 +58,25 @@ namespace Emergence.Test.Data.Fakes.Stores
             return plantInfos;
         }
 
-        public static Taxon Taxon()
+        public static Taxon Taxon() => new Taxon
         {
-            return new Taxon
-            {
-                Kingdom = "Plantae",
-                Phylum = "Tracheophyta",
-                Subphylum = "Angiospermae",
-                Class = "Magnoliopsida",
-                Subclass = null,
-                Order = "Asterales",
-                Superfamily = null,
-                Family = "Asteraceae",
-                Subfamily = "Asteroideae",
-                Tribe = "Eupatorieae",
-                Subtribe = "Liatrinae",
-                Genus = "Liatris",
-                Subgenus = null,
-                Species = "spicata",
-                Subspecies = null,
-                Variety = "spicata",
-                Form = null
-            };
-        }
+            Kingdom = "Plantae",
+            Phylum = "Tracheophyta",
+            Subphylum = "Angiospermae",
+            Class = "Magnoliopsida",
+            Subclass = null,
+            Order = "Asterales",
+            Superfamily = null,
+            Family = "Asteraceae",
+            Subfamily = "Asteroideae",
+            Tribe = "Eupatorieae",
+            Subtribe = "Liatrinae",
+            Genus = "Liatris",
+            Subgenus = null,
+            Species = "spicata",
+            Subspecies = null,
+            Variety = "spicata",
+            Form = null
+        };
     }
 }

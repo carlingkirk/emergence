@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Shared.Stores;
+using Emergence.Data.Shared.Stores;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Emergence.Data.Repository
 {
     public class Repository<T> : IRepository<T> where T : class, IKeyable
     {
-        private EmergenceDbContext _context;
+        private readonly EmergenceDbContext _context;
 
         public Repository(EmergenceDbContext context)
         {
@@ -45,10 +45,7 @@ namespace Emergence.Data.Repository
             return await entities.FirstOrDefaultAsync();
         }
 
-        public async Task<T> GetAsync(object key, bool track = false)
-        {
-            return await GetAsync(e => e.Key == key, track);
-        }
+        public async Task<T> GetAsync(object key, bool track = false) => await GetAsync(e => e.Key == key, track);
 
         public async Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity)
         {
@@ -66,10 +63,7 @@ namespace Emergence.Data.Repository
             return dbEntity;
         }
 
-        public async Task<T> AddOrUpdateAsync(object key, T entity)
-        {
-            return await AddOrUpdateAsync(e => e.Key == key, entity);
-        }
+        public async Task<T> AddOrUpdateAsync(object key, T entity) => await AddOrUpdateAsync(e => e.Key == key, entity);
 
         public async Task AddSomeAsync(IEnumerable<T> source)
         {

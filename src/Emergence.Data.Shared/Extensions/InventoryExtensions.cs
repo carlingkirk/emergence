@@ -1,64 +1,51 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Emergence.Data.Shared.Models;
+using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Extensions
 {
     public static class InventoryExtensions
     {
-        public static Data.Shared.Models.Inventory AsModel(this Data.Shared.Stores.Inventory source, IEnumerable<Data.Shared.Stores.InventoryItem> items = null)
+        public static Models.Inventory AsModel(this Inventory source, IEnumerable<InventoryItem> items = null) => new Models.Inventory
         {
-            return new Data.Shared.Models.Inventory
-            {
-                InventoryId = source.Id,
-                UserId = source.UserId,
-                Items = items.Any() ? items.Select(i => i.AsModel()) : Enumerable.Empty<Data.Shared.Models.InventoryItem>()
-            };
-        }
+            InventoryId = source.Id,
+            UserId = source.UserId,
+            Items = items != null && items.Any() ? items.Select(i => i.AsModel()) : Enumerable.Empty<Models.InventoryItem>()
+        };
 
-        public static Data.Shared.Stores.Inventory AsStore(this Data.Shared.Models.Inventory source)
+        public static Inventory AsStore(this Models.Inventory source) => new Inventory
         {
-            return new Data.Shared.Stores.Inventory
-            {
-                Id = source.InventoryId,
-                UserId = source.UserId
-            };
-        }
+            Id = source.InventoryId,
+            UserId = source.UserId
+        };
 
-        public static Data.Shared.Models.InventoryItem AsModel(this Data.Shared.Stores.InventoryItem source)
+        public static Models.InventoryItem AsModel(this InventoryItem source) => new Models.InventoryItem
         {
-            return new Data.Shared.Models.InventoryItem
-            {
-                InventoryItemId = source.Id,
-                InventoryId = source.InventoryId,
-                Name = source.Name,
-                Origin = source.OriginId.HasValue ? new Data.Shared.Models.Origin { OriginId = source.OriginId.Value } : null,
-                ItemType = Enum.Parse<Data.Shared.Models.ItemType>(source.ItemType),
-                Status = Enum.Parse<Data.Shared.Models.Status>(source.Status),
-                Quantity = source.Quantity,
-                DateAcquired = source.DateAcquired,
-                DateCreated = source.DateCreated,
-                DateModified = source.DateModified
-            };
-        }
+            InventoryItemId = source.Id,
+            InventoryId = source.InventoryId,
+            Name = source.Name,
+            Origin = source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
+            ItemType = Enum.Parse<Models.ItemType>(source.ItemType),
+            Status = Enum.Parse<Models.Status>(source.Status),
+            Quantity = source.Quantity,
+            DateAcquired = source.DateAcquired,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
 
-        public static Data.Shared.Stores.InventoryItem AsStore(this Data.Shared.Models.InventoryItem source)
+        public static InventoryItem AsStore(this Models.InventoryItem source) => new InventoryItem
         {
-            return new Data.Shared.Stores.InventoryItem
-            {
-                Id = source.InventoryItemId,
-                InventoryId = source.InventoryId,
-                Name = source.Name,
-                OriginId = source.Origin?.OriginId,
-                ItemType = source.ItemType.ToString(),
-                Status = source.Status.ToString(),
-                Quantity = source.Quantity,
-                DateAcquired = source.DateAcquired,
-                DateCreated = source.DateCreated,
-                DateModified = source.DateModified
-            };
-        }
+            Id = source.InventoryItemId,
+            InventoryId = source.InventoryId,
+            Name = source.Name,
+            OriginId = source.Origin?.OriginId,
+            ItemType = source.ItemType.ToString(),
+            Status = source.Status.ToString(),
+            Quantity = source.Quantity,
+            DateAcquired = source.DateAcquired,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }

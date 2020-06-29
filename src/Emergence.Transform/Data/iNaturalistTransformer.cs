@@ -1,4 +1,4 @@
-﻿using Emergence.Data.External.iNaturalist;
+using Emergence.Data.External.iNaturalist;
 using Emergence.Data.Shared.Stores;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Emergence.Transform.Data
 {
-    public class iNaturalistPlantInfo : ITransformer<Lifeform, Observation>
+    public class INaturalistPlantInfo : ITransformer<Lifeform, Observation>
     {
         public Origin Origin => new Origin
         {
@@ -73,9 +73,6 @@ namespace Emergence.Transform.Data
             return taxon;
         }
 
-        private static Ancestor GetAncestor(IEnumerable<Ancestor> ancestors, Rank rank)
-        {
-            return ancestors?.Where(a => a.rank == rank).FirstOrDefault();
-        }
+        private static Ancestor GetAncestor(IEnumerable<Ancestor> ancestors, Rank rank) => ancestors?.Where(a => a.rank == rank).FirstOrDefault();
     }
 }

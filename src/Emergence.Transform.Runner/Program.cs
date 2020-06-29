@@ -45,9 +45,6 @@ namespace Emergence.Transform.Runner
             }
         }
 
-        static IConfigurationRoot LoadConfiguration()
-        {
-            return new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
-        }
+        static IConfigurationRoot LoadConfiguration() => new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
     }
 }

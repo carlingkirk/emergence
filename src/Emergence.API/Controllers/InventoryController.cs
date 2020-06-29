@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,16 +16,10 @@ namespace Emergence.API.Controllers
         }
 
         [HttpGet]
-        public async Task<Inventory> Get(int id)
-        {
-            return await _inventoryService.GetInventoryAsync(id);
-        }
+        public async Task<Inventory> Get(int id) => await _inventoryService.GetInventoryAsync(id);
 
         [HttpPut]
 
-        public async Task<Inventory> Put(Inventory inventory)
-        {
-            return await _inventoryService.AddOrUpdateAsync(inventory);
-        }
+        public async Task<Inventory> Put(Inventory inventory) => await _inventoryService.AddOrUpdateAsync(inventory);
     }
 }

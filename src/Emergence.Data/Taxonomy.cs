@@ -12,10 +12,7 @@ namespace Emergence.Data
         public IEnumerable<TaxonClassification> Classifications { get; set; }
         public TaxonClassification Classification => Classifications.FirstOrDefault(c => c.Preferred) ?? Classifications.FirstOrDefault();
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+        public override string ToString() => base.ToString();
     }
 
     public class TaxonClassification
