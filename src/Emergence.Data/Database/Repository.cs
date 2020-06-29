@@ -1,10 +1,10 @@
-using Emergence.Data.Shared.Stores;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Emergence.Data.Shared.Stores;
+using Microsoft.EntityFrameworkCore;
 
 namespace Emergence.Data.Repository
 {
@@ -57,7 +57,7 @@ namespace Emergence.Data.Repository
             }
             else
             {
-                dbEntity =  (await _context.Set<T>().AddAsync(entity)).Entity;
+                dbEntity = (await _context.Set<T>().AddAsync(entity)).Entity;
             }
 
             return dbEntity;

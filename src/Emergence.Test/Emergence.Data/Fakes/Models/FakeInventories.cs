@@ -1,10 +1,10 @@
-﻿using Emergence.Data.Shared.Models;
 using System;
 using System.Collections.Generic;
+using Emergence.Data.Shared.Models;
 
-namespace Emergence.Test.Data.Fakes.Models.Inventories
+namespace Emergence.Test.Data.Fakes.Models
 {
-    public static class Get
+    public static class FakeInventories
     {
         public static IEnumerable<Inventory> Inventories()
         {

@@ -1,10 +1,9 @@
-﻿using Emergence.Data.Shared.Models;
 using System.Collections.Generic;
-using System.Net.Mail;
+using Emergence.Data.Shared.Models;
 
-namespace Emergence.Test.Data.Fakes.Models.Plants
+namespace Emergence.Test.Data.Fakes.Models
 {
-    public static class Get
+    public static class FakePlants
     {
         public static IEnumerable<Plant> Plants()
         {

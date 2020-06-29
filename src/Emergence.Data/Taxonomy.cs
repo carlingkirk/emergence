@@ -1,7 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Emergence.Data
 {
@@ -22,7 +20,6 @@ namespace Emergence.Data
 
         }
 
-        private Dictionary<int, int> _assignment { get; set; }
         public long TaxonId { get; set; }
         public TaxonType TaxonType { get; set; }
         public long SourceId { get; set; }

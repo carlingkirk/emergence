@@ -1,4 +1,4 @@
-﻿namespace Emergence.Data.Shared.Stores
+namespace Emergence.Data.Shared.Stores
 {
     public class Specimen
     {

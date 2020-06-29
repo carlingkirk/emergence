@@ -3,7 +3,7 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
 {
-    public static class Get
+    public static class FakePlants
     {
         public static IEnumerable<Plant> Plants()
         {
