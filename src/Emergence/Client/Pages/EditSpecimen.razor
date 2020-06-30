@@ -1,0 +1,30 @@
+@page "/specimen/edit/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Emergence.Data.Shared.Models
+@using Emergence.Client.Components
+@attribute [Authorize]
+@inherits SpecimenComponent
+<h3>Add Specimen</h3>
+
+<EditForm Model="@Specimen">
+    <div class="simple-form">
+
+        <div class="form-group">
+            <label for="specimen-name">Name</label>
+            <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" />
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
+        </div>
+
+        @*<button @onclick="SaveSpecimen" class="btn btn-primary">Submit</button>
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>*@
+    </div>
+</EditForm>
+@code {
+
+
+}
