@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Shared.Interfaces;
+using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Models
 {

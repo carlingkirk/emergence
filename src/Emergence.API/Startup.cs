@@ -34,6 +34,7 @@ namespace Emergence.API
             services.AddAuthentication().AddIdentityServerJwt();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IInventoryService), typeof(InventoryService));
+            services.AddTransient(typeof(ISpecimenService), typeof(SpecimenService));
             services.AddControllers();
         }
 
