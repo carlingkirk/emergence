@@ -16,7 +16,7 @@ namespace Emergence.API.Services
         }
         public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen)
         {
-            var result = await _specimenRepository.AddOrUpdateAsync(specimen.SpecimenId, specimen.AsStore());
+            var result = await _specimenRepository.AddOrUpdateAsync(specimen.AsStore());
             return result.AsModel();
         }
 

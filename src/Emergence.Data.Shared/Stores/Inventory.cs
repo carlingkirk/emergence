@@ -9,8 +9,9 @@ namespace Emergence.Data.Shared.Stores
         public long UserId { get; set; }
     }
 
-    public class InventoryItem
+    public class InventoryItem : IKeyable
     {
+        public object Key => Id;
         public int InventoryId { get; set; }
         public long Id { get; set; }
         public long? OriginId { get; set; }

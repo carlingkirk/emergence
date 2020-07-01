@@ -47,11 +47,11 @@ namespace Emergence.Data.Repository
 
         public async Task<T> GetAsync(object key, bool track = false) => await GetAsync(e => e.Key == key, track);
 
-        public async Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity)
+        public async Task<T> AddOrUpdateAsync(T entity)
         {
             T dbEntity;
 
-            if (_context.Set<T>().Any(key))
+            if (_context.Set<T>().AsEnumerable().Any(e => e.Key == entity.Key))
             {
                 dbEntity = _context.Set<T>().Update(entity).Entity;
             }
@@ -63,7 +63,7 @@ namespace Emergence.Data.Repository
             return dbEntity;
         }
 
-        public async Task<T> AddOrUpdateAsync(object key, T entity) => await AddOrUpdateAsync(e => e.Key == key, entity);
+        public async Task<T> AddOrUpdateAsync(object key, T entity) => await AddOrUpdateAsync(entity);
 
         public async Task AddSomeAsync(IEnumerable<T> source)
         {

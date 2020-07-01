@@ -1,7 +1,9 @@
 ﻿using Emergence.API.Services;
 using Emergence.API.Services.Interfaces;
+using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
+using Emergence.Data.Shared.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +39,11 @@ namespace Emergence.Server
             // Application Services
             services.AddTransient<ISpecimenService, SpecimenService>();
             services.AddTransient<IInventoryService, InventoryService>();
+
+            //Add repositories
+            services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
+            services.AddScoped(typeof(IRepository<InventoryItem>), typeof(Repository<InventoryItem>));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
