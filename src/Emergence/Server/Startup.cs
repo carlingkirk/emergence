@@ -1,4 +1,6 @@
-﻿using Emergence.Data.Identity;
+﻿using Emergence.API.Services;
+using Emergence.API.Services.Interfaces;
+using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +33,10 @@ namespace Emergence.Server
 
             services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
             services.AddAuthentication().AddIdentityServerJwt();
+
+            // Application Services
+            services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<IInventoryService, InventoryService>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
