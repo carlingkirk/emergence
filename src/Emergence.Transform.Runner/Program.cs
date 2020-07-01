@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Emergence.Transform.Runner
 {
-    class Program
+    public class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var configuration = LoadConfiguration();
             var importers = LoadImporters(configuration);
@@ -29,7 +29,7 @@ namespace Emergence.Transform.Runner
             Console.ReadKey();
         }
 
-        static IEnumerable<ImporterConfiguration> LoadImporters(IConfigurationRoot configuration)
+        public static IEnumerable<ImporterConfiguration> LoadImporters(IConfigurationRoot configuration)
         {
             var importers = configuration.GetSection("importers").GetChildren();
             foreach (var importer in importers)
@@ -44,6 +44,6 @@ namespace Emergence.Transform.Runner
             }
         }
 
-        static IConfigurationRoot LoadConfiguration() => new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+        public static IConfigurationRoot LoadConfiguration() => new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
     }
 }

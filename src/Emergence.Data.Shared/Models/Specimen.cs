@@ -1,11 +1,9 @@
-using Emergence.Data.Shared.Interfaces;
-
 namespace Emergence.Data.Shared.Models
 {
     public class Specimen
     {
         public long SpecimenId { get; set; }
-        public ILifeform Lifeform { get; set; }
+        public Plant Plant { get; set; }
         public SpecimenStage SpecimenStage { get; set; }
         public InventoryItem InventoryItem { get; set; }
     }

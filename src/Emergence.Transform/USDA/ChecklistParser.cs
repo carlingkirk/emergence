@@ -50,7 +50,7 @@ namespace Emergence.Transform.USDA
             else if (scientificNameParts.Length == 2)
             {
                 // Is the second word an author?
-                if (Char.IsUpper(scientificNameParts[1][0]))
+                if (char.IsUpper(scientificNameParts[1][0]))
                 {
                     return (scientificNameParts[0], null, scientificNameParts[1], null);
                 }
