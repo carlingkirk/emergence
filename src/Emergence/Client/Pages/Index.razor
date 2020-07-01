@@ -13,7 +13,7 @@
     {
         var modalParams = new ModalParameters();
         modalParams.Add("Id", Id);
-        var specimenModal = Modal.Show<SpecimenComponent>("", modalParams);
+        var specimenModal = Modal.Show<EditSpecimen>("setgh", modalParams);
         var result = await specimenModal.Result;
 
         if (result.Cancelled)

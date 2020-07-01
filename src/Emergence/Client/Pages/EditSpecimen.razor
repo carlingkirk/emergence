@@ -20,8 +20,8 @@
             <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
         </div>
 
-        @*<button @onclick="SaveSpecimen" class="btn btn-primary">Submit</button>
-        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>*@
+        <button @onclick="(async () => await SaveSpecimen())" class="btn btn-primary">Submit</button>
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
     </div>
 </EditForm>
 @code {
