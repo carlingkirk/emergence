@@ -12,8 +12,8 @@ namespace Emergence.Transform
 
     public class TextImporter<T> : ITextImporter<T>
     {
-        private string _filename { get; set; }
-        private CsvConfiguration _configuration { get; set; }
+        private readonly string _filename;
+        private readonly CsvConfiguration _configuration;
 
         public TextImporter(string filename, bool hasHeaders)
         {
@@ -26,10 +26,10 @@ namespace Emergence.Transform
 
         public async IAsyncEnumerable<T> Import()
         {
-            using (FileStream fileStream = File.Open(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (BufferedStream stream = new BufferedStream(fileStream))
-            using (StreamReader streamReader = new StreamReader(stream))
-            using (CsvReader reader = new CsvReader(streamReader, _configuration))
+            using (var fileStream = File.Open(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var stream = new BufferedStream(fileStream))
+            using (var streamReader = new StreamReader(stream))
+            using (var reader = new CsvReader(streamReader, _configuration))
             {
                 var records = reader.GetRecordsAsync<T>().GetAsyncEnumerator();
 
