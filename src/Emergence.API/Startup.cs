@@ -1,6 +1,3 @@
-using Emergence.API.Services;
-using Emergence.API.Services.Interfaces;
-using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 using Microsoft.AspNetCore.Authentication;
@@ -32,9 +29,7 @@ namespace Emergence.API
 
             services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
             services.AddAuthentication().AddIdentityServerJwt();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddTransient(typeof(IInventoryService), typeof(InventoryService));
-            services.AddTransient(typeof(ISpecimenService), typeof(SpecimenService));
+
             services.AddControllers();
         }
 
