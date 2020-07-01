@@ -22,13 +22,13 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                Specimen = await Client.GetFromJsonAsync<Specimen>($"/specimen/{Id}");
+                Specimen = await Client.GetFromJsonAsync<Specimen>($"/api/specimen/{Id}");
             }
             else
             {
                 Specimen = new Specimen
                 {
-                    Lifeform = new Plant(),
+                    Plant = new Plant(),
                     InventoryItem = new InventoryItem()
                 };
             }
@@ -36,7 +36,7 @@ namespace Emergence.Client.Components
 
         protected async Task SaveSpecimen()
         {
-            var result = await Client.PutAsJsonAsync("/specimen", Specimen);
+            var result = await Client.PutAsJsonAsync("/api/specimen", Specimen);
             if (result.IsSuccessStatusCode)
             {
                 Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
