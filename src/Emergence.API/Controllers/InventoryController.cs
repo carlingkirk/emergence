@@ -20,6 +20,6 @@ namespace Emergence.API.Controllers
 
         [HttpPut]
 
-        public async Task<Inventory> Put(Inventory inventory) => await _inventoryService.AddOrUpdateAsync(inventory);
+        public async Task<Inventory> Put(Inventory inventory) => await _inventoryService.AddOrUpdateInventoryAsync(inventory);
     }
 }

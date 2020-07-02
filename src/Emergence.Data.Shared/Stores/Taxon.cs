@@ -1,8 +1,8 @@
-﻿namespace Emergence.Data.Shared.Stores
+namespace Emergence.Data.Shared.Stores
 {
     public class Taxon
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Kingdom { get; set; }
         public string Phylum { get; set; }
         public string Subphylum { get; set; }

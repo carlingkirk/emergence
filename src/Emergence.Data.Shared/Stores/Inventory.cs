@@ -1,19 +1,17 @@
-﻿using System;
+using System;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class Inventory : IKeyable
+    public class Inventory
     {
-        public object Key => Id;
         public int Id { get; set; }
         public long UserId { get; set; }
     }
 
-    public class InventoryItem : IKeyable
+    public class InventoryItem
     {
-        public object Key => Id;
         public int InventoryId { get; set; }
-        public long Id { get; set; }
+        public int Id { get; set; }
         public long? OriginId { get; set; }
         public string ItemType { get; set; }
         public string Name { get; set; }

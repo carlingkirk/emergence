@@ -11,21 +11,34 @@ namespace Emergence.API.Services
     {
         private readonly IRepository<Specimen> _specimenRepository;
         private readonly IInventoryService _inventoryService;
+
         public SpecimenService(IRepository<Specimen> specimenRepository, IInventoryService inventoryService)
         {
             _specimenRepository = specimenRepository;
             _inventoryService = inventoryService;
         }
+
         public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen)
         {
-            var result
-            var specimenResult = await _specimenRepository.AddOrUpdateAsync(specimen.AsStore());
-            return result.AsModel();
+            if (specimen.InventoryItem == null)
+            {
+                specimen.InventoryItem = new Data.Shared.Models.InventoryItem();
+            }
+
+            if (specimen.InventoryItem.InventoryId == 0)
+            {
+                var inventory = _inventoryService.AddOrUpdateInventoryAsync(new Inventory().AsModel());
+            }
+
+            var inventoryItemResult = _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
+
+            var specimenResult = await _specimenRepository.AddOrUpdateAsync(s => s.Id == specimen.SpecimenId, specimen.AsStore());
+            return specimenResult.AsModel();
         }
 
         public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(long specimenId)
         {
-            var result = await _specimenRepository.GetAsync(specimenId);
+            var result = await _specimenRepository.GetAsync(s => s.Id == specimenId);
             return result.AsModel();
         }
 

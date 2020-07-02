@@ -19,7 +19,7 @@ namespace Emergence.API.Services
 
         public async Task<Data.Shared.Models.Inventory> GetInventoryAsync(int id)
         {
-            var result = await _inventoryRepository.GetAsync(id);
+            var result = await _inventoryRepository.GetAsync(i => i.Id == id);
             var inventory = result.AsModel();
             inventory.Items = await GetInventoryItemsAsync(id);
             return inventory;
@@ -38,13 +38,13 @@ namespace Emergence.API.Services
 
         public async Task<Data.Shared.Models.Inventory> AddOrUpdateInventoryAsync(Data.Shared.Models.Inventory inventory)
         {
-            var result = await _inventoryRepository.AddOrUpdateAsync(inventory.InventoryId, inventory.AsStore());
+            var result = await _inventoryRepository.AddOrUpdateAsync(i => i.Id == inventory.InventoryId, inventory.AsStore());
             return result.AsModel();
         }
 
         public async Task<Data.Shared.Models.InventoryItem> AddOrUpdateInventoryItemAsync(Data.Shared.Models.InventoryItem inventoryItem)
         {
-            var result = await _inventoryItemRepository.AddOrUpdateAsync(inventoryItem.InventoryItemId, inventoryItem.AsStore());
+            var result = await _inventoryItemRepository.AddOrUpdateAsync(i => i.Id == inventoryItem.InventoryItemId, inventoryItem.AsStore());
             return result.AsModel();
         }
     }

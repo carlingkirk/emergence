@@ -9,6 +9,6 @@ namespace Emergence.API.Services.Interfaces
         Task<Inventory> GetInventoryAsync(int id);
         Task<IEnumerable<InventoryItem>> GetInventoryItemsAsync(int inventoryId);
         Task<Inventory> AddOrUpdateInventoryAsync(Inventory inventory);
-        Task<InventoryItem> AddOrUpdateInventoryItemAsync(Inventory inventory);
+        Task<InventoryItem> AddOrUpdateInventoryItemAsync(InventoryItem inventory);
     }
 }
