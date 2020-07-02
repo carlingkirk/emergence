@@ -27,12 +27,13 @@ namespace Emergence.API.Services
 
             if (specimen.InventoryItem.InventoryId == 0)
             {
-                var inventory = _inventoryService.AddOrUpdateInventoryAsync(new Inventory().AsModel());
+                var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory().AsModel());
             }
 
-            var inventoryItemResult = _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
+            specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
 
             var specimenResult = await _specimenRepository.AddOrUpdateAsync(s => s.Id == specimen.SpecimenId, specimen.AsStore());
+
             return specimenResult.AsModel();
         }
 

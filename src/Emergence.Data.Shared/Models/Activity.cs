@@ -1,8 +1,8 @@
-﻿namespace Emergence.Data.Shared.Models
+namespace Emergence.Data.Shared.Models
 {
     public class Activity
     {
-        public long ActivityId { get; set; }
+        public int ActivityId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ActivityType ActivityType { get; set; }

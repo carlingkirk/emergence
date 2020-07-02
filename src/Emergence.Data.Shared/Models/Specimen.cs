@@ -2,7 +2,7 @@ namespace Emergence.Data.Shared.Models
 {
     public class Specimen
     {
-        public long SpecimenId { get; set; }
+        public int SpecimenId { get; set; }
         public Plant Plant { get; set; }
         public SpecimenStage SpecimenStage { get; set; }
         public InventoryItem InventoryItem { get; set; }

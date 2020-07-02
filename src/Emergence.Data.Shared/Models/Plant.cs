@@ -1,10 +1,10 @@
-﻿using Emergence.Data.Shared.Interfaces;
+using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Models
 {
     public class Plant : ILifeform
     {
-        public long LifeformId { get; set; }
+        public int LifeformId { get; set; }
         public Taxon Taxon { get; set; }
         public string ScientificName { get; set; }
         public string CommonName { get; set; }

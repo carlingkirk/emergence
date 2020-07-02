@@ -11,7 +11,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 new Inventory
                 {
                     Id = 0,
-                    UserId = 0
+                    UserId = new Guid().ToString()
                 }
             };
 

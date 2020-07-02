@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 
 namespace Emergence.Data.Shared.Models
 {
     public class Origin
     {
-        public long OriginId { get; set; }
+        public int OriginId { get; set; }
         public Origin ParentOrigin { get; set; }
         public string Name { get; set; }
         public OriginType Type { get; set; }

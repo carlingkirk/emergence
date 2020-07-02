@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Emergence.Data.Shared.Models
@@ -6,14 +6,14 @@ namespace Emergence.Data.Shared.Models
     public class Inventory
     {
         public int InventoryId { get; set; }
-        public long UserId { get; set; }
+        public string UserId { get; set; }
         public IEnumerable<InventoryItem> Items { get; set; }
     }
 
     public class InventoryItem
     {
         public int InventoryId { get; set; }
-        public long InventoryItemId { get; set; }
+        public int InventoryItemId { get; set; }
         public ItemType ItemType { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }

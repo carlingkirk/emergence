@@ -11,6 +11,7 @@ namespace Emergence.API.Services
     {
         private readonly IRepository<Inventory> _inventoryRepository;
         private readonly IRepository<InventoryItem> _inventoryItemRepository;
+
         public InventoryService(IRepository<Inventory> inventoryRepository, IRepository<InventoryItem> inventoryItemRepository)
         {
             _inventoryRepository = inventoryRepository;

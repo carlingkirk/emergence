@@ -5,14 +5,14 @@ namespace Emergence.Data.Shared.Stores
     public class Inventory
     {
         public int Id { get; set; }
-        public long UserId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class InventoryItem
     {
         public int InventoryId { get; set; }
         public int Id { get; set; }
-        public long? OriginId { get; set; }
+        public int? OriginId { get; set; }
         public string ItemType { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
