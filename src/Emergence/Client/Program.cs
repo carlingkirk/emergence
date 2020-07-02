@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blazored.Modal;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,8 @@ namespace Emergence.Client
             builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Emergence.ServerAPI"));
 
             builder.Services.AddApiAuthorization();
+
+            builder.Services.AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }

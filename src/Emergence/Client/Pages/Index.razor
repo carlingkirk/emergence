@@ -1,7 +1,28 @@
-﻿@page "/"
+@page "/"
+@inject IModalService Modal
+@using Emergence.Client.Components
+<link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
 
-<h1>Hello, world!</h1>
+<h1>Emergence</h1>
 
-Welcome to your new app.
+<button class="btn btn-primary" @onclick="@(() => AddSpecimen(0))">Add New Specimen</button>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code
+{
+    async Task AddSpecimen(int Id)
+    {
+        var modalParams = new ModalParameters();
+        modalParams.Add("Id", Id);
+        var specimenModal = Modal.Show<EditSpecimen>("setgh", modalParams);
+        var result = await specimenModal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            Console.WriteLine("Modal was closed");
+        }
+    }
+}
