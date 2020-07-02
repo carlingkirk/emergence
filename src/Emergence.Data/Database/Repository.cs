@@ -60,6 +60,8 @@ namespace Emergence.Data.Repository
                 dbEntity = (await _context.Set<T>().AddAsync(entity)).Entity;
             }
 
+            await _context.SaveChangesAsync();
+
             return dbEntity;
         }
 

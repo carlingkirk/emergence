@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 
@@ -8,6 +8,7 @@ namespace Emergence.API.Services.Interfaces
     {
         Task<Inventory> GetInventoryAsync(int id);
         Task<IEnumerable<InventoryItem>> GetInventoryItemsAsync(int inventoryId);
-        Task<Inventory> AddOrUpdateAsync(Inventory inventory);
+        Task<Inventory> AddOrUpdateInventoryAsync(Inventory inventory);
+        Task<InventoryItem> AddOrUpdateInventoryItemAsync(Inventory inventory);
     }
 }

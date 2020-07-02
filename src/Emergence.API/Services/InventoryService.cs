@@ -36,9 +36,15 @@ namespace Emergence.API.Services
             return items;
         }
 
-        public async Task<Data.Shared.Models.Inventory> AddOrUpdateAsync(Data.Shared.Models.Inventory inventory)
+        public async Task<Data.Shared.Models.Inventory> AddOrUpdateInventoryAsync(Data.Shared.Models.Inventory inventory)
         {
             var result = await _inventoryRepository.AddOrUpdateAsync(inventory.InventoryId, inventory.AsStore());
+            return result.AsModel();
+        }
+
+        public async Task<Data.Shared.Models.InventoryItem> AddOrUpdateInventoryItemAsync(Data.Shared.Models.InventoryItem inventoryItem)
+        {
+            var result = await _inventoryItemRepository.AddOrUpdateAsync(inventoryItem.InventoryItemId, inventoryItem.AsStore());
             return result.AsModel();
         }
     }
