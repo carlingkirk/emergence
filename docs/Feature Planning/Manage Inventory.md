@@ -1,13 +1,15 @@
 #Manage Inventory
 
 ##Stories
-As a propogator, I want to know what seeds I have available so I can sow them.
-As a propogator, I want to know what plants I have that are ready to put into the ground.
-As a propogator, I want to know if I have any space for my seeds that are ready to germinate.
-As a propogator, I want to know if the seeds I have are expiring so I can use them before they expire.
-As a propogator, I want to know where a seed packet came from so that if I got a bad rate of germination, I can avoid that supplier, or traversely a good rate so I can use that supplier.
-As a propogator, I want to let other propogators know if I have any inventory available for trade.
-As a propogator, I want to check my wishlist when I'm shopping so I can acquire items I want.
+- As a propogator, I want to know what seeds I have available so I can sow them.
+  - As a propogator, I want to search my inventory by keyword so I can find a specific specimen.
+  - As a propogator, I want to filter my inventory by keyword so I can limit the results to find what I'm looking for and I don't know the specifics.
+- As a propogator, I want to know what plants I have that are ready to put into the ground.
+- As a propogator, I want to know if I have any space for my seeds that are ready to germinate.
+- As a propogator, I want to know if the seeds I have are expiring so I can use them before they expire.
+- As a propogator, I want to know where a seed packet came from so that if I got a bad rate of germination, I can avoid that supplier, or traversely a good rate so I can use that supplier.
+- As a propogator, I want to let other propogators know if I have any inventory available for trade.
+- As a propogator, I want to check my wishlist when I'm shopping so I can acquire items I want.
 
 ##Data design
 - Item
