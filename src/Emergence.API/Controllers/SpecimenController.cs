@@ -7,7 +7,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SpecimenController : ControllerBase
+    public class SpecimenController : BaseAPIController
     {
         private readonly ISpecimenService _specimenService;
         public SpecimenController(ISpecimenService specimenService)
@@ -20,6 +20,6 @@ namespace Emergence.API.Controllers
 
         [HttpPut]
 
-        public async Task<Specimen> Put(Specimen specimen) => await _specimenService.AddOrUpdateAsync(specimen);
+        public async Task<Specimen> Put(Specimen specimen) => await _specimenService.AddOrUpdateAsync(specimen, UserId);
     }
 }

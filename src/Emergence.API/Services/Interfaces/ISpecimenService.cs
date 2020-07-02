@@ -8,6 +8,6 @@ namespace Emergence.API.Services.Interfaces
     {
         Task<Specimen> GetSpecimenAsync(long specimenId);
         Task<IEnumerable<Specimen>> GetSpecimensAsync(int inventoryId);
-        Task<Specimen> AddOrUpdateAsync(Specimen specimen);
+        Task<Specimen> AddOrUpdateAsync(Specimen specimen, string userId);
     }
 }

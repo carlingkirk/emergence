@@ -18,7 +18,7 @@ namespace Emergence.API.Services
             _inventoryService = inventoryService;
         }
 
-        public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen)
+        public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen, string userId)
         {
             if (specimen.InventoryItem == null)
             {
@@ -27,7 +27,7 @@ namespace Emergence.API.Services
 
             if (specimen.InventoryItem.InventoryId == 0)
             {
-                var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory().AsModel());
+                var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { UserId = userId }.AsModel());
             }
 
             specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
