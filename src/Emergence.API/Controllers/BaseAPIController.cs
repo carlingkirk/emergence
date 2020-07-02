@@ -9,10 +9,11 @@ namespace Emergence.API.Controllers
     [ApiController]
     public class BaseAPIController : ControllerBase
     {
-        public string UserId { get; }
+        public string UserId => GetUserId();
         public BaseAPIController()
         {
-            UserId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         }
+
+        private string GetUserId() => User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
     }
 }

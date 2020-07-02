@@ -28,6 +28,7 @@ namespace Emergence.API.Services
             if (specimen.InventoryItem.InventoryId == 0)
             {
                 var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { UserId = userId }.AsModel());
+                specimen.InventoryItem.InventoryId = inventory.InventoryId;
             }
 
             specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
