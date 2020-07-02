@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -37,6 +38,7 @@ namespace Emergence.Data.Shared.Models
         Available,
         Wishlist,
         Ordered,
+        [Description("In Use")]
         InUse
     }
 }

@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Emergence.Data.Shared.Models
 {
     public class Specimen
@@ -15,6 +17,7 @@ namespace Emergence.Data.Shared.Models
         Stratification,
         Germination,
         Growing,
+        [Description("In Ground")]
         InGround,
         Blooming,
         Diseased,

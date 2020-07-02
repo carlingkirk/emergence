@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -17,6 +20,9 @@ namespace Emergence.Client.Components
         [Parameter]
         public int Id { get; set; }
         public Specimen Specimen { get; set; }
+        public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
+        public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
+        public IEnumerable<Status> Statuses => Enum.GetValues(typeof(Status)).Cast<Status>();
 
         protected override async Task OnInitializedAsync()
         {
