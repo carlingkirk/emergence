@@ -1,4 +1,4 @@
-#Getting started
+# Getting started
 - Design data structure
 - Acquire starting data
 - Build website
