@@ -1,4 +1,4 @@
-﻿using Emergence.Data.Shared.Stores;
+using Emergence.Data.Shared.Stores;
 using Microsoft.EntityFrameworkCore;
 
 namespace Emergence.Data.Repository
@@ -10,7 +10,7 @@ namespace Emergence.Data.Repository
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Origin> Origins { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<Plant> Plants { get; set; }
+        public DbSet<Lifeform> Lifeforms { get; set; }
         public DbSet<PlantInfo> PlantInfos { get; set; }
         public DbSet<Specimen> Specimens { get; set; }
         public DbSet<Taxon> Taxons { get; set; }
@@ -24,7 +24,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Activity>().HasKey(i => i.Id);
             modelBuilder.Entity<Origin>().HasKey(i => i.Id);
             modelBuilder.Entity<Location>().HasKey(i => i.Id);
-            modelBuilder.Entity<Plant>().HasKey(i => i.Id);
+            modelBuilder.Entity<Lifeform>().HasKey(i => i.Id);
             modelBuilder.Entity<PlantInfo>().HasKey(i => i.Id);
             modelBuilder.Entity<Specimen>().HasKey(i => i.Id);
             modelBuilder.Entity<Taxon>().HasKey(i => i.Id);

@@ -1,6 +1,6 @@
 namespace Emergence.Data.Shared.Stores
 {
-    public class Plant
+    public class Lifeform
     {
         public int Id { get; set; }
         public string ScientificName { get; set; }

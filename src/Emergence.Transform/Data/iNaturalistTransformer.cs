@@ -1,45 +1,45 @@
-using Emergence.Data.External.iNaturalist;
-using Emergence.Data.Shared.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.External.iNaturalist;
+using Emergence.Data.Shared.Models;
 
 namespace Emergence.Transform.Data
 {
-    public class INaturalistPlantInfo : ITransformer<Lifeform, Observation>
+    public class INaturalistPlantInfo : ITransformer<Specimen, Observation>
     {
         public Origin Origin => new Origin
         {
-            Id = 0,
+            OriginId = 0,
             Name = "iNaturalist",
             Description = "iNaturalist is an online social network of people sharing biodiversity information to help each other learn about nature",
             Uri = new Uri("https://www.inaturalist.org/")
         };
 
-        public Lifeform Transform(Observation source)
+        public Specimen Transform(Observation source)
         {
             var origin = new Origin
             {
-                ParentId = Origin.Id,
+                ParentOrigin = new Origin { OriginId = Origin.OriginId },
                 Uri = new Uri(source.uri)
             };
-            return new Lifeform
+            return new Specimen
             {
                 PlantInfo = new PlantInfo
                 {
                     CommonName = source.taxon?.preferred_common_name,
-                    OriginId = Origin.Id
+
+                    Origin = origin,
+                    Taxon = GetFullTaxon(source)
                 },
-                Taxon = GetFullTaxon(source),
-                Origin = origin
             };
         }
 
-        public static Emergence.Data.Shared.Stores.Taxon GetFullTaxon(Observation observation)
+        public static Emergence.Data.Shared.Models.Taxon GetFullTaxon(Observation observation)
         {
             var bestId = observation.identifications?.Where(id => id.own_observation).FirstOrDefault() ?? observation.identifications?.FirstOrDefault();
             var ancestors = bestId?.taxon?.ancestors?.ToList();
-            var taxon = new Emergence.Data.Shared.Stores.Taxon
+            var taxon = new Emergence.Data.Shared.Models.Taxon
             {
                 Kingdom = GetAncestor(ancestors, Rank.Kingdom)?.name,
                 Phylum = GetAncestor(ancestors, Rank.Phylum)?.name,

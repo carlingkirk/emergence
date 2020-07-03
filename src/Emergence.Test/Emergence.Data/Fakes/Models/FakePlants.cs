@@ -5,11 +5,11 @@ namespace Emergence.Test.Data.Fakes.Models
 {
     public static class FakePlants
     {
-        public static IEnumerable<Plant> Plants()
+        public static IEnumerable<PlantInfo> Plants()
         {
-            var plants = new List<Plant>
+            var plantInfos = new List<PlantInfo>
             {
-                new Plant
+                new PlantInfo
                 {
                     LifeformId = 0,
                     CommonName = "Dense Blazing Star",
@@ -72,7 +72,7 @@ namespace Emergence.Test.Data.Fakes.Models
                 }
             };
 
-            return plants;
+            return plantInfos;
         }
     }
 }

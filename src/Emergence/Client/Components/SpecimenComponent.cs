@@ -34,7 +34,7 @@ namespace Emergence.Client.Components
             {
                 Specimen = new Specimen
                 {
-                    Plant = new Plant(),
+                    PlantInfo = new PlantInfo(),
                     InventoryItem = new InventoryItem()
                 };
             }

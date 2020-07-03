@@ -12,6 +12,8 @@ namespace Emergence.Data.Shared.Models
         public string Authors { get; set; }
         public Uri Uri { get; set; }
         public Location Location { get; set; }
+        public string ExternalId { get; set; }
+        public string AltExternalId { get; set; }
     }
 
     public enum OriginType

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace Emergence.Data.Shared.Stores
 {
     public class PlantInfo
     {
         public int Id { get; set; }
-        public int PlantId { get; set; }
+        public int LifeformId { get; set; }
         public long OriginId { get; set; }
         public long TaxonId { get; set; }
         public string ScientificName { get; set; }

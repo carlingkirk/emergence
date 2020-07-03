@@ -49,7 +49,7 @@ namespace Emergence.Test.Data.Fakes.Models
                             }
                         }
                     },
-                    Plant = new Plant
+                    PlantInfo = new PlantInfo
                     {
                         LifeformId = 0,
                         CommonName = "Dense Blazing Star",

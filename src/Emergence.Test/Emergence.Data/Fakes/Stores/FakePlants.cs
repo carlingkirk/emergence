@@ -5,11 +5,11 @@ namespace Emergence.Test.Data.Fakes.Stores
 {
     public static class FakePlants
     {
-        public static IEnumerable<Plant> Plants()
+        public static IEnumerable<Lifeform> Plants()
         {
-            var plants = new List<Plant>
+            var plants = new List<Lifeform>
             {
-                new Plant
+                new Lifeform
                 {
                     Id = 0,
                     CommonName = "Dense Blazing Star",
@@ -26,7 +26,7 @@ namespace Emergence.Test.Data.Fakes.Stores
             {
                 new PlantInfo
                 {
-                    PlantId = 0,
+                    LifeformId = 0,
                     Id = 0,
                     OriginId = 0,
                     TaxonId = 0,

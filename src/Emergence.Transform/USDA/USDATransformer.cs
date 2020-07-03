@@ -1,41 +1,37 @@
 using System;
 using Emergence.Data.External.USDA;
-using Emergence.Data.Shared.Stores;
-using Emergence.Transform.Data;
+using Emergence.Data.Shared.Models;
 using Emergence.Transform.USDA;
 
 namespace Emergence.Transform
 {
-    public class USDATransformer : ITransformer<Lifeform, Checklist>
+    public class USDATransformer : ITransformer<PlantInfo, Checklist>
     {
         public Origin Origin => new Origin
         {
-            Id = 1,
+            OriginId = 1,
             Name = "USDA Checklist",
             Description = "",
             Uri = new Uri("https://plants.sc.egov.usda.gov/dl_all.html")
         };
 
-        public Lifeform Transform(Checklist source)
+        public PlantInfo Transform(Checklist source)
         {
             (var Genus, var Species, var Author, var Variant) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
 
             var origin = new Origin
             {
-                ParentId = Origin.Id,
+                ParentOrigin = new Origin { OriginId = Origin.OriginId },
                 Name = Author,
                 ExternalId = source.Symbol,
                 AltExternalId = source.SynonymSymbol
             };
 
-            return new Lifeform
+            return new PlantInfo
             {
+                CommonName = source.CommonName,
+                ScientificName = Genus + " " + Species,
                 Origin = origin,
-                PlantInfo = new PlantInfo
-                {
-                    CommonName = source.CommonName,
-                    ScientificName = Genus + " " + Species
-                },
                 Taxon = new Taxon
                 {
                     Family = source.Family,
@@ -45,7 +41,5 @@ namespace Emergence.Transform
                 }
             };
         }
-
-
     }
 }

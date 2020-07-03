@@ -2,7 +2,7 @@ using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Models
 {
-    public class Plant : ILifeform
+    public class PlantInfo : ILifeform
     {
         public int LifeformId { get; set; }
         public Taxon Taxon { get; set; }
@@ -12,6 +12,7 @@ namespace Emergence.Data.Shared.Models
         public Height Height { get; set; }
         public Spread Spread { get; set; }
         public Requirements Requirements { get; set; }
+        public Origin Origin { get; set; }
     }
 
     public class BloomTime
