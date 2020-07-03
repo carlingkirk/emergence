@@ -1,8 +1,8 @@
 # Plant Profiles
 
 ## Stories
-- [Add plant profile for specimen](../../../../../emergence/projects/2#card-41210651) As a propagator, I need to know what my plant requires for it to thrive.
-- [Add plant profile](../../../../../emergence/projects/2#card-41210845) As a researcher, I want to collect information about a plant so I can use it later.
+- [Add plant profile for specimen](../../../../../emergence/projects/2#card-41210651): As a propagator, I need to know what my plant requires for it to thrive.
+- [Add plant profile](../../../../../emergence/projects/2#card-41210845): As a researcher, I want to collect information about a plant so I can use it later.
 
 ## Data Design
 - Plant profile
