@@ -1,6 +1,7 @@
 # Plant Profiles
 
 ## Stories
+- [Add plant profile](https://github.com/carlingkirk/emergence/projects/2#card-41210651) As a propagator, I need to know what my plant requires for it to thrive.
 
 ## Data Design
 - Plant profile
