@@ -20,7 +20,7 @@ namespace Emergence.Test.API.Services
         }
 
         [Fact]
-        public async Task TestGetlifeformAsync()
+        public async Task TestGetLifeformAsync()
         {
             var lifeformsService = new LifeformService(_mockLifeformRepository.Object);
             var lifeforms = await lifeformsService.GetLifeformAsync(1);
@@ -29,7 +29,7 @@ namespace Emergence.Test.API.Services
         }
 
         [Fact]
-        public async Task TestGetlifeformsAsync()
+        public async Task TestGetLifeformsAsync()
         {
             var lifeformService = new LifeformService(_mockLifeformRepository.Object);
             var lifeforms = await lifeformService.GetLifeformsAsync();

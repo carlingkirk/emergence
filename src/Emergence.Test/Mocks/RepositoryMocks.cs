@@ -29,6 +29,9 @@ namespace Emergence.Test.Mocks
             mockLifeformItemRepo.Setup(i => i.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeLifeforms.Lifeforms().ToAsyncEnumerable());
 
+            mockLifeformItemRepo.Setup(i => i.GetAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(Data.Fakes.Stores.FakeLifeforms.Lifeforms().First());
+
             return mockLifeformItemRepo;
         }
 
