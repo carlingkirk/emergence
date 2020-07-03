@@ -3,8 +3,12 @@ name: .NET Core
 on:
   push:
     branches: [ initial ]
+    paths:
+      - 'src/*'
   pull_request:
     branches: [ initial ]
+    paths:
+      - 'src/*'
 
 jobs:
   build:
@@ -19,6 +23,7 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore
+      working-directory: src
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
