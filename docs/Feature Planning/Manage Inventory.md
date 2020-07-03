@@ -2,8 +2,8 @@
 
 ## Stories
 - As a propagator, I want to add a plant to my inventory so I can track its progress.
-  - As a propagator, I want to be able to add plant profile data to the item in my inventory so I don't have to look up how to to grow it.
-  - As a propagator, I want to be able to be able to track where I got the plant profile data from so I can credit the source
+  - [Plant as Inventory](../../../../../emergence/projects/2#card-41209456) As a propagator, I want to be able to add plant profile data to the item in my inventory so I don't have to look up how to to grow it. 
+  - [Plant Profile Source](../../../../../emergence/projects/2#card-41209690) As a propagator, I want to be able to be able to track where I got the plant profile data from so I can credit the source 
 - As a propagator, I want to know what seeds I have available so I can sow them.
   - As a propagator, I want to see all of my inventory in a list so I keep everything up to date.
   - As a propagator, I want to search my inventory by keyword so I can find a specific specimen.
