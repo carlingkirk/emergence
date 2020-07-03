@@ -22,24 +22,24 @@
       - Pots, trays, space?
  - Status
  - DateAcquired
- - Origin
-   - Source
-   - An origin is a higher level of specificty than a Source
  - Source
-   - Source - 
-     - Type:
-       - Nursery
-       - Store
-       - Location
-       - Person
-       - Event
-     - Contact
-     - URL
+   - Source
+   - A source can has a parent and children
+   - Type:
+     - Nursery
+     - Store
+     - Location
+     - Person
+     - Event
+   - Contact
+   - URL
  - IsWishlist
- - Is a seed considered a specimen?
 - Examples:
   - Root hormone
   - Packet of Joe Pye Weed seeds
   - Collected seeds
   - Bag of mushroom compost
   - Max-sea
+
+- Is a seed considered a specimen?
+  - Yes
