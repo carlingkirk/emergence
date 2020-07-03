@@ -1,8 +1,8 @@
-#Plant Profiles
+# lant Profiles
 
-##Stories
+## Stories
 
-##Data Design
+## Data Design
 - Plant profile
   - Taxonomy
   - Common names
