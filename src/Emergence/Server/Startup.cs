@@ -1,4 +1,4 @@
-﻿using Emergence.API.Services;
+using Emergence.API.Services;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Identity;
@@ -39,11 +39,13 @@ namespace Emergence.Server
             // Application Services
             services.AddTransient<ISpecimenService, SpecimenService>();
             services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<ILifeformService, LifeformService>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
             services.AddScoped(typeof(IRepository<InventoryItem>), typeof(Repository<InventoryItem>));
+            services.AddScoped(typeof(IRepository<Lifeform>), typeof(Repository<Lifeform>));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>

@@ -22,6 +22,16 @@ namespace Emergence.Test.Mocks
             return mockSpecimenRepo;
         }
 
+        public static Mock<IRepository<Lifeform>> GetStandardMockLifeformRepository()
+        {
+            var mockLifeformItemRepo = new Mock<IRepository<Lifeform>>();
+
+            mockLifeformItemRepo.Setup(i => i.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
+                .Returns(Data.Fakes.Stores.FakeLifeforms.Lifeforms().ToAsyncEnumerable());
+
+            return mockLifeformItemRepo;
+        }
+
         public static Mock<IRepository<InventoryItem>> GetStandardMockInventoryItemRepository()
         {
             var mockInventoryItemRepo = new Mock<IRepository<InventoryItem>>();

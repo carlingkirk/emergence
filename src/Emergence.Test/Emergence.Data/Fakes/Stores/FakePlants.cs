@@ -3,23 +3,8 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
 {
-    public static class FakePlants
+    public static class FakePlantInfos
     {
-        public static IEnumerable<Lifeform> Plants()
-        {
-            var plants = new List<Lifeform>
-            {
-                new Lifeform
-                {
-                    Id = 0,
-                    CommonName = "Dense Blazing Star",
-                    ScientificName = "Liatris spicata"
-                }
-            };
-
-            return plants;
-        }
-
         public static IEnumerable<PlantInfo> PlantInfos()
         {
             var plantInfos = new List<PlantInfo>
