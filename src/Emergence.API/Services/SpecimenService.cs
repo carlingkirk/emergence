@@ -25,10 +25,10 @@ namespace Emergence.API.Services
                 specimen.InventoryItem = new Data.Shared.Models.InventoryItem();
             }
 
-            if (specimen.InventoryItem.InventoryId == 0)
+            if (specimen.InventoryItem.Inventory.InventoryId == 0)
             {
                 var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { UserId = userId }.AsModel());
-                specimen.InventoryItem.InventoryId = inventory.InventoryId;
+                specimen.InventoryItem.Inventory.InventoryId = inventory.InventoryId;
             }
 
             specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);

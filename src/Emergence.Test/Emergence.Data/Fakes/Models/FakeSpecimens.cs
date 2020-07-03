@@ -14,7 +14,7 @@ namespace Emergence.Test.Data.Fakes.Models
                 {
                     InventoryItem = new InventoryItem
                     {
-                        InventoryId = 0,
+                        Inventory = new Inventory { InventoryId = 0 },
                         InventoryItemId = 0,
                         DateAcquired = new DateTime(2020,06,26),
                         ItemType = ItemType.Specimen,
