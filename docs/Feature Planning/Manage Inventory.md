@@ -1,6 +1,6 @@
-#Manage Inventory
+# Manage Inventory
 
-##Stories
+## Stories
 - As a propogator, I want to know what seeds I have available so I can sow them.
   - As a propogator, I want to search my inventory by keyword so I can find a specific specimen.
   - As a propogator, I want to filter my inventory by keyword so I can limit the results to find what I'm looking for and I don't know the specifics.
@@ -11,7 +11,7 @@
 - As a propogator, I want to let other propogators know if I have any inventory available for trade.
 - As a propogator, I want to check my wishlist when I'm shopping so I can acquire items I want.
 
-##Data design
+## Data design
 - Item
   - Name
   - Type
