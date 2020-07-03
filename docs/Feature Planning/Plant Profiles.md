@@ -1,4 +1,4 @@
-# lant Profiles
+# Plant Profiles
 
 ## Stories
 
