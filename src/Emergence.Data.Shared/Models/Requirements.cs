@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -62,17 +63,23 @@ namespace Emergence.Data.Shared.Models
     public enum WaterType
     {
         Wet,
+        [Description("Medium Wet")]
         MediumWet,
         Medium,
+        [Description("Medium Dry")]
         MediumDry,
         Dry
     }
 
     public enum LightType
     {
+        [Description("Full Sun")]
         FullSun,
+        [Description("Part Sun")]
         PartSun,
+        [Description("Part Shade")]
         PartShade,
+        [Description("Full Sun")]
         FullShade
     }
 

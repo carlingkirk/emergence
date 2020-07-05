@@ -5,24 +5,9 @@
 
 <h1>Emergence</h1>
 
-<button class="btn btn-primary" @onclick="@(() => AddSpecimen(0))">Add New Specimen</button>
+
 
 @code
 {
-    async Task AddSpecimen(int Id)
-    {
-        var modalParams = new ModalParameters();
-        modalParams.Add("Id", Id);
-        var specimenModal = Modal.Show<EditSpecimen>("setgh", modalParams);
-        var result = await specimenModal.Result;
 
-        if (result.Cancelled)
-        {
-            Console.WriteLine("Modal was cancelled");
-        }
-        else
-        {
-            Console.WriteLine("Modal was closed");
-        }
-    }
 }

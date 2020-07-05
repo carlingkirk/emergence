@@ -44,7 +44,11 @@
         </div>
 
         <button @onclick="(async () => await SaveSpecimen())" class="btn btn-primary">Submit</button>
-        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+        @if (BlazoredModal != null)
+        {
+            <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+        }
+
     </div>
 </EditForm>
 @code {
