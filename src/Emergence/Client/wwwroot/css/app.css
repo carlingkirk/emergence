@@ -1,4 +1,4 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -180,4 +180,23 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+ul.checklist {
+  list-style-type: none;
+  padding: 0 0 0 .5em;
+}
+
+select.range {
+    display:inline-flex;
+}
+
+div.range-separator {
+  text-align: center;
+  padding: .45em .25em 0 .25em;
+}
+
+div.range-input {
+  text-align: center;
+  padding: 0 0 .75em 0;
 }
