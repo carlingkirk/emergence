@@ -24,7 +24,8 @@ namespace Emergence.Client.Components
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
         public IEnumerable<ScarificationType> ScarificationTypes => Enum.GetValues(typeof(ScarificationType)).Cast<ScarificationType>();
         public IEnumerable<Month> Months => Enum.GetValues(typeof(Month)).Cast<Month>();
-        public IEnumerable<Unit> Units => Enum.GetValues(typeof(Unit)).Cast<Unit>();
+        public IEnumerable<DistanceUnit> DistanceUnits => Enum.GetValues(typeof(DistanceUnit)).Cast<DistanceUnit>();
+        public IEnumerable<TemperatureUnit> TemperatureUnits => Enum.GetValues(typeof(TemperatureUnit)).Cast<TemperatureUnit>();
         public List<SoilType> ChosenSoilTypes;
         public List<ScarificationType> ChosenScarificationTypes = new List<ScarificationType>();
         public Dictionary<int, StratificationStage> ChosenStratificationStages = new Dictionary<int, StratificationStage>();

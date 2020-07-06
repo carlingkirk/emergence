@@ -63,13 +63,13 @@ namespace Emergence.Test.Data.Fakes.Models
                         {
                             MinimumHeight = 1,
                             MaximumHeight = 2,
-                            Unit = Unit.Feet
+                            Unit = DistanceUnit.Feet
                         },
                         Spread = new Spread
                         {
                             MinimumSpread = .75,
                             MaximumSpread = 1.5,
-                            Unit = Unit.Feet
+                            Unit = DistanceUnit.Feet
                         },
                         Requirements = new Requirements
                         {
@@ -94,7 +94,7 @@ namespace Emergence.Test.Data.Fakes.Models
                                 {
                                     {
                                         0,
-                                        new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43 }
+                                        new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43, TemperatureUnit = TemperatureUnit.Fahrenheit }
                                     }
                                 }
                             },

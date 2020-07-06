@@ -46,6 +46,7 @@ namespace Emergence.Data.Shared.Models
         public short DayLength { get; set; }
         public short MinimumTemperature { get; set; }
         public short MaximumTemperature { get; set; }
+        public TemperatureUnit TemperatureUnit { get; set; }
     }
 
     public class ZoneRequirements
@@ -62,6 +63,8 @@ namespace Emergence.Data.Shared.Models
 
     public enum WaterType
     {
+        [Description("")]
+        Unknown,
         Wet,
         [Description("Medium Wet")]
         MediumWet,
@@ -73,6 +76,8 @@ namespace Emergence.Data.Shared.Models
 
     public enum LightType
     {
+        [Description("")]
+        Unknown,
         [Description("Full Sun")]
         FullSun,
         [Description("Part Sun")]
@@ -98,5 +103,13 @@ namespace Emergence.Data.Shared.Models
     {
         Sand,
         Nick
+    }
+
+    public enum TemperatureUnit
+    {
+        [Description("F")]
+        Fahrenheit,
+        [Description("C")]
+        Celsius
     }
 }

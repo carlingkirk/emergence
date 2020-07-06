@@ -187,10 +187,6 @@ ul.checklist {
   padding: 0 0 0 .5em;
 }
 
-select.range {
-    display:inline-flex;
-}
-
 div.range-separator {
   text-align: center;
   padding: .45em .25em 0 .25em;
@@ -199,4 +195,8 @@ div.range-separator {
 div.range-input {
   text-align: center;
   padding: 0 0 .75em 0;
+}
+
+div.range-input-unit {
+  padding-left: .25em;
 }

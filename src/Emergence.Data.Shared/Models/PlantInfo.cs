@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Models
@@ -23,21 +24,23 @@ namespace Emergence.Data.Shared.Models
 
     public class Height
     {
-        public double MinimumHeight { get; set; }
-        public double MaximumHeight { get; set; }
-        public Unit Unit { get; set; }
+        public double? MinimumHeight { get; set; }
+        public double? MaximumHeight { get; set; }
+        public DistanceUnit Unit { get; set; }
     }
 
     public class Spread
     {
-        public double MinimumSpread { get; set; }
-        public double MaximumSpread { get; set; }
-        public Unit Unit { get; set; }
+        public double? MinimumSpread { get; set; }
+        public double? MaximumSpread { get; set; }
+        public DistanceUnit Unit { get; set; }
     }
 
     public enum Month
     {
-        Jan = 1,
+        [Description("")]
+        Unknown,
+        Jan,
         Feb,
         Mar,
         Apr,
@@ -51,11 +54,15 @@ namespace Emergence.Data.Shared.Models
         Dec
     }
 
-    public enum Unit
+    public enum DistanceUnit
     {
-        Inches,
+        [Description("ft")]
         Feet,
-        Centimeters,
-        Meters
+        [Description("in")]
+        Inches,
+        [Description("m")]
+        Meters,
+        [Description("cm")]
+        Centimeters
     }
 }
