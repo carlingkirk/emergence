@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -18,6 +19,8 @@ namespace Emergence.Data.Shared.Models
 
     public enum OriginType
     {
+        [Description("")]
+        Unknown,
         Nursery,
         Store,
         Location,
