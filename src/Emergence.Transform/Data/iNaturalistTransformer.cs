@@ -13,22 +13,26 @@ namespace Emergence.Transform.Data
             OriginId = 0,
             Name = "iNaturalist",
             Description = "iNaturalist is an online social network of people sharing biodiversity information to help each other learn about nature",
-            Uri = new Uri("https://www.inaturalist.org/")
+            Uri = new Uri("https://www.inaturalist.org/"),
+            Type = OriginType.Website
         };
 
         public Specimen Transform(Observation source)
         {
             var origin = new Origin
             {
+                Name = source.taxon?.preferred_common_name,
+                Type = OriginType.Webpage,
                 ParentOrigin = new Origin { OriginId = Origin.OriginId },
-                Uri = new Uri(source.uri)
+                Uri = new Uri(source.uri),
+                ExternalId = source.id.ToString(),
+
             };
             return new Specimen
             {
                 PlantInfo = new PlantInfo
                 {
                     CommonName = source.taxon?.preferred_common_name,
-
                     Origin = origin,
                     Taxon = GetFullTaxon(source)
                 },

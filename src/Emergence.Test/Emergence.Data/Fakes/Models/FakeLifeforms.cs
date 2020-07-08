@@ -13,19 +13,7 @@ namespace Emergence.Test.Emergence.Data.Fakes.Models
                 {
                     LifeformId = 1,
                     CommonName = "",
-                    Origin = new Origin
-                    {
-
-                    },
-                    PlantInfo = new PlantInfo
-                    {
-
-                    },
-                    ScientificName = "",
-                    Taxon = new Taxon
-                    {
-
-                    }
+                    ScientificName = ""
                 }
             };
             return lifeforms;

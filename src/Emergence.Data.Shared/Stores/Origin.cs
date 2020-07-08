@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Emergence.Data.Shared.Stores
 {
@@ -12,6 +12,7 @@ namespace Emergence.Data.Shared.Stores
         public Uri Uri { get; set; }
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
+        public string Authors { get; set; }
         public string ExternalId { get; set; }
         public string AltExternalId { get; set; }
     }

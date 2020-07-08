@@ -4,6 +4,7 @@ namespace Emergence.Data.Shared.Stores
     {
         public int Id { get; set; }
         public int InventoryItemId { get; set; }
+        public int LifeformId { get; set; }
         public string SpecimenStage { get; set; }
     }
 }
