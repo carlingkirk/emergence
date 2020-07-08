@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using Emergence.Data.Shared.Interfaces;
 
@@ -5,6 +6,7 @@ namespace Emergence.Data.Shared.Models
 {
     public class PlantInfo : ILifeform
     {
+        public int PlantInfoId { get; set; }
         public int LifeformId { get; set; }
         public Taxon Taxon { get; set; }
         public string ScientificName { get; set; }
@@ -14,6 +16,8 @@ namespace Emergence.Data.Shared.Models
         public Spread Spread { get; set; }
         public Requirements Requirements { get; set; }
         public Origin Origin { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
     }
 
     public class BloomTime

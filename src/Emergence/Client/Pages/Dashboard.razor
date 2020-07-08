@@ -1,5 +1,5 @@
 @page "/dashboard"
-@inject IModalService Modal
+@inject IModalService ModalService
 
 <AuthorizeView>
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
@@ -7,12 +7,12 @@
     <button class="btn btn-primary" @onclick="@(() => AddSpecimen(0))">Add New Specimen</button>
 
     @code
-{
+    {
         async Task AddSpecimen(int Id)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Id", Id);
-            var specimenModal = Modal.Show<EditSpecimen>("setgh", modalParams);
+            var specimenModal = ModalService.Show<EditSpecimen>("setgh", modalParams);
             var result = await specimenModal.Result;
 
             if (result.Cancelled)

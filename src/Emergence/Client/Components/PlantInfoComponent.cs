@@ -22,14 +22,12 @@ namespace Emergence.Client.Components
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
-        public IEnumerable<ScarificationType> ScarificationTypes => Enum.GetValues(typeof(ScarificationType)).Cast<ScarificationType>();
         public IEnumerable<Month> Months => Enum.GetValues(typeof(Month)).Cast<Month>();
         public IEnumerable<DistanceUnit> DistanceUnits => Enum.GetValues(typeof(DistanceUnit)).Cast<DistanceUnit>();
-        public IEnumerable<TemperatureUnit> TemperatureUnits => Enum.GetValues(typeof(TemperatureUnit)).Cast<TemperatureUnit>();
+        public IEnumerable<StratificationType> StratificationTypes => Enum.GetValues(typeof(StratificationType)).Cast<StratificationType>();
         public List<SoilType> ChosenSoilTypes;
-        public List<ScarificationType> ChosenScarificationTypes = new List<ScarificationType>();
-        public Dictionary<int, StratificationStage> ChosenStratificationStages = new Dictionary<int, StratificationStage>();
-        public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationRequirements.StratificationStages.Any() || ChosenStratificationStages.Any();
+        public LinkedList<StratificationStage> ChosenStratificationStages = new LinkedList<StratificationStage>();
+        public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any();
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,12 +48,10 @@ namespace Emergence.Client.Components
                         LightRequirements = new LightRequirements(),
                         SoilRequirements = new List<SoilType>(),
                         ZoneRequirements = new ZoneRequirements { MinimumZone = new Zone(), MaximumZone = new Zone() },
-                        ScarificationRequirements = new ScarificationRequirements(),
-                        StratificationRequirements = new StratificationRequirements
+                        StratificationStages = new List<StratificationStage>
                         {
-                            StratificationStages = new Dictionary<int, StratificationStage>()
-                        },
-                        SeedStorageRequirements = new SeedStorageRequirements()
+
+                        }
                     },
                     BloomTime = new BloomTime(),
                     Spread = new Spread(),
@@ -68,21 +64,54 @@ namespace Emergence.Client.Components
 
         protected void AddSoilType(SoilType soilType) => ChosenSoilTypes.Add(soilType);
 
-        protected bool IsScarificationTypeChosen(ScarificationType scarificationType) => ChosenScarificationTypes.Any(s => s == scarificationType);
-
-        protected void AddScarificationType(ScarificationType scarificationType) => ChosenScarificationTypes.Add(scarificationType);
-
         protected void AddStratificationStage(StratificationStage stratificationStage = null)
         {
             if (stratificationStage == null)
             {
-                stratificationStage = new StratificationStage();
+                stratificationStage = new StratificationStage
+                {
+                    Step = ChosenStratificationStages.Count + 1
+                };
             }
 
-            var position = ChosenStratificationStages.Count + 1;
-            ChosenStratificationStages.Add(position, stratificationStage);
+            ChosenStratificationStages.AddLast(stratificationStage);
         }
 
-        protected void RemoveStratificationStage(int key) => ChosenStratificationStages.Remove(key);
+        protected void RemoveStratificationStage(int step)
+        {
+            // if I remove step 2, I need step 3 to become step 2
+            var stage = ChosenStratificationStages.First(s => s.Step == step);
+            var afterStages = ChosenStratificationStages.Skip(step);
+
+            ChosenStratificationStages.Remove(stage);
+
+            foreach (var afterStage in afterStages)
+            {
+                ChosenStratificationStages.First(s => s.Step == afterStage.Step).Step--;
+            }
+        }
+
+        protected void MoveStratificationStage(int oldStep, int newStep)
+        {
+            // if I move step 2 to step 3
+            var oldStage = ChosenStratificationStages.First(s => s.Step == oldStep);
+            var newStage = ChosenStratificationStages.First(s => s.Step == newStep);
+
+            var oldNode = ChosenStratificationStages.Find(oldStage);
+            var newNode = ChosenStratificationStages.Find(oldStage);
+
+            if (oldStep < newStep)
+            {
+                oldStage.Step++;
+                newStage.Step--;
+                ChosenStratificationStages.AddAfter(oldNode, newNode);
+            }
+            else if (oldStep > newStep)
+            {
+                oldStage.Step--;
+                newStage.Step++;
+                ChosenStratificationStages.AddBefore(oldNode, newNode);
+            }
+        }
     }
 }

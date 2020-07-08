@@ -6,8 +6,8 @@ namespace Emergence.Data.Shared.Stores
     {
         public int Id { get; set; }
         public int LifeformId { get; set; }
-        public long OriginId { get; set; }
-        public long TaxonId { get; set; }
+        public int? OriginId { get; set; }
+        public int? TaxonId { get; set; }
         public string ScientificName { get; set; }
         public string CommonName { get; set; }
         public bool? Preferred { get; set; }
@@ -23,13 +23,7 @@ namespace Emergence.Data.Shared.Stores
         public string MaximumWater { get; set; }
         public string MinimumLight { get; set; }
         public string MaximumLight { get; set; }
-        public bool? SeedRefrigerate { get; set; }
-        public string StratificationStage1 { get; set; }
-        public string StratificationStage2 { get; set; }
-        public string StratificationStage3 { get; set; }
-        public string ScarificationType1 { get; set; }
-        public string ScarificationType2 { get; set; }
-        public string ScarificationType3 { get; set; }
+        public string StratificationStages { get; set; }
         public string MinimumZone { get; set; }
         public string MaximumZone { get; set; }
         public DateTime DateCreated { get; set; }

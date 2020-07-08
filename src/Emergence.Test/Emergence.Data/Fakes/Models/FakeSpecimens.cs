@@ -84,21 +84,21 @@ namespace Emergence.Test.Data.Fakes.Models
                                 MaximumWater = WaterType.Medium
                             },
                             SoilRequirements = null,
-                            ScarificationRequirements = new ScarificationRequirements
+                            StratificationStages = new List<StratificationStage>
                             {
-                                ScarificationTypes = new List<ScarificationType>() { ScarificationType.Nick }
-                            },
-                            StratificationRequirements = new StratificationRequirements
-                            {
-                                StratificationStages = new Dictionary<int, StratificationStage>()
+                                new StratificationStage
                                 {
-                                    {
-                                        0,
-                                        new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43, TemperatureUnit = TemperatureUnit.Fahrenheit }
-                                    }
+                                    Step = 1,
+                                    DayLength = 0,
+                                    StratificationType = StratificationType.NickScarify
+                                },
+                                new StratificationStage
+                                {
+                                    Step = 2,
+                                    DayLength = 30,
+                                    StratificationType = StratificationType.ColdMoist
                                 }
                             },
-                            SeedStorageRequirements = new SeedStorageRequirements { Refrigerate = false },
                             ZoneRequirements = new ZoneRequirements
                             {
                                 MinimumZone = new Zone { Number = 3 },

@@ -6,6 +6,7 @@ namespace Emergence.Data.Shared.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public ActivityType ActivityType { get; set; }
+        public Specimen Specimen { get; set; }
     }
 
     public enum ActivityType

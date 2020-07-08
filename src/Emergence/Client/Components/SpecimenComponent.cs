@@ -49,5 +49,22 @@ namespace Emergence.Client.Components
             }
             BlazoredModal.Close(ModalResult.Ok(Specimen));
         }
+
+        public async Task ShowModal(IModalService modalService, int id)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Id", id);
+            var specimenModal = modalService.Show<Pages.EditSpecimen>("setgh", modalParams);
+            var result = await specimenModal.Result;
+
+            if (result.Cancelled)
+            {
+                Console.WriteLine("Modal was cancelled");
+            }
+            else
+            {
+                Console.WriteLine("Modal was closed");
+            }
+        }
     }
 }

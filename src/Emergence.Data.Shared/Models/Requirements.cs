@@ -8,9 +8,7 @@ namespace Emergence.Data.Shared.Models
         public WaterRequirements WaterRequirements { get; set; }
         public LightRequirements LightRequirements { get; set; }
         public IEnumerable<SoilType> SoilRequirements { get; set; }
-        public StratificationRequirements StratificationRequirements { get; set; }
-        public ScarificationRequirements ScarificationRequirements { get; set; }
-        public SeedStorageRequirements SeedStorageRequirements { get; set; }
+        public List<StratificationStage> StratificationStages { get; set; }
         public ZoneRequirements ZoneRequirements { get; set; }
     }
 
@@ -26,27 +24,11 @@ namespace Emergence.Data.Shared.Models
         public LightType MaximumLight { get; set; }
     }
 
-    public class SeedStorageRequirements
-    {
-        public bool Refrigerate { get; set; }
-    }
-
-    public class StratificationRequirements
-    {
-        public IDictionary<int, StratificationStage> StratificationStages { get; set; }
-    }
-
-    public class ScarificationRequirements
-    {
-        public IEnumerable<ScarificationType> ScarificationTypes { get; set; }
-    }
-
     public class StratificationStage
     {
+        public int Step { get; set; }
         public short DayLength { get; set; }
-        public short MinimumTemperature { get; set; }
-        public short MaximumTemperature { get; set; }
-        public TemperatureUnit TemperatureUnit { get; set; }
+        public StratificationType StratificationType { get; set; }
     }
 
     public class ZoneRequirements
@@ -99,17 +81,31 @@ namespace Emergence.Data.Shared.Models
         Water
     }
 
-    public enum ScarificationType
+    public enum StratificationType
     {
-        Sand,
-        Nick
-    }
-
-    public enum TemperatureUnit
-    {
-        [Description("F")]
-        Fahrenheit,
-        [Description("C")]
-        Celsius
+        [Description("Refrigerate seed for storage")]
+        Refrigeration,
+        [Description("Sand scarification")]
+        AbrasionScarify,
+        [Description("Nick scarification")]
+        NickScarify,
+        [Description("Hot water treatment")]
+        HotWater,
+        [Description("Cold moist stratification")]
+        ColdMoist,
+        [Description("Warm moist stratification")]
+        WarmMoist,
+        [Description("Needs light to germinate")]
+        LightGermination,
+        [Description("Sow in late fall")]
+        CoolSoil,
+        [Description("Sow outdoors in fall")]
+        FallOutdoors,
+        [Description("Requires inoculum")]
+        Rhizobia,
+        [Description("Requires host plant")]
+        HostPlant,
+        [Description("Fern spores")]
+        FernSpores
     }
 }

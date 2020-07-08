@@ -43,22 +43,25 @@ namespace Emergence.Test.Data.Fakes.Models
                             MinimumWater = WaterType.Medium,
                             MaximumWater = WaterType.Medium
                         },
-                        SoilRequirements = null,
-                        ScarificationRequirements = new ScarificationRequirements
+                        SoilRequirements = new List<SoilType>
                         {
-                            ScarificationTypes = new List<ScarificationType>() { ScarificationType.Nick }
+                            SoilType.Fertile
                         },
-                        StratificationRequirements = new StratificationRequirements
+                        StratificationStages = new List<StratificationStage>
                         {
-                            StratificationStages = new Dictionary<int, StratificationStage>()
+                            new StratificationStage
                             {
-                                {
-                                    0,
-                                    new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43, TemperatureUnit = TemperatureUnit.Fahrenheit }
-                                }
+                                Step = 1,
+                                DayLength = 0,
+                                StratificationType = StratificationType.NickScarify
+                            },
+                            new StratificationStage
+                            {
+                                Step = 2,
+                                DayLength = 30,
+                                StratificationType = StratificationType.ColdMoist
                             }
                         },
-                        SeedStorageRequirements = new SeedStorageRequirements { Refrigerate = false },
                         ZoneRequirements = new ZoneRequirements
                         {
                             MinimumZone = new Zone { Number = 3 },

@@ -31,13 +31,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumLight = "FullSun",
                     MinimumZone = "3",
                     MaximumZone = "8",
-                    SeedRefrigerate = false,
-                    StratificationStage1 = "",
-                    StratificationStage2 = null,
-                    StratificationStage3 = null,
-                    ScarificationType1 = "Nick",
-                    ScarificationType2 = "Soak",
-                    ScarificationType3 = null
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]"
                 }
             };
             return plantInfos;

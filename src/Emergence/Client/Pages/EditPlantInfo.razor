@@ -171,6 +171,57 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="req-scarification">Stratification Stages</label>
+                            <div class="@(AnyStratificationStages() ? "d-none" : "")">
+                                <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                            </div>
+
+                            @foreach (var chosenStratificationStage in ChosenStratificationStages)
+                            {
+                                var key = chosenStratificationStage.Step.ToString();
+                                var firstRow = chosenStratificationStage.Step == 1;
+                                var lastRow = ChosenStratificationStages.Count == chosenStratificationStage.Step;
+                                <div class="row">
+                                    <div class="col-1">
+                                        <div>
+                                            <div class="@(firstRow ? "" : "d-none")"><label>+ / -</label></div>
+                                            <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(chosenStratificationStage.Step))"><span class="oi oi-minus"></span></button>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="@(firstRow ? "" : "d-none")"><label>Step</label></div>
+                                        <span id="@GetElementId("req-scarification", key)">@chosenStratificationStage.Step</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-days", key)">Days</label>
+                                        <input @bind="@chosenStratificationStage.DayLength" type="text" class="form-control" id="@GetElementId("req-scarification-days", key)" />
+                                    </div>
+                                    <div class="col-7">
+                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-temp-min", key)">Temperature Range</label>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <select @bind="@chosenStratificationStage.StratificationType" class="form-control" id="@GetElementId("req-scarification-temp-min", key)">
+                                                        @foreach (var stratificationType in StratificationTypes)
+                                                        {
+                                                            <option value="@stratificationType">@stratificationType.ToFriendlyName()</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="@(lastRow ? "row" : "d-none")">
+                                    <div class="col-1">
+                                        <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col">
@@ -184,85 +235,6 @@
                         </li>
                     }
                 </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="col">
-                    <label for="req-scarification">Scarification Types</label>
-                    <ul class="checklist">
-                        @foreach (var scarificationType in ScarificationTypes)
-                        {
-                            <li>
-                                <input type="checkbox" checked="@IsScarificationTypeChosen(scarificationType)" @onclick="(() => AddScarificationType(scarificationType))" />
-                                <label for="@GetElementId("req-soil", scarificationType.ToString())">@scarificationType</label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <div class="col">
-                    <label for="req-seedstorage">Refrigerate seed?</label>
-                    <input type="checkbox" @bind="@PlantInfo.Requirements.SeedStorageRequirements.Refrigerate" />
-                </div>
-            </div>
-            <div class="col-10">
-                <label for="req-scarification">Stratification Stages</label>
-                <div class="@(AnyStratificationStages() ? "d-none" : "")">
-                    <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
-                </div>
-
-                @foreach (var chosenStratificationStage in ChosenStratificationStages)
-                {
-                    StratificationStage stage = chosenStratificationStage.Value;
-                    var key = chosenStratificationStage.Key.ToString();
-                    var firstRow = chosenStratificationStage.Key == 1;
-                    var lastRow = ChosenStratificationStages.Count == chosenStratificationStage.Key;
-                    <div class="row">
-                        <div class="col-1">
-                            <div>
-                                <div class="@(firstRow ? "" : "d-none")"><label>+ / -</label></div>
-                                <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(chosenStratificationStage.Key))"><span class="oi oi-minus"></span></button>
-                            </div>
-                        </div>
-                        <div class="col-1">
-                            <div class="@(firstRow ? "" : "d-none")"><label>Stage</label></div>
-                            <span id="@GetElementId("req-scarification", key.ToString())">@key</span>
-                        </div>
-                        <div class="col-1">
-                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-days", key)">Days</label>
-                            <input @bind="@stage.DayLength" type="text" class="form-control" id="@GetElementId("req-scarification-days", key)" />
-                        </div>
-                        <div class="col-7">
-                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-temp-min", key)">Temperature Range</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-2 range-input">
-                                        <input @bind="@stage.MinimumTemperature" type="text" class="form-control" id="@GetElementId("req-scarification-temp-min", key)" />
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-2 range-input">
-                                        <input @bind="@stage.MaximumTemperature" type="text" class="form-control" id="@GetElementId("req-scarification-temp-max", key)" />
-                                    </div>
-                                    <div class="col-3 range-input range-input-unit">
-                                        <select @bind="@stage.TemperatureUnit" type="text" class="form-control" id="spread-unit">
-                                            @foreach (var unit in TemperatureUnits)
-                                            {
-                                                <option value="@unit">@unit.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="@(lastRow ? "row" : "d-none")">
-                        <div class="col-1">
-                            <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
-                        </div>
-                    </div>
-                }
             </div>
         </div>
     </div>
