@@ -39,7 +39,7 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task SaveSpecimen()
+        protected async Task SaveOrigin()
         {
             var result = await Client.PutAsJsonAsync("/api/origin", Origin);
             if (result.IsSuccessStatusCode)

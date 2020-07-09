@@ -238,6 +238,12 @@
             </div>
         </div>
     </div>
+
+    <button @onclick="(async () => await SavePlantInfo())" class="btn btn-primary">Submit</button>
+    @if (BlazoredModal != null)
+    {
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+    }
 </div>
 @code {
     protected string GetElementId(string element, string id)

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Blazored.Modal;
+using Blazored.Modal.Services;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -58,6 +59,16 @@ namespace Emergence.Client.Components
                     Height = new Height()
                 };
             }
+        }
+
+        protected async Task SavePlantInfo()
+        {
+            var result = await Client.PutAsJsonAsync("/api/plantinfo", PlantInfo);
+            if (result.IsSuccessStatusCode)
+            {
+                PlantInfo = await result.Content.ReadFromJsonAsync<PlantInfo>();
+            }
+            BlazoredModal.Close(ModalResult.Ok(PlantInfo));
         }
 
         protected bool IsSoilTypeChosen(SoilType soilType) => ChosenSoilTypes.Any(s => s == soilType);

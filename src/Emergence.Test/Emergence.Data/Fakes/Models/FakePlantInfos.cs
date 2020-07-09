@@ -3,9 +3,9 @@ using Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Data.Fakes.Models
 {
-    public static class FakePlants
+    public static class FakePlantInfos
     {
-        public static IEnumerable<PlantInfo> Plants()
+        public static IEnumerable<PlantInfo> Get()
         {
             var plantInfos = new List<PlantInfo>
             {

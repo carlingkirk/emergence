@@ -5,18 +5,18 @@ namespace Emergence.Test.Data.Fakes.Stores
 {
     public static class FakePlantInfos
     {
-        public static IEnumerable<PlantInfo> PlantInfos()
+        public static IEnumerable<PlantInfo> Get()
         {
             var plantInfos = new List<PlantInfo>
             {
                 new PlantInfo
                 {
-                    LifeformId = 0,
-                    Id = 0,
-                    OriginId = 0,
-                    TaxonId = 0,
-                    CommonName = "",
-                    ScientificName = "",
+                    LifeformId = 1,
+                    Id = 1,
+                    OriginId = 1,
+                    TaxonId = 1,
+                    CommonName = "Dense Blazing Star",
+                    ScientificName = "Liatris Spicata",
                     MinimumBloomTime = 7,
                     MaximumBloomTime = 8,
                     MinimumHeight = 1,
@@ -32,6 +32,30 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MinimumZone = "3",
                     MaximumZone = "8",
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]"
+                },
+                new PlantInfo
+                {
+                    LifeformId = 2,
+                    Id = 2,
+                    OriginId = 2,
+                    TaxonId = 0,
+                    CommonName = "White wild indigo",
+                    ScientificName = "Baptisia alba",
+                    MinimumBloomTime = 4,
+                    MaximumBloomTime = 5,
+                    MinimumHeight = 2,
+                    MaximumHeight = 4,
+                    HeightUnit = "Feet",
+                    MinimumSpread = 2,
+                    MaximumSpread = 2.5,
+                    SpreadUnit = "Feet",
+                    MinimumWater = "Dry",
+                    MaximumWater = "Medium",
+                    MinimumLight = "PartShade",
+                    MaximumLight = "FullSun",
+                    MinimumZone = "5",
+                    MaximumZone = "8",
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"1\",\"StratificationType\":\"AbrasionScarify\"},{\"Step\":\"2\",\"DayLength\":\"10\",\"StratificationType\":\"ColdMoist\"}]"
                 }
             };
             return plantInfos;
