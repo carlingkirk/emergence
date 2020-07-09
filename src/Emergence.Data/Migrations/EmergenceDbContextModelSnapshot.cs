@@ -18,7 +18,7 @@ namespace Emergence.Data.Migrations
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.Activity", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -31,7 +31,7 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("SpecimenId")
+                    b.Property<int?>("SpecimenId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -45,8 +45,8 @@ namespace Emergence.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -55,7 +55,7 @@ namespace Emergence.Data.Migrations
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.InventoryItem", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -77,7 +77,7 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("OriginId")
+                    b.Property<int?>("OriginId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -89,6 +89,23 @@ namespace Emergence.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("InventoryItems");
+                });
+
+            modelBuilder.Entity("Emergence.Data.Shared.Stores.Lifeform", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CommonName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ScientificName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Lifeforms");
                 });
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.Location", b =>
@@ -135,6 +152,9 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("AltExternalId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Authors")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -150,7 +170,7 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Type")
@@ -162,23 +182,6 @@ namespace Emergence.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Origins");
-                });
-
-            modelBuilder.Entity("Emergence.Data.Shared.Stores.Plant", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CommonName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ScientificName")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Plants");
                 });
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.PlantInfo", b =>
@@ -199,7 +202,10 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("HeightUnit")
                         .HasColumnType("TEXT");
 
-                    b.Property<short>("MaximumBloomTime")
+                    b.Property<int>("LifeformId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<short?>("MaximumBloomTime")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("MaximumHeight")
@@ -217,7 +223,7 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("MaximumZone")
                         .HasColumnType("TEXT");
 
-                    b.Property<short>("MinimumBloomTime")
+                    b.Property<short?>("MinimumBloomTime")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("MinimumHeight")
@@ -235,43 +241,22 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("MinimumZone")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("OriginId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PlantId")
+                    b.Property<int?>("OriginId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool?>("Preferred")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ScarificationType1")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ScarificationType2")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ScarificationType3")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ScientificName")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool?>("SeedRefrigerate")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SpreadUnit")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StratificationStage1")
+                    b.Property<string>("StratificationStages")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StratificationStage2")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("StratificationStage3")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("TaxonId")
+                    b.Property<int?>("TaxonId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -281,11 +266,14 @@ namespace Emergence.Data.Migrations
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.Specimen", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("InventoryItemId")
+                    b.Property<int>("InventoryItemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("LifeformId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SpecimenStage")
@@ -298,7 +286,7 @@ namespace Emergence.Data.Migrations
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.Taxon", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 

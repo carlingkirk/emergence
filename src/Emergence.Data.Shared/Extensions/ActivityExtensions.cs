@@ -11,7 +11,7 @@ namespace Emergence.Data.Shared.Extensions
             ActivityType = Enum.Parse<Models.ActivityType>(source.ActivityType),
             Name = source.Name,
             Description = source.Description,
-            Specimen = new Models.Specimen { SpecimenId = source.SpecimenId }
+            Specimen = source.SpecimenId.HasValue ? new Models.Specimen { SpecimenId = source.SpecimenId.Value } : null
         };
 
         public static Activity AsStore(this Models.Activity source) => new Activity

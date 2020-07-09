@@ -11,8 +11,8 @@ namespace Emergence.Data.Shared.Stores
         public string ScientificName { get; set; }
         public string CommonName { get; set; }
         public bool? Preferred { get; set; }
-        public short MinimumBloomTime { get; set; }
-        public short MaximumBloomTime { get; set; }
+        public short? MinimumBloomTime { get; set; }
+        public short? MaximumBloomTime { get; set; }
         public double? MinimumHeight { get; set; }
         public double? MaximumHeight { get; set; }
         public string HeightUnit { get; set; }

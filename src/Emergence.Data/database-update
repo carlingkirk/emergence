@@ -1,1 +1,2 @@
+dotnet ef migrations add Incremental --context EmergenceDbContext
 dotnet ef database update --context EmergenceDbContext --startup-project "../Emergence/Server/"
