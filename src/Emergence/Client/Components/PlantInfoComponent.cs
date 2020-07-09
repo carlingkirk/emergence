@@ -80,14 +80,17 @@ namespace Emergence.Client.Components
         protected void RemoveStratificationStage(int step)
         {
             // if I remove step 2, I need step 3 to become step 2
-            var stage = ChosenStratificationStages.First(s => s.Step == step);
-            var afterStages = ChosenStratificationStages.Skip(step);
+            var removeStage = ChosenStratificationStages.First(s => s.Step == step);
+            var afterStages = ChosenStratificationStages.OrderBy(s => s.Step).Skip(step).ToList();
 
-            ChosenStratificationStages.Remove(stage);
+            ChosenStratificationStages.Remove(removeStage);
 
             foreach (var afterStage in afterStages)
             {
-                ChosenStratificationStages.First(s => s.Step == afterStage.Step).Step--;
+                var stage = ChosenStratificationStages.First(s => s.Step == afterStage.Step);
+                Console.WriteLine(stage.Step);
+                stage.Step--;
+                Console.WriteLine(stage.Step);
             }
         }
 
