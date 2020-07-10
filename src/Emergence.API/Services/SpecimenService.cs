@@ -68,7 +68,7 @@ namespace Emergence.API.Services
 
         public async Task<IEnumerable<Data.Shared.Models.Specimen>> FindSpecimens(string search, int skip, int take, string userId)
         {
-            var specimenResult = _specimenRepository.GetSomeAsync(s => s.);
+            var specimenResult = _specimenRepository.GetSomeAsync(s => s.Id > 0);
             var specimens = new List<Data.Shared.Models.Specimen>();
             await foreach (var specimen in specimenResult)
             {

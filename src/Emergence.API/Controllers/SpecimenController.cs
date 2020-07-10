@@ -24,9 +24,10 @@ namespace Emergence.API.Controllers
         public async Task<Specimen> Put(Specimen specimen) => await _specimenService.AddOrUpdateAsync(specimen, UserId);
 
         [HttpGet]
-        public async Task<IEnumerable<Specimen>> FindSpecimens(string search)
+        [Route("Find")]
+        public async Task<IEnumerable<Specimen>> FindSpecimens(string search, int skip = 0, int take = 10)
         {
-            var results = await _specimenService.FindSpecimens(search, UserId);
+            var results = await _specimenService.FindSpecimens(search, skip, take, UserId);
             return results;
         }
     }
