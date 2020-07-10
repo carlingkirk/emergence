@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data.Shared.Models;
@@ -21,5 +22,12 @@ namespace Emergence.API.Controllers
         [HttpPut]
 
         public async Task<Specimen> Put(Specimen specimen) => await _specimenService.AddOrUpdateAsync(specimen, UserId);
+
+        [HttpGet]
+        public async Task<IEnumerable<Specimen>> FindSpecimens(string search)
+        {
+            var results = await _specimenService.FindSpecimens(search, UserId);
+            return results;
+        }
     }
 }

@@ -65,5 +65,16 @@ namespace Emergence.API.Services
             }
             return specimens;
         }
+
+        public async Task<IEnumerable<Data.Shared.Models.Specimen>> FindSpecimens(string search, int skip, int take, string userId)
+        {
+            var specimenResult = _specimenRepository.GetSomeAsync(s => s.);
+            var specimens = new List<Data.Shared.Models.Specimen>();
+            await foreach (var specimen in specimenResult)
+            {
+                specimens.Add(specimen.AsModel());
+            }
+            return specimens;
+        }
     }
 }

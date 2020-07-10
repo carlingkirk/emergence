@@ -1,5 +1,68 @@
-﻿<h3>EditActivity</h3>
+@page "/activity/edit/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Emergence.Data.Shared.Models
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions
+@using Blazored.Typeahead
+@attribute [Authorize]
+@inherits ActivityComponent
+    
+    <h3>Edit Activity</h3>
+    <div class="form">
+        <div class="form-group container">
+            <div class="row">
+                <div class="col">
+                    <label for="name">Name</label>
+                    <input @bind="@Activity.Name" type="text" class="form-control" id="name" />
+                </div>
+                <div class="col">
+                    <label for="type">Type</label>
+                    <select @bind="@Activity.ActivityType" type="text" class="form-control" id="type">
+                        @foreach (var type in ActivityTypes)
+                        {
+                            <option value="@type">@type.ToFriendlyName()</option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <BlazoredTypeahead SearchMethod="SearchSpecimens" 
+                                       @bind-Value="SelectedSpecimen"
+                                       MinimumLength="3"
+                                       Debounce="500">
+                        <SelectedTemplate>
+                            @context.PlantInfo.ScientificName
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @context.PlantInfo.ScientificName
+                        </ResultTemplate>
+                        <NotFoundTemplate>
+                            No results found
+                        </NotFoundTemplate>
+                    </BlazoredTypeahead>
+                </div>
+                <div class="col">
+                    <label for="description">Description</label>
+                    <textarea @bind="@Activity.Description" type="text" class="form-control" id="description" />
+                </div>
+                <div class="col">
+                    <label for="date-occured">Date Occured</label>
+                    <input @bind="@Activity.DateOccured" type="date" class="form-control" id="date-occured" />
+                </div>
+                <div class="col">
+                    <label for="date-scheduled">Date Scheduled</label>
+                    <input @bind="@Activity.DateScheduled" type="date" class="form-control" id="date-scheduled" />
+                </div>
+            </div>
+        </div>
 
-@code {
+        <button @onclick="(async () => await SaveActivity())" class="btn btn-primary">Submit</button>
+        @if (BlazoredModal != null)
+        {
+            <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+        }
+    </div>
 
-}
+    @code {
+        
+    }
