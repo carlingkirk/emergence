@@ -113,7 +113,7 @@ namespace Emergence.Data.Shared.Extensions
             MaximumWater = source.Requirements.WaterRequirements.MaximumWater.ToString(),
             MinimumZone = source.Requirements.ZoneRequirements.MinimumZone.Letter + source.Requirements.ZoneRequirements.MinimumZone.Number,
             MaximumZone = source.Requirements.ZoneRequirements.MaximumZone.Letter + source.Requirements.ZoneRequirements.MaximumZone.Number,
-            DateCreated = source.DateCreated,
+            DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
     }

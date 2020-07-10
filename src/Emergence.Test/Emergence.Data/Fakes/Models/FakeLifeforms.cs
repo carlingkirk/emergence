@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Emergence.Data.Shared.Models;
 
-namespace Emergence.Test.Emergence.Data.Fakes.Models
+namespace Emergence.Test.Data.Fakes.Models
 {
     public static class FakeLifeforms
     {

@@ -44,7 +44,7 @@ namespace Emergence.Data.Shared.Extensions
             Status = source.Status.ToString(),
             Quantity = source.Quantity,
             DateAcquired = source.DateAcquired,
-            DateCreated = source.DateCreated,
+            DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
     }

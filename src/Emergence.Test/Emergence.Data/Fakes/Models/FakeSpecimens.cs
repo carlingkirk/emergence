@@ -6,19 +6,26 @@ namespace Emergence.Test.Data.Fakes.Models
 {
     public static class FakeSpecimens
     {
-        public static IEnumerable<Specimen> Specimens()
+        public static IEnumerable<Specimen> Get()
         {
             var specimens = new List<Specimen>
             {
                 new Specimen
                 {
+                    SpecimenId = 1,
+                    Lifeform = new Lifeform
+                    {
+                        LifeformId = 1,
+                        CommonName = "Dense Blazing Star",
+                        ScientificName = "Liatris spicata",
+                    },
                     InventoryItem = new InventoryItem
                     {
-                        Inventory = new Inventory { InventoryId = 0 },
-                        InventoryItemId = 0,
+                        Inventory = new Inventory { InventoryId = 1 },
+                        InventoryItemId = 1,
                         DateAcquired = new DateTime(2020,06,26),
                         ItemType = ItemType.Specimen,
-                        Name = "Liatris Spicata Seeds",
+                        Name = "Liatris spicata Seeds",
                         Quantity = 50,
                         Status = Status.Available,
                         Origin = new Origin
@@ -51,7 +58,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     },
                     PlantInfo = new PlantInfo
                     {
-                        LifeformId = 0,
+                        PlantInfoId = 1,
+                        LifeformId = 1,
                         CommonName = "Dense Blazing Star",
                         ScientificName = "Liatris spicata",
                         BloomTime = new BloomTime
@@ -104,7 +112,17 @@ namespace Emergence.Test.Data.Fakes.Models
                                 MinimumZone = new Zone { Number = 3 },
                                 MaximumZone = new Zone { Number = 8 }
                             }
-                        }
+                        },
+                        Origin = new Origin
+                        {
+                            OriginId = 1,
+                        },
+                        Taxon = new Taxon
+                        {
+                            TaxonId = 1
+                        },
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = null
                     },
                     SpecimenStage = SpecimenStage.Seed
                 }

@@ -1,18 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Stores;
 
 namespace Emergence.API.Services
 {
     public class InventoryService : IInventoryService
     {
-        private readonly IRepository<Inventory> _inventoryRepository;
-        private readonly IRepository<InventoryItem> _inventoryItemRepository;
+        private readonly IRepository<Data.Shared.Stores.Inventory> _inventoryRepository;
+        private readonly IRepository<Data.Shared.Stores.InventoryItem> _inventoryItemRepository;
 
-        public InventoryService(IRepository<Inventory> inventoryRepository, IRepository<InventoryItem> inventoryItemRepository)
+        public InventoryService(IRepository<Data.Shared.Stores.Inventory> inventoryRepository, IRepository<Data.Shared.Stores.InventoryItem> inventoryItemRepository)
         {
             _inventoryRepository = inventoryRepository;
             _inventoryItemRepository = inventoryItemRepository;
@@ -29,6 +29,17 @@ namespace Emergence.API.Services
         public async Task<IEnumerable<Data.Shared.Models.InventoryItem>> GetInventoryItemsAsync(int inventoryId)
         {
             var itemResult = _inventoryItemRepository.GetSomeAsync(i => i.InventoryId == inventoryId);
+            var items = new List<Data.Shared.Models.InventoryItem>();
+            await foreach (var item in itemResult)
+            {
+                items.Add(item.AsModel());
+            }
+            return items;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.InventoryItem>> GetInventoryItemsByIdsAsync(IEnumerable<int> inventoryIds)
+        {
+            var itemResult = _inventoryItemRepository.GetSomeAsync(i => inventoryIds.Any(id => id == i.Id));
             var items = new List<Data.Shared.Models.InventoryItem>();
             await foreach (var item in itemResult)
             {

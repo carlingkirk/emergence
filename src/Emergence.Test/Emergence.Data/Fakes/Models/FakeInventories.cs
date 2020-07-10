@@ -6,7 +6,7 @@ namespace Emergence.Test.Data.Fakes.Models
 {
     public static class FakeInventories
     {
-        public static IEnumerable<Inventory> Inventories()
+        public static IEnumerable<Inventory> Get()
         {
             var inventories = new List<Inventory>
             {
@@ -16,11 +16,11 @@ namespace Emergence.Test.Data.Fakes.Models
                     {
                         new InventoryItem
                         {
-                            Inventory = new Inventory { InventoryId = 0 },
-                            InventoryItemId = 0,
+                            Inventory = new Inventory { InventoryId = 1 },
+                            InventoryItemId = 1,
                             DateAcquired = new DateTime(2020,06,26),
                             ItemType = ItemType.Specimen,
-                            Name = "Liatris Spicata Seeds",
+                            Name = "Liatris spicata Seeds",
                             Quantity = 50,
                             Status = Status.Available,
                             Origin = new Origin

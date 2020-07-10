@@ -18,7 +18,7 @@ namespace Emergence.Data.Shared.Stores
         public int Quantity { get; set; }
         public string Status { get; set; }
         public DateTime? DateAcquired { get; set; }
-        public DateTime? DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }
 }

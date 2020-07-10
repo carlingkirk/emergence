@@ -11,7 +11,10 @@ namespace Emergence.Data.Shared.Extensions
             ActivityType = Enum.Parse<Models.ActivityType>(source.ActivityType),
             Name = source.Name,
             Description = source.Description,
-            Specimen = source.SpecimenId.HasValue ? new Models.Specimen { SpecimenId = source.SpecimenId.Value } : null
+            Specimen = source.SpecimenId.HasValue ? new Models.Specimen { SpecimenId = source.SpecimenId.Value } : null,
+            DateOccured = source.DateOccured,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
         };
 
         public static Activity AsStore(this Models.Activity source) => new Activity
@@ -20,7 +23,10 @@ namespace Emergence.Data.Shared.Extensions
             Name = source.Name,
             Description = source.Description,
             ActivityType = source.ActivityType.ToString(),
-            SpecimenId = source.Specimen.SpecimenId
+            SpecimenId = source.Specimen.SpecimenId,
+            DateOccured = source.DateOccured,
+            DateCreated = source.DateCreated ?? DateTime.UtcNow,
+            DateModified = source.DateModified
         };
     }
 }

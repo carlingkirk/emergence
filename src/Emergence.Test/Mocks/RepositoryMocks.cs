@@ -70,5 +70,18 @@ namespace Emergence.Test.Mocks
 
             return mockPlantInfoRepo;
         }
+
+        public static Mock<IRepository<Activity>> GetStandardMockActivityRepository()
+        {
+            var mockActivityRepo = new Mock<IRepository<Activity>>();
+
+            mockActivityRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(Data.Fakes.Stores.FakeActivities.Get().First());
+
+            mockActivityRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<bool>()))
+                .Returns(Data.Fakes.Stores.FakeActivities.Get().ToAsyncEnumerable());
+
+            return mockActivityRepo;
+        }
     }
 }

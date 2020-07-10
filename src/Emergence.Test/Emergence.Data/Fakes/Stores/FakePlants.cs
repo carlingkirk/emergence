@@ -16,7 +16,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     OriginId = 1,
                     TaxonId = 1,
                     CommonName = "Dense Blazing Star",
-                    ScientificName = "Liatris Spicata",
+                    ScientificName = "Liatris spicata",
                     MinimumBloomTime = 7,
                     MaximumBloomTime = 8,
                     MinimumHeight = 1,

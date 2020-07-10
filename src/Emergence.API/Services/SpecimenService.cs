@@ -1,18 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Stores;
 
 namespace Emergence.API.Services
 {
     public class SpecimenService : ISpecimenService
     {
-        private readonly IRepository<Specimen> _specimenRepository;
+        private readonly IRepository<Data.Shared.Stores.Specimen> _specimenRepository;
         private readonly IInventoryService _inventoryService;
 
-        public SpecimenService(IRepository<Specimen> specimenRepository, IInventoryService inventoryService)
+        public SpecimenService(IRepository<Data.Shared.Stores.Specimen> specimenRepository, IInventoryService inventoryService)
         {
             _specimenRepository = specimenRepository;
             _inventoryService = inventoryService;
@@ -27,7 +27,7 @@ namespace Emergence.API.Services
 
             if (specimen.InventoryItem.Inventory.InventoryId == 0)
             {
-                var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { UserId = userId }.AsModel());
+                var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Data.Shared.Stores.Inventory { UserId = userId }.AsModel());
                 specimen.InventoryItem.Inventory.InventoryId = inventory.InventoryId;
             }
 
@@ -44,9 +44,20 @@ namespace Emergence.API.Services
             return result.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensAsync(int inventoryId)
+        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensForInventoryAsync(int inventoryId)
         {
             var specimenResult = _specimenRepository.GetSomeAsync(s => s.InventoryItemId == inventoryId);
+            var specimens = new List<Data.Shared.Models.Specimen>();
+            await foreach (var specimen in specimenResult)
+            {
+                specimens.Add(specimen.AsModel());
+            }
+            return specimens;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensByIdsAsync(IEnumerable<int> specimenIds)
+        {
+            var specimenResult = _specimenRepository.GetSomeAsync(s => specimenIds.Any(i => i == s.Id));
             var specimens = new List<Data.Shared.Models.Specimen>();
             await foreach (var specimen in specimenResult)
             {

@@ -35,7 +35,7 @@ namespace Emergence.Test.API.Services
         public async Task TestGetSpecimensAsync()
         {
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
-            var specimens = await specimenService.GetSpecimensAsync(0);
+            var specimens = await specimenService.GetSpecimensForInventoryAsync(0);
 
             specimens.Should().NotBeNull("it exists");
             specimens.Should().HaveCount(3);

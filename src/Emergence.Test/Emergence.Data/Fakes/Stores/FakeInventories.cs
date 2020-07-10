@@ -21,7 +21,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 {
                     Id = 0,
                     InventoryId = 0,
-                    Name = "Liatris Spicata seeds",
+                    Name = "Liatris spicata seeds",
                     OriginId = 0,
                     ItemType = "Specimen",
                     Quantity = 25,
