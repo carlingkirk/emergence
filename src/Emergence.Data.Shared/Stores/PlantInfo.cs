@@ -6,8 +6,11 @@ namespace Emergence.Data.Shared.Stores
     {
         public int Id { get; set; }
         public int LifeformId { get; set; }
+        public Lifeform Lifeform { get; set; }
         public int? OriginId { get; set; }
+        public Origin Origin { get; set; }
         public int? TaxonId { get; set; }
+        public Taxon Taxon { get; set; }
         public string ScientificName { get; set; }
         public string CommonName { get; set; }
         public bool? Preferred { get; set; }
