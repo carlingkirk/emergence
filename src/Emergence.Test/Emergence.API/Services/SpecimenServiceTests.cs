@@ -43,5 +43,16 @@ namespace Emergence.Test.API.Services
             specimens.Where(s => s.SpecimenStage == Models.SpecimenStage.Stratification).Should().HaveCount(1);
             specimens.Where(s => s.SpecimenStage == Models.SpecimenStage.Growing).Should().HaveCount(1);
         }
+
+        [Fact]
+        public async Task TestFindSpecimens()
+        {
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
+            var specimens = await specimenService.FindSpecimens("Liatris spicata", "me");
+
+            specimens.Should().NotBeNull("it exists");
+            specimens.Should().HaveCount(1);
+            specimens.Where(s => s.SpecimenStage == Models.SpecimenStage.Seed).Should().HaveCount(1);
+        }
     }
 }

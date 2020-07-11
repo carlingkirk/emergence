@@ -13,10 +13,10 @@ namespace Emergence.Test.Mocks
         {
             var mockSpecimenRepo = new Mock<IRepository<Specimen>>();
 
-            mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>()))
+            mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>(), It.IsAny<string[]>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakeSpecimens.Get().First());
 
-            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>()))
+            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
 
             return mockSpecimenRepo;
@@ -26,7 +26,7 @@ namespace Emergence.Test.Mocks
         {
             var mockLifeformItemRepo = new Mock<IRepository<Lifeform>>();
 
-            mockLifeformItemRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
+            mockLifeformItemRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeLifeforms.Lifeforms().ToAsyncEnumerable());
 
             mockLifeformItemRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
@@ -39,7 +39,7 @@ namespace Emergence.Test.Mocks
         {
             var mockInventoryItemRepo = new Mock<IRepository<InventoryItem>>();
 
-            mockInventoryItemRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<InventoryItem, bool>>>(), It.IsAny<bool>()))
+            mockInventoryItemRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<InventoryItem, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeInventories.GetItems().ToAsyncEnumerable());
 
             return mockInventoryItemRepo;
@@ -62,7 +62,7 @@ namespace Emergence.Test.Mocks
             mockPlantInfoRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakePlantInfos.Get().First());
 
-            mockPlantInfoRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<bool>()))
+            mockPlantInfoRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakePlantInfos.Get().ToAsyncEnumerable());
 
             mockPlantInfoRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<PlantInfo>()))
@@ -78,7 +78,7 @@ namespace Emergence.Test.Mocks
             mockActivityRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakeActivities.Get().First());
 
-            mockActivityRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<bool>()))
+            mockActivityRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeActivities.Get().ToAsyncEnumerable());
 
             return mockActivityRepo;
