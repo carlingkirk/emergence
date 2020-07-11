@@ -47,9 +47,9 @@ namespace Emergence.Client.Components
             BlazoredModal.Close(ModalResult.Ok(Activity));
         }
 
-        protected async Task<IEnumerable<Specimen>> SearchSpecimens(string searchText)
+        protected async Task<IEnumerable<Specimen>> FindSpecimens(string searchText)
         {
-            var response = await Client.GetFromJsonAsync<IEnumerable<Specimen>>("/api/specimen/find");
+            var response = await Client.GetFromJsonAsync<IEnumerable<Specimen>>($"/api/specimen/find?search={searchText}&skip=0&take=10");
             return response;
         }
     }
