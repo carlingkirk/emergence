@@ -7,8 +7,8 @@ namespace Emergence.Data
 {
     public interface IRepository<T>
     {
-        Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false);
-        IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, bool track = false);
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false, params string[] includes);
+        IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null, bool track = false, params string[] includes);
         Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity);
         Task AddSomeAsync(IEnumerable<T> source);
         Task AddAsync(T entity);

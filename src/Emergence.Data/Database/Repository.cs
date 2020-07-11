@@ -16,10 +16,23 @@ namespace Emergence.Data.Repository
             _context = context;
         }
 
-        public async IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, bool track = false)
+        public async IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null, bool track = false, params string[] includes)
         {
             var entities = _context.Set<T>().Where(predicate);
-            var items = _context.Inventories.Where(i => i.Id == 0).ToList();
+            if (skip.HasValue)
+            {
+                entities = entities.Skip(skip.Value);
+            }
+
+            if (take.HasValue)
+            {
+                entities = entities.Take(take.Value);
+            }
+
+            foreach (var include in includes)
+            {
+                entities = entities.Include(include);
+            }
 
             if (!track)
             {
@@ -32,9 +45,14 @@ namespace Emergence.Data.Repository
             }
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false, params string[] includes)
         {
             var entities = _context.Set<T>().Where(predicate);
+
+            foreach (var include in includes)
+            {
+                entities = entities.Include(include);
+            }
 
             if (!track)
             {
