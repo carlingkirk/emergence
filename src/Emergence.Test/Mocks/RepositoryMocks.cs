@@ -16,7 +16,7 @@ namespace Emergence.Test.Mocks
             mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>(), It.IsAny<string[]>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakeSpecimens.Get().First());
 
-            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<string[]>()))
                 .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
 
             return mockSpecimenRepo;
@@ -27,10 +27,10 @@ namespace Emergence.Test.Mocks
             var mockLifeformItemRepo = new Mock<IRepository<Lifeform>>();
 
             mockLifeformItemRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakeLifeforms.Lifeforms().ToAsyncEnumerable());
+                .Returns(Data.Fakes.Stores.FakeLifeforms.Get().ToAsyncEnumerable());
 
             mockLifeformItemRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakeLifeforms.Lifeforms().First());
+                .ReturnsAsync(Data.Fakes.Stores.FakeLifeforms.Get().First());
 
             return mockLifeformItemRepo;
         }

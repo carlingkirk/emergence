@@ -5,6 +5,7 @@ using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Emergence.API.Services
 {
@@ -12,11 +13,12 @@ namespace Emergence.API.Services
     {
         private readonly IRepository<Data.Shared.Stores.Specimen> _specimenRepository;
         private readonly IInventoryService _inventoryService;
-
-        public SpecimenService(IRepository<Data.Shared.Stores.Specimen> specimenRepository, IInventoryService inventoryService)
+        private readonly ILogger _logger;
+        public SpecimenService(IRepository<Data.Shared.Stores.Specimen> specimenRepository, IInventoryService inventoryService, ILogger logger)
         {
             _specimenRepository = specimenRepository;
             _inventoryService = inventoryService;
+            _logger = logger;
         }
 
         public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen, string userId)
@@ -69,10 +71,10 @@ namespace Emergence.API.Services
 
         public async Task<IEnumerable<Data.Shared.Models.Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10)
         {
-            var specimenResult = _specimenRepository.GetSomeAsync(s => (s.InventoryItem.Inventory.UserId == userId &&
-                                                                        EF.Functions.Like(s.InventoryItem.Name, search)) ||
+            var specimenResult = _specimenRepository.GetSomeAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
+                                                                       (EF.Functions.Like(s.InventoryItem.Name, search) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, search) ||
-                                                                        EF.Functions.Like(s.Lifeform.ScientificName, search),
+                                                                        EF.Functions.Like(s.Lifeform.ScientificName, search)),
                                                                   take: take, skip: skip, track: false,
                                                                   includes: new string[] { "Lifeform", "InventoryItem", "InventoryItem.Inventory)" });
 

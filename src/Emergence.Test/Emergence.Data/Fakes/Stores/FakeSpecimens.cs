@@ -13,7 +13,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 Id = 1,
                 InventoryItemId = 1,
                 SpecimenStage = "Seed",
-                InventoryItem = FakeInventories.GetItems().First(i => i.Id == 1)
+                InventoryItem = FakeInventories.GetItems().First(i => i.InventoryId == 1),
+                Lifeform = FakeLifeforms.Get().First(l => l.Id == 1)
             },
             new Specimen
             {

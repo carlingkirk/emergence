@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -10,7 +11,7 @@ namespace Emergence.Test.Data.Fakes.Stores
             {
                 new Inventory
                 {
-                    Id = 0,
+                    Id = 1,
                     UserId = new Guid().ToString()
                 }
             };
@@ -21,6 +22,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 {
                     Id = 1,
                     InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
                     Name = "Liatris spicata seeds",
                     OriginId = 1,
                     ItemType = "Specimen",
@@ -34,6 +36,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 {
                     Id = 2,
                     InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
                     Name = "Liatris spicata plants",
                     OriginId = 1,
                     ItemType = "Specimen",
@@ -47,6 +50,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 {
                     Id = 3,
                     InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
                     Name = "Mushroom compost",
                     OriginId = 3,
                     ItemType = "Supply",
