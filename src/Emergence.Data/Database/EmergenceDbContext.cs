@@ -1,10 +1,21 @@
 using Emergence.Data.Shared.Stores;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Emergence.Data.Repository
 {
     public class EmergenceDbContext : DbContext
     {
+        public static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddFilter((category, level) =>
+                    category == DbLoggerCategory.Database.Command.Name
+                    && level == LogLevel.Information)
+                .AddDebug()
+                .AddConsole();
+        });
+
         public virtual DbSet<Inventory> Inventories { get; set; }
         public virtual DbSet<InventoryItem> InventoryItems { get; set; }
         public virtual DbSet<Activity> Activities { get; set; }
@@ -15,7 +26,9 @@ namespace Emergence.Data.Repository
         public virtual DbSet<Specimen> Specimens { get; set; }
         public virtual DbSet<Taxon> Taxons { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=emergence.db");
+        protected override void OnConfiguring(DbContextOptionsBuilder options) =>
+            options.UseLoggerFactory(Logger)
+            .UseSqlite("Data Source=emergence.db");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

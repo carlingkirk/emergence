@@ -5,7 +5,7 @@ namespace Emergence.Test.Data.Fakes.Stores
 {
     public static class FakeLifeforms
     {
-        public static IEnumerable<Lifeform> Lifeforms()
+        public static IEnumerable<Lifeform> Get()
         {
             var lifeforms = new List<Lifeform>
             {
