@@ -59,7 +59,7 @@ namespace Emergence.Test.API.Services
             var specimens = await specimenService.FindSpecimens("Liatris spicata", "me");
 
             specimens.Should().NotBeNull("it exists");
-            specimens.Should().HaveCount(1);
+            specimens.Should().HaveCount(3);
             specimens.First().InventoryItem.Should().NotBeNull();
             specimens.First().InventoryItem.Inventory.Should().NotBeNull();
             specimens.First().Lifeform.Should().NotBeNull();
