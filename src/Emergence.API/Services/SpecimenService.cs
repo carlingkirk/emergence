@@ -70,6 +70,7 @@ namespace Emergence.API.Services
 
         public async Task<IEnumerable<Data.Shared.Models.Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10)
         {
+            search = "%" + search + "%";
             var specimenResult = _specimenRepository.GetSomeWithIncludesAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
                                                                        (EF.Functions.Like(s.InventoryItem.Name, search) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, search) ||

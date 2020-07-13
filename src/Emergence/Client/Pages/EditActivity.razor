@@ -31,10 +31,10 @@
                                        MinimumLength="3"
                                        Debounce="500">
                         <SelectedTemplate>
-                            @context.PlantInfo.ScientificName
+                            @(context.InventoryItem?.Name ?? context.Lifeform?.ScientificName ?? context.SpecimenId.ToString())
                         </SelectedTemplate>
                         <ResultTemplate>
-                            @context.PlantInfo.ScientificName
+                            @(context.InventoryItem?.Name ?? context.Lifeform?.ScientificName ?? context.SpecimenId.ToString())
                         </ResultTemplate>
                         <NotFoundTemplate>
                             No results found
