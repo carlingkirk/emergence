@@ -5,7 +5,6 @@ using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Emergence.API.Services
 {
@@ -13,12 +12,11 @@ namespace Emergence.API.Services
     {
         private readonly IRepository<Data.Shared.Stores.Specimen> _specimenRepository;
         private readonly IInventoryService _inventoryService;
-        private readonly ILogger _logger;
-        public SpecimenService(IRepository<Data.Shared.Stores.Specimen> specimenRepository, IInventoryService inventoryService, ILogger logger)
+
+        public SpecimenService(IRepository<Data.Shared.Stores.Specimen> specimenRepository, IInventoryService inventoryService)
         {
             _specimenRepository = specimenRepository;
             _inventoryService = inventoryService;
-            _logger = logger;
         }
 
         public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen, string userId)

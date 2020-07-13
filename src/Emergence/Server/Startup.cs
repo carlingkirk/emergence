@@ -36,6 +36,8 @@ namespace Emergence.Server
             services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
             services.AddAuthentication().AddIdentityServerJwt();
 
+            services.AddLogging();
+
             // Application Services
             services.AddTransient<ISpecimenService, SpecimenService>();
             services.AddTransient<IInventoryService, InventoryService>();
