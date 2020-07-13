@@ -8,7 +8,7 @@ namespace Emergence.Data.Shared.Stores
         public string UserId { get; set; }
     }
 
-    public class InventoryItem
+    public class InventoryItem : IIncludable<InventoryItem, Inventory>
     {
         public int InventoryId { get; set; }
         public Inventory Inventory { get; set; }

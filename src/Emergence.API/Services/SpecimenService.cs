@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data;
+using Emergence.Data.Extensions;
 using Emergence.Data.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +42,7 @@ namespace Emergence.API.Services
 
         public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(long specimenId)
         {
-            var result = await _specimenRepository.GetAsync(s => s.Id == specimenId, track: false, "InventoryItem");
+            var result = await _specimenRepository.GetAsync(s => s.Id == specimenId, track: false);
             return result.AsModel();
         }
 
@@ -69,12 +70,12 @@ namespace Emergence.API.Services
 
         public async Task<IEnumerable<Data.Shared.Models.Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10)
         {
-            var specimenResult = _specimenRepository.GetSomeAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
+            var specimenResult = _specimenRepository.GetSomeWithIncludesAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
                                                                        (EF.Functions.Like(s.InventoryItem.Name, search) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, search) ||
                                                                         EF.Functions.Like(s.Lifeform.ScientificName, search)),
-                                                                  take: take, skip: skip, track: false,
-                                                                  includes: new string[] { "Lifeform", "InventoryItem", "InventoryItem.Inventory)" });
+                                                                  skip: skip, take: take, track: false,
+                                                                  s => s.Include(s => s.InventoryItem).ThenInclude(ii => ii.Inventory).Include(s => s.Lifeform));
 
             var specimens = new List<Data.Shared.Models.Specimen>();
             await foreach (var specimen in specimenResult)

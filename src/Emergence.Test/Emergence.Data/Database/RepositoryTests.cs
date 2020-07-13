@@ -31,8 +31,7 @@ namespace Emergence.Test.Data.Database
             MockEmergenceDbContext.Setup(c => c.Set<Lifeform>()).Returns(lifeformsDbSetMock.Object);
 
             var specimenRepository = new Repository<Specimen>(MockEmergenceDbContext.Object);
-            var specimen = await specimenRepository.GetAsync(s => s.Id == 1, track: false,
-                includes: new string[] { "InventoryItem", "InventoryItem.Inventory", "Lifeform" });
+            var specimen = await specimenRepository.GetAsync(s => s.Id == 1, track: false);
 
             specimen.InventoryItemId.Should().Be(1);
             specimen.SpecimenStage.Should().Be("Seed");

@@ -13,10 +13,10 @@ namespace Emergence.Test.Mocks
         {
             var mockSpecimenRepo = new Mock<IRepository<Specimen>>();
 
-            mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>(), It.IsAny<string[]>()))
+            mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakeSpecimens.Get().First());
 
-            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<string[]>()))
+            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
 
             return mockSpecimenRepo;
