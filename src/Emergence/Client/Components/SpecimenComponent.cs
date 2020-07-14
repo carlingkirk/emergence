@@ -19,6 +19,8 @@ namespace Emergence.Client.Components
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
         public int Id { get; set; }
+        [Parameter]
+        public Specimen SpecimenParam { get; set; }
         public Specimen Specimen { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
@@ -30,10 +32,16 @@ namespace Emergence.Client.Components
             {
                 Specimen = await Client.GetFromJsonAsync<Specimen>($"/api/specimen/{Id}");
             }
-            else
+            else if (SpecimenParam != null)
+            {
+                Console.WriteLine(SpecimenParam.Lifeform?.CommonName ?? "null");
+                Specimen = SpecimenParam;
+            }
+            else if (Specimen == null)
             {
                 Specimen = new Specimen
                 {
+                    Lifeform = new Lifeform(),
                     PlantInfo = new PlantInfo(),
                     InventoryItem = new InventoryItem()
                 };
@@ -45,9 +53,9 @@ namespace Emergence.Client.Components
             var result = await Client.PutAsJsonAsync("/api/specimen", Specimen);
             if (result.IsSuccessStatusCode)
             {
-                Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
+                SpecimenParam = Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
             }
-            BlazoredModal.Close(ModalResult.Ok(Specimen));
+            BlazoredModal.Close(ModalResult.Ok(SpecimenParam));
         }
     }
 }

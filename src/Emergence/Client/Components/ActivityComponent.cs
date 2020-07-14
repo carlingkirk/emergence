@@ -49,7 +49,13 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Specimen>> FindSpecimens(string searchText)
         {
-            var response = await Client.GetFromJsonAsync<IEnumerable<Specimen>>($"/api/specimen/find?search={searchText}&skip=0&take=10");
+            var response = (await Client.GetFromJsonAsync<IEnumerable<Specimen>>($"/api/specimen/find?search={searchText}&skip=0&take=10")).ToList();
+            var lifeforms = await Client.GetFromJsonAsync<IEnumerable<Lifeform>>($"/api/lifeform/find?search={searchText}&skip=0&take=3");
+
+            foreach (var lifeform in lifeforms)
+            {
+                response.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
+            }
             return response;
         }
     }

@@ -4,6 +4,7 @@ using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
+using Microsoft.EntityFrameworkCore;
 
 namespace Emergence.API.Services
 {
@@ -29,6 +30,21 @@ namespace Emergence.API.Services
         public async Task<IEnumerable<Data.Shared.Models.Lifeform>> GetLifeformsAsync()
         {
             var lifeformResult = _lifeformRepository.GetSomeAsync(l => l.Id > 0);
+            var lifeforms = new List<Data.Shared.Models.Lifeform>();
+            await foreach (var lifeform in lifeformResult)
+            {
+                lifeforms.Add(lifeform.AsModel());
+            }
+            return lifeforms;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Lifeform>> FindLifeforms(string search, string userId, int skip = 0, int take = 10)
+        {
+            search = "%" + search + "%";
+            var lifeformResult = _lifeformRepository.GetSomeAsync(l => EF.Functions.Like(l.CommonName, search) ||
+                                                                  EF.Functions.Like(l.ScientificName, search),
+                                                                  skip: skip, take: take, track: false);
+
             var lifeforms = new List<Data.Shared.Models.Lifeform>();
             await foreach (var lifeform in lifeformResult)
             {
