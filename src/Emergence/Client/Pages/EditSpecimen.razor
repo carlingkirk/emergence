@@ -10,48 +10,76 @@
 
 <EditForm Model="@Specimen">
     <div class="simple-form">
+        <div class="form-group container">
+            <div class="row">
+                <div class="col">
+                    <label for="lifeform">Plant Name</label><br />
+                    @if (Specimen.Lifeform != null)
+                    {
+                        <span>@(Specimen.Lifeform != null ? Specimen.Lifeform.CommonName : "") </span>
+                        <span class="font-italic">@(Specimen.Lifeform != null ? Specimen.Lifeform.ScientificName : "")</span>
+                    }
+                    else
+                    {
+                    }
 
-        <div class="form-group">
-            <label for="lifeform">Plant Name</label>
-            <span>@(Specimen.Lifeform != null ? (Specimen.Lifeform.CommonName + " " + Specimen.Lifeform.ScientificName) : "")</span>
-
-            <label for="specimen-name">Name</label>
-            <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" />
-
-            <label for="quantity">Stage</label>
-            <select @bind="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
-                @foreach (var stage in SpecimenStages)
-                {
-                    <option value="@stage">@stage.ToFriendlyName()</option>
-                }
-            </select>
-
-            <label for="quantity">Quantity</label>
-            <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
-
-            <label for="quantity">Status</label>
-            <select @bind="@Specimen.InventoryItem.Status" type="text" class="form-control" id="status">
-                @foreach (var status in Statuses)
-                {
-                    <option value="@status">@status.ToFriendlyName()</option>
-                }
-            </select>
-
-            <label for="quantity">Type</label>
-            <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="status">
-                @foreach (var itemType in ItemTypes)
-                {
-                    <option value="@itemType">@itemType.ToFriendlyName()</option>
-                }
-            </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="specimen-name">Name</label>
+                    <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="quantity">Stage</label>
+                    <select @bind="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
+                        @foreach (var stage in SpecimenStages)
+                        {
+                            <option value="@stage">@stage.ToFriendlyName()</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="quantity">Quantity</label>
+                    <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="quantity">Status</label>
+                    <select @bind="@Specimen.InventoryItem.Status" type="text" class="form-control" id="status">
+                        @foreach (var status in Statuses)
+                        {
+                            <option value="@status">@status.ToFriendlyName()</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="quantity">Type</label>
+                    <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="status">
+                        @foreach (var itemType in ItemTypes)
+                        {
+                            <option value="@itemType">@itemType.ToFriendlyName()</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button @onclick="(async () => await SaveSpecimen())" class="btn btn-primary">Submit</button>
+                    @if (BlazoredModal != null)
+                    {
+                        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+                    }
+                </div>
+            </div>
         </div>
-
-        <button @onclick="(async () => await SaveSpecimen())" class="btn btn-primary">Submit</button>
-        @if (BlazoredModal != null)
-        {
-            <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
-        }
-
     </div>
 </EditForm>
 @code {

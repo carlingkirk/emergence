@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -8,6 +9,7 @@ namespace Emergence.Data.Shared.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public ActivityType ActivityType { get; set; }
+        public string CustomActivityType { get; set; }
         public Specimen Specimen { get; set; }
         public DateTime? DateOccured { get; set; }
         public DateTime? DateScheduled { get; set; }
@@ -17,16 +19,29 @@ namespace Emergence.Data.Shared.Models
 
     public enum ActivityType
     {
-        Order,
+        Custom,
+        [Description("Add to wishlist")]
+        Wishlist,
+        Purchase,
+        [Description("Stratify")]
         Stratification,
+        [Description("Germinate")]
         Germination,
+        [Description("Divide")]
         Division,
+        [Description("Take cutting")]
         Cutting,
+        [Description("Collect seed")]
         SeedCollection,
+        [Description("Check progress")]
         ProgressCheck,
+        [Description("Plant in ground")]
         PlantInGround,
+        [Description("Repot")]
         Repotting,
+        [Description("Water")]
         Watering,
+        [Description("Fertilize")]
         Fertilization
     }
 }
