@@ -2,31 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Emergence.Data.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace Emergence.Data.Extensions
 {
     public static class RepositoryExtensions
     {
-        public static IQueryable<T> Include<T>(this IQueryable<T> query, params Expression<Func<T, object>>[] includes) where T : class
+        public static IQueryable<T> IncludeMultiple<T>(this IQueryable<T> query, Func<IIncludable<T>, IIncludable> includes) where T : class
         {
-            if (includes != null)
+            if (includes == null)
             {
-                query = includes.Aggregate(query,
-                          (current, include) => current.Include(include));
+                return query;
             }
 
-            return query;
+            var includable = (Includable<T>)includes(new Includable<T>(query));
+            return includable.Input;
         }
 
-        public static IAsyncEnumerable<T> Include<T>(this IAsyncEnumerable<T> query, params Expression<Func<T, object>>[] includes) where T : class
+        public static IIncludable<TEntity, TProperty> Include<TEntity, TProperty>(this IIncludable<TEntity> includes,
+            Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : class
         {
-            if (includes != null)
-            {
-                query = includes.Aggregate(query,
-                          (current, include) => current.Include(include));
-            }
+            var result = ((Includable<TEntity>)includes).Input.Include(propertySelector);
+            return new Includable<TEntity, TProperty>(result);
+        }
 
-            return query;
+        public static IIncludable<TEntity, TOtherProperty> ThenInclude<TEntity, TOtherProperty, TProperty>(this IIncludable<TEntity, TProperty> includes,
+                Expression<Func<TProperty, TOtherProperty>> propertySelector) where TEntity : class
+        {
+            var result = ((Includable<TEntity, TProperty>)includes).IncludableInput.ThenInclude(propertySelector);
+            return new Includable<TEntity, TOtherProperty>(result);
+        }
+
+        public static IIncludable<TEntity, TOtherProperty> ThenInclude<TEntity, TOtherProperty, TProperty>(this IIncludable<TEntity, IEnumerable<TProperty>> includes,
+                Expression<Func<TProperty, TOtherProperty>> propertySelector) where TEntity : class
+        {
+            var result = ((Includable<TEntity, IEnumerable<TProperty>>)includes).IncludableInput.ThenInclude(propertySelector);
+            return new Includable<TEntity, TOtherProperty>(result);
         }
     }
 }

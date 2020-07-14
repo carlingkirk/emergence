@@ -28,6 +28,7 @@ namespace Emergence.Data.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) =>
             options.UseLoggerFactory(Logger)
+            .EnableSensitiveDataLogging(true)
             .UseSqlite("Data Source=emergence.db");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Moq;
 
@@ -13,10 +14,14 @@ namespace Emergence.Test.Mocks
         {
             var mockSpecimenRepo = new Mock<IRepository<Specimen>>();
 
-            mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>(), It.IsAny<string[]>()))
+            mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakeSpecimens.Get().First());
 
-            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<string[]>()))
+            mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
+
+            mockSpecimenRepo.Setup(p => p.GetSomeWithIncludesAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<Specimen>, IIncludable>[]>()))
                 .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
 
             return mockSpecimenRepo;

@@ -12,6 +12,9 @@
     <div class="simple-form">
 
         <div class="form-group">
+            <label for="lifeform">Plant Name</label>
+            <span>@(Specimen.Lifeform != null ? (Specimen.Lifeform.CommonName + " " + Specimen.Lifeform.ScientificName) : "")</span>
+
             <label for="specimen-name">Name</label>
             <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" />
 

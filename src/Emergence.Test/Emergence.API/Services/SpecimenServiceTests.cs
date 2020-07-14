@@ -30,7 +30,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestGetSpecimenAsync()
         {
-            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object, _logger);
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
             var specimen = await specimenService.GetSpecimenAsync(0);
 
             specimen.Should().NotBeNull("it exists");
@@ -39,7 +39,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestGetSpecimensAsync()
         {
-            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object, _logger);
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
             var specimens = await specimenService.GetSpecimensForInventoryAsync(0);
 
             specimens.Should().NotBeNull("it exists");
@@ -52,14 +52,14 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestFindSpecimens()
         {
-            _mockSpecimenRepository.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<string[]>()))
+            _mockSpecimenRepository.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeSpecimens.Get().Take(1).ToAsyncEnumerable());
 
-            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object, _logger);
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
             var specimens = await specimenService.FindSpecimens("Liatris spicata", "me");
 
             specimens.Should().NotBeNull("it exists");
-            specimens.Should().HaveCount(1);
+            specimens.Should().HaveCount(3);
             specimens.First().InventoryItem.Should().NotBeNull();
             specimens.First().InventoryItem.Inventory.Should().NotBeNull();
             specimens.First().Lifeform.Should().NotBeNull();
