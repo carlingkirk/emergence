@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
 using Emergence.Data.Shared.Models;
@@ -22,6 +23,14 @@ namespace Emergence.API.Controllers
         public async Task<Origin> Put(Origin origin)
         {
             return await _originService.AddOrUpdateOriginAsync(origin);
+        }
+
+        [HttpGet]
+        [Route("Find")]
+        public async Task<IEnumerable<Origin>> FindOrigins(string search, int skip = 0, int take = 10)
+        {
+            var results = await _originService.FindOrigins(search, skip, take);
+            return results;
         }
     }
 }

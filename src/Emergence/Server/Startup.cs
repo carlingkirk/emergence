@@ -39,15 +39,23 @@ namespace Emergence.Server
             services.AddLogging();
 
             // Application Services
-            services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IInventoryService, InventoryService>();
             services.AddTransient<ILifeformService, LifeformService>();
+            services.AddTransient<IOriginService, OriginService>();
+            services.AddTransient<IPlantInfoService, PlantInfoService>();
+            services.AddTransient<ISpecimenService, SpecimenService>();
 
             //Add repositories
-            services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
             services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
             services.AddScoped(typeof(IRepository<InventoryItem>), typeof(Repository<InventoryItem>));
             services.AddScoped(typeof(IRepository<Lifeform>), typeof(Repository<Lifeform>));
+            services.AddScoped(typeof(IRepository<Location>), typeof(Repository<Location>));
+            services.AddScoped(typeof(IRepository<Origin>), typeof(Repository<Origin>));
+            services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
+            services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>

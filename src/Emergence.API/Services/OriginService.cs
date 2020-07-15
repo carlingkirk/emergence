@@ -4,6 +4,7 @@ using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
+using Microsoft.EntityFrameworkCore;
 
 namespace Emergence.API.Services
 {
@@ -36,6 +37,21 @@ namespace Emergence.API.Services
         {
             var originResult = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.OriginId, origin.AsStore());
             return originResult.AsModel();
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Origin>> FindOrigins(string search, int skip = 0, int take = 10)
+        {
+            search = "%" + search + "%";
+            var originResult = _originRepository.GetSomeAsync(o => EF.Functions.Like(o.Name, search) || EF.Functions.Like(o.Description, search),
+                                                                  skip: skip, take: take, track: false);
+
+            var origins = new List<Data.Shared.Models.Origin>();
+            await foreach (var origin in originResult)
+            {
+                origins.Add(origin.AsModel());
+            }
+
+            return origins;
         }
     }
 }

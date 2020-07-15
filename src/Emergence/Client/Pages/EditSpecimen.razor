@@ -4,6 +4,7 @@
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions
+@using Blazored.Typeahead
 @attribute [Authorize]
 @inherits SpecimenComponent
 <h3>Add Specimen</h3>
@@ -12,8 +13,8 @@
     <div class="simple-form">
         <div class="form-group container">
             <div class="row">
-                <div class="col">
-                    <label for="lifeform">Plant Name</label><br />
+                <div class="col-12">
+                    <label for="lifeform">Plant Name </label>
                     @if (Specimen.Lifeform != null)
                     {
                         <span>@(Specimen.Lifeform != null ? Specimen.Lifeform.CommonName : "") </span>
@@ -22,34 +23,18 @@
                     else
                     {
                     }
-
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-8 col-xs-1">
                     <label for="specimen-name">Name</label>
                     <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" />
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label for="quantity">Stage</label>
-                    <select @bind="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
-                        @foreach (var stage in SpecimenStages)
-                        {
-                            <option value="@stage">@stage.ToFriendlyName()</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
+                <div class="col-3 col-xs-1">
                     <label for="quantity">Quantity</label>
                     <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
+                <div class="col-4 col-xs-1">
                     <label for="quantity">Status</label>
                     <select @bind="@Specimen.InventoryItem.Status" type="text" class="form-control" id="status">
                         @foreach (var status in Statuses)
@@ -58,9 +43,48 @@
                         }
                     </select>
                 </div>
+
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-4 col-xs-1">
+                    <label for="quantity">Stage</label>
+                    <select @bind="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
+                        @foreach (var stage in SpecimenStages)
+                        {
+                            <option value="@stage">@stage.ToFriendlyName()</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-3 col-xs-1">
+                    <label for="date-acquired">Date Acquired</label>
+                    <input type="date" />
+                </div>
+                <div class="col-3 col-xs-1">
+                    <label for="origin">Origin</label>
+                    <BlazoredTypeahead SearchMethod="FindOrigins" 
+                                       @bind-Value="SelectedOrigin"
+                                       MinimumLength="3"
+                                       Debounce="500" Context="origin">
+                        <SelectedTemplate>
+                            @(origin.Name)
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @if (origin.OriginId == 0)
+                            {
+                                <span class="text-body">Add new "@(origin.Name)" </span>
+                            }
+                            else
+                            {
+                                <span class="text-body">@(origin.Name) </span>
+                            }
+
+                        </ResultTemplate>
+                        <NotFoundTemplate>
+                            
+                        </NotFoundTemplate>
+                    </BlazoredTypeahead>
+                </div>
+                <div class="col-4 col-xs-1">
                     <label for="quantity">Type</label>
                     <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="status">
                         @foreach (var itemType in ItemTypes)

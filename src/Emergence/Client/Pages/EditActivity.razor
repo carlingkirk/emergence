@@ -38,7 +38,7 @@
                     <ResultTemplate>
                         @if (context.SpecimenId == 0 && context.Lifeform != null)
                         {
-                            <a href="" @onclick="@(async () => { Console.WriteLine(context.SpecimenId); await AddSpecimen((Specimen)context); })" @onclick:preventDefault>
+                            <a href="" @onclick="@(async () => { await AddSpecimen((Specimen)context); })" @onclick:preventDefault>
                                 <span>Add new </span>
                                 <span class="text-body">@(context.Lifeform.CommonName) </span>
                                 <span class="text-body font-italic">@(context.Lifeform.ScientificName) </span>
