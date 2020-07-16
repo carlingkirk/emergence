@@ -39,6 +39,12 @@ namespace Emergence.Client.Components
 
         protected async Task SaveActivity()
         {
+            if (Activity.ActivityId == 0)
+            {
+                Activity.DateCreated = DateTime.UtcNow;
+            }
+            Activity.DateModified = DateTime.UtcNow;
+
             var result = await Client.PutAsJsonAsync("/api/activity", Activity);
             if (result.IsSuccessStatusCode)
             {

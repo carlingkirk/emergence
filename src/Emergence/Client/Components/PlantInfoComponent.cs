@@ -63,6 +63,12 @@ namespace Emergence.Client.Components
 
         protected async Task SavePlantInfo()
         {
+            if (PlantInfo.PlantInfoId == 0)
+            {
+                PlantInfo.DateCreated = DateTime.UtcNow;
+            }
+            PlantInfo.DateModified = DateTime.UtcNow;
+
             var result = await Client.PutAsJsonAsync("/api/plantinfo", PlantInfo);
             if (result.IsSuccessStatusCode)
             {

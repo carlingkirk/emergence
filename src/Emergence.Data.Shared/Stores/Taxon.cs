@@ -1,3 +1,5 @@
+using System;
+
 namespace Emergence.Data.Shared.Stores
 {
     public class Taxon
@@ -30,5 +32,7 @@ namespace Emergence.Data.Shared.Stores
         public string Variety { get; set; }
         public string Form { get; set; }
         public string Section { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
     }
 }

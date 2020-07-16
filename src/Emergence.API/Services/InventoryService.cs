@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,6 +57,7 @@ namespace Emergence.API.Services
 
         public async Task<Data.Shared.Models.InventoryItem> AddOrUpdateInventoryItemAsync(Data.Shared.Models.InventoryItem inventoryItem)
         {
+            inventoryItem.DateModified = DateTime.UtcNow;
             var result = await _inventoryItemRepository.AddOrUpdateAsync(i => i.Id == inventoryItem.InventoryItemId, inventoryItem.AsStore());
             return result.AsModel();
         }

@@ -22,6 +22,7 @@ namespace Emergence.API.Controllers
         [HttpPut]
         public async Task<Origin> Put(Origin origin)
         {
+            origin.UserId = UserId;
             return await _originService.AddOrUpdateOriginAsync(origin);
         }
 

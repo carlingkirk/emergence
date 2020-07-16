@@ -12,6 +12,7 @@ namespace Emergence.Data.Shared.Extensions
             Name = source.Name,
             Description = source.Description,
             Specimen = source.SpecimenId.HasValue ? new Models.Specimen { SpecimenId = source.SpecimenId.Value } : null,
+            UserId = source.UserId,
             DateOccured = source.DateOccured,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
@@ -24,6 +25,7 @@ namespace Emergence.Data.Shared.Extensions
             Description = source.Description,
             ActivityType = source.ActivityType.ToString(),
             SpecimenId = source.Specimen.SpecimenId,
+            UserId = source.UserId,
             DateOccured = source.DateOccured,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified

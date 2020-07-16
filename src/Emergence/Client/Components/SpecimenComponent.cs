@@ -51,6 +51,12 @@ namespace Emergence.Client.Components
 
         protected async Task SaveSpecimen()
         {
+            if (Specimen.SpecimenId == 0)
+            {
+                Specimen.DateCreated = DateTime.UtcNow;
+            }
+            Specimen.DateModified = DateTime.UtcNow;
+
             var result = await Client.PutAsJsonAsync("/api/specimen", Specimen);
             if (result.IsSuccessStatusCode)
             {

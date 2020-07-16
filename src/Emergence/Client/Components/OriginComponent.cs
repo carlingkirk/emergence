@@ -41,6 +41,12 @@ namespace Emergence.Client.Components
 
         protected async Task SaveOrigin()
         {
+            if (Origin.OriginId == 0)
+            {
+                Origin.DateCreated = DateTime.UtcNow;
+            }
+            Origin.DateModified = DateTime.UtcNow;
+
             var result = await Client.PutAsJsonAsync("/api/origin", Origin);
             if (result.IsSuccessStatusCode)
             {

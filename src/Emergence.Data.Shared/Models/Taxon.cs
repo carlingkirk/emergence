@@ -1,3 +1,4 @@
+using System;
 using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Models
@@ -32,5 +33,7 @@ namespace Emergence.Data.Shared.Models
         public string Variety { get; set; }
         public string Form { get; set; }
         public string Section { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
     }
 }

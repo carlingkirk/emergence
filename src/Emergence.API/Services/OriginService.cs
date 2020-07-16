@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
@@ -35,6 +36,7 @@ namespace Emergence.API.Services
 
         public async Task<Data.Shared.Models.Origin> AddOrUpdateOriginAsync(Data.Shared.Models.Origin origin)
         {
+            origin.DateModified = DateTime.UtcNow;
             var originResult = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.OriginId, origin.AsStore());
             return originResult.AsModel();
         }

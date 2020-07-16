@@ -11,11 +11,13 @@ namespace Emergence.Data.Shared.Models
         public Taxon Taxon { get; set; }
         public string ScientificName { get; set; }
         public string CommonName { get; set; }
+        public bool? Preferred { get; set; }
         public BloomTime BloomTime { get; set; }
         public Height Height { get; set; }
         public Spread Spread { get; set; }
         public Requirements Requirements { get; set; }
         public Origin Origin { get; set; }
+        public string CreatedBy { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }

@@ -44,7 +44,8 @@ namespace Emergence.Data.Shared.Extensions
                 PlantInfoId = source.Id,
                 CommonName = source.CommonName,
                 ScientificName = source.ScientificName,
-                Origin = new Models.Origin { OriginId = (int)source.OriginId },
+                LifeformId = source.LifeformId,
+                Origin = source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
                 BloomTime = new Models.BloomTime
                 {
                     MinimumBloomTime = (Models.Month)source.MinimumBloomTime,
@@ -90,6 +91,8 @@ namespace Emergence.Data.Shared.Extensions
                         }
                     }
                 },
+                Taxon = source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
+                CreatedBy = source.CreatedBy,
                 DateCreated = source.DateCreated,
                 DateModified = source.DateModified
             };
@@ -101,18 +104,25 @@ namespace Emergence.Data.Shared.Extensions
             CommonName = source.CommonName,
             ScientificName = source.ScientificName,
             OriginId = source.Origin?.OriginId,
+            LifeformId = source.LifeformId,
             MinimumBloomTime = (short)source.BloomTime.MinimumBloomTime,
             MaximumBloomTime = (short)source.BloomTime.MaximumBloomTime,
             MinimumHeight = source.Height.MinimumHeight,
             MaximumHeight = source.Height.MaximumHeight,
+            HeightUnit = source.Height.Unit.ToString(),
             MinimumSpread = source.Spread.MinimumSpread,
             MaximumSpread = source.Spread.MaximumSpread,
+            SpreadUnit = source.Spread.Unit.ToString(),
             MinimumLight = source.Requirements.LightRequirements.MinimumLight.ToString(),
             MaximumLight = source.Requirements.LightRequirements.MaximumLight.ToString(),
             MinimumWater = source.Requirements.WaterRequirements.MinimumWater.ToString(),
             MaximumWater = source.Requirements.WaterRequirements.MaximumWater.ToString(),
             MinimumZone = source.Requirements.ZoneRequirements.MinimumZone.Letter + source.Requirements.ZoneRequirements.MinimumZone.Number,
             MaximumZone = source.Requirements.ZoneRequirements.MaximumZone.Letter + source.Requirements.ZoneRequirements.MaximumZone.Number,
+            StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
+            Preferred = source.Preferred,
+            TaxonId = source.Taxon?.TaxonId,
+            CreatedBy = source.CreatedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

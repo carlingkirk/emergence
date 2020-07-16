@@ -10,6 +10,7 @@ namespace Emergence.Data.Shared.Stores
         public string ActivityType { get; set; }
         public int? SpecimenId { get; set; }
         public Specimen Specimen { get; set; }
+        public string UserId { get; set; }
         public DateTime? DateScheduled { get; set; }
         public DateTime? DateOccured { get; set; }
         public DateTime DateCreated { get; set; }

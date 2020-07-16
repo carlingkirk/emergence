@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.API.Services.Interfaces;
@@ -16,6 +17,7 @@ namespace Emergence.API.Services
         }
         public async Task<Data.Shared.Models.PlantInfo> AddOrUpdatePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo)
         {
+            plantInfo.DateModified = DateTime.UtcNow;
             var plantInfoResult = await _plantInfoRepository.AddOrUpdateAsync(l => l.Id == plantInfo.PlantInfoId, plantInfo.AsStore());
             return plantInfoResult.AsModel();
         }
