@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
+using Emergence.Service.Interfaces;
 
-namespace Emergence.API.Services
+namespace Emergence.Service
 {
     public class ActivityService : IActivityService
     {

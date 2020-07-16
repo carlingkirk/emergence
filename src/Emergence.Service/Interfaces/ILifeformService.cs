@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 
-namespace Emergence.API.Services.Interfaces
+namespace Emergence.Service.Interfaces
 {
     public interface ILifeformService
     {

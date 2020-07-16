@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Emergence.API.Services.Interfaces;
 using Emergence.Data.Shared.Models;
+using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emergence.API.Controllers

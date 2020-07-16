@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Emergence.API.Services;
 using Emergence.Data;
 using Emergence.Data.Shared.Stores;
+using Emergence.Service;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;

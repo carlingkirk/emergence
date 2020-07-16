@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Emergence.API.Services.Interfaces;
 using Emergence.Data.Shared.Models;
+using Emergence.Service.Interfaces;
 using Emergence.Test.Data.Fakes.Models;
 using Moq;
 

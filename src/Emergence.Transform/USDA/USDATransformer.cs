@@ -27,11 +27,18 @@ namespace Emergence.Transform
                 AltExternalId = source.SynonymSymbol
             };
 
+            var lifeform = new Lifeform
+            {
+                CommonName = source.CommonName,
+                ScientificName = Genus + " " + Species
+            };
+
             return new PlantInfo
             {
                 CommonName = source.CommonName,
                 ScientificName = Genus + " " + Species,
                 Origin = origin,
+                Lifeform = lifeform,
                 Taxon = new Taxon
                 {
                     Family = source.Family,

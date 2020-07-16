@@ -45,6 +45,7 @@ namespace Emergence.Data.Shared.Extensions
                 CommonName = source.CommonName,
                 ScientificName = source.ScientificName,
                 LifeformId = source.LifeformId,
+                Lifeform = new Models.Lifeform { LifeformId = source.LifeformId },
                 Origin = source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
                 BloomTime = new Models.BloomTime
                 {

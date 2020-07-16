@@ -1,9 +1,9 @@
-using Emergence.API.Services;
-using Emergence.API.Services.Interfaces;
 using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 using Emergence.Data.Shared.Stores;
+using Emergence.Service;
+using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

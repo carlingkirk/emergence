@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Emergence.API.Services.Interfaces
+namespace Emergence.Service.Interfaces
 {
     public interface IPlantInfoService
     {

@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Emergence.API\Emergence.API.csproj" />
     <ProjectReference Include="..\..\Emergence.Data\Emergence.Data.csproj" />
+    <ProjectReference Include="..\..\Emergence.Service\Emergence.Service.csproj" />
     <ProjectReference Include="..\Client\Emergence.Client.csproj" />
   </ItemGroup>
 
