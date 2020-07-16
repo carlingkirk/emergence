@@ -46,6 +46,9 @@ namespace Emergence.Data.Migrations
                     b.Property<int?>("SpecimenId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SpecimenId");
@@ -171,6 +174,12 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("Authors")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -198,6 +207,9 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("Uri")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentOriginId");
@@ -212,6 +224,9 @@ namespace Emergence.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CommonName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -297,10 +312,19 @@ namespace Emergence.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("InventoryItemId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("LifeformId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PlantInfoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SpecimenStage")
@@ -312,6 +336,8 @@ namespace Emergence.Data.Migrations
 
                     b.HasIndex("LifeformId");
 
+                    b.HasIndex("PlantInfoId");
+
                     b.ToTable("Specimens");
                 });
 
@@ -322,6 +348,12 @@ namespace Emergence.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Class")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DateModified")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Epifamily")
@@ -458,6 +490,10 @@ namespace Emergence.Data.Migrations
                     b.HasOne("Emergence.Data.Shared.Stores.Lifeform", "Lifeform")
                         .WithMany()
                         .HasForeignKey("LifeformId");
+
+                    b.HasOne("Emergence.Data.Shared.Stores.PlantInfo", "PlantInfo")
+                        .WithMany()
+                        .HasForeignKey("PlantInfoId");
                 });
 #pragma warning restore 612, 618
         }

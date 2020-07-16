@@ -70,7 +70,10 @@ namespace Emergence.Data.Migrations
                     Latitude = table.Column<double>(nullable: true),
                     Authors = table.Column<string>(nullable: true),
                     ExternalId = table.Column<string>(nullable: true),
-                    AltExternalId = table.Column<string>(nullable: true)
+                    AltExternalId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateModified = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -115,7 +118,9 @@ namespace Emergence.Data.Migrations
                     Subspecies = table.Column<string>(nullable: true),
                     Variety = table.Column<string>(nullable: true),
                     Form = table.Column<string>(nullable: true),
-                    Section = table.Column<string>(nullable: true)
+                    Section = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateModified = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,6 +181,7 @@ namespace Emergence.Data.Migrations
                     StratificationStages = table.Column<string>(nullable: true),
                     MinimumZone = table.Column<string>(nullable: true),
                     MaximumZone = table.Column<string>(nullable: true),
+                    CreatedBy = table.Column<string>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: true)
                 },
@@ -210,7 +216,10 @@ namespace Emergence.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     InventoryItemId = table.Column<int>(nullable: false),
                     LifeformId = table.Column<int>(nullable: true),
-                    SpecimenStage = table.Column<string>(nullable: true)
+                    SpecimenStage = table.Column<string>(nullable: true),
+                    PlantInfoId = table.Column<int>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateModified = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,6 +236,12 @@ namespace Emergence.Data.Migrations
                         principalTable: "Lifeforms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Specimens_PlantInfos_PlantInfoId",
+                        column: x => x.PlantInfoId,
+                        principalTable: "PlantInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -239,6 +254,7 @@ namespace Emergence.Data.Migrations
                     Description = table.Column<string>(nullable: true),
                     ActivityType = table.Column<string>(nullable: true),
                     SpecimenId = table.Column<int>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     DateScheduled = table.Column<DateTime>(nullable: true),
                     DateOccured = table.Column<DateTime>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false),
@@ -295,6 +311,11 @@ namespace Emergence.Data.Migrations
                 table: "Specimens",
                 column: "LifeformId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Specimens_PlantInfoId",
+                table: "Specimens",
+                column: "PlantInfoId");
+
             MigrationSeeds.AddEmergenceSeedData(migrationBuilder);
         }
 
@@ -307,25 +328,25 @@ namespace Emergence.Data.Migrations
                 name: "Locations");
 
             migrationBuilder.DropTable(
+                name: "Specimens");
+
+            migrationBuilder.DropTable(
+                name: "InventoryItems");
+
+            migrationBuilder.DropTable(
                 name: "PlantInfos");
 
             migrationBuilder.DropTable(
-                name: "Specimens");
+                name: "Inventories");
+
+            migrationBuilder.DropTable(
+                name: "Lifeforms");
 
             migrationBuilder.DropTable(
                 name: "Origins");
 
             migrationBuilder.DropTable(
                 name: "Taxons");
-
-            migrationBuilder.DropTable(
-                name: "InventoryItems");
-
-            migrationBuilder.DropTable(
-                name: "Lifeforms");
-
-            migrationBuilder.DropTable(
-                name: "Inventories");
         }
     }
 }
