@@ -23,6 +23,7 @@ namespace Emergence.Client.Components
         public Specimen SpecimenParam { get; set; }
         public Specimen Specimen { get; set; }
         public Origin SelectedOrigin { get; set; }
+        public Lifeform SelectedLifeform { get; set; }
         public string OriginSearch { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
@@ -37,6 +38,11 @@ namespace Emergence.Client.Components
             else if (SpecimenParam != null)
             {
                 Specimen = SpecimenParam;
+                SelectedLifeform = Specimen.Lifeform;
+                if (SpecimenParam.Lifeform != null)
+                {
+                    Specimen.InventoryItem.Name = SpecimenParam.Lifeform.ScientificName;
+                }
             }
             else if (Specimen == null)
             {
@@ -73,6 +79,13 @@ namespace Emergence.Client.Components
             return origins;
         }
 
+        protected async Task<IEnumerable<Lifeform>> FindLifeforms(string searchText)
+        {
+            var lifeforms = (await Client.GetFromJsonAsync<IEnumerable<Lifeform>>($"/api/lifeform/find?search={searchText}&skip=0&take=10")).ToList();
+
+            return lifeforms;
+        }
+
         protected void SaveSelectedOrigin()
         {
             if (SelectedOrigin == null)
@@ -85,6 +98,14 @@ namespace Emergence.Client.Components
             else if (SelectedOrigin.Name != OriginSearch)
             {
                 SelectedOrigin.Name = OriginSearch;
+            }
+        }
+
+        protected void PopulateInventoryItemName()
+        {
+            if (SelectedLifeform != null && string.IsNullOrEmpty(Specimen.InventoryItem.Name))
+            {
+                Specimen.InventoryItem.Name = SelectedLifeform.ScientificName;
             }
         }
     }

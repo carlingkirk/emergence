@@ -27,7 +27,7 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<IEnumerable<Lifeform>> FindLifeforms(string search, int skip = 0, int take = 10)
         {
-            var results = await _lifeformService.FindLifeforms(search, UserId, skip, take);
+            var results = await _lifeformService.FindLifeforms(search, skip, take);
             return results;
         }
     }

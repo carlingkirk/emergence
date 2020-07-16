@@ -38,7 +38,7 @@ namespace Emergence.API.Services
             return lifeforms;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Lifeform>> FindLifeforms(string search, string userId, int skip = 0, int take = 10)
+        public async Task<IEnumerable<Data.Shared.Models.Lifeform>> FindLifeforms(string search, int skip = 0, int take = 10)
         {
             search = "%" + search + "%";
             var lifeformResult = _lifeformRepository.GetSomeAsync(l => EF.Functions.Like(l.CommonName, search) ||
