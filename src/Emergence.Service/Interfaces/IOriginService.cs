@@ -10,5 +10,6 @@ namespace Emergence.Service.Interfaces
         Task<IEnumerable<Origin>> GetOriginsAsync();
         Task<Origin> AddOrUpdateOriginAsync(Origin origin);
         Task<IEnumerable<Origin>> FindOrigins(string search, int skip = 0, int take = 10);
+        Task<Data.Shared.Models.Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId);
     }
 }

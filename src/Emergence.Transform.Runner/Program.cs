@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Emergence.Data.External.USDA;
+using Emergence.Data.Repository;
+using Emergence.Data.Shared.Stores;
+using Emergence.Service;
 using Microsoft.Extensions.Configuration;
 
 namespace Emergence.Transform.Runner
@@ -14,6 +17,18 @@ namespace Emergence.Transform.Runner
             var configuration = LoadConfiguration();
             var importers = LoadImporters(configuration);
             var dataDirectory = configuration["dataDirectory"];
+            var dbContext = new EmergenceDbContext();
+            var lifeformService = new LifeformService(new Repository<Lifeform>(dbContext));
+            var originService = new OriginService(new Repository<Origin>(dbContext));
+            var plantInfoService = new PlantInfoService(new Repository<PlantInfo>(dbContext));
+
+            var transformer = new USDATransformer();
+            var origin = await originService.GetOriginAsync(transformer.Origin.OriginId);
+            if (origin == null)
+            {
+                origin = await originService.AddOrUpdateOriginAsync(transformer.Origin);
+            }
+
             foreach (var importer in importers)
             {
                 if (importer.Type == ImporterType.TextImporter)
@@ -22,7 +37,25 @@ namespace Emergence.Transform.Runner
                     var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
                     await foreach (var result in textImporter.Import())
                     {
-                        Console.WriteLine(result.ScientificNameWithAuthor);
+                        var plantInfo = transformer.Transform(result);
+                        var lifeform = await lifeformService.GetLifeformByScientificNameAsync(plantInfo.ScientificName);
+                        if (lifeform == null)
+                        {
+                            lifeform = await lifeformService.AddOrUpdateLifeformAsync(plantInfo.Lifeform);
+                        }
+                        plantInfo.Lifeform = lifeform;
+                        var originResult = await originService.GetOriginAsync(origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
+                        if (originResult == null)
+                        {
+                            originResult = await originService.AddOrUpdateOriginAsync(plantInfo.Origin);
+                        }
+
+                        plantInfo.Origin = originResult;
+
+                        var plantInfoResult = plantInfoService.GetPlantInfoAsync(plantInfo.Origin.OriginId, plantInfo.Taxon.TaxonId);
+                        plantInfo = await plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
+
+                        Console.WriteLine(plantInfo.ScientificName);
                     }
                 }
             }

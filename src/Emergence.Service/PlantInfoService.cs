@@ -28,6 +28,12 @@ namespace Emergence.Service
             return plantInfo.AsModel();
         }
 
+        public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, string scientificName)
+        {
+            var plantInfo = await _plantInfoRepository.GetAsync(p => p.OriginId == originId && p.ScientificName == scientificName);
+            return plantInfo.AsModel();
+        }
+
         public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> GetPlantInfosAsync()
         {
             var plantInfoResult = _plantInfoRepository.GetSomeAsync(l => l.Id > 0);
@@ -37,6 +43,12 @@ namespace Emergence.Service
                 plantInfos.Add(plantInfo.AsModel());
             }
             return plantInfos;
+        }
+
+        public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, int taxonId)
+        {
+            var plantInfo = await _plantInfoRepository.GetAsync(p => p.OriginId == originId && p.TaxonId == taxonId);
+            return plantInfo.AsModel();
         }
     }
 }

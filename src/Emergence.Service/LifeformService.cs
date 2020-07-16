@@ -27,6 +27,12 @@ namespace Emergence.Service
             return lifeform.AsModel();
         }
 
+        public async Task<Data.Shared.Models.Lifeform> GetLifeformByScientificNameAsync(string scientificName)
+        {
+            var lifeform = await _lifeformRepository.GetAsync(l => l.ScientificName == scientificName);
+            return lifeform.AsModel();
+        }
+
         public async Task<IEnumerable<Data.Shared.Models.Lifeform>> GetLifeformsAsync()
         {
             var lifeformResult = _lifeformRepository.GetSomeAsync(l => l.Id > 0);

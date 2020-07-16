@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Emergence.Data.External\Emergence.Data.External.csproj" />
     <ProjectReference Include="..\Emergence.Data\Emergence.Data.csproj" />
+    <ProjectReference Include="..\Emergence.Service\Emergence.Service.csproj" />
     <ProjectReference Include="..\Emergence.Transform\Emergence.Transform.csproj" />
   </ItemGroup>
 
