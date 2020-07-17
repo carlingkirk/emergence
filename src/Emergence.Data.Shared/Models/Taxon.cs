@@ -26,13 +26,15 @@ namespace Emergence.Data.Shared.Models
         public string Subtribe { get; set; }
         public string GenusHybrid { get; set; }
         public string Genus { get; set; }
+        public string Section { get; set; }
         public string Subgenus { get; set; }
         public string Hybrid { get; set; }
         public string Species { get; set; }
         public string Subspecies { get; set; }
         public string Variety { get; set; }
+        public string Subvariety { get; set; }
         public string Form { get; set; }
-        public string Section { get; set; }
+
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }

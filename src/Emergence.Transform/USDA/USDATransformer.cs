@@ -17,12 +17,12 @@ namespace Emergence.Transform
 
         public PlantInfo Transform(Checklist source)
         {
-            (var Genus, var Species, var Author, var Variant) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
+            (var genus, var species, var author, var subspecies, var variety, var subvariety) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
 
             var origin = new Origin
             {
                 ParentOrigin = new Origin { OriginId = Origin.OriginId },
-                Name = Author,
+                Name = author,
                 ExternalId = source.Symbol,
                 AltExternalId = source.SynonymSymbol
             };
@@ -30,21 +30,23 @@ namespace Emergence.Transform
             var lifeform = new Lifeform
             {
                 CommonName = source.CommonName,
-                ScientificName = Genus + " " + Species
+                ScientificName = genus + " " + species
             };
 
             return new PlantInfo
             {
                 CommonName = source.CommonName,
-                ScientificName = Genus + " " + Species,
+                ScientificName = genus + " " + species,
                 Origin = origin,
                 Lifeform = lifeform,
                 Taxon = new Taxon
                 {
                     Family = source.Family,
-                    Genus = Genus,
-                    Species = Species,
-                    Variety = Variant
+                    Genus = genus,
+                    Species = species,
+                    Subspecies = subspecies,
+                    Variety = variety,
+                    Subvariety = subvariety
                 }
             };
         }
