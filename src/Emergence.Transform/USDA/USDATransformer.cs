@@ -12,7 +12,8 @@ namespace Emergence.Transform
             OriginId = 2,
             Name = "USDA Checklist",
             Description = "",
-            Uri = new Uri("https://plants.sc.egov.usda.gov/dl_all.html")
+            Uri = new Uri("https://plants.sc.egov.usda.gov/dl_all.html"),
+            Type = OriginType.File
         };
 
         public PlantInfo Transform(Checklist source)
@@ -24,7 +25,8 @@ namespace Emergence.Transform
                 ParentOrigin = new Origin { OriginId = Origin.OriginId },
                 Name = author,
                 ExternalId = source.Symbol,
-                AltExternalId = source.SynonymSymbol
+                AltExternalId = source.SynonymSymbol,
+                Type = OriginType.File
             };
 
             var lifeform = new Lifeform

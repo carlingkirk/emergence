@@ -43,7 +43,7 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(long specimenId)
         {
             var result = await _specimenRepository.GetAsync(s => s.Id == specimenId, track: false);
-            return result.AsModel();
+            return result?.AsModel();
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensForInventoryAsync(int inventoryId)

@@ -51,7 +51,7 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id)
         {
             var result = await _activityRepository.GetAsync(a => a.Id == id);
-            var activity = result.AsModel();
+            var activity = result?.AsModel();
             return activity;
         }
 

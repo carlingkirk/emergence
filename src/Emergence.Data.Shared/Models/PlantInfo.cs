@@ -63,6 +63,8 @@ namespace Emergence.Data.Shared.Models
 
     public enum DistanceUnit
     {
+        [Description("")]
+        Unknown,
         [Description("ft")]
         Feet,
         [Description("in")]

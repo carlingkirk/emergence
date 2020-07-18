@@ -36,7 +36,7 @@ namespace Emergence.Data.Shared.Extensions
             ExternalId = source.ExternalId,
             AltExternalId = source.AltExternalId,
             UserId = source.UserId,
-            DateCreated = source.DateCreated,
+            DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
     }

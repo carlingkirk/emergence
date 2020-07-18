@@ -24,13 +24,13 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Lifeform> GetLifeformAsync(int id)
         {
             var lifeform = await _lifeformRepository.GetAsync(l => l.Id == id);
-            return lifeform.AsModel();
+            return lifeform?.AsModel();
         }
 
         public async Task<Data.Shared.Models.Lifeform> GetLifeformByScientificNameAsync(string scientificName)
         {
             var lifeform = await _lifeformRepository.GetAsync(l => l.ScientificName == scientificName);
-            return lifeform.AsModel();
+            return lifeform?.AsModel();
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Lifeform>> GetLifeformsAsync()

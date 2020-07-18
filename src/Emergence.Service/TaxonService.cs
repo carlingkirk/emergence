@@ -19,7 +19,7 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Taxon> GetTaxonAsync(int id)
         {
             var taxon = await _taxonRepository.GetAsync(l => l.Id == id);
-            return taxon.AsModel();
+            return taxon?.AsModel();
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Taxon>> GetTaxonsAsync()
@@ -40,10 +40,14 @@ namespace Emergence.Service
             return taxonResult.AsModel();
         }
 
-        public async Task<Data.Shared.Models.Taxon> GetTaxonAsync(string species, string variety, string form)
+        public async Task<Data.Shared.Models.Taxon> GetTaxonAsync(string genus, string species, string subspecies, string variety, string subvariety, string form)
         {
-            var taxon = await _taxonRepository.GetAsync(t => t.Species == species && t.Variety == variety && t.Form == form);
-            return taxon.AsModel();
+            var taxon = await _taxonRepository.GetAsync(t => t.Genus == genus && t.Species == species &&
+                                                             (subspecies == null || t.Subspecies == subspecies) &&
+                                                             (variety == null || t.Variety == variety) &&
+                                                             (subvariety == null || t.Subvariety == subvariety) &&
+                                                             (form == null || t.Form == form));
+            return taxon?.AsModel();
         }
     }
 }
