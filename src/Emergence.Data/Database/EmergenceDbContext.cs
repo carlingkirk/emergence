@@ -6,6 +6,18 @@ namespace Emergence.Data.Repository
 {
     public class EmergenceDbContext : DbContext
     {
+        private string ConnectionString { get; }
+
+        public EmergenceDbContext()
+        {
+            ConnectionString = "Data Source=emergence.db";
+        }
+
+        public EmergenceDbContext(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+
         public static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
         {
             builder
@@ -29,7 +41,7 @@ namespace Emergence.Data.Repository
         protected override void OnConfiguring(DbContextOptionsBuilder options) =>
             options.UseLoggerFactory(Logger)
             .EnableSensitiveDataLogging(true)
-            .UseSqlite("Data Source=emergence.db");
+            .UseSqlite(ConnectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
