@@ -35,7 +35,7 @@ namespace Emergence.Data.Shared.Models
         public string Subvariety { get; set; }
         public string Form { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }
 }

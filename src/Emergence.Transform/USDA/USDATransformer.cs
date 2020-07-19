@@ -25,8 +25,9 @@ namespace Emergence.Transform
                 ParentOrigin = new Origin { OriginId = Origin.OriginId },
                 Name = author,
                 ExternalId = source.Symbol,
-                AltExternalId = source.SynonymSymbol,
-                Type = OriginType.File
+                AltExternalId = !string.IsNullOrEmpty(source.SynonymSymbol) ? source.SynonymSymbol : null,
+                Type = OriginType.File,
+                Uri = new Uri("https://plants.usda.gov/core/profile?symbol=" + source.Symbol)
             };
 
             var lifeform = new Lifeform

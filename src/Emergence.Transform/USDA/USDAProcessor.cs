@@ -55,16 +55,7 @@ namespace Emergence.Transform.USDA
 
             var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(originResult.OriginId, taxonResult.TaxonId);
 
-            if (plantInfoResult != null)
-            {
-                plantInfoResult.CommonName = plantInfo.CommonName;
-                plantInfoResult.ScientificName = plantInfo.ScientificName;
-                plantInfoResult.Origin = originResult;
-                plantInfoResult.Lifeform = lifeformResult;
-                plantInfoResult.Taxon = taxonResult;
-                plantInfoResult = await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfoResult);
-            }
-            else
+            if (plantInfoResult == null)
             {
                 plantInfo.Origin = originResult;
                 plantInfo.Lifeform = lifeformResult;

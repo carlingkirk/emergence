@@ -17,11 +17,10 @@ namespace Emergence.Transform.Runner
             var dataDirectory = configuration["dataDirectory"];
             var databaseDirectory = configuration["databaseDirectory"];
             var connectionString = $"Data Source={databaseDirectory}emergence.db";
-            var dbContext = new EmergenceDbContext(connectionString);
-            var processor = new USDA.USDAProcessor(dbContext);
-            var transformer = new USDATransformer();
 
-            await processor.InitializeOrigin(transformer.Origin);
+            var transformer = new USDATransformer();
+            var startRow = 22914;
+            var batchSize = 50;
 
             foreach (var importer in importers)
             {
@@ -29,12 +28,39 @@ namespace Emergence.Transform.Runner
                 {
                     var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
                     var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
+                    var row = 1;
+                    var checklists = new List<Checklist>();
                     await foreach (var result in textImporter.Import())
                     {
-                        var plantInfo = transformer.Transform(result);
-                        var plantInfoResult = await processor.Process(plantInfo);
+                        row++;
+                        if (row < startRow)
+                        {
+                            continue;
+                        }
+                        else if (row % batchSize != 0)
+                        {
+                            checklists.Add(result);
+                        }
+                        else
+                        {
+                            using (var dbContext = new EmergenceDbContext(connectionString, false))
+                            {
+                                var processor = new USDA.USDAProcessor(dbContext);
+                                await processor.InitializeOrigin(transformer.Origin);
+                                foreach (var checklist in checklists)
+                                {
+                                    if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
+                                    {
+                                        var plantInfo = transformer.Transform(checklist);
+                                        var plantInfoResult = await processor.Process(plantInfo);
 
-                        Console.WriteLine(plantInfoResult.CommonName, plantInfoResult.ScientificName, plantInfo.PlantInfoId);
+                                        Console.WriteLine("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
+                                                          " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+                                    }
+                                }
+                            }
+                            checklists.Clear();
+                        }
                     }
                 }
             }

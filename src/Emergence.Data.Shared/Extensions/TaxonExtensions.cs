@@ -1,3 +1,4 @@
+using System;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Extensions
@@ -70,7 +71,7 @@ namespace Emergence.Data.Shared.Extensions
             Variety = source.Variety,
             Subvariety = source.Subvariety,
             Form = source.Form,
-            DateCreated = source.DateCreated,
+            DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
     }
