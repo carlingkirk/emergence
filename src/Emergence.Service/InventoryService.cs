@@ -22,8 +22,11 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Inventory> GetInventoryAsync(int id)
         {
             var result = await _inventoryRepository.GetAsync(i => i.Id == id);
-            var inventory = result.AsModel();
-            inventory.Items = await GetInventoryItemsAsync(id);
+            var inventory = result?.AsModel();
+            if (inventory != null)
+            {
+                inventory.Items = await GetInventoryItemsAsync(id);
+            }
             return inventory;
         }
 

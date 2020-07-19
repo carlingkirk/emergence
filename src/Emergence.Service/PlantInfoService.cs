@@ -25,7 +25,19 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int id)
         {
             var plantInfo = await _plantInfoRepository.GetAsync(l => l.Id == id);
-            return plantInfo.AsModel();
+            return plantInfo?.AsModel();
+        }
+
+        public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, string scientificName)
+        {
+            var plantInfo = await _plantInfoRepository.GetAsync(p => p.OriginId == originId && p.ScientificName == scientificName);
+            return plantInfo?.AsModel();
+        }
+
+        public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, int taxonId)
+        {
+            var plantInfo = await _plantInfoRepository.GetAsync(p => p.OriginId == originId && p.TaxonId == taxonId);
+            return plantInfo?.AsModel();
         }
 
         public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> GetPlantInfosAsync()

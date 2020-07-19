@@ -6,6 +6,21 @@ namespace Emergence.Data.Repository
 {
     public class EmergenceDbContext : DbContext
     {
+        private string ConnectionString { get; }
+        private bool IsLoggingEnabled { get; }
+
+        public EmergenceDbContext()
+        {
+            ConnectionString = "Data Source=emergence.db";
+            IsLoggingEnabled = true;
+        }
+
+        public EmergenceDbContext(string connectionString, bool loggingEnabled = true)
+        {
+            ConnectionString = connectionString;
+            IsLoggingEnabled = loggingEnabled;
+        }
+
         public static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
         {
             builder
@@ -26,10 +41,15 @@ namespace Emergence.Data.Repository
         public virtual DbSet<Specimen> Specimens { get; set; }
         public virtual DbSet<Taxon> Taxons { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) =>
-            options.UseLoggerFactory(Logger)
-            .EnableSensitiveDataLogging(true)
-            .UseSqlite("Data Source=emergence.db");
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseSqlite(ConnectionString);
+            if (IsLoggingEnabled)
+            {
+                options.UseLoggerFactory(Logger)
+                .EnableSensitiveDataLogging(true);
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -20,7 +20,7 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id)
         {
             var origin = await _originRepository.GetAsync(l => l.Id == id);
-            return origin.AsModel();
+            return origin?.AsModel();
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Origin>> GetOriginsAsync()
@@ -54,6 +54,14 @@ namespace Emergence.Service
             }
 
             return origins;
+        }
+
+        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId)
+        {
+            var origin = await _originRepository.GetAsync(o => o.ParentId == parentOriginId &&
+                                                               o.ExternalId == externalId &&
+                                                              (altExternalId == null || o.AltExternalId == altExternalId));
+            return origin?.AsModel();
         }
     }
 }
