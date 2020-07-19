@@ -19,8 +19,6 @@ namespace Emergence.Client.Components
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
         public int Id { get; set; }
-        [Parameter]
-        public IEnumerable<Activity> ActivitiesResult { get; set; }
         public Activity Activity { get; set; }
         public Specimen SelectedSpecimen { get; set; }
         public IEnumerable<ActivityType> ActivityTypes => Enum.GetValues(typeof(ActivityType)).Cast<ActivityType>();
@@ -29,7 +27,18 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                Activity = await Client.GetFromJsonAsync<Activity>($"/api/activity/{Id}");
+                var result = await Client.GetAsync($"/api/activity/{Id}");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    Activity = await result.Content.ReadFromJsonAsync<Activity>();
+                    SelectedSpecimen = Activity.Specimen ?? null;
+                }
+                else
+                {
+                    var message = result.Content.ReadAsStringAsync();
+                    throw new Exception(result.StatusCode + ": " + message);
+                }
             }
             else
             {
@@ -45,11 +54,22 @@ namespace Emergence.Client.Components
             }
             Activity.DateModified = DateTime.UtcNow;
 
+            if (SelectedSpecimen != null)
+            {
+                Activity.Specimen = SelectedSpecimen;
+            }
+
             var result = await Client.PutAsJsonAsync("/api/activity", Activity);
             if (result.IsSuccessStatusCode)
             {
                 Activity = await result.Content.ReadFromJsonAsync<Activity>();
             }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+
             BlazoredModal.Close(ModalResult.Ok(Activity));
         }
 

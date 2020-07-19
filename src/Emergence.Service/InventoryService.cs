@@ -12,11 +12,13 @@ namespace Emergence.Service
     {
         private readonly IRepository<Data.Shared.Stores.Inventory> _inventoryRepository;
         private readonly IRepository<Data.Shared.Stores.InventoryItem> _inventoryItemRepository;
+        private readonly IOriginService _originService;
 
-        public InventoryService(IRepository<Data.Shared.Stores.Inventory> inventoryRepository, IRepository<Data.Shared.Stores.InventoryItem> inventoryItemRepository)
+        public InventoryService(IRepository<Data.Shared.Stores.Inventory> inventoryRepository, IRepository<Data.Shared.Stores.InventoryItem> inventoryItemRepository, IOriginService originService)
         {
             _inventoryRepository = inventoryRepository;
             _inventoryItemRepository = inventoryItemRepository;
+            _originService = originService;
         }
 
         public async Task<Data.Shared.Models.Inventory> GetInventoryAsync(int id)
@@ -26,6 +28,17 @@ namespace Emergence.Service
             if (inventory != null)
             {
                 inventory.Items = await GetInventoryItemsAsync(id);
+            }
+            return inventory;
+        }
+
+        public async Task<Data.Shared.Models.Inventory> GetInventoryAsync(string userId, bool withItems = false)
+        {
+            var result = await _inventoryRepository.GetAsync(i => i.UserId == userId);
+            var inventory = result?.AsModel();
+            if (inventory != null && withItems)
+            {
+                inventory.Items = await GetInventoryItemsAsync(inventory.InventoryId);
             }
             return inventory;
         }
@@ -61,6 +74,12 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.InventoryItem> AddOrUpdateInventoryItemAsync(Data.Shared.Models.InventoryItem inventoryItem)
         {
             inventoryItem.DateModified = DateTime.UtcNow;
+
+            if (inventoryItem.Origin != null && inventoryItem.Origin.OriginId == 0)
+            {
+                inventoryItem.Origin = await _originService.AddOrUpdateOriginAsync(inventoryItem.Origin);
+            }
+
             var result = await _inventoryItemRepository.AddOrUpdateAsync(i => i.Id == inventoryItem.InventoryItemId, inventoryItem.AsStore());
             return result.AsModel();
         }

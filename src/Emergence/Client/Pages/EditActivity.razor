@@ -9,8 +9,10 @@
 @attribute [Authorize]
 @inherits ActivityComponent
 
-<h3>Edit Activity</h3>
-<div class="form">
+@if (Activity != null)
+{
+<EditForm Model="@Activity">
+    <h3>Edit Activity</h3>
     <div class="form-group container">
         <div class="row">
             <div class="col-3">
@@ -29,28 +31,28 @@
             <div class="col">
                 <label for="specimen">Specimen</label>
                 <BlazoredTypeahead SearchMethod="FindSpecimens"
-                                   @bind-Value="SelectedSpecimen"
-                                   MinimumLength="3"
-                                   Debounce="500">
+                                    @bind-Value="SelectedSpecimen"
+                                    MinimumLength="3"
+                                    Debounce="500" Context="specimen">
                     <SelectedTemplate>
-                        @(context.InventoryItem?.Name ?? context.Lifeform?.ScientificName ?? context.SpecimenId.ToString())
+                        @(specimen.InventoryItem?.Name ?? specimen.Lifeform?.ScientificName ?? specimen.SpecimenId.ToString())
                     </SelectedTemplate>
                     <ResultTemplate>
-                        @if (context.SpecimenId == 0 && context.Lifeform != null)
+                        @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
                         {
-                            <a href="" @onclick="@(async () => { await AddSpecimen((Specimen)context); })" @onclick:preventDefault>
+                            <a href="" @onclick="@(async () => { await AddSpecimen((Specimen)specimen); })" @onclick:preventDefault>
                                 <span>Add new </span>
-                                <span class="text-body">@(context.Lifeform.CommonName) </span>
-                                <span class="text-body font-italic">@(context.Lifeform.ScientificName) </span>
+                                <span class="text-body">@(specimen.Lifeform.CommonName) </span>
+                                <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>
                             </a>
                         }
-                        else if (context.InventoryItem != null)
+                        else if (specimen.InventoryItem != null)
                         {
-                            <span>@(context.InventoryItem?.Name)</span> <span>@(context.InventoryItem?.Status.ToFriendlyName())</span>
+                            <span>@(specimen.InventoryItem?.Name)</span> <span>@(specimen.SpecimenStage.ToFriendlyName())</span> <span>@(specimen.InventoryItem?.Status.ToFriendlyName())</span>
                         }
                         else // this won't happen?
                         {
-                            <span>@context.SpecimenId.ToString();</span>
+                            <span>@specimen.SpecimenId.ToString();</span>
                         }
                     </ResultTemplate>
                     <NotFoundTemplate>
@@ -82,7 +84,12 @@
     {
         <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
     }
-</div>
+</EditForm>
+}
+else
+{
+    <span>Loading...</span>
+}
 
 @code {
     async Task AddSpecimen(Specimen specimen)

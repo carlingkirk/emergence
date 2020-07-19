@@ -52,11 +52,19 @@ namespace Emergence.Service
         {
             var result = await _activityRepository.GetAsync(a => a.Id == id);
             var activity = result?.AsModel();
+
+            if (result.SpecimenId.HasValue)
+            {
+                var specimen = await _specimenService.GetSpecimenAsync(result.SpecimenId.Value);
+                activity.Specimen = specimen;
+            }
+
             return activity;
         }
 
-        public async Task<Data.Shared.Models.Activity> AddOrUpdateActivityAsync(Data.Shared.Models.Activity activity)
+        public async Task<Data.Shared.Models.Activity> AddOrUpdateActivityAsync(Data.Shared.Models.Activity activity, string userId)
         {
+            activity.UserId = userId;
             var activityResult = await _activityRepository.AddOrUpdateAsync(a => a.Id == activity.ActivityId, activity.AsStore());
             return activityResult.AsModel();
         }

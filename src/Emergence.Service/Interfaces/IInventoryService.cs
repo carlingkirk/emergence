@@ -7,6 +7,7 @@ namespace Emergence.Service.Interfaces
     public interface IInventoryService
     {
         Task<Inventory> GetInventoryAsync(int id);
+        Task<Inventory> GetInventoryAsync(string userId, bool withItems = false);
         Task<IEnumerable<InventoryItem>> GetInventoryItemsAsync(int inventoryId);
         Task<IEnumerable<InventoryItem>> GetInventoryItemsByIdsAsync(IEnumerable<int> inventoryIds);
         Task<Inventory> AddOrUpdateInventoryAsync(Inventory inventory);

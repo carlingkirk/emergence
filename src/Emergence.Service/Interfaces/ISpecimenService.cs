@@ -6,7 +6,7 @@ namespace Emergence.Service.Interfaces
 {
     public interface ISpecimenService
     {
-        Task<Specimen> GetSpecimenAsync(long specimenId);
+        Task<Specimen> GetSpecimenAsync(int specimenId);
         Task<IEnumerable<Specimen>> GetSpecimensForInventoryAsync(int inventoryId);
         Task<Specimen> AddOrUpdateAsync(Specimen specimen, string userId);
         Task<IEnumerable<Specimen>> GetSpecimensByIdsAsync(IEnumerable<int> specimenIds);

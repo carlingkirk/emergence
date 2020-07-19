@@ -37,7 +37,7 @@ namespace Emergence.Data.Shared.Extensions
         public static InventoryItem AsStore(this Models.InventoryItem source) => new InventoryItem
         {
             Id = source.InventoryItemId,
-            InventoryId = source.Inventory.InventoryId,
+            InventoryId = (int)source.Inventory?.InventoryId,
             Name = source.Name,
             OriginId = source.Origin?.OriginId,
             ItemType = source.ItemType.ToString(),

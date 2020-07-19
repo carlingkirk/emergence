@@ -38,7 +38,7 @@ namespace Emergence.Data.Repository
             {
                 foreach (var include in includes)
                 {
-                    entities.IncludeMultiple(include);
+                    entities = entities.IncludeMultiple(include);
                 }
             }
 

@@ -28,5 +28,18 @@ namespace Emergence.Test.Mocks
 
             return mockInventoryService;
         }
+
+        public static Mock<IOriginService> GetStandardMockOriginService(IEnumerable<Origin> originsResult = null)
+        {
+            var mockOriginService = new Mock<IOriginService>();
+
+            mockOriginService.Setup(s => s.GetOriginAsync(It.IsAny<int>()))
+                .ReturnsAsync(originsResult?.FirstOrDefault() ?? FakeOrigins.Get().First());
+
+            mockOriginService.Setup(s => s.GetOriginsAsync())
+                .ReturnsAsync(originsResult ?? FakeOrigins.Get());
+
+            return mockOriginService;
+        }
     }
 }

@@ -63,6 +63,11 @@ namespace Emergence.Client.Components
             }
             Specimen.DateModified = DateTime.UtcNow;
 
+            if (SelectedOrigin != null)
+            {
+                Specimen.InventoryItem.Origin = SelectedOrigin;
+            }
+
             var result = await Client.PutAsJsonAsync("/api/specimen", Specimen);
             if (result.IsSuccessStatusCode)
             {

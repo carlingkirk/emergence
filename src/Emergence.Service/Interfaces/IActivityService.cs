@@ -8,6 +8,6 @@ namespace Emergence.Service.Interfaces
     {
         Task<Activity> GetActivityAsync(int id);
         Task<IEnumerable<Activity>> GetActivitiesAsync();
-        Task<Activity> AddOrUpdateActivityAsync(Activity activity);
+        Task<Activity> AddOrUpdateActivityAsync(Activity activity, string userId);
     }
 }

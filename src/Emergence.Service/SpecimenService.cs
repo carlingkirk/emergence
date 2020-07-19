@@ -27,10 +27,14 @@ namespace Emergence.Service
                 specimen.InventoryItem = new Data.Shared.Models.InventoryItem();
             }
 
-            if (specimen.InventoryItem.Inventory.InventoryId == 0)
+            if (specimen.InventoryItem.Inventory == null || specimen.InventoryItem.Inventory.InventoryId == 0)
             {
-                var inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Data.Shared.Stores.Inventory { UserId = userId }.AsModel());
-                specimen.InventoryItem.Inventory.InventoryId = inventory.InventoryId;
+                var inventory = await _inventoryService.GetInventoryAsync(userId);
+                if (inventory == null)
+                {
+                    inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Data.Shared.Stores.Inventory { UserId = userId }.AsModel());
+                }
+                specimen.InventoryItem.Inventory = inventory;
             }
 
             specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
@@ -40,9 +44,11 @@ namespace Emergence.Service
             return specimenResult.AsModel();
         }
 
-        public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(long specimenId)
+        public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(int specimenId)
         {
-            var result = await _specimenRepository.GetAsync(s => s.Id == specimenId, track: false);
+            var result = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenId, track: false,
+                                                                        s => s.Include(s => s.InventoryItem)
+                                                                              .Include(s => s.Lifeform));
             return result?.AsModel();
         }
 

@@ -24,7 +24,7 @@ namespace Emergence.Data.Shared.Extensions
             Name = source.Name,
             Description = source.Description,
             ActivityType = source.ActivityType.ToString(),
-            SpecimenId = source.Specimen.SpecimenId,
+            SpecimenId = source.Specimen?.SpecimenId,
             UserId = source.UserId,
             DateOccured = source.DateOccured,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
