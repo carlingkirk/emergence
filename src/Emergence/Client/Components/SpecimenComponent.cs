@@ -73,7 +73,11 @@ namespace Emergence.Client.Components
             {
                 SpecimenParam = Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
             }
-            BlazoredModal.Close(ModalResult.Ok(SpecimenParam));
+
+            if (BlazoredModal != null)
+            {
+                BlazoredModal.Close(ModalResult.Ok(SpecimenParam));
+            }
         }
 
         protected async Task<IEnumerable<Origin>> FindOrigins(string searchText)

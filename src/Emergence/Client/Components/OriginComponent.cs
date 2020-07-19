@@ -52,7 +52,11 @@ namespace Emergence.Client.Components
             {
                 Origin = await result.Content.ReadFromJsonAsync<Origin>();
             }
-            BlazoredModal.Close(ModalResult.Ok(Origin));
+
+            if (BlazoredModal != null)
+            {
+                BlazoredModal.Close(ModalResult.Ok(Origin));
+            }
         }
     }
 }

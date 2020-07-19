@@ -74,7 +74,11 @@ namespace Emergence.Client.Components
             {
                 PlantInfo = await result.Content.ReadFromJsonAsync<PlantInfo>();
             }
-            BlazoredModal.Close(ModalResult.Ok(PlantInfo));
+
+            if (BlazoredModal != null)
+            {
+                BlazoredModal.Close(ModalResult.Ok(PlantInfo));
+            }
         }
 
         protected bool IsSoilTypeChosen(SoilType soilType) => ChosenSoilTypes.Any(s => s == soilType);

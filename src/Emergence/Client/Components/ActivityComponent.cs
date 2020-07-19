@@ -70,7 +70,10 @@ namespace Emergence.Client.Components
                 throw new Exception(result.StatusCode + ": " + message);
             }
 
-            BlazoredModal.Close(ModalResult.Ok(Activity));
+            if (BlazoredModal != null)
+            {
+                BlazoredModal.Close(ModalResult.Ok(Activity));
+            }
         }
 
         protected async Task<IEnumerable<Specimen>> FindSpecimens(string searchText)
