@@ -63,6 +63,7 @@ namespace Emergence.Client.Components
             if (result.IsSuccessStatusCode)
             {
                 Activity = await result.Content.ReadFromJsonAsync<Activity>();
+                Id = Activity.ActivityId;
             }
             else
             {
