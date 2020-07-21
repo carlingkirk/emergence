@@ -7,244 +7,251 @@
 @attribute [Authorize]
 @inherits EditPlantInfoComponent
 
-<h3>Edit PlantInfo</h3>
-<div class="form">
-    <div class="form-group container">
-        <div class="row">
-            <div class="col">
-                <label for="common-name">Common Name</label>
-                <input @bind="@PlantInfo.CommonName" type="text" class="form-control" id="common-name" />
-            </div>
-            <div class="col">
-                <label for="scientific-name">Scientific Name</label>
-                <input @bind="@PlantInfo.ScientificName" type="text" class="form-control" id="scientific-name" />
+@if (PlantInfo != null)
+{
+    <EditForm Model="@PlantInfo">
+        <h3>@(Id > 0 ? "Edit" : "Add") PlantInfo</h3>
+        <div class="form-group container">
+            <div class="row">
+                <div class="col">
+                    <label for="common-name">Common Name</label>
+                    <input @bind="@PlantInfo.CommonName" type="text" class="form-control" id="common-name" />
+                </div>
+                <div class="col">
+                    <label for="scientific-name">Scientific Name</label>
+                    <input @bind="@PlantInfo.ScientificName" type="text" class="form-control" id="scientific-name" />
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-10">
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <label for="req-light-min">Light</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-5 range-input">
-                                        <select @bind="@PlantInfo.Requirements.LightRequirements.MinimumLight" type="text" class="form-control" id="req-light-min">
-                                            @foreach (var lightType in LightTypes)
-                                            {
-                                                <option value="@lightType">@lightType.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-5 range-input">
-                                        <select @bind="@PlantInfo.Requirements.LightRequirements.MaximumLight" type="text" class="form-control" id="req-light-max">
-                                            @foreach (var lightType in LightTypes)
-                                            {
-                                                <option value="@lightType">@lightType.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label for="req-water-min">Water</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-5 range-input">
-                                        <select @bind="@PlantInfo.Requirements.WaterRequirements.MinimumWater" type="text" class="form-control" id="req-water-min">
-                                            @foreach (var waterType in WaterTypes)
-                                            {
-                                                <option value="@waterType">@waterType.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-5 range-input">
-                                        <select @bind="@PlantInfo.Requirements.WaterRequirements.MaximumWater" type="text" class="form-control" id="req-water-max">
-                                            @foreach (var waterType in WaterTypes)
-                                            {
-                                                <option value="@waterType">@waterType.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label for="req-zones-min">Zones</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-5 range-input">
-                                        <input @bind="@PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter" type="text" class="form-control" id="req-zones-min" />
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-5 range-input">
-                                        <input @bind="@PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter" type="text" class="form-control" id="req-zones-max" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="bloom-min">Bloom Times</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-5 range-input">
-                                        <select @bind="@PlantInfo.BloomTime.MinimumBloomTime" type="text" class="form-control" id="bloom-min">
-                                            @foreach (var month in Months)
-                                            {
-                                                <option value="@month">@month.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-5 range-input">
-                                        <select @bind="@PlantInfo.BloomTime.MaximumBloomTime" type="text" class="form-control" id="bloom-max">
-                                            @foreach (var month in Months)
-                                            {
-                                                <option value="@month">@month.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label for="height-min">Height</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-3 range-input">
-                                        <input @bind="@PlantInfo.Height.MinimumHeight" type="text" class="form-control" id="height-min" />
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-3 range-input">
-                                        <input @bind="@PlantInfo.Height.MaximumHeight" type="text" class="form-control" id="height-max" />
-                                    </div>
-                                    <div class="col-2 range-input range-input-unit">
-                                        <select @bind="@PlantInfo.Height.Unit" type="text" class="form-control" id="bloom-unit">
-                                            @foreach (var unit in DistanceUnits)
-                                            {
-                                                <option value="@unit">@unit.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label for="spread-min">Spread</label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-3 range-input">
-                                        <input @bind="@PlantInfo.Spread.MinimumSpread" type="text" class="form-control" id="spread-min" />
-                                    </div>
-                                    <div class="col-1 range-separator">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-3 range-input">
-                                        <input @bind="@PlantInfo.Spread.MaximumSpread" type="text" class="form-control" id="spread-max" />
-                                    </div>
-                                    <div class="col-4 range-input range-input-unit">
-                                        <select @bind="@PlantInfo.Spread.Unit" type="text" class="form-control" id="spread-unit">
-                                            @foreach (var unit in DistanceUnits)
-                                            {
-                                                <option value="@unit">@unit.ToFriendlyName()</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="req-scarification">Stratification Stages</label>
-                            <div class="@(AnyStratificationStages() ? "d-none" : "")">
-                                <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
-                            </div>
-
-                            @foreach (var chosenStratificationStage in ChosenStratificationStages)
-                            {
-                                var key = chosenStratificationStage.Step.ToString();
-                                var firstRow = chosenStratificationStage.Step == 1;
-                                var lastRow = ChosenStratificationStages.Count == chosenStratificationStage.Step;
-                                <div class="row">
-                                    <div class="col-1">
-                                        <div>
-                                            <div class="@(firstRow ? "" : "d-none")"><label>+ / -</label></div>
-                                            <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(chosenStratificationStage.Step))"><span class="oi oi-minus"></span></button>
+        <div class="container">
+            <div class="row">
+                <div class="col-10">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <label for="req-light-min">Light</label>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-5 range-input">
+                                            <select @bind="@PlantInfo.Requirements.LightRequirements.MinimumLight" type="text" class="form-control" id="req-light-min">
+                                                @foreach (var lightType in LightTypes)
+                                                {
+                                                    <option value="@lightType">@lightType.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-1 range-separator">
+                                            <span>to</span>
+                                        </div>
+                                        <div class="col-5 range-input">
+                                            <select @bind="@PlantInfo.Requirements.LightRequirements.MaximumLight" type="text" class="form-control" id="req-light-max">
+                                                @foreach (var lightType in LightTypes)
+                                                {
+                                                    <option value="@lightType">@lightType.ToFriendlyName()</option>
+                                                }
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-1">
-                                        <div class="@(firstRow ? "" : "d-none")"><label>Step</label></div>
-                                        <span id="@GetElementId("req-scarification", key)">@chosenStratificationStage.Step</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="req-water-min">Water</label>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-5 range-input">
+                                            <select @bind="@PlantInfo.Requirements.WaterRequirements.MinimumWater" type="text" class="form-control" id="req-water-min">
+                                                @foreach (var waterType in WaterTypes)
+                                                {
+                                                    <option value="@waterType">@waterType.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-1 range-separator">
+                                            <span>to</span>
+                                        </div>
+                                        <div class="col-5 range-input">
+                                            <select @bind="@PlantInfo.Requirements.WaterRequirements.MaximumWater" type="text" class="form-control" id="req-water-max">
+                                                @foreach (var waterType in WaterTypes)
+                                                {
+                                                    <option value="@waterType">@waterType.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-1">
-                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-days", key)">Days</label>
-                                        <input @bind="@chosenStratificationStage.DayLength" type="text" class="form-control" id="@GetElementId("req-scarification-days", key)" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="req-zones-min">Zones</label>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-5 range-input">
+                                            <input @bind="@PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter" type="text" class="form-control" id="req-zones-min" />
+                                        </div>
+                                        <div class="col-1 range-separator">
+                                            <span>to</span>
+                                        </div>
+                                        <div class="col-5 range-input">
+                                            <input @bind="@PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter" type="text" class="form-control" id="req-zones-max" />
+                                        </div>
                                     </div>
-                                    <div class="col-7">
-                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-temp-min", key)">Temperature Range</label>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <select @bind="@chosenStratificationStage.StratificationType" class="form-control" id="@GetElementId("req-scarification-temp-min", key)">
-                                                        @foreach (var stratificationType in StratificationTypes)
-                                                        {
-                                                            <option value="@stratificationType">@stratificationType.ToFriendlyName()</option>
-                                                        }
-                                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="bloom-min">Bloom Times</label>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-5 range-input">
+                                            <select @bind="@PlantInfo.BloomTime.MinimumBloomTime" type="text" class="form-control" id="bloom-min">
+                                                @foreach (var month in Months)
+                                                {
+                                                    <option value="@month">@month.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-1 range-separator">
+                                            <span>to</span>
+                                        </div>
+                                        <div class="col-5 range-input">
+                                            <select @bind="@PlantInfo.BloomTime.MaximumBloomTime" type="text" class="form-control" id="bloom-max">
+                                                @foreach (var month in Months)
+                                                {
+                                                    <option value="@month">@month.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="height-min">Height</label>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-3 range-input">
+                                            <input @bind="@PlantInfo.Height.MinimumHeight" type="text" class="form-control" id="height-min" />
+                                        </div>
+                                        <div class="col-1 range-separator">
+                                            <span>to</span>
+                                        </div>
+                                        <div class="col-3 range-input">
+                                            <input @bind="@PlantInfo.Height.MaximumHeight" type="text" class="form-control" id="height-max" />
+                                        </div>
+                                        <div class="col-2 range-input range-input-unit">
+                                            <select @bind="@PlantInfo.Height.Unit" type="text" class="form-control" id="bloom-unit">
+                                                @foreach (var unit in DistanceUnits)
+                                                {
+                                                    <option value="@unit">@unit.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="spread-min">Spread</label>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-3 range-input">
+                                            <input @bind="@PlantInfo.Spread.MinimumSpread" type="text" class="form-control" id="spread-min" />
+                                        </div>
+                                        <div class="col-1 range-separator">
+                                            <span>to</span>
+                                        </div>
+                                        <div class="col-3 range-input">
+                                            <input @bind="@PlantInfo.Spread.MaximumSpread" type="text" class="form-control" id="spread-max" />
+                                        </div>
+                                        <div class="col-4 range-input range-input-unit">
+                                            <select @bind="@PlantInfo.Spread.Unit" type="text" class="form-control" id="spread-unit">
+                                                @foreach (var unit in DistanceUnits)
+                                                {
+                                                    <option value="@unit">@unit.ToFriendlyName()</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="req-scarification">Stratification Stages</label>
+                                <div class="@(AnyStratificationStages() ? "d-none" : "")">
+                                    <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                                </div>
+
+                                @foreach (var chosenStratificationStage in ChosenStratificationStages)
+                                {
+                                    var key = chosenStratificationStage.Step.ToString();
+                                    var firstRow = chosenStratificationStage.Step == 1;
+                                    var lastRow = ChosenStratificationStages.Count == chosenStratificationStage.Step;
+                                    <div class="row">
+                                        <div class="col-1">
+                                            <div>
+                                                <div class="@(firstRow ? "" : "d-none")"><label>+ / -</label></div>
+                                                <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(chosenStratificationStage.Step))"><span class="oi oi-minus"></span></button>
+                                            </div>
+                                        </div>
+                                        <div class="col-1">
+                                            <div class="@(firstRow ? "" : "d-none")"><label>Step</label></div>
+                                            <span id="@GetElementId("req-scarification", key)">@chosenStratificationStage.Step</span>
+                                        </div>
+                                        <div class="col-1">
+                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-days", key)">Days</label>
+                                            <input @bind="@chosenStratificationStage.DayLength" type="text" class="form-control" id="@GetElementId("req-scarification-days", key)" />
+                                        </div>
+                                        <div class="col-7">
+                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-temp-min", key)">Temperature Range</label>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <select @bind="@chosenStratificationStage.StratificationType" class="form-control" id="@GetElementId("req-scarification-temp-min", key)">
+                                                            @foreach (var stratificationType in StratificationTypes)
+                                                            {
+                                                                <option value="@stratificationType">@stratificationType.ToFriendlyName()</option>
+                                                            }
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="@(lastRow ? "row" : "d-none")">
-                                    <div class="col-1">
-                                        <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                                    <div class="@(lastRow ? "row" : "d-none")">
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <label for="req-soil">Soil Types</label>
-                <ul class="checklist">
-                    @foreach (var soilType in SoilTypes)
-                    {
-                        <li>
-                            <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
-                            <label for="@GetElementId("req-soil", soilType.ToString())">@soilType</label>
-                        </li>
-                    }
-                </ul>
+                <div class="col">
+                    <label for="req-soil">Soil Types</label>
+                    <ul class="checklist">
+                        @foreach (var soilType in SoilTypes)
+                        {
+                            <li>
+                                <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
+                                <label for="@GetElementId("req-soil", soilType.ToString())">@soilType</label>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    <button @onclick="(async () => await SavePlantInfo())" class="btn btn-primary">Submit</button>
-    @if (BlazoredModal != null)
-    {
-        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
-    }
-</div>
+        <button @onclick="(async () => await SavePlantInfo())" class="btn btn-primary">Submit</button>
+        @if (BlazoredModal != null)
+        {
+            <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+        }
+    </EditForm>
+}
+else
+{
+    <span>Loading...</span>
+}
 @code {
     protected string GetElementId(string element, string id)
     {

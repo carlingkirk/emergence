@@ -35,7 +35,17 @@ namespace Emergence.Client.Components
             ChosenSoilTypes = new List<SoilType>();
             if (Id > 0)
             {
-                PlantInfo = await Client.GetFromJsonAsync<PlantInfo>($"/api/plantinfo/{Id}");
+                var result = await Client.GetAsync($"/api/plantinfo/{Id}");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    PlantInfo = await result.Content.ReadFromJsonAsync<PlantInfo>();
+                }
+                else
+                {
+                    var message = result.Content.ReadAsStringAsync();
+                    throw new Exception(result.StatusCode + ": " + message);
+                }
             }
             else
             {

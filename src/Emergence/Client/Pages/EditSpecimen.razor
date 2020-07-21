@@ -7,18 +7,20 @@
 @using Blazored.Typeahead
 @attribute [Authorize]
 @inherits EditSpecimenComponent
-<h3>Add Specimen</h3>
 
-<EditForm Model="@Specimen">
-    <div class="simple-form">
+
+@if (Specimen != null)
+{
+    <EditForm Model="@Specimen">
+        <h3>@(Id > 0 ? "Edit" : "Add") Specimen</h3>
         <div class="form-group container">
             <div class="row">
                 <div class="col-12">
                     <label for="lifeform">Plant Name </label>
                     <BlazoredTypeahead SearchMethod="FindLifeforms"
-                                       @bind-Value="SelectedLifeform"
-                                       MinimumLength="3"
-                                       Debounce="500" Context="lifeform">
+                                        @bind-Value="SelectedLifeform"
+                                        MinimumLength="3"
+                                        Debounce="500" Context="lifeform">
                         <SelectedTemplate>
                             @(lifeform.ScientificName)
                         </SelectedTemplate>
@@ -34,7 +36,7 @@
             <div class="row">
                 <div class="col-8 col-xs-1">
                     <label for="specimen-name">Name</label>
-                    <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" @onfocus="PopulateInventoryItemName"/>
+                    <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" @onfocus="PopulateInventoryItemName" />
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="quantity">Quantity</label>
@@ -67,26 +69,26 @@
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="origin">Origin</label>
-                    <BlazoredTypeahead SearchMethod="FindOrigins" 
-                                       @bind-Value="SelectedOrigin"
-                                       MinimumLength="3"
-                                       Debounce="500" Context="origin">
+                    <BlazoredTypeahead SearchMethod="FindOrigins"
+                                        @bind-Value="SelectedOrigin"
+                                        MinimumLength="3"
+                                        Debounce="500" Context="origin">
                         <SelectedTemplate>
                             @(origin.Name)
                         </SelectedTemplate>
                         <ResultTemplate>
                             @if (origin.OriginId == 0)
-                            {
+                                {
                                 <span class="text-body">Add new "@(origin.Name)" </span>
-                            }
-                            else
-                            {
+                                }
+                                else
+                                {
                                 <span class="text-body">@(origin.Name) </span>
-                            }
+                                }
 
                         </ResultTemplate>
                         <NotFoundTemplate>
-                            
+
                         </NotFoundTemplate>
                     </BlazoredTypeahead>
                 </div>
@@ -110,8 +112,12 @@
                 </div>
             </div>
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+}
+else
+{
+    <span>Loading...</span>
+}
 @code {
 
 

@@ -17,6 +17,7 @@ namespace Emergence.API.Controllers
         }
 
         [HttpGet]
+        [Route("{id}")]
         public async Task<Origin> Get(int id) => await _originService.GetOriginAsync(id);
 
         [HttpPut]

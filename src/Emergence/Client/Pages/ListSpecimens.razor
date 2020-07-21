@@ -1,5 +1,6 @@
 @page "/specimen/list"
 @using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions;
 @inherits ListSpecimensComponent
 
 @if (Specimens != null)
@@ -28,25 +29,25 @@
         {
             <tr>
                 <td>
-                    @specimen.Lifeform.ScientificName
+                    <a href="/specimen/edit/@specimen.SpecimenId"><span>@specimen.Lifeform.ScientificName</span></a>
                 </td>
                 <td>
-                    @specimen.Lifeform.CommonName
+                    <span>@specimen.Lifeform.CommonName</span>
                 </td>
                 <td>
-                    @specimen.InventoryItem.Quantity
+                    <span>@specimen.InventoryItem.Quantity</span>
                 </td>
                 <td>
-                    @specimen.SpecimenStage
+                    <span>@specimen.SpecimenStage.ToFriendlyName()</span>
                 </td>
                 <td>
-                    @specimen.InventoryItem.Status
+                    <span>@specimen.InventoryItem.Status.ToFriendlyName()</span>
                 </td>
                 <td>
-                    @specimen.InventoryItem.DateAcquired
+                    <span>@specimen.InventoryItem.DateAcquired</span>
                 </td>
                 <td>
-                    @specimen.InventoryItem.Origin?.Name
+                    <span>@specimen.InventoryItem.Origin?.Name</span>
                 </td>
             </tr>
         }

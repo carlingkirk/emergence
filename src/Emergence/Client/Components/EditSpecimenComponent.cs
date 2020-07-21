@@ -33,7 +33,17 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                Specimen = await Client.GetFromJsonAsync<Specimen>($"/api/specimen/{Id}");
+                var result = await Client.GetAsync($"/api/specimen/{Id}");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
+                }
+                else
+                {
+                    var message = result.Content.ReadAsStringAsync();
+                    throw new Exception(result.StatusCode + ": " + message);
+                }
             }
             else if (SpecimenParam != null)
             {

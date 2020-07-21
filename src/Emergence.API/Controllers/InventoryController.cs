@@ -17,6 +17,7 @@ namespace Emergence.API.Controllers
         }
 
         [HttpGet]
+        [Route("{id}")]
         public async Task<Inventory> Get(int id) => await _inventoryService.GetInventoryAsync(id);
 
         [HttpPut]

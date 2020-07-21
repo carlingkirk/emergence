@@ -27,7 +27,17 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                Origin = await Client.GetFromJsonAsync<Origin>($"/api/origin/{Id}");
+                var result = await Client.GetAsync($"/api/origin/{Id}");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    Origin = await result.Content.ReadFromJsonAsync<Origin>();
+                }
+                else
+                {
+                    var message = result.Content.ReadAsStringAsync();
+                    throw new Exception(result.StatusCode + ": " + message);
+                }
             }
             else
             {

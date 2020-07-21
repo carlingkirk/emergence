@@ -17,6 +17,7 @@ namespace Emergence.API.Controllers
         }
 
         [HttpGet]
+        [Route("{id}")]
         public async Task<Lifeform> Get(int id) => await _lifeformService.GetLifeformAsync(id);
 
         [HttpPut]
