@@ -18,6 +18,26 @@ namespace Emergence.Data.Repository
             _context = context;
         }
 
+        public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
+        {
+            var entities = _context.Set<T>().Where(predicate);
+            return entities;
+        }
+
+        public IQueryable<T> WhereWithIncludesAsync(Expression<Func<T, bool>> predicate, params Func<IIncludable<T>, IIncludable>[] includes)
+        {
+            var entities = _context.Set<T>().Where(predicate);
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    entities = entities.IncludeMultiple(include);
+                }
+            }
+            return entities;
+        }
+
+
         public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
@@ -53,39 +73,6 @@ namespace Emergence.Data.Repository
         public async IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
-            if (skip.HasValue)
-            {
-                entities = entities.Skip(skip.Value);
-            }
-
-            if (take.HasValue)
-            {
-                entities = entities.Take(take.Value);
-            }
-
-            if (!track)
-            {
-                entities = entities.AsNoTracking();
-            };
-
-            await foreach (var entity in entities.AsAsyncEnumerable())
-            {
-                yield return entity;
-            }
-        }
-
-        public async IAsyncEnumerable<T> GetSomeWithIncludesAsync(Expression<Func<T, bool>> predicate,
-            int? skip = null, int? take = null, bool track = false, params Func<IIncludable<T>, IIncludable>[] includes)
-        {
-            var entities = _context.Set<T>().Where(predicate);
-
-            if (includes != null)
-            {
-                foreach (var include in includes)
-                {
-                    entities = entities.IncludeMultiple(include);
-                }
-            }
 
             if (skip.HasValue)
             {

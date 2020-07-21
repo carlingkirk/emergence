@@ -76,13 +76,20 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10)
         {
-            search = "%" + search + "%";
-            var specimenResult = _specimenRepository.GetSomeWithIncludesAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
-                                                                       (EF.Functions.Like(s.InventoryItem.Name, search) ||
+            if (search != null)
+            {
+                search = "%" + search + "%";
+            }
+
+            var specimenResult = _specimenRepository.WhereWithIncludesAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
+                                                                       (search == null ||
+                                                                       EF.Functions.Like(s.InventoryItem.Name, search) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, search) ||
                                                                         EF.Functions.Like(s.Lifeform.ScientificName, search)),
-                                                                  skip: skip, take: take, track: false,
-                                                                  s => s.Include(s => s.InventoryItem).ThenInclude(ii => ii.Inventory).Include(s => s.Lifeform));
+                                                                        s => s.Include(s => s.InventoryItem).ThenInclude(ii => ii.Inventory).Include(s => s.Lifeform)
+                                                                              .Include(s => s.InventoryItem).ThenInclude(ii => ii.Origin))
+                                                    .WithOrder(s => s.OrderByDescending(s => s.DateCreated))
+                                                    .GetSomeAsync(skip: skip, take: take, track: false);
 
             var specimens = new List<Data.Shared.Models.Specimen>();
             await foreach (var specimen in specimenResult)

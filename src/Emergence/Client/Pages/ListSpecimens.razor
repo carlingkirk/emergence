@@ -1,43 +1,54 @@
+@page "/specimen/list"
 @using Emergence.Client.Components
 @inherits ListSpecimensComponent
 
 @if (Specimens != null)
 {
     <table>
-        <thead><tr>
-                   <td>Scientific Name</td>
-                   <td>Common Name</td>
-                   <td>Quantity</td>
-                   <td>Growth Stage</td>
-                   <td>Status</td>
-                   <td>Date Acquired</td>
-            <td>Origin</td>
-        </tr></thead>
-        @foreach(var specimen in Specimens)
+        <thead>
+            <tr>
+                <td>Scientific Name</td>
+                <td>Common Name</td>
+                <td>Quantity</td>
+                <td>Growth Stage</td>
+                <td>Status</td>
+                <td>Date Acquired</td>
+                <td>Origin</td>
+            </tr>
+        </thead>
+        @if (!Specimens.Any())
         {
-        <tr>
-            <td>
-                @specimen.Lifeform.ScientificName
-            </td>
-            <td>
-                @specimen.Lifeform.CommonName
-            </td>
-            <td>
-                @specimen.InventoryItem.Quantity
-            </td>
-            <td>
-                @specimen.SpecimenStage
-            </td>
-            <td>
-                @specimen.InventoryItem.Status
-            </td>
-            <td>
-                @specimen.InventoryItem.DateAcquired
-            </td>
-            <td>
-                @specimen.InventoryItem.Origin?.Name
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    No results
+                </td>
+            </tr>
+        }
+        @foreach (var specimen in Specimens)
+        {
+            <tr>
+                <td>
+                    @specimen.Lifeform.ScientificName
+                </td>
+                <td>
+                    @specimen.Lifeform.CommonName
+                </td>
+                <td>
+                    @specimen.InventoryItem.Quantity
+                </td>
+                <td>
+                    @specimen.SpecimenStage
+                </td>
+                <td>
+                    @specimen.InventoryItem.Status
+                </td>
+                <td>
+                    @specimen.InventoryItem.DateAcquired
+                </td>
+                <td>
+                    @specimen.InventoryItem.Origin?.Name
+                </td>
+            </tr>
         }
     </table>
 }

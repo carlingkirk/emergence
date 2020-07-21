@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared.Stores;
@@ -52,9 +50,6 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestFindSpecimens()
         {
-            _mockSpecimenRepository.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakeSpecimens.Get().Take(1).ToAsyncEnumerable());
-
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
             var specimens = await specimenService.FindSpecimens("Liatris spicata", "me");
 

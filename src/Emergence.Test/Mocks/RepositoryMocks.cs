@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
+using MockQueryable.Moq;
 using Moq;
 
 namespace Emergence.Test.Mocks
@@ -13,20 +14,24 @@ namespace Emergence.Test.Mocks
         public static Mock<IRepository<Specimen>> GetStandardMockSpecimenRepository()
         {
             var mockSpecimenRepo = new Mock<IRepository<Specimen>>();
+            var mockSpecimens = Data.Fakes.Stores.FakeSpecimens.Get().AsQueryable().BuildMockDbSet<Specimen>().Object;
 
             mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakeSpecimens.Get().First());
+                .ReturnsAsync(mockSpecimens.First());
 
             mockSpecimenRepo.Setup(p => p.GetWithIncludesAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>(),
                 It.IsAny<Func<IIncludable<Specimen>, IIncludable>[]>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakeSpecimens.Get().First());
+                .ReturnsAsync(mockSpecimens.First());
+
+            mockSpecimenRepo.Setup(p => p.Where(It.IsAny<Expression<Func<Specimen, bool>>>()))
+                .Returns(mockSpecimens);
+
+            mockSpecimenRepo.Setup(p => p.WhereWithIncludesAsync(It.IsAny<Expression<Func<Specimen, bool>>>(),
+                It.IsAny<Func<IIncludable<Specimen>, IIncludable>[]>()))
+                .Returns(mockSpecimens);
 
             mockSpecimenRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
-
-            mockSpecimenRepo.Setup(p => p.GetSomeWithIncludesAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(),
-                It.IsAny<Func<IIncludable<Specimen>, IIncludable>[]>()))
-                .Returns(Data.Fakes.Stores.FakeSpecimens.Get().ToAsyncEnumerable());
+                .Returns(mockSpecimens);
 
             return mockSpecimenRepo;
         }
