@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class PlantInfoComponent : ComponentBase
+    public class EditPlantInfoComponent : ComponentBase
     {
         [Inject]
         protected HttpClient Client { get; set; }
