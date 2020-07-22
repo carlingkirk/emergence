@@ -1,64 +1,15 @@
 @page "/dashboard"
-@inject IModalService ModalService
+@inject IModalServiceClient ModalServiceClient
 
     <AuthorizeView>
         <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
         <h3>Dashboard</h3>
-        <button class="btn btn-primary" @onclick="@(() => AddSpecimen(0))">Add New Specimen</button>
-        <button class="btn btn-primary" @onclick="@(() => AddOrigin(0))">Add New Origin</button>
-        <button class="btn btn-primary" @onclick="@(() => AddPlantInfo(0))">Add New Plant Profile</button>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowSpecimenModal(0))">Add New Specimen</button>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowOriginModal(0))">Add New Origin</button>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowPlantInfoModal(0))">Add New Plant Profile</button>
 
-        @code
+    @code
     {
-            async Task AddSpecimen(int Id)
-            {
-                var modalParams = new ModalParameters();
-                modalParams.Add("Id", Id);
-                var specimenModal = ModalService.Show<EditSpecimen>("", modalParams);
-                var result = await specimenModal.Result;
 
-                if (result.Cancelled)
-                {
-                    Console.WriteLine("Modal was cancelled");
-                }
-                else
-                {
-                    Console.WriteLine("Modal was closed");
-                }
-            }
-
-            async Task AddOrigin(int Id)
-            {
-                var modalParams = new ModalParameters();
-                modalParams.Add("Id", Id);
-                var modal = ModalService.Show<EditOrigin>("", modalParams);
-                var result = await modal.Result;
-
-                if (result.Cancelled)
-                {
-                    Console.WriteLine("Modal was cancelled");
-                }
-                else
-                {
-                    Console.WriteLine("Modal was closed");
-                }
-            }
-
-            async Task AddPlantInfo(int Id)
-            {
-                var modalParams = new ModalParameters();
-                modalParams.Add("Id", Id);
-                var modal = ModalService.Show<EditPlantInfo>("", modalParams);
-                var result = await modal.Result;
-
-                if (result.Cancelled)
-                {
-                    Console.WriteLine("Modal was cancelled");
-                }
-                else
-                {
-                    Console.WriteLine("Modal was closed");
-                }
-            }
-        }
+    }
     </AuthorizeView>

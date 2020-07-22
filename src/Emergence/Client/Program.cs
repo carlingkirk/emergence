@@ -25,6 +25,9 @@ namespace Emergence.Client
 
             builder.Services.AddBlazoredModal();
 
+            // Client services
+            builder.Services.AddTransient<IModalServiceClient, ModalServiceClient>();
+
             await builder.Build().RunAsync();
         }
     }

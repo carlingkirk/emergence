@@ -5,7 +5,7 @@
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions
 @using Blazored.Typeahead
-@inject IModalService ModalService
+@inject IModalServiceClient ModalServiceClient
 @attribute [Authorize]
 @inherits EditActivityComponent
 
@@ -40,7 +40,7 @@
                     <ResultTemplate>
                         @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
                         {
-                            <a href="" @onclick="@(async () => { await AddSpecimen((Specimen)specimen); })" @onclick:preventDefault>
+                            <a href="" @onclick="@(async () => { await ModalServiceClient.ShowSpecimenModal((Specimen)specimen); })" @onclick:preventDefault>
                                 <span>Add new </span>
                                 <span class="text-body">@(specimen.Lifeform.CommonName) </span>
                                 <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>
@@ -92,22 +92,5 @@ else
 }
 
 @code {
-    async Task AddSpecimen(Specimen specimen)
-    {
-        var modalParams = new ModalParameters();
-        modalParams.Add("Id", specimen.SpecimenId);
-        modalParams.Add("SpecimenParam", specimen);
-        var specimenModal = ModalService.Show<EditSpecimen>("", modalParams);
-        var result = await specimenModal.Result;
-        SelectedSpecimen = (Specimen)result.Data;
 
-        if (result.Cancelled)
-        {
-            Console.WriteLine("Modal was cancelled");
-        }
-        else
-        {
-            Console.WriteLine("Modal was closed");
-        }
-    }
 }
