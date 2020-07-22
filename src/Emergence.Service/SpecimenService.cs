@@ -48,6 +48,7 @@ namespace Emergence.Service
         {
             var result = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenId, track: false,
                                                                         s => s.Include(s => s.InventoryItem)
+                                                                              .Include(ii => ii.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
             return result?.AsModel();
         }
@@ -86,8 +87,9 @@ namespace Emergence.Service
                                                                        EF.Functions.Like(s.InventoryItem.Name, search) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, search) ||
                                                                         EF.Functions.Like(s.Lifeform.ScientificName, search)),
-                                                                        s => s.Include(s => s.InventoryItem).ThenInclude(ii => ii.Inventory).Include(s => s.Lifeform)
-                                                                              .Include(s => s.InventoryItem).ThenInclude(ii => ii.Origin))
+                                                                        s => s.Include(s => s.InventoryItem)
+                                                                              .Include(s => s.InventoryItem.Origin)
+                                                                              .Include(s => s.Lifeform))
                                                     .WithOrder(s => s.OrderByDescending(s => s.DateCreated))
                                                     .GetSomeAsync(skip: skip, take: take, track: false);
 

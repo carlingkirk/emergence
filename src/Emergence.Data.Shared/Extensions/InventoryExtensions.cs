@@ -23,9 +23,9 @@ namespace Emergence.Data.Shared.Extensions
         public static Models.InventoryItem AsModel(this InventoryItem source) => new Models.InventoryItem
         {
             InventoryItemId = source.Id,
-            Inventory = new Models.Inventory { InventoryId = source.InventoryId },
+            Inventory = source.Inventory != null ? source.Inventory.AsModel() : source.InventoryId > 0 ? new Models.Inventory { InventoryId = source.InventoryId } : null,
             Name = source.Name,
-            Origin = source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
+            Origin = source.Origin != null ? source.Origin.AsModel() : source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
             ItemType = Enum.Parse<Models.ItemType>(source.ItemType),
             Status = Enum.Parse<Models.Status>(source.Status),
             Quantity = source.Quantity,

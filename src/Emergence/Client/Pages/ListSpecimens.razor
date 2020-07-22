@@ -2,7 +2,8 @@
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
 @inherits ListSpecimensComponent
-
+<input type="text" @bind="SearchText" id="search" />
+<button class="btn btn-secondary" @onclick="GetSpecimens">Search</button>
 @if (Specimens != null)
 {
     <table>
@@ -44,7 +45,8 @@
                     <span>@specimen.InventoryItem.Status.ToFriendlyName()</span>
                 </td>
                 <td>
-                    <span>@specimen.InventoryItem.DateAcquired</span>
+                    <span>@(specimen.InventoryItem.DateAcquired.HasValue ?
+                            specimen.InventoryItem.DateAcquired.Value.ToLocalTime().ToShortDateString() : "")</span>
                 </td>
                 <td>
                     <span>@specimen.InventoryItem.Origin?.Name</span>

@@ -53,8 +53,8 @@ namespace Emergence.Data.Shared.Extensions
                 CommonName = source.CommonName,
                 ScientificName = source.ScientificName,
                 LifeformId = source.LifeformId,
-                Lifeform = new Models.Lifeform { LifeformId = source.LifeformId },
-                Origin = source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
+                Lifeform = source.Lifeform != null ? source.Lifeform.AsModel() : new Models.Lifeform { LifeformId = source.LifeformId },
+                Origin = source.Origin != null ? source.Origin.AsModel() : source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
                 BloomTime = new Models.BloomTime
                 {
                     MinimumBloomTime = source.MinimumBloomTime.HasValue ? (Models.Month)source.MinimumBloomTime.Value : Models.Month.Unknown,
@@ -92,7 +92,7 @@ namespace Emergence.Data.Shared.Extensions
                         MaximumZone = maximumZone
                     }
                 },
-                Taxon = source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
+                Taxon = source.Taxon != null ? source.Taxon.AsModel() : source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
                 CreatedBy = source.CreatedBy,
                 DateCreated = source.DateCreated,
                 DateModified = source.DateModified

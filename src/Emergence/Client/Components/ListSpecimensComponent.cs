@@ -13,10 +13,21 @@ namespace Emergence.Client.Components
         [Inject]
         protected HttpClient Client { get; set; }
         public IEnumerable<Specimen> Specimens { get; set; }
+        public string SearchText { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            var result = await Client.GetAsync($"/api/specimen/find");
+            await GetSpecimens();
+        }
+
+        protected async Task GetSpecimens()
+        {
+            var url = "/api/specimen/find";
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                url = url + "?search=" + SearchText;
+            }
+            var result = await Client.GetAsync(url);
 
             if (result.IsSuccessStatusCode)
             {

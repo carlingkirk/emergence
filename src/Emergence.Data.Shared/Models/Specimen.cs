@@ -10,7 +10,7 @@ namespace Emergence.Data.Shared.Models
         public PlantInfo PlantInfo { get; set; }
         public SpecimenStage SpecimenStage { get; set; }
         public InventoryItem InventoryItem { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }
 

@@ -38,6 +38,8 @@ namespace Emergence.Client.Components
                 if (result.IsSuccessStatusCode)
                 {
                     Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
+                    SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
+                    SelectedLifeform = Specimen.Lifeform;
                 }
                 else
                 {
@@ -49,6 +51,7 @@ namespace Emergence.Client.Components
             {
                 Specimen = SpecimenParam;
                 SelectedLifeform = Specimen.Lifeform;
+                SelectedOrigin = Specimen.InventoryItem.Origin;
                 if (SpecimenParam.Lifeform != null)
                 {
                     Specimen.InventoryItem.Name = SpecimenParam.Lifeform.ScientificName;

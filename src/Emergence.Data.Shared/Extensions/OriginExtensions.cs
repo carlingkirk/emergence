@@ -8,7 +8,7 @@ namespace Emergence.Data.Shared.Extensions
         public static Models.Origin AsModel(this Origin source) => new Models.Origin
         {
             OriginId = source.Id,
-            ParentOrigin = source.ParentId.HasValue ? new Models.Origin { OriginId = source.ParentId.Value } : null,
+            ParentOrigin = source.ParentOrigin != null ? source.ParentOrigin.AsModel() : source.ParentId.HasValue ? new Models.Origin { OriginId = source.ParentId.Value } : null,
             Name = source.Name,
             Description = source.Description,
             Type = Enum.Parse<Models.OriginType>(source.Type),
