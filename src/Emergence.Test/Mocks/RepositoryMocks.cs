@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Emergence.Data;
@@ -14,7 +15,7 @@ namespace Emergence.Test.Mocks
         public static Mock<IRepository<Specimen>> GetStandardMockSpecimenRepository()
         {
             var mockSpecimenRepo = new Mock<IRepository<Specimen>>();
-            var mockSpecimens = Data.Fakes.Stores.FakeSpecimens.Get().AsQueryable().BuildMockDbSet<Specimen>().Object;
+            var mockSpecimens = Data.Fakes.Stores.FakeSpecimens.Get().AsQueryable().BuildMockDbSet().Object;
 
             mockSpecimenRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Specimen, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(mockSpecimens.First());
@@ -36,15 +37,25 @@ namespace Emergence.Test.Mocks
             return mockSpecimenRepo;
         }
 
-        public static Mock<IRepository<Origin>> GetStandardMockOriginRepository()
+        public static Mock<IRepository<Origin>> GetStandardMockOriginRepository(IEnumerable<Origin> origins = null)
         {
+            if (origins == null)
+            {
+                origins = Data.Fakes.Stores.FakeOrigins.Get();
+            }
+
             var mockOriginRepo = new Mock<IRepository<Origin>>();
+            var mockOrigins = origins.AsQueryable().BuildMockDbSet().Object;
 
             mockOriginRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<bool>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakeOrigins.Get().First());
+                .ReturnsAsync(mockOrigins.First());
 
             mockOriginRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakeOrigins.Get().ToAsyncEnumerable());
+                .Returns(mockOrigins.ToAsyncEnumerable());
+
+            mockOriginRepo.Setup(p => p.WhereWithIncludesAsync(It.IsAny<Expression<Func<Origin, bool>>>(),
+                It.IsAny<Func<IIncludable<Origin>, IIncludable>[]>()))
+                .Returns(mockOrigins);
 
             return mockOriginRepo;
         }

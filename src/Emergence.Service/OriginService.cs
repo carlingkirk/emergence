@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Extensions;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
@@ -41,11 +42,26 @@ namespace Emergence.Service
             return originResult.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Origin>> FindOrigins(string search, int skip = 0, int take = 10)
+        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId)
+        {
+            var origin = await _originRepository.GetAsync(o => o.ParentOriginId == parentOriginId &&
+                                                               o.ExternalId == externalId &&
+                                                              (altExternalId == null || o.AltExternalId == altExternalId));
+            return origin?.AsModel();
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Origin>> FindOrigins(string search, string userId, int skip = 0, int take = 10)
         {
             search = "%" + search + "%";
-            var originResult = _originRepository.GetSomeAsync(o => EF.Functions.Like(o.Name, search) || EF.Functions.Like(o.Description, search),
-                                                                  skip: skip, take: take, track: false);
+            var originResult = _originRepository.WhereWithIncludesAsync(o => o.UserId == userId &&
+                                                                    (EF.Functions.Like(o.Name, search) ||
+                                                                    EF.Functions.Like(o.Description, search) ||
+                                                                    EF.Functions.Like(o.Location.City, search) ||
+                                                                    EF.Functions.Like(o.Location.AddressLine1, search) ||
+                                                                    EF.Functions.Like(o.Location.StateOrProvince, search)),
+                                                                        o => o.Include(o => o.Location))
+                                                    .WithOrder(o => o.OrderByDescending(o => o.DateCreated))
+                                                    .GetSomeAsync(skip: skip, take: take, track: false);
 
             var origins = new List<Data.Shared.Models.Origin>();
             await foreach (var origin in originResult)
@@ -54,14 +70,6 @@ namespace Emergence.Service
             }
 
             return origins;
-        }
-
-        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId)
-        {
-            var origin = await _originRepository.GetAsync(o => o.ParentId == parentOriginId &&
-                                                               o.ExternalId == externalId &&
-                                                              (altExternalId == null || o.AltExternalId == altExternalId));
-            return origin?.AsModel();
         }
     }
 }

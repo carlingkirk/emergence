@@ -15,15 +15,17 @@ namespace Emergence.Test.Data.Fakes.Stores
                 Description = "Look up, view a photo and read about the over 7,500 plants which are growing or have been grown in the Kemper Center display " +
                 "gardens (plus selected additions) by scientific name, common name and/or selected plant characteristics.",
                 Type = "Website",
-                Uri = new Uri("http://www.missouribotanicalgarden.org/plantfinder/plantfindersearch.aspx")
+                Uri = new Uri("http://www.missouribotanicalgarden.org/plantfinder/plantfindersearch.aspx"),
+                UserId = "me"
             },
             new Origin
             {
                 Id = 2,
-                ParentId = 3,
+                ParentOriginId = 3,
                 Type = "Nursery",
                 Name = "Botany Yards",
-                Description = ""
+                Description = "",
+                UserId = "me"
             },
             new Origin
             {
@@ -33,7 +35,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 Description = "Our 25th annual Symposium is all about connections between native plants and the fauna that rely upon them. Inspired by the " +
                 "February book release of Nature’s Best Hope: A New Approach to Conservation that Starts in Your Yard from Doug Tallamy, we invite you to " +
                 "be among the first to hear his new message. Growing more native plants to sustain all of nature is more urgent than ever.",
-                Uri = new Uri("https://gnps.org/2020-georgia-native-plant-society-annual-symposium/")
+                Uri = new Uri("https://gnps.org/2020-georgia-native-plant-society-annual-symposium/"),
+                UserId = "me"
             }
         };
     }

@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared.Stores;
@@ -46,11 +44,10 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestFindOrigins()
         {
-            _mockOriginRepository.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakeOrigins.Get().Where(o => o.Name == "Botany Yards").ToAsyncEnumerable());
+            var mockOriginRepository = RepositoryMocks.GetStandardMockOriginRepository(Data.Fakes.Stores.FakeOrigins.Get().Where(o => o.Name == "Botany Yards"));
 
-            var originService = new OriginService(_mockOriginRepository.Object);
-            var specimens = await originService.FindOrigins("Botany");
+            var originService = new OriginService(mockOriginRepository.Object);
+            var specimens = await originService.FindOrigins("Botany", "me");
 
             specimens.Should().NotBeNull("it exists");
             specimens.Should().HaveCount(1);

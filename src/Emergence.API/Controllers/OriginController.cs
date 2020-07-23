@@ -31,7 +31,7 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<IEnumerable<Origin>> FindOrigins(string search, int skip = 0, int take = 10)
         {
-            var results = await _originService.FindOrigins(search, skip, take);
+            var results = await _originService.FindOrigins(search, UserId, skip, take);
             return results;
         }
     }
