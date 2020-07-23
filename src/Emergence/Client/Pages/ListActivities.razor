@@ -1,0 +1,60 @@
+@page "/activity/list"
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions;
+@inherits ListActivitiesComponent
+<input type="text" @bind="SearchText" id="search" />
+<button class="btn btn-secondary" @onclick="GetActivities">Search</button>
+@if (Activities != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Scientific Name</td>
+                <td>Type</td>
+                <td>Date Occured</td>
+                <td>Date Scheduled</td>
+                <td>Date Acquired</td>
+                <td>Origin</td>
+            </tr>
+        </thead>
+        @if (!Activities.Any())
+        {
+            <tr>
+                <td>
+                    No results
+                </td>
+            </tr>
+        }
+        @foreach (var activity in Activities)
+        {
+    <tr>
+        <td>
+            <a href="/activity/edit/@activity.ActivityId"><span>@activity.Name</span></a>
+        </td>
+        <td>
+            <span>@activity.Specimen.Lifeform.ScientificName</span>
+        </td>
+        <td>
+            <span>@activity.ActivityType.ToFriendlyName()</span>
+        </td>
+        <td>
+            <span>
+                @(activity.DateOccured.HasValue ?
+                            activity.DateOccured.Value.ToLocalTime().ToShortDateString() : "")
+            </span>
+        </td>
+        <td>
+            <span>
+                @(activity.DateScheduled.HasValue ?
+                            activity.DateScheduled.Value.ToLocalTime().ToShortDateString() : "")
+            </span>
+        </td>
+    </tr>
+        }
+    </table>
+}
+
+@code {
+
+}

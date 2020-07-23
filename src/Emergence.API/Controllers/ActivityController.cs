@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
@@ -23,9 +24,16 @@ namespace Emergence.API.Controllers
             return activity;
         }
 
-
         [HttpPut]
 
         public async Task<Activity> Put(Activity activity) => await _activityService.AddOrUpdateActivityAsync(activity, UserId);
+
+        [HttpGet]
+        [Route("Find")]
+        public async Task<IEnumerable<Activity>> FindActivities(string search = null, int skip = 0, int take = 10)
+        {
+            var results = await _activityService.FindActivities(search, UserId, skip, take);
+            return results;
+        }
     }
 }

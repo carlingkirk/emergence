@@ -2,7 +2,7 @@ using System;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class Activity
+    public class Activity : IIncludable<Activity>, IIncludable<Activity, Specimen>
     {
         public int Id { get; set; }
         public string Name { get; set; }
