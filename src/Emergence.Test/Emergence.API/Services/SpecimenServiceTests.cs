@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
-using Emergence.Service.Interfaces;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -16,19 +15,17 @@ namespace Emergence.Test.API.Services
     public class SpecimenServiceTests : TestBase
     {
         private readonly Mock<IRepository<Specimen>> _mockSpecimenRepository;
-        private readonly Mock<IInventoryService> _mockInventoryService;
         private readonly ILogger _logger;
         public SpecimenServiceTests()
         {
             _mockSpecimenRepository = RepositoryMocks.GetStandardMockSpecimenRepository();
-            _mockInventoryService = ServiceMocks.GetStandardMockInventoryService();
             _logger = GetLogger<SpecimenService>();
         }
 
         [Fact]
         public async Task TestGetSpecimenAsync()
         {
-            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
             var specimen = await specimenService.GetSpecimenAsync(0);
 
             specimen.Should().NotBeNull("it exists");
@@ -37,7 +34,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestGetSpecimensAsync()
         {
-            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
             var specimens = await specimenService.GetSpecimensForInventoryAsync(0);
 
             specimens.Should().NotBeNull("it exists");
@@ -50,7 +47,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestFindSpecimens()
         {
-            var specimenService = new SpecimenService(_mockSpecimenRepository.Object, _mockInventoryService.Object);
+            var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
             var specimens = await specimenService.FindSpecimens("Liatris spicata", "me");
 
             specimens.Should().NotBeNull("it exists");

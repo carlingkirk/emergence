@@ -11,9 +11,11 @@ namespace Emergence.API.Controllers
     public class PlantInfoController : BaseAPIController
     {
         private readonly IPlantInfoService _plantInfoService;
-        public PlantInfoController(IPlantInfoService plantInfoService)
+        private readonly IOriginService _originService;
+        public PlantInfoController(IPlantInfoService plantInfoService, IOriginService originService)
         {
             _plantInfoService = plantInfoService;
+            _originService = originService;
         }
 
         [HttpGet]
@@ -21,7 +23,15 @@ namespace Emergence.API.Controllers
         public async Task<PlantInfo> Get(int id) => await _plantInfoService.GetPlantInfoAsync(id);
 
         [HttpPut]
-        public async Task<PlantInfo> Put(PlantInfo plantInfo) => await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
+        public async Task<PlantInfo> Put(PlantInfo plantInfo)
+        {
+            if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0)
+            {
+                plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin);
+            }
+
+            return await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
+        }
 
         [HttpGet]
         [Route("Find")]

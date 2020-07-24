@@ -11,9 +11,11 @@ namespace Emergence.API.Controllers
     public class SpecimenController : BaseAPIController
     {
         private readonly ISpecimenService _specimenService;
-        public SpecimenController(ISpecimenService specimenService)
+        private readonly IInventoryService _inventoryService;
+        public SpecimenController(ISpecimenService specimenService, IInventoryService inventoryService)
         {
             _specimenService = specimenService;
+            _inventoryService = inventoryService;
         }
 
         [HttpGet]
@@ -22,7 +24,27 @@ namespace Emergence.API.Controllers
 
         [HttpPut]
 
-        public async Task<Specimen> Put(Specimen specimen) => await _specimenService.AddOrUpdateAsync(specimen, UserId);
+        public async Task<Specimen> Put(Specimen specimen)
+        {
+            if (specimen.InventoryItem == null)
+            {
+                specimen.InventoryItem = new InventoryItem();
+            }
+
+            if (specimen.InventoryItem.Inventory == null || specimen.InventoryItem.Inventory.InventoryId == 0)
+            {
+                var inventory = await _inventoryService.GetInventoryAsync(UserId);
+                if (inventory == null)
+                {
+                    inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { UserId = UserId });
+                }
+                specimen.InventoryItem.Inventory = inventory;
+            }
+
+            specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
+
+            return await _specimenService.AddOrUpdateAsync(specimen, UserId);
+        }
 
         [HttpGet]
         [Route("Find")]

@@ -16,6 +16,7 @@ namespace Emergence.Service
         {
             _plantInfoRepository = plantInfoRepository;
         }
+
         public async Task<Data.Shared.Models.PlantInfo> AddOrUpdatePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo)
         {
             plantInfo.DateModified = DateTime.UtcNow;
@@ -25,7 +26,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int id)
         {
-            var plantInfo = await _plantInfoRepository.GetAsync(l => l.Id == id);
+            var plantInfo = await _plantInfoRepository.GetWithIncludesAsync(l => l.Id == id, false, p => p.Include(p => p.Lifeform).Include(p => p.Origin));
             return plantInfo?.AsModel();
         }
 

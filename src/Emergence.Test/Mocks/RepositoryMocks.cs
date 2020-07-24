@@ -96,15 +96,20 @@ namespace Emergence.Test.Mocks
         public static Mock<IRepository<PlantInfo>> GetStandardMockPlantInfoRepository()
         {
             var mockPlantInfoRepo = new Mock<IRepository<PlantInfo>>();
+            var mockPlantInfos = Data.Fakes.Stores.FakePlantInfos.Get().AsQueryable().BuildMockDbSet().Object;
 
             mockPlantInfoRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<bool>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakePlantInfos.Get().First());
+                .ReturnsAsync(mockPlantInfos.First());
 
             mockPlantInfoRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakePlantInfos.Get().ToAsyncEnumerable());
+                .Returns(mockPlantInfos.ToAsyncEnumerable());
 
             mockPlantInfoRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<PlantInfo>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakePlantInfos.Get().First());
+                .ReturnsAsync(mockPlantInfos.First());
+
+            mockPlantInfoRepo.Setup(p => p.GetWithIncludesAsync(It.IsAny<Expression<Func<PlantInfo, bool>>>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<PlantInfo>, IIncludable>[]>()))
+                .ReturnsAsync(mockPlantInfos.First());
 
             return mockPlantInfoRepo;
         }
