@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -14,7 +13,7 @@ namespace Emergence.Client.Components
     public class EditSpecimenComponent : ComponentBase
     {
         [Inject]
-        protected HttpClient Client { get; set; }
+        protected IApiClient ApiClient { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
@@ -33,19 +32,9 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                var result = await Client.GetAsync($"/api/specimen/{Id}");
-
-                if (result.IsSuccessStatusCode)
-                {
-                    Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
-                    SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
-                    SelectedLifeform = Specimen.Lifeform;
-                }
-                else
-                {
-                    var message = result.Content.ReadAsStringAsync();
-                    throw new Exception(result.StatusCode + ": " + message);
-                }
+                Specimen = await ApiClient.GetSpecimen(Id);
+                SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
+                SelectedLifeform = Specimen.Lifeform;
             }
             else if (SpecimenParam != null)
             {
@@ -81,45 +70,11 @@ namespace Emergence.Client.Components
                 Specimen.InventoryItem.Origin = SelectedOrigin;
             }
 
-            var result = await Client.PutAsJsonAsync("/api/specimen", Specimen);
-            if (result.IsSuccessStatusCode)
-            {
-                SpecimenParam = Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
-            }
+            Specimen = await ApiClient.PutSpecimen(Specimen);
 
             if (BlazoredModal != null)
             {
-                BlazoredModal.Close(ModalResult.Ok(SpecimenParam));
-            }
-        }
-
-        protected async Task<IEnumerable<Origin>> FindOrigins(string searchText)
-        {
-            var origins = (await Client.GetFromJsonAsync<IEnumerable<Origin>>($"/api/origin/find?search={searchText}&skip=0&take=10")).ToList();
-
-            origins.Add(new Origin { Name = searchText });
-            return origins;
-        }
-
-        protected async Task<IEnumerable<Lifeform>> FindLifeforms(string searchText)
-        {
-            var lifeforms = (await Client.GetFromJsonAsync<IEnumerable<Lifeform>>($"/api/lifeform/find?search={searchText}&skip=0&take=10")).ToList();
-
-            return lifeforms;
-        }
-
-        protected void SaveSelectedOrigin()
-        {
-            if (SelectedOrigin == null)
-            {
-                SelectedOrigin = new Origin
-                {
-                    Name = OriginSearch
-                };
-            }
-            else if (SelectedOrigin.Name != OriginSearch)
-            {
-                SelectedOrigin.Name = OriginSearch;
+                BlazoredModal.Close(ModalResult.Ok(Specimen));
             }
         }
 

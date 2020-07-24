@@ -4,6 +4,7 @@
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions
+@using Blazored.Typeahead
 @attribute [Authorize]
 @inherits EditPlantInfoComponent
 
@@ -13,17 +14,51 @@
         <h3>@(Id > 0 ? "Edit" : "Add") PlantInfo</h3>
         <div class="form-group container">
             <div class="row">
-                <div class="col">
-                    <label for="common-name">Common Name</label>
-                    <input @bind="@PlantInfo.CommonName" type="text" class="form-control" id="common-name" />
+                <div class="col-9 col-xs-1">
+                    <label for="lifeform">Plant Name </label>
+                    <BlazoredTypeahead SearchMethod="ApiClient.FindLifeforms"
+                                       @bind-Value="SelectedLifeform"
+                                       MinimumLength="3"
+                                       Debounce="500" Context="lifeform">
+                        <SelectedTemplate>
+                            @(lifeform.ScientificName)
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            <span class="text-body">@(lifeform.CommonName) </span><span class="text-body font-italic">@(lifeform.ScientificName) </span>
+                        </ResultTemplate>
+                        <NotFoundTemplate>
+                            No results found
+                        </NotFoundTemplate>
+                    </BlazoredTypeahead>
                 </div>
-                <div class="col">
-                    <label for="scientific-name">Scientific Name</label>
-                    <input @bind="@PlantInfo.ScientificName" type="text" class="form-control" id="scientific-name" />
+                <div class="col-3 col-xs-1">
+                    <label for="origin">Origin</label>
+                    <BlazoredTypeahead SearchMethod="ApiClient.FindOrigins"
+                                       @bind-Value="SelectedOrigin"
+                                       MinimumLength="3"
+                                       Debounce="500" Context="origin">
+                        <SelectedTemplate>
+                            @(origin.Name)
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @if (origin.OriginId == 0)
+                                {
+                                <span class="text-body">Add new "@(origin.Name)" </span>
+                                }
+                                else
+                                {
+                                <span class="text-body">@(origin.Name) </span>
+                                }
+
+                        </ResultTemplate>
+                        <NotFoundTemplate>
+
+                        </NotFoundTemplate>
+                    </BlazoredTypeahead>
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="form-group container">
             <div class="row">
                 <div class="col-10">
                     <div class="container">

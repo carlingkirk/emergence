@@ -8,7 +8,6 @@
 @attribute [Authorize]
 @inherits EditSpecimenComponent
 
-
 @if (Specimen != null)
 {
     <EditForm Model="@Specimen">
@@ -17,7 +16,7 @@
             <div class="row">
                 <div class="col-12">
                     <label for="lifeform">Plant Name </label>
-                    <BlazoredTypeahead SearchMethod="FindLifeforms"
+                    <BlazoredTypeahead SearchMethod="ApiClient.FindLifeforms"
                                         @bind-Value="SelectedLifeform"
                                         MinimumLength="3"
                                         Debounce="500" Context="lifeform">
@@ -69,7 +68,7 @@
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="origin">Origin</label>
-                    <BlazoredTypeahead SearchMethod="FindOrigins"
+                    <BlazoredTypeahead SearchMethod="ApiClient.FindOrigins"
                                         @bind-Value="SelectedOrigin"
                                         MinimumLength="3"
                                         Debounce="500" Context="origin">

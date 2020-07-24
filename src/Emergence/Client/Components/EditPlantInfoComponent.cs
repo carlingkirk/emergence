@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -14,12 +13,15 @@ namespace Emergence.Client.Components
     public class EditPlantInfoComponent : ComponentBase
     {
         [Inject]
-        protected HttpClient Client { get; set; }
+        protected IApiClient ApiClient { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
         public int Id { get; set; }
         public PlantInfo PlantInfo { get; set; }
+        public Origin SelectedOrigin { get; set; }
+        public Lifeform SelectedLifeform { get; set; }
+        public string OriginSearch { get; set; }
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
@@ -35,23 +37,14 @@ namespace Emergence.Client.Components
             ChosenSoilTypes = new List<SoilType>();
             if (Id > 0)
             {
-                var result = await Client.GetAsync($"/api/plantinfo/{Id}");
-
-                if (result.IsSuccessStatusCode)
-                {
-                    PlantInfo = await result.Content.ReadFromJsonAsync<PlantInfo>();
-                }
-                else
-                {
-                    var message = result.Content.ReadAsStringAsync();
-                    throw new Exception(result.StatusCode + ": " + message);
-                }
+                PlantInfo = await ApiClient.GetPlantInfo(Id);
+                SelectedLifeform = PlantInfo.Lifeform;
+                SelectedOrigin = PlantInfo.Origin;
             }
             else
             {
                 PlantInfo = new PlantInfo
                 {
-                    Taxon = new Taxon(),
                     Origin = new Origin(),
                     Requirements = new Requirements
                     {
@@ -79,11 +72,13 @@ namespace Emergence.Client.Components
             }
             PlantInfo.DateModified = DateTime.UtcNow;
 
-            var result = await Client.PutAsJsonAsync("/api/plantinfo", PlantInfo);
-            if (result.IsSuccessStatusCode)
+            if (SelectedOrigin != null)
             {
-                PlantInfo = await result.Content.ReadFromJsonAsync<PlantInfo>();
+                PlantInfo.Origin = SelectedOrigin;
             }
+            PlantInfo.Lifeform = SelectedLifeform;
+
+            PlantInfo = await ApiClient.PutPlantInfo(PlantInfo);
 
             if (BlazoredModal != null)
             {

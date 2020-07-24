@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Blazored.Modal.Services;
 using Emergence.Data.Shared.Models;
 
-namespace Emergence.Client
+namespace Emergence.Client.Common
 {
     public interface IModalServiceClient
     {

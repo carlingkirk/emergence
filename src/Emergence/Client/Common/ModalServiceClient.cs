@@ -4,7 +4,7 @@ using Blazored.Modal.Services;
 using Emergence.Client.Pages;
 using Emergence.Data.Shared.Models;
 
-namespace Emergence.Client
+namespace Emergence.Client.Common
 {
     public class ModalServiceClient : IModalServiceClient
     {
