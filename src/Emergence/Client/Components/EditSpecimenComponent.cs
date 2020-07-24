@@ -86,7 +86,18 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText) => await ApiClient.FindOriginsAsync(searchText);
+        protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
+        {
+            var origins = (await ApiClient.FindOriginsAsync(searchText)).ToList();
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                origins.Add(new Origin { Name = searchText });
+            }
+
+            return origins;
+        }
+
         protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(searchText);
     }
 }

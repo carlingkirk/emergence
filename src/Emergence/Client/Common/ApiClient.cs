@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -18,11 +17,17 @@ namespace Emergence.Client.Common
 
         public async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10)
         {
-            var origins = (await _httpClient.GetFromJsonAsync<IEnumerable<Origin>>($"/api/origin/find?search={searchText}&skip={skip}&take={take}")).ToList();
+            var result = await _httpClient.GetAsync($"/api/origin/find?search={searchText}&skip={skip}&take={take}");
 
-            origins.Add(new Origin { Name = searchText });
-
-            return origins;
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<IEnumerable<Origin>>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
         }
 
         public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10)
