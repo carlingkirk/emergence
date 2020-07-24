@@ -21,7 +21,6 @@ namespace Emergence.API.Controllers
         public async Task<PlantInfo> Get(int id) => await _plantInfoService.GetPlantInfoAsync(id);
 
         [HttpPut]
-
         public async Task<PlantInfo> Put(PlantInfo plantInfo) => await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
 
         [HttpGet]

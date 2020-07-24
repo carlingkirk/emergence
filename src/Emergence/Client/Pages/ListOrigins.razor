@@ -3,7 +3,7 @@
 @using Emergence.Data.Shared.Extensions;
 @inherits ListOriginsComponent
 <input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="GetOrigins">Search</button>
+<button class="btn btn-secondary" @onclick="GetOriginsAsync">Search</button>
 @if (Origins != null)
 {
     <table>

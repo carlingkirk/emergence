@@ -31,7 +31,7 @@
                 </div>
                 <div class="col">
                     <label for="specimen">Specimen</label>
-                    <BlazoredTypeahead SearchMethod="FindSpecimens"
+                    <BlazoredTypeahead SearchMethod="FindSpecimensAsync"
                                        @bind-Value="SelectedSpecimen"
                                        MinimumLength="3"
                                        Debounce="500" Context="specimen">
@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <button @onclick="(async () => await SaveActivity())" class="btn btn-primary">Submit</button>
+        <button @onclick="(async () => await SaveActivityAsync())" class="btn btn-primary">Submit</button>
         @if (BlazoredModal != null)
         {
             <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>

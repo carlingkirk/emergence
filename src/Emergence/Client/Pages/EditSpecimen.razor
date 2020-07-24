@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-12">
                     <label for="lifeform">Plant Name </label>
-                    <BlazoredTypeahead SearchMethod="ApiClient.FindLifeforms"
+                    <BlazoredTypeahead SearchMethod="FindLifeformsAsync"
                                         @bind-Value="SelectedLifeform"
                                         MinimumLength="3"
                                         Debounce="500" Context="lifeform">
@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="origin">Origin</label>
-                    <BlazoredTypeahead SearchMethod="ApiClient.FindOrigins"
+                    <BlazoredTypeahead SearchMethod="FindOriginsAsync"
                                         @bind-Value="SelectedOrigin"
                                         MinimumLength="3"
                                         Debounce="500" Context="origin">
@@ -103,7 +103,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <button @onclick="(async () => await SaveSpecimen())" class="btn btn-primary">Submit</button>
+                    <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Submit</button>
                     @if (BlazoredModal != null)
                     {
                         <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>

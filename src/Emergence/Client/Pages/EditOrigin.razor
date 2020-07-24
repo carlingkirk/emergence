@@ -126,7 +126,7 @@
             </div>
         </div>
 
-        <button @onclick="(async () => await SaveOrigin())" class="btn btn-primary">Submit</button>
+        <button @onclick="(async () => await SaveOriginAsync())" class="btn btn-primary">Submit</button>
         @if (BlazoredModal != null)
         {
             <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>

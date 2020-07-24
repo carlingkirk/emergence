@@ -37,7 +37,7 @@ namespace Emergence.Client.Components
             ChosenSoilTypes = new List<SoilType>();
             if (Id > 0)
             {
-                PlantInfo = await ApiClient.GetPlantInfo(Id);
+                PlantInfo = await ApiClient.GetPlantInfoAsync(Id);
                 SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
             }
@@ -64,7 +64,7 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task SavePlantInfo()
+        protected async Task SavePlantInfoAsync()
         {
             if (PlantInfo.PlantInfoId == 0)
             {
@@ -78,7 +78,7 @@ namespace Emergence.Client.Components
             }
             PlantInfo.Lifeform = SelectedLifeform;
 
-            PlantInfo = await ApiClient.PutPlantInfo(PlantInfo);
+            PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
 
             if (BlazoredModal != null)
             {
@@ -142,5 +142,8 @@ namespace Emergence.Client.Components
                 ChosenStratificationStages.AddBefore(oldNode, newNode);
             }
         }
+
+        protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText) => await ApiClient.FindOriginsAsync(searchText);
+        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(searchText);
     }
 }

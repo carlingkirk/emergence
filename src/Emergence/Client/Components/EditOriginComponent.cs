@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -14,7 +13,7 @@ namespace Emergence.Client.Components
     public class EditOriginComponent : ComponentBase
     {
         [Inject]
-        protected HttpClient Client { get; set; }
+        protected IApiClient ApiClient { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
@@ -27,17 +26,7 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                var result = await Client.GetAsync($"/api/origin/{Id}");
-
-                if (result.IsSuccessStatusCode)
-                {
-                    Origin = await result.Content.ReadFromJsonAsync<Origin>();
-                }
-                else
-                {
-                    var message = result.Content.ReadAsStringAsync();
-                    throw new Exception(result.StatusCode + ": " + message);
-                }
+                Origin = await ApiClient.GetOriginAsync(Id);
             }
             else
             {
@@ -49,7 +38,7 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task SaveOrigin()
+        protected async Task SaveOriginAsync()
         {
             if (Origin.OriginId == 0)
             {
@@ -57,11 +46,7 @@ namespace Emergence.Client.Components
             }
             Origin.DateModified = DateTime.UtcNow;
 
-            var result = await Client.PutAsJsonAsync("/api/origin", Origin);
-            if (result.IsSuccessStatusCode)
-            {
-                Origin = await result.Content.ReadFromJsonAsync<Origin>();
-            }
+            Origin = await ApiClient.PutOriginAsync(Origin);
 
             if (BlazoredModal != null)
             {

@@ -3,7 +3,7 @@
 @using Emergence.Data.Shared.Extensions;
 @inherits ListPlantInfosComponent
 <input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="GetPlantInfos">Search</button>
+<button class="btn btn-secondary" @onclick="GetPlantInfosAsync">Search</button>
 @if (PlantInfos != null)
 {
 <table>

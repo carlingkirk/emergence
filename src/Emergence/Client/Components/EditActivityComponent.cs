@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -14,7 +13,7 @@ namespace Emergence.Client.Components
     public class EditActivityComponent : ComponentBase
     {
         [Inject]
-        protected HttpClient Client { get; set; }
+        protected IApiClient ApiClient { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
@@ -27,18 +26,8 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                var result = await Client.GetAsync($"/api/activity/{Id}");
-
-                if (result.IsSuccessStatusCode)
-                {
-                    Activity = await result.Content.ReadFromJsonAsync<Activity>();
-                    SelectedSpecimen = Activity.Specimen ?? null;
-                }
-                else
-                {
-                    var message = result.Content.ReadAsStringAsync();
-                    throw new Exception(result.StatusCode + ": " + message);
-                }
+                Activity = await ApiClient.GetActivityAsync(Id);
+                SelectedSpecimen = Activity.Specimen ?? null;
             }
             else
             {
@@ -46,7 +35,7 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task SaveActivity()
+        protected async Task SaveActivityAsync()
         {
             if (Activity.ActivityId == 0)
             {
@@ -59,17 +48,8 @@ namespace Emergence.Client.Components
                 Activity.Specimen = SelectedSpecimen;
             }
 
-            var result = await Client.PutAsJsonAsync("/api/activity", Activity);
-            if (result.IsSuccessStatusCode)
-            {
-                Activity = await result.Content.ReadFromJsonAsync<Activity>();
-                Id = Activity.ActivityId;
-            }
-            else
-            {
-                var message = result.Content.ReadAsStringAsync();
-                throw new Exception(result.StatusCode + ": " + message);
-            }
+            Activity = await ApiClient.PutActivityAsync(Activity);
+            Id = Activity.ActivityId;
 
             if (BlazoredModal != null)
             {
@@ -77,16 +57,15 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task<IEnumerable<Specimen>> FindSpecimens(string searchText)
+        protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
         {
-            var response = (await Client.GetFromJsonAsync<IEnumerable<Specimen>>($"/api/specimen/find?search={searchText}&skip=0&take=10")).ToList();
-            var lifeforms = await Client.GetFromJsonAsync<IEnumerable<Lifeform>>($"/api/lifeform/find?search={searchText}&skip=0&take=3");
-
+            var specimens = (await ApiClient.FindSpecimensAsync(searchText)).ToList();
+            var lifeforms = await ApiClient.FindLifeformsAsync(searchText, 0, 3);
             foreach (var lifeform in lifeforms)
             {
-                response.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
+                specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
             }
-            return response;
+            return specimens;
         }
     }
 }

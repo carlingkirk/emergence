@@ -32,7 +32,7 @@ namespace Emergence.Client.Components
         {
             if (Id > 0)
             {
-                Specimen = await ApiClient.GetSpecimen(Id);
+                Specimen = await ApiClient.GetSpecimenAsync(Id);
                 SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
                 SelectedLifeform = Specimen.Lifeform;
             }
@@ -57,7 +57,7 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task SaveSpecimen()
+        protected async Task SaveSpecimenAsync()
         {
             if (Specimen.SpecimenId == 0)
             {
@@ -70,7 +70,7 @@ namespace Emergence.Client.Components
                 Specimen.InventoryItem.Origin = SelectedOrigin;
             }
 
-            Specimen = await ApiClient.PutSpecimen(Specimen);
+            Specimen = await ApiClient.PutSpecimenAsync(Specimen);
 
             if (BlazoredModal != null)
             {
@@ -85,5 +85,8 @@ namespace Emergence.Client.Components
                 Specimen.InventoryItem.Name = SelectedLifeform.ScientificName;
             }
         }
+
+        protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText) => await ApiClient.FindOriginsAsync(searchText);
+        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(searchText);
     }
 }

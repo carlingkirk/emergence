@@ -16,22 +16,76 @@ namespace Emergence.Client.Common
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<Origin>> FindOrigins(string searchText)
+        public async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10)
         {
-            var origins = (await _httpClient.GetFromJsonAsync<IEnumerable<Origin>>($"/api/origin/find?search={searchText}&skip=0&take=10")).ToList();
+            var origins = (await _httpClient.GetFromJsonAsync<IEnumerable<Origin>>($"/api/origin/find?search={searchText}&skip={skip}&take={take}")).ToList();
 
             origins.Add(new Origin { Name = searchText });
+
             return origins;
         }
 
-        public async Task<IEnumerable<Lifeform>> FindLifeforms(string searchText)
+        public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10)
         {
-            var lifeforms = (await _httpClient.GetFromJsonAsync<IEnumerable<Lifeform>>($"/api/lifeform/find?search={searchText}&skip=0&take=10")).ToList();
+            var result = await _httpClient.GetAsync($"/api/lifeform/find?search={searchText}&skip={skip}&take={take}");
 
-            return lifeforms;
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<IEnumerable<Lifeform>>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
         }
 
-        public async Task<Specimen> GetSpecimen(int id)
+        public async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10)
+        {
+            var result = await _httpClient.GetAsync($"/api/specimen/find?search={searchText}&skip={skip}&take={take}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<IEnumerable<Specimen>>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        public async Task<IEnumerable<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10)
+        {
+            var result = await _httpClient.GetAsync($"/api/activity/find?search={searchText}&skip={skip}&take={take}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<IEnumerable<Activity>>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        public async Task<IEnumerable<PlantInfo>> FindPlantInfosAsync(string searchText, int? skip = 0, int? take = 10)
+        {
+            var result = await _httpClient.GetAsync($"/api/plantinfo/find?search={searchText}&skip={skip}&take={take}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<IEnumerable<PlantInfo>>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        public async Task<Specimen> GetSpecimenAsync(int id)
         {
             var result = await _httpClient.GetAsync($"/api/specimen/{id}");
 
@@ -46,9 +100,10 @@ namespace Emergence.Client.Common
             }
         }
 
-        public async Task<Specimen> PutSpecimen(Specimen specimen)
+        public async Task<Specimen> PutSpecimenAsync(Specimen specimen)
         {
             var result = await _httpClient.PutAsJsonAsync("/api/specimen", specimen);
+
             if (result.IsSuccessStatusCode)
             {
                 return await result.Content.ReadFromJsonAsync<Specimen>();
@@ -57,7 +112,7 @@ namespace Emergence.Client.Common
             return null;
         }
 
-        public async Task<PlantInfo> GetPlantInfo(int id)
+        public async Task<PlantInfo> GetPlantInfoAsync(int id)
         {
             var result = await _httpClient.GetAsync($"/api/plantinfo/{id}");
 
@@ -72,15 +127,76 @@ namespace Emergence.Client.Common
             }
         }
 
-        public async Task<PlantInfo> PutPlantInfo(PlantInfo plantInfo)
+        public async Task<PlantInfo> PutPlantInfoAsync(PlantInfo plantInfo)
         {
             var result = await _httpClient.PutAsJsonAsync("/api/plantinfo", plantInfo);
+
             if (result.IsSuccessStatusCode)
             {
                 return await result.Content.ReadFromJsonAsync<PlantInfo>();
             }
 
             return null;
+        }
+
+        public async Task<Activity> GetActivityAsync(int id)
+        {
+            var result = await _httpClient.GetAsync($"/api/activity/{id}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<Activity>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        public async Task<Activity> PutActivityAsync(Activity activity)
+        {
+            var result = await _httpClient.PutAsJsonAsync("/api/activity", activity);
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<Activity>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        public async Task<Origin> GetOriginAsync(int id)
+        {
+            var result = await _httpClient.GetAsync($"/api/origin/{id}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<Origin>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        public async Task<Origin> PutOriginAsync(Origin origin)
+        {
+            var result = await _httpClient.PutAsJsonAsync("/api/origin", origin);
+
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<Origin>();
+            }
+            else
+            {
+                var message = result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
         }
     }
 }
