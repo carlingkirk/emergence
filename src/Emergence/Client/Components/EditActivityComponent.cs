@@ -29,8 +29,16 @@ namespace Emergence.Client.Components
             if (Id > 0)
             {
                 Activity = await ApiClient.GetActivityAsync(Id);
+                var photos = await ApiClient.GetPhotosAsync(PhotoType.Activity, Id);
+                if (photos.Any())
+                {
+                    UploadedPhotos = photos.ToList();
+                }
+                else
+                {
+                    UploadedPhotos = new List<Photo>();
+                }
                 SelectedSpecimen = Activity.Specimen ?? null;
-                UploadedPhotos = new List<Photo>();
             }
             else
             {
@@ -45,6 +53,12 @@ namespace Emergence.Client.Components
             {
                 Activity.DateCreated = DateTime.UtcNow;
             }
+
+            if (UploadedPhotos.Any())
+            {
+                Activity.Photos = UploadedPhotos;
+            }
+
             Activity.DateModified = DateTime.UtcNow;
 
             if (SelectedSpecimen != null)

@@ -36,5 +36,13 @@ namespace Emergence.API.Controllers
             var result = await _photoService.GetPhotosAsync(photoResult.Select(p => p.PhotoId));
             return result.FirstOrDefault();
         }
+
+        [HttpGet]
+        [Route("{type}/{id}")]
+        public async Task<IEnumerable<Photo>> Get(PhotoType type, int id)
+        {
+            var photoResult = await _photoService.GetPhotosAsync(type, id);
+            return photoResult;
+        }
     }
 }

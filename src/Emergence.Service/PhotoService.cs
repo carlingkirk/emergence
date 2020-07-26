@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -15,9 +14,9 @@ namespace Emergence.Service
     public class PhotoService : IPhotoService
     {
         private readonly IBlobService _blobService;
-        private readonly IRepository<Photo> _photoRepository;
+        private readonly IRepository<Data.Shared.Stores.Photo> _photoRepository;
 
-        public PhotoService(IBlobService blobService, IRepository<Photo> photoRepository)
+        public PhotoService(IBlobService blobService, IRepository<Data.Shared.Stores.Photo> photoRepository)
         {
             _blobService = blobService;
             _photoRepository = photoRepository;
@@ -83,6 +82,17 @@ namespace Emergence.Service
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(IEnumerable<int> ids)
         {
             var photoResult = _photoRepository.GetSomeAsync(p => ids.Any(i => i == p.Id));
+            var photos = new List<Data.Shared.Models.Photo>();
+            await foreach (var photo in photoResult)
+            {
+                photos.Add(photo.AsModel());
+            }
+            return photos;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(Data.Shared.Models.PhotoType type, int typeId)
+        {
+            var photoResult = _photoRepository.GetSomeAsync(p => p.Type == type.ToString() && p.TypeId == typeId);
             var photos = new List<Data.Shared.Models.Photo>();
             await foreach (var photo in photoResult)
             {
@@ -169,5 +179,7 @@ namespace Emergence.Service
 
             return (length, width);
         }
+
+
     }
 }

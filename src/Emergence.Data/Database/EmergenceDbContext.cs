@@ -37,6 +37,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<Origin> Origins { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Lifeform> Lifeforms { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
         public virtual DbSet<PlantInfo> PlantInfos { get; set; }
         public virtual DbSet<Specimen> Specimens { get; set; }
         public virtual DbSet<Taxon> Taxons { get; set; }
@@ -60,6 +61,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Location>().HasKey(i => i.Id);
             modelBuilder.Entity<Lifeform>().HasKey(i => i.Id);
             modelBuilder.Entity<PlantInfo>().HasKey(i => i.Id);
+            modelBuilder.Entity<Photo>().HasKey(i => i.Id);
             modelBuilder.Entity<Specimen>().HasKey(i => i.Id);
             modelBuilder.Entity<Taxon>().HasKey(i => i.Id);
         }

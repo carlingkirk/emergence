@@ -11,5 +11,6 @@ namespace Emergence.Service.Interfaces
         Task<Photo> AddOrUpdatePhotoAsync(Photo photo);
         Task<bool> AddOrUpdatePhotosAsync(IEnumerable<Photo> photos);
         Task<IEnumerable<Photo>> GetPhotosAsync(IEnumerable<int> ids);
+        Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int typeId);
     }
 }

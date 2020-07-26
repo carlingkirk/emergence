@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Emergence.Data.Shared.Models
@@ -18,7 +19,7 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateModified { get; set; }
 
         public Specimen Specimen { get; set; }
-        public Photo Photo { get; set; }
+        public IEnumerable<Photo> Photos { get; set; }
     }
 
     public enum ActivityType

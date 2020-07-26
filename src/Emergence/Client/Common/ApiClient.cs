@@ -150,7 +150,14 @@ namespace Emergence.Client.Common
             }
         }
 
-        public async Task<T> ReadResult<T>(HttpResponseMessage result)
+        public async Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int id)
+        {
+            var result = await _httpClient.GetAsync($"/api/photo/{type}/{id}");
+
+            return await ReadResult<IEnumerable<Photo>>(result);
+        }
+
+        private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)
             {
