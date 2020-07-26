@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
@@ -16,10 +17,13 @@ namespace Emergence.API.Controllers
         {
             _photoService = photoService;
         }
+
         [HttpPut]
         public async Task<IEnumerable<Photo>> Upload(IEnumerable<FormFile> photos, PhotoType type)
         {
-            return await _photoService.UploadPhotosAsync(photos, type, UserId);
+            var photoResult = await _photoService.UploadPhotosAsync(photos, type, UserId);
+            await _photoService.AddOrUpdatePhotosAsync(photoResult);
+            return await _photoService.GetPhotosAsync(photoResult.Select(p => p.PhotoId));
         }
     }
 }

@@ -1,12 +1,13 @@
 using System;
 
-namespace Emergence.Data.Shared.Models
+namespace Emergence.Data.Shared.Stores
 {
     public class Photo
     {
-        public int PhotoId { get; set; }
-        public PhotoType Type { get; set; }
+        public int Id { get; set; }
+        public string Type { get; set; }
         public int TypeId { get; set; }
+        public int? LocationId { get; set; }
         public string Filename { get; set; }
         public string UserId { get; set; }
         public string ContentType { get; set; }
@@ -16,15 +17,5 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Location Location { get; set; }
-    }
-
-    public enum PhotoType
-    {
-        Activity,
-        Specimen,
-        InventoryItem,
-        Origin,
-        PlantInfo,
-        User
     }
 }

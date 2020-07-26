@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data;
 using Emergence.Data.Shared;
-using Emergence.Data.Shared.Models;
+using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -12,15 +15,17 @@ namespace Emergence.Service
     public class PhotoService : IPhotoService
     {
         private readonly IBlobService _blobService;
+        private readonly IRepository<Photo> _photoRepository;
 
-        public PhotoService(IBlobService blobService)
+        public PhotoService(IBlobService blobService, IRepository<Photo> photoRepository)
         {
             _blobService = blobService;
+            _photoRepository = photoRepository;
         }
 
-        public async Task<IEnumerable<Photo>> UploadPhotosAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadPhotosAsync(IEnumerable<IFormFile> photos, Data.Shared.Models.PhotoType type, string userId)
         {
-            var photoResult = new List<Photo>();
+            var photoResult = new List<Data.Shared.Models.Photo>();
 
             foreach (var photo in photos)
             {
@@ -45,7 +50,7 @@ namespace Emergence.Service
                     }
                 }
 
-                photoResult.Add(new Photo
+                photoResult.Add(new Data.Shared.Models.Photo
                 {
                     Filename = path + "/" + name,
                     Type = type,
@@ -62,9 +67,33 @@ namespace Emergence.Service
             return photoResult;
         }
 
-        private Location GetLocationFromMetadata(IDictionary<string, string> metadata)
+        public async Task<Data.Shared.Models.Photo> AddOrUpdatePhotoAsync(Data.Shared.Models.Photo photo)
         {
-            var location = new Location();
+            photo.DateModified = DateTime.UtcNow;
+            var photoResult = await _photoRepository.AddOrUpdateAsync(l => l.Id == photo.PhotoId, photo.AsStore());
+            return photoResult.AsModel();
+        }
+
+        public async Task<bool> AddOrUpdatePhotosAsync(IEnumerable<Data.Shared.Models.Photo> photos)
+        {
+            await _photoRepository.AddSomeAsync(photos.Select(p => p.AsStore()));
+            return true;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(IEnumerable<int> ids)
+        {
+            var photoResult = _photoRepository.GetSomeAsync(p => ids.Any(i => i == p.Id));
+            var photos = new List<Data.Shared.Models.Photo>();
+            await foreach (var photo in photoResult)
+            {
+                photos.Add(photo.AsModel());
+            }
+            return photos;
+        }
+
+        private Data.Shared.Models.Location GetLocationFromMetadata(IDictionary<string, string> metadata)
+        {
+            var location = new Data.Shared.Models.Location();
             var hasValues = false;
 
             if (metadata.Count > 0)
