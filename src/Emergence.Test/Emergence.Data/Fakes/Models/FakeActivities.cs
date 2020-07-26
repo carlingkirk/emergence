@@ -20,7 +20,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     DateScheduled = new System.DateTime(2020,03,25),
                     DateOccured = new System.DateTime(2020,03,25),
                     DateCreated = new System.DateTime(2020,07,10),
-                    DateModified = null
+                    DateModified = null,
+                    Photo = new Photo { PhotoId = 1, Filename = "/photo/activities/1", UserId = "me", DateCreated = new System.DateTime(2020,07,10), DateModified = null }
                 },
                 new Activity
                 {
@@ -32,7 +33,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     DateScheduled = new System.DateTime(2020,05,24),
                     DateOccured = new System.DateTime(2020,05,25),
                     DateCreated = new System.DateTime(2020,07,09),
-                    DateModified = new System.DateTime(2020,07,10)
+                    DateModified = new System.DateTime(2020,07,10),
+                    Photo = new Photo { PhotoId = 2, Filename = "/photo/activities/2", UserId = "me", DateCreated = new System.DateTime(2020,07,10), DateModified = null }
                 },
                 new Activity
                 {
@@ -44,7 +46,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     DateScheduled = new System.DateTime(2020,06,24),
                     DateOccured = new System.DateTime(2020,06,12),
                     DateCreated = new System.DateTime(2020,07,10),
-                    DateModified = null
+                    DateModified = null,
+                    Photo = new Photo { PhotoId = 3, Filename = "/photo/activities/3", UserId = "me", DateCreated = new System.DateTime(2020,07,10), DateModified = null }
                 }
             };
             return activities;
