@@ -18,12 +18,23 @@ namespace Emergence.API.Controllers
             _photoService = photoService;
         }
 
-        [HttpPut]
-        public async Task<IEnumerable<Photo>> Upload(IEnumerable<FormFile> photos, PhotoType type)
+        [HttpPost]
+        [Route("{type}/UploadMany")]
+        public async Task<IEnumerable<Photo>> UploadMany(IEnumerable<IFormFile> photos, PhotoType type)
         {
             var photoResult = await _photoService.UploadPhotosAsync(photos, type, UserId);
             await _photoService.AddOrUpdatePhotosAsync(photoResult);
             return await _photoService.GetPhotosAsync(photoResult.Select(p => p.PhotoId));
+        }
+
+        [HttpPost]
+        [Route("{type}/Upload")]
+        public async Task<Photo> Upload(IFormFile photo, PhotoType type)
+        {
+            var photoResult = await _photoService.UploadPhotosAsync(new IFormFile[] { photo }, type, UserId);
+            await _photoService.AddOrUpdatePhotosAsync(photoResult);
+            var result = await _photoService.GetPhotosAsync(photoResult.Select(p => p.PhotoId));
+            return result.FirstOrDefault();
         }
     }
 }

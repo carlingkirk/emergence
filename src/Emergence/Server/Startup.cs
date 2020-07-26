@@ -45,6 +45,8 @@ namespace Emergence.Server
             services.AddTransient<IOriginService, OriginService>();
             services.AddTransient<IPlantInfoService, PlantInfoService>();
             services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<IBlobService, BlobService>();
+            services.AddTransient<IPhotoService, PhotoService>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
@@ -53,6 +55,7 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<Lifeform>), typeof(Repository<Lifeform>));
             services.AddScoped(typeof(IRepository<Location>), typeof(Repository<Location>));
             services.AddScoped(typeof(IRepository<Origin>), typeof(Repository<Origin>));
+            services.AddScoped(typeof(IRepository<Photo>), typeof(Repository<Photo>));
             services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
