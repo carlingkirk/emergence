@@ -46,7 +46,7 @@ namespace Emergence.Test.Emergence.API.Services
             mockProperties.Setup(p => p.Metadata).Returns(metadata);
             mockProperties.Setup(p => p.ContentType).Returns("");
 
-            _mockBlobService.Setup(b => b.UploadPhotoAsync(It.IsAny<IFormFile>(), It.IsAny<string>(), It.IsAny<string>()))
+            _mockBlobService.Setup(b => b.UploadPhotoAsync(It.IsAny<IFormFile>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(mockProperties.Object);
 
             var file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt");
@@ -55,7 +55,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var result = await photoService.UploadPhotosAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me");
 
-            result.FirstOrDefault().Filename.Should().Be("Activity/me/00000000-0000-0000-0000-000000000000.txt");
+            result.FirstOrDefault().Filename.Should().StartWith("activity");
             result.FirstOrDefault().Location.Latitude.Should().Be(38.885986);
             result.FirstOrDefault().Location.Longitude.Should().Be(-77.036880);
             result.FirstOrDefault().Location.Altitude.Should().Be(145);

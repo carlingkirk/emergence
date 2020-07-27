@@ -29,38 +29,41 @@ namespace Emergence.Service
             foreach (var photo in photos)
             {
                 var path = type.ToString() + "/" + userId;
-                var name = new Guid().ToString();
+                var name = Guid.NewGuid().ToString();
                 var fileInfo = new FileInfo(photo.FileName);
                 name += fileInfo.Extension;
 
-                var result = await _blobService.UploadPhotoAsync(photo, path, name);
-                var location = GetLocationFromMetadata(result.Metadata);
-                var (length, width) = GetDimensionsFromMetadata(result.Metadata);
-
-                DateTime? dateTaken = null;
-                if (result.Metadata.TryGetValue(Constants.DateTaken, out var dateTakenEntry))
+                var result = await _blobService.UploadPhotoAsync(photo, type.ToString(), userId, name);
+                if (result != null)
                 {
-                    if (!string.IsNullOrEmpty(dateTakenEntry))
+                    var location = GetLocationFromMetadata(result.Metadata);
+                    var (length, width) = GetDimensionsFromMetadata(result.Metadata);
+
+                    DateTime? dateTaken = null;
+                    if (result.Metadata.TryGetValue(Constants.DateTaken, out var dateTakenEntry))
                     {
-                        if (DateTime.TryParse(dateTakenEntry, out var dateTakenValue))
+                        if (!string.IsNullOrEmpty(dateTakenEntry))
                         {
-                            dateTaken = dateTakenValue.ToUniversalTime();
+                            if (DateTime.TryParse(dateTakenEntry, out var dateTakenValue))
+                            {
+                                dateTaken = dateTakenValue.ToUniversalTime();
+                            }
                         }
                     }
-                }
 
-                photoResult.Add(new Data.Shared.Models.Photo
-                {
-                    Filename = path + "/" + name,
-                    Type = type,
-                    UserId = userId,
-                    ContentType = result.ContentType,
-                    Location = location,
-                    Length = length,
-                    Width = width,
-                    DateTaken = dateTaken,
-                    DateCreated = DateTime.UtcNow
-                });
+                    photoResult.Add(new Data.Shared.Models.Photo
+                    {
+                        Filename = path + "/" + name,
+                        Type = type,
+                        UserId = userId,
+                        ContentType = result.ContentType,
+                        Location = location,
+                        Length = length,
+                        Width = width,
+                        DateTaken = dateTaken,
+                        DateCreated = DateTime.UtcNow
+                    });
+                }
             }
 
             return photoResult;
