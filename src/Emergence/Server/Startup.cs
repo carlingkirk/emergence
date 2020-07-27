@@ -42,6 +42,7 @@ namespace Emergence.Server
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IInventoryService, InventoryService>();
             services.AddTransient<ILifeformService, LifeformService>();
+            services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<IOriginService, OriginService>();
             services.AddTransient<IPlantInfoService, PlantInfoService>();
             services.AddTransient<ISpecimenService, SpecimenService>();

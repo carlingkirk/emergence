@@ -6,7 +6,7 @@ namespace Emergence.Data.Shared.Stores
     {
         public int Id { get; set; }
         public string Type { get; set; }
-        public int TypeId { get; set; }
+        public int? TypeId { get; set; }
         public int? LocationId { get; set; }
         public string Filename { get; set; }
         public string UserId { get; set; }

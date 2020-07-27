@@ -28,7 +28,6 @@ namespace Emergence.Service
 
             foreach (var photo in photos)
             {
-                var path = type.ToString() + "/" + userId;
                 var name = Guid.NewGuid().ToString();
                 var fileInfo = new FileInfo(photo.FileName);
                 name += fileInfo.Extension;
@@ -53,7 +52,7 @@ namespace Emergence.Service
 
                     photoResult.Add(new Data.Shared.Models.Photo
                     {
-                        Filename = path + "/" + name,
+                        Filename = type.ToString().ToLower() + "/" + name,
                         Type = type,
                         UserId = userId,
                         ContentType = result.ContentType,
@@ -76,10 +75,10 @@ namespace Emergence.Service
             return photoResult.AsModel();
         }
 
-        public async Task<bool> AddOrUpdatePhotosAsync(IEnumerable<Data.Shared.Models.Photo> photos)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> AddOrUpdatePhotosAsync(IEnumerable<Data.Shared.Models.Photo> photos)
         {
-            await _photoRepository.AddSomeAsync(photos.Select(p => p.AsStore()));
-            return true;
+            var result = await _photoRepository.AddSomeAsync(photos.Select(p => p.AsStore()));
+            return result.Select(p => p.AsModel());
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(IEnumerable<int> ids)

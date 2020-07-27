@@ -12,7 +12,7 @@ namespace Emergence.Data.Shared.Extensions
             Name = source.Name,
             Description = source.Description,
             Type = Enum.Parse<Models.OriginType>(source.Type),
-            Location = new Models.Location { Latitude = source.Latitude, Longitude = source.Longitude },
+            Location = source.Location != null ? source.Location.AsModel() : source.LocationId.HasValue ? new Models.Location { LocationId = source.LocationId.Value } : null,
             Uri = source.Uri,
             Authors = source.Authors,
             ExternalId = source.ExternalId,

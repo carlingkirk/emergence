@@ -24,6 +24,15 @@ namespace Emergence.Data.Shared.Extensions
         public static Location AsStore(this Models.Location source) => new Location
         {
             Id = source.LocationId,
+            Latitude = source.Latitude,
+            Longitude = source.Longitude,
+            Altitude = source.Altitude,
+            AddressLine1 = source.AddressLine1,
+            AddressLine2 = source.AddressLine2,
+            City = source.City,
+            StateOrProvince = source.StateOrProvince,
+            PostalCode = source.PostalCode,
+            Country = source.Country,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

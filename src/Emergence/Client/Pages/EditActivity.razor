@@ -82,6 +82,17 @@
             <div class="row">
                 <div class="col">
                     <InputFile OnChange="UploadPhotosAsync" multiple></InputFile>
+                    @if (UploadedPhotos != null)
+                    {
+                    <div class="row">
+                        @foreach (var photo in UploadedPhotos)
+                        {
+                        <div class="col">
+                            <img src="@("https://emergencesa.blob.core.windows.net/"+ photo.Filename)" />
+                        </div>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
         </div>

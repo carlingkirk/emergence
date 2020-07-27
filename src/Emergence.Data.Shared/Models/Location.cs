@@ -17,6 +17,6 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
 
-        public string CityState => City + ", " + StateOrProvince;
+        public string CityState => (City != null) ? (City + (StateOrProvince != null ? ", " : "")) : "" + StateOrProvince;
     }
 }
