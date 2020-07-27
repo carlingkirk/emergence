@@ -113,10 +113,12 @@ namespace Emergence.Data.Repository
             return dbEntity;
         }
 
-        public async Task AddSomeAsync(IEnumerable<T> source)
+        public async Task<IEnumerable<T>> AddSomeAsync(IEnumerable<T> source)
         {
-            await _context.Set<T>().AddRangeAsync(source);
-            await _context.SaveChangesAsync();
+            var entities = source.ToList();
+            await _context.Set<T>().AddRangeAsync(entities);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return entities;
         }
 
         public async Task AddAsync(T entity)
