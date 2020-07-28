@@ -76,7 +76,7 @@ namespace Emergence.Test.Emergence.API.Services
         }
 
         [Fact(Skip = "Integration test")]
-        public async Task TestExifReader()
+        public void TestExifReader()
         {
             using (var stream = new FileStream("D:/Pictures/IMG_20200724_170738.jpg", FileMode.Open, FileAccess.Read))
             {
