@@ -86,11 +86,13 @@ namespace Emergence.Test.Emergence.API.Services
 
             var result = await photoService.UploadPhotosAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me");
 
+            var timezone = TimeZoneInfo.Local;
+            var expectedDate = TimeZoneInfo.ConvertTimeToUtc(new DateTime(2020, 7, 22, 13, 45, 26, DateTimeKind.Unspecified), timezone);
             result.FirstOrDefault().Filename.Should().StartWith("activity");
             result.FirstOrDefault().Location.Should().BeNull();
             result.FirstOrDefault().Length.Should().Be(3024);
             result.FirstOrDefault().Width.Should().Be(4032);
-            result.FirstOrDefault().DateTaken.Should().Be(new DateTime(2020, 7, 22, 17, 45, 26, DateTimeKind.Utc));
+            result.FirstOrDefault().DateTaken.Should().Be(expectedDate);
         }
 
         [Fact]
