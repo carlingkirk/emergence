@@ -17,7 +17,7 @@ namespace Emergence.Data
         Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity);
         Task<IEnumerable<T>> AddSomeAsync(IEnumerable<T> source);
         Task AddAsync(T entity);
-        Task UpdateSomeAsync(IEnumerable<T> source);
+        Task<IEnumerable<T>> UpdateSomeAsync(IEnumerable<T> source);
         Task UpdateAsync(T entity);
     }
 }

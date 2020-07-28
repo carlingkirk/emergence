@@ -77,8 +77,13 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> AddOrUpdatePhotosAsync(IEnumerable<Data.Shared.Models.Photo> photos)
         {
-            var result = await _photoRepository.AddSomeAsync(photos.Select(p => p.AsStore()));
-            return result.Select(p => p.AsModel());
+            var updates = photos.Where(p => p.PhotoId != 0);
+            var updateResult = await _photoRepository.UpdateSomeAsync(updates.Select(p => p.AsStore()));
+
+            var adds = photos.Where(p => p.PhotoId == 0);
+            var addResult = await _photoRepository.AddSomeAsync(adds.Select(p => p.AsStore()));
+
+            return updateResult.Union(addResult).Select(p => p.AsModel());
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(IEnumerable<int> ids)

@@ -127,10 +127,12 @@ namespace Emergence.Data.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateSomeAsync(IEnumerable<T> source)
+        public async Task<IEnumerable<T>> UpdateSomeAsync(IEnumerable<T> source)
         {
-            _context.Set<T>().UpdateRange(source);
-            await _context.SaveChangesAsync();
+            var entities = source.ToList();
+            _context.Set<T>().UpdateRange(entities);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return entities;
         }
 
         public async Task UpdateAsync(T entity)

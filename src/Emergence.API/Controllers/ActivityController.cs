@@ -31,19 +31,19 @@ namespace Emergence.API.Controllers
 
         public async Task<Activity> Put(Activity activity)
         {
-            activity = await _activityService.AddOrUpdateActivityAsync(activity, UserId);
+            var activityResult = await _activityService.AddOrUpdateActivityAsync(activity, UserId);
 
             if (activity.Photos.Any())
             {
                 foreach (var photo in activity.Photos)
                 {
-                    photo.TypeId = activity.ActivityId;
+                    photo.TypeId = activityResult.ActivityId;
                 }
                 await _photoService.AddOrUpdatePhotosAsync(activity.Photos);
             }
 
-            activity.Photos = await _photoService.GetPhotosAsync(activity.Photos.Select(p => p.PhotoId));
-            return activity;
+            activityResult.Photos = await _photoService.GetPhotosAsync(activity.Photos.Select(p => p.PhotoId));
+            return activityResult;
         }
 
         [HttpGet]
