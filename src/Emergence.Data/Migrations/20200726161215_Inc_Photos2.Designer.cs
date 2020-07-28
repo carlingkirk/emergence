@@ -3,14 +3,16 @@ using System;
 using Emergence.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Emergence.Data.Migrations
 {
     [DbContext(typeof(EmergenceDbContext))]
-    partial class EmergenceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200726161215_Inc_Photos2")]
+    partial class Inc_Photos2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,7 +262,7 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TypeId")
+                    b.Property<int>("TypeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")

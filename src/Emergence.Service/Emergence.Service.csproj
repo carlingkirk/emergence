@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.4.4" />
+    <PackageReference Include="ExifLib.Standard" Version="1.7.0" />
+    <PackageReference Include="GeoTimeZone" Version="4.0.0" />
+    <PackageReference Include="TimeZoneConverter" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Emergence.Data.Shared\Emergence.Data.Shared.csproj" />
     <ProjectReference Include="..\Emergence.Data\Emergence.Data.csproj" />
   </ItemGroup>

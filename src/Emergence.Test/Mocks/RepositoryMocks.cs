@@ -126,5 +126,23 @@ namespace Emergence.Test.Mocks
 
             return mockActivityRepo;
         }
+
+        public static Mock<IRepository<Photo>> GetStandardMockPhotoRepository()
+        {
+            var mockPhotoRepo = new Mock<IRepository<Photo>>();
+            var mockPhotos = Data.Fakes.Stores.FakePhotos.Get().AsQueryable().BuildMockDbSet().Object;
+
+            mockPhotoRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Photo, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(mockPhotos.First());
+
+            mockPhotoRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Photo, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(mockPhotos.ToAsyncEnumerable());
+
+            mockPhotoRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<Photo, bool>>>(), It.IsAny<Photo>()))
+                .ReturnsAsync(mockPhotos.First());
+
+            return mockPhotoRepo;
+
+        }
     }
 }

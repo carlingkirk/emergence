@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using BlazorInputFile;
 using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
@@ -20,6 +21,7 @@ namespace Emergence.Client.Components
         public int Id { get; set; }
         public Activity Activity { get; set; }
         public Specimen SelectedSpecimen { get; set; }
+        public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<ActivityType> ActivityTypes => Enum.GetValues(typeof(ActivityType)).Cast<ActivityType>();
 
         protected override async Task OnInitializedAsync()
@@ -27,11 +29,21 @@ namespace Emergence.Client.Components
             if (Id > 0)
             {
                 Activity = await ApiClient.GetActivityAsync(Id);
+                var photos = await ApiClient.GetPhotosAsync(PhotoType.Activity, Id);
+                if (photos.Any())
+                {
+                    UploadedPhotos = photos.ToList();
+                }
+                else
+                {
+                    UploadedPhotos = new List<Photo>();
+                }
                 SelectedSpecimen = Activity.Specimen ?? null;
             }
             else
             {
                 Activity = new Activity();
+                UploadedPhotos = new List<Photo>();
             }
         }
 
@@ -41,6 +53,12 @@ namespace Emergence.Client.Components
             {
                 Activity.DateCreated = DateTime.UtcNow;
             }
+
+            if (UploadedPhotos.Any())
+            {
+                Activity.Photos = UploadedPhotos;
+            }
+
             Activity.DateModified = DateTime.UtcNow;
 
             if (SelectedSpecimen != null)
@@ -66,6 +84,18 @@ namespace Emergence.Client.Components
                 specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
             }
             return specimens;
+        }
+
+        protected async Task UploadPhotosAsync(IFileListEntry[] files)
+        {
+            var photos = await ApiClient.UploadPhotosAsync(files, PhotoType.Activity);
+            UploadedPhotos = photos.ToList();
+        }
+
+        protected async Task UploadPhotoAsync(IFileListEntry[] files)
+        {
+            var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType.Activity);
+            UploadedPhotos.Add(photo);
         }
     }
 }

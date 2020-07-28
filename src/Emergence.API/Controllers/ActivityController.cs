@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
@@ -11,9 +12,11 @@ namespace Emergence.API.Controllers
     public class ActivityController : BaseAPIController
     {
         private readonly IActivityService _activityService;
-        public ActivityController(IActivityService activityService)
+        private readonly IPhotoService _photoService;
+        public ActivityController(IActivityService activityService, IPhotoService photoService)
         {
             _activityService = activityService;
+            _photoService = photoService;
         }
 
         [HttpGet]
@@ -26,7 +29,22 @@ namespace Emergence.API.Controllers
 
         [HttpPut]
 
-        public async Task<Activity> Put(Activity activity) => await _activityService.AddOrUpdateActivityAsync(activity, UserId);
+        public async Task<Activity> Put(Activity activity)
+        {
+            var activityResult = await _activityService.AddOrUpdateActivityAsync(activity, UserId);
+
+            if (activity.Photos.Any())
+            {
+                foreach (var photo in activity.Photos)
+                {
+                    photo.TypeId = activityResult.ActivityId;
+                }
+                await _photoService.AddOrUpdatePhotosAsync(activity.Photos);
+            }
+
+            activityResult.Photos = await _photoService.GetPhotosAsync(activity.Photos.Select(p => p.PhotoId));
+            return activityResult;
+        }
 
         [HttpGet]
         [Route("Find")]

@@ -31,4 +31,8 @@
     <ProjectReference Include="..\Emergence.Transform\Emergence.Transform.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Emergence.API\" />
+  </ItemGroup>
+
 </Project>

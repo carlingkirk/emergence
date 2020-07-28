@@ -6,6 +6,7 @@
 @using Emergence.Client.Common
 @using Emergence.Data.Shared.Extensions
 @using Blazored.Typeahead
+@using BlazorInputFile; 
 @inject IModalServiceClient ModalServiceClient
 @attribute [Authorize]
 @inherits EditActivityComponent
@@ -52,7 +53,7 @@
                                 <span>@(specimen.InventoryItem?.Name)</span> <span>@(specimen.SpecimenStage.ToFriendlyName())</span> <span>@(specimen.InventoryItem?.Status.ToFriendlyName())</span>
                                 }
                                 else // this won't happen?
-                                {
+                            {
                                 <span>@specimen.SpecimenId.ToString();</span>
                                 }
                         </ResultTemplate>
@@ -78,6 +79,23 @@
                     <input @bind="@Activity.DateScheduled" type="date" class="form-control" id="date-scheduled" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <input type="file" accept="image/*" capture="" />
+                    <InputFile OnChange="UploadPhotosAsync" multiple></InputFile>
+                    @if (UploadedPhotos != null)
+                    {
+                        <div class="row">
+                            @foreach (var photo in UploadedPhotos)
+                            {
+                                <div class="col">
+                                    <img src="@("https://emergencesa.blob.core.windows.net/"+ photo.Filename)" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
 
         <button @onclick="(async () => await SaveActivityAsync())" class="btn btn-primary">Submit</button>
@@ -85,7 +103,7 @@
         {
             <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
         }
-    </EditForm>
+</EditForm>
 }
 else
 {

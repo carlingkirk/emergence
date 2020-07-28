@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BlazorInputFile;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
@@ -18,6 +19,9 @@ namespace Emergence.Client.Common
         Task<Activity> GetActivityAsync(int id);
         Task<Activity> PutActivityAsync(Activity activity);
         Task<Origin> GetOriginAsync(int id);
+        Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int id);
         Task<Origin> PutOriginAsync(Origin origin);
+        Task<IEnumerable<Photo>> UploadPhotosAsync(IFileListEntry[] photos, PhotoType type);
+        Task<Photo> UploadPhotoAsync(IFileListEntry photo, PhotoType type);
     }
 }

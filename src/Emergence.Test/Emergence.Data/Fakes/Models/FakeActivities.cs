@@ -20,7 +20,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     DateScheduled = new System.DateTime(2020,03,25),
                     DateOccured = new System.DateTime(2020,03,25),
                     DateCreated = new System.DateTime(2020,07,10),
-                    DateModified = null
+                    DateModified = null,
+                    Photos = new List<Photo> { new Photo { PhotoId = 1, Filename = "/photo/activities/1", UserId = "me", DateCreated = new System.DateTime(2020,07,10), DateModified = null } }
                 },
                 new Activity
                 {
@@ -32,7 +33,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     DateScheduled = new System.DateTime(2020,05,24),
                     DateOccured = new System.DateTime(2020,05,25),
                     DateCreated = new System.DateTime(2020,07,09),
-                    DateModified = new System.DateTime(2020,07,10)
+                    DateModified = new System.DateTime(2020,07,10),
+                    Photos = new List<Photo> { new Photo {  PhotoId = 2, Filename = "/photo/activities/2", UserId = "me", DateCreated = new System.DateTime(2020,07,10), DateModified = null } }
                 },
                 new Activity
                 {
@@ -41,10 +43,11 @@ namespace Emergence.Test.Data.Fakes.Models
                     Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata Seeds"),
                     Name = "Liatris spicata Seeds Division",
                     Description = "Split about 15 seedlings into 2\" containers with woody mix",
-                    DateScheduled = new System.DateTime(2020,06,24),
-                    DateOccured = new System.DateTime(2020,06,12),
-                    DateCreated = new System.DateTime(2020,07,10),
-                    DateModified = null
+                    DateScheduled = new System.DateTime(2020, 06, 24),
+                    DateOccured = new System.DateTime(2020, 06, 12),
+                    DateCreated = new System.DateTime(2020, 07, 10),
+                    DateModified = null,
+                    Photos = new List<Photo> { new Photo {  PhotoId = 3, Filename = "/photo/activities/3", UserId = "me", DateCreated = new System.DateTime(2020, 07, 10), DateModified = null } }
                 }
             };
             return activities;

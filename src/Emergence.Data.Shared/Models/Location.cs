@@ -1,3 +1,5 @@
+using System;
+
 namespace Emergence.Data.Shared.Models
 {
     public class Location
@@ -11,7 +13,10 @@ namespace Emergence.Data.Shared.Models
         public string Country { get; set; }
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
+        public double? Altitude { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
 
-        public string CityState => City + ", " + StateOrProvince;
+        public string CityState => (City != null) ? (City + (StateOrProvince != null ? ", " : "")) : "" + StateOrProvince;
     }
 }

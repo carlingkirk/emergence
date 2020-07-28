@@ -3,14 +3,16 @@ using System;
 using Emergence.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Emergence.Data.Migrations
 {
     [DbContext(typeof(EmergenceDbContext))]
-    partial class EmergenceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200726115004_Inc_Photos")]
+    partial class Inc_Photos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,52 +230,6 @@ namespace Emergence.Data.Migrations
                     b.HasIndex("ParentOriginId");
 
                     b.ToTable("Origins");
-                });
-
-            modelBuilder.Entity("Emergence.Data.Shared.Stores.Photo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ContentType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateTaken")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Filename")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("Length")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("Width")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.PlantInfo", b =>
@@ -530,13 +486,6 @@ namespace Emergence.Data.Migrations
                     b.HasOne("Emergence.Data.Shared.Stores.Origin", "ParentOrigin")
                         .WithMany()
                         .HasForeignKey("ParentOriginId");
-                });
-
-            modelBuilder.Entity("Emergence.Data.Shared.Stores.Photo", b =>
-                {
-                    b.HasOne("Emergence.Data.Shared.Stores.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId");
                 });
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.PlantInfo", b =>
