@@ -31,7 +31,7 @@ namespace Emergence.Test.Emergence.API.Services
         }
 
         [Fact]
-        public async Task TestUploadPhotoAsync()
+        public async Task TestUploadPhotoAsyncWithMetadta()
         {
             var metadata = new Dictionary<string, string>
             {
@@ -59,6 +59,35 @@ namespace Emergence.Test.Emergence.API.Services
             result.FirstOrDefault().Location.Latitude.Should().Be(38.885986);
             result.FirstOrDefault().Location.Longitude.Should().Be(-77.036880);
             result.FirstOrDefault().Location.Altitude.Should().Be(145);
+            result.FirstOrDefault().Length.Should().Be(3024);
+            result.FirstOrDefault().Width.Should().Be(4032);
+            result.FirstOrDefault().DateTaken.Should().Be(new DateTime(2020, 7, 22, 17, 45, 26, DateTimeKind.Utc));
+        }
+
+        [Fact]
+        public async Task TestUploadPhotoAsyncWithSomeMetadta()
+        {
+            var metadata = new Dictionary<string, string>
+            {
+                { Constants.Length, "3024" },
+                { Constants.Width, "4032" },
+                { Constants.DateTaken, "2020-07-22 13:45:26" },
+            };
+            var mockProperties = new Mock<IBlobResult>();
+            mockProperties.Setup(p => p.Metadata).Returns(metadata);
+            mockProperties.Setup(p => p.ContentType).Returns("");
+
+            _mockBlobService.Setup(b => b.UploadPhotoAsync(It.IsAny<IFormFile>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(mockProperties.Object);
+
+            var file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt");
+
+            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object);
+
+            var result = await photoService.UploadPhotosAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me");
+
+            result.FirstOrDefault().Filename.Should().StartWith("activity");
+            result.FirstOrDefault().Location.Should().BeNull();
             result.FirstOrDefault().Length.Should().Be(3024);
             result.FirstOrDefault().Width.Should().Be(4032);
             result.FirstOrDefault().DateTaken.Should().Be(new DateTime(2020, 7, 22, 17, 45, 26, DateTimeKind.Utc));

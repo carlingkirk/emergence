@@ -40,7 +40,7 @@ namespace Emergence.Service
                     var location = GetLocationFromMetadata(result.Metadata);
                     var (length, width) = GetDimensionsFromMetadata(result.Metadata);
                     var timezone = TimeZoneInfo.Local;
-                    if (location.Latitude.HasValue && location.Longitude.HasValue)
+                    if (location != null && location.Latitude.HasValue && location.Longitude.HasValue)
                     {
                         var zone = TimeZoneLookup.GetTimeZone(location.Latitude.Value, location.Longitude.Value);
                         timezone = TZConvert.GetTimeZoneInfo(zone.Result);
