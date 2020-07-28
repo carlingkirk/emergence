@@ -7,7 +7,9 @@ using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Service.Interfaces;
+using GeoTimeZone;
 using Microsoft.AspNetCore.Http;
+using TimeZoneConverter;
 
 namespace Emergence.Service
 {
@@ -37,6 +39,12 @@ namespace Emergence.Service
                 {
                     var location = GetLocationFromMetadata(result.Metadata);
                     var (length, width) = GetDimensionsFromMetadata(result.Metadata);
+                    var timezone = TimeZoneInfo.Local;
+                    if (location.Latitude.HasValue && location.Longitude.HasValue)
+                    {
+                        var zone = TimeZoneLookup.GetTimeZone(location.Latitude.Value, location.Longitude.Value);
+                        timezone = TZConvert.GetTimeZoneInfo(zone.Result);
+                    }
 
                     DateTime? dateTaken = null;
                     if (result.Metadata.TryGetValue(Constants.DateTaken, out var dateTakenEntry))
@@ -45,7 +53,7 @@ namespace Emergence.Service
                         {
                             if (DateTime.TryParse(dateTakenEntry, out var dateTakenValue))
                             {
-                                dateTaken = dateTakenValue.ToUniversalTime();
+                                dateTaken = TimeZoneInfo.ConvertTimeToUtc(dateTakenValue, timezone);
                             }
                         }
                     }
