@@ -33,16 +33,16 @@ namespace Emergence.API.Controllers
         {
             var activityResult = await _activityService.AddOrUpdateActivityAsync(activity, UserId);
 
-            if (activity.Photos.Any())
+            if (activity.Photos != null && activity.Photos.Any())
             {
                 foreach (var photo in activity.Photos)
                 {
                     photo.TypeId = activityResult.ActivityId;
                 }
-                await _photoService.AddOrUpdatePhotosAsync(activity.Photos);
+
+                activityResult.Photos = await _photoService.AddOrUpdatePhotosAsync(activity.Photos);
             }
 
-            activityResult.Photos = await _photoService.GetPhotosAsync(activity.Photos.Select(p => p.PhotoId));
             return activityResult;
         }
 

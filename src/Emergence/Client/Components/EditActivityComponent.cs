@@ -71,7 +71,7 @@ namespace Emergence.Client.Components
 
             if (BlazoredModal != null)
             {
-                BlazoredModal.Close(ModalResult.Ok(Activity));
+                await BlazoredModal.Close(ModalResult.Ok(Activity));
             }
         }
 
@@ -96,6 +96,16 @@ namespace Emergence.Client.Components
         {
             var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType.Activity);
             UploadedPhotos.Add(photo);
+        }
+
+        protected async Task RemovePhotoAsync(int id)
+        {
+            var photo = UploadedPhotos.First(p => p.PhotoId == id);
+            var result = await ApiClient.RemovePhotoAsync(photo.PhotoId);
+            if (result)
+            {
+                UploadedPhotos.Remove(photo);
+            }
         }
     }
 }

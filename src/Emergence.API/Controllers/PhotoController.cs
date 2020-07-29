@@ -14,10 +14,15 @@ namespace Emergence.API.Controllers
     {
         private readonly IPhotoService _photoService;
         private readonly ILocationService _locationService;
-        public PhotoController(IPhotoService photoService, ILocationService locationService)
+        private readonly IConfigurationService _configurationService;
+        private readonly string _blobStorageRoot;
+
+        public PhotoController(IPhotoService photoService, ILocationService locationService, IConfigurationService configurationService)
         {
             _photoService = photoService;
             _locationService = locationService;
+            _configurationService = configurationService;
+            _blobStorageRoot = _configurationService.Settings.BlobStorageRoot;
         }
 
         [HttpPost]
@@ -33,6 +38,7 @@ namespace Emergence.API.Controllers
             {
                 var location = locationResult.Where(l => l.Latitude == photo.Location.Latitude && l.Longitude == photo.Location.Longitude).FirstOrDefault();
                 photo.Location = location;
+                photo.AbsoluteUri = _blobStorageRoot + photo.RelativeUri;
             }
 
             return await _photoService.AddOrUpdatePhotosAsync(photoResult);
@@ -53,10 +59,27 @@ namespace Emergence.API.Controllers
                 }
 
                 photoResult = await _photoService.AddOrUpdatePhotoAsync(photoResult);
-
+                photoResult.AbsoluteUri = _blobStorageRoot + photoResult.RelativeUri;
                 return photoResult;
             }
             return null;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _photoService.RemovePhotoAsync(id, UserId);
+            {
+                if (result)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
         }
 
         [HttpGet]
@@ -64,6 +87,12 @@ namespace Emergence.API.Controllers
         public async Task<IEnumerable<Photo>> Get(PhotoType type, int id)
         {
             var photoResult = await _photoService.GetPhotosAsync(type, id);
+
+            foreach (var photo in photoResult)
+            {
+                photo.AbsoluteUri = _blobStorageRoot + photo.RelativeUri;
+            }
+
             return photoResult;
         }
     }

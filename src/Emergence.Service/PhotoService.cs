@@ -60,7 +60,7 @@ namespace Emergence.Service
 
                     photoResult.Add(new Data.Shared.Models.Photo
                     {
-                        Filename = type.ToString().ToLower() + "/" + name,
+                        Filename = name,
                         Type = type,
                         UserId = userId,
                         ContentType = result.ContentType,
@@ -105,6 +105,13 @@ namespace Emergence.Service
             return photos;
         }
 
+        public async Task<Data.Shared.Models.Photo> GetPhotoAsync(int id)
+        {
+            var photoResult = await _photoRepository.GetAsync(p => p.Id == id);
+            var photo = photoResult.AsModel();
+            return photo;
+        }
+
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(Data.Shared.Models.PhotoType type, int typeId)
         {
             var photoResult = _photoRepository.GetSomeAsync(p => p.Type == type.ToString() && p.TypeId == typeId);
@@ -114,6 +121,14 @@ namespace Emergence.Service
                 photos.Add(photo.AsModel());
             }
             return photos;
+        }
+
+        public async Task<bool> RemovePhotoAsync(int id, string userId)
+        {
+            var photo = await GetPhotoAsync(id);
+            await _blobService.RemovePhotoAsync(photo.Type.ToString(), photo.Filename);
+            var result = await _photoRepository.RemoveAsync(photo.AsStore());
+            return result;
         }
 
         private Data.Shared.Models.Location GetLocationFromMetadata(IDictionary<string, string> metadata)
@@ -194,7 +209,5 @@ namespace Emergence.Service
 
             return (length, width);
         }
-
-
     }
 }

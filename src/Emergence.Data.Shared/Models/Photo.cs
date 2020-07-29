@@ -16,6 +16,8 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Location Location { get; set; }
+        public string AbsoluteUri { get; set; }
+        public string RelativeUri => Type.ToString().ToLower() + "/" + Filename;
     }
 
     public enum PhotoType

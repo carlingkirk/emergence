@@ -8,5 +8,6 @@ namespace Emergence.Service.Interfaces
     {
         Task<IEnumerable<IBlobResult>> UploadPhotosAsync(IEnumerable<IFormFile> photos, string type, string userId, string name);
         Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string type, string userId, string name);
+        Task<bool> RemovePhotoAsync(string type, string filename);
     }
 }

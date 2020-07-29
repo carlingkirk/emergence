@@ -157,6 +157,20 @@ namespace Emergence.Client.Common
             return await ReadResult<IEnumerable<Photo>>(result);
         }
 
+        public async Task<bool> RemovePhotoAsync(int id)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/photo/{id}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)

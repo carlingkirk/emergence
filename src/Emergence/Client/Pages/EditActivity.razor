@@ -85,14 +85,21 @@
                     <InputFile OnChange="UploadPhotosAsync" multiple></InputFile>
                     @if (UploadedPhotos != null)
                     {
+                    <div class="row">
+                        @foreach (var photo in UploadedPhotos)
+                        {
                         <div class="row">
-                            @foreach (var photo in UploadedPhotos)
-                            {
-                                <div class="col">
-                                    <img src="@("https://emergencesa.blob.core.windows.net/"+ photo.Filename)" />
-                                </div>
-                            }
+                            <div class="col">
+                                <button class="btn btn-primary" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <img src="@(photo.AbsoluteUri)" />
+                            </div>
+                        </div>
+                        }
+                    </div>
                     }
                 </div>
             </div>

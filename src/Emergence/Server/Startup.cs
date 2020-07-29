@@ -38,6 +38,9 @@ namespace Emergence.Server
 
             services.AddLogging();
 
+            // Configuration
+            services.AddSingleton<IConfigurationService, ConfigurationService>();
+
             // Application Services
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IInventoryService, InventoryService>();

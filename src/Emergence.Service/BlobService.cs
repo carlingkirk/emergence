@@ -57,6 +57,20 @@ namespace Emergence.Service
             return results;
         }
 
+        public async Task<bool> RemovePhotoAsync(string type, string filename)
+        {
+            var typeContainerClient = new BlobContainerClient(_connectionString, type.ToLower());
+            var result = await typeContainerClient.DeleteBlobAsync(filename, DeleteSnapshotsOption.IncludeSnapshots);
+            if ((HttpStatusCode)result.Status == HttpStatusCode.Accepted)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private async Task<IBlobResult> SetBlobProperties(BlobClient client, IFormFile file, string userId)
         {
             Dictionary<string, string> metadata = null;
