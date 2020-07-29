@@ -55,7 +55,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var result = await photoService.UploadPhotosAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me");
 
-            result.FirstOrDefault().Filename.Should().StartWith("activity");
+            result.FirstOrDefault().Filename.Length.Should().Be(40);
             result.FirstOrDefault().Location.Latitude.Should().Be(38.885986);
             result.FirstOrDefault().Location.Longitude.Should().Be(-77.036880);
             result.FirstOrDefault().Location.Altitude.Should().Be(145);
@@ -88,7 +88,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var timezone = TimeZoneInfo.Local;
             var expectedDate = TimeZoneInfo.ConvertTimeToUtc(new DateTime(2020, 7, 22, 13, 45, 26, DateTimeKind.Unspecified), timezone);
-            result.FirstOrDefault().Filename.Should().StartWith("activity");
+            result.FirstOrDefault().Filename.Length.Should().Be(40);
             result.FirstOrDefault().Location.Should().BeNull();
             result.FirstOrDefault().Length.Should().Be(3024);
             result.FirstOrDefault().Width.Should().Be(4032);
