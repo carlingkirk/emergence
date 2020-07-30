@@ -26,7 +26,7 @@ namespace Emergence.Data.Shared.Models
     {
         Custom,
         [Description("Add to wishlist")]
-        Wishlist,
+        AddToWishlist,
         Purchase,
         [Description("Stratify")]
         Stratification,
@@ -34,11 +34,11 @@ namespace Emergence.Data.Shared.Models
         Germination,
         [Description("Divide")]
         Division,
-        [Description("Take cutting")]
+        [Description("Cutting")]
         Cutting,
-        [Description("Collect seed")]
+        [Description("Seed collection")]
         SeedCollection,
-        [Description("Check progress")]
+        [Description("Progress check")]
         ProgressCheck,
         [Description("Plant in ground")]
         PlantInGround,

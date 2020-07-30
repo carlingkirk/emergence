@@ -65,7 +65,7 @@ namespace Emergence.Test.Emergence.API.Services
         }
 
         [Fact]
-        public async Task TestUploadPhotoAsyncWithSomeMetadta()
+        public async Task TestUploadPhotoAsyncWithSomeMetadata()
         {
             var metadata = new Dictionary<string, string>
             {

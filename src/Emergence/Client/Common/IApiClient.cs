@@ -10,7 +10,8 @@ namespace Emergence.Client.Common
         Task<IEnumerable<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10);
         Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10);
         Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10);
-        Task<IEnumerable<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10);
+        Task<IEnumerable<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending);
         Task<IEnumerable<PlantInfo>> FindPlantInfosAsync(string searchText, int? skip = 0, int? take = 10);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);

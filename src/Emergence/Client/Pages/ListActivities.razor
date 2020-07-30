@@ -1,6 +1,7 @@
 @page "/activity/list"
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
+@using Data.Shared.Models;
 @inherits ListActivitiesComponent
 <input type="text" @bind="SearchText" id="search" />
 <button class="btn btn-secondary" @onclick="FindActivitiesAsync">Search</button>
@@ -9,13 +10,21 @@
     <table>
         <thead>
             <tr>
-                <td>Name</td>
-                <td>Scientific Name</td>
-                <td>Type</td>
-                <td>Date Occured</td>
-                <td>Date Scheduled</td>
-                <td>Date Acquired</td>
-                <td>Origin</td>
+                <td @onclick="@(async () => await SortActivitiesAsync("Name"))" class="sortable">
+                    <span class="@GetSortClass("Name")"></span><span>Name</span>
+                </td>
+                <td @onclick="@(async () => await SortActivitiesAsync("ScientificName"))" class="sortable">
+                    <span class="@GetSortClass("ScientificName")"></span><span>Scientific Name</span>
+                </td>
+                <td @onclick="@(async () => await SortActivitiesAsync("ActivityType"))" class="sortable">
+                    <span class="@GetSortClass("ActivityType")"></span><span>Type</span>
+                </td>
+                <td @onclick="@(async () => await SortActivitiesAsync("DateOccured"))" class="sortable">
+                    <span class="@GetSortClass("DateOccured")"></span><span>Date Occured</span>
+                </td>
+                <td @onclick="@(async () => await SortActivitiesAsync("DateScheduled"))" class="sortable">
+                    <span class="@GetSortClass("DateScheduled")"></span><span>Date Scheduled</span>
+                </td>
             </tr>
         </thead>
         @if (!Activities.Any())

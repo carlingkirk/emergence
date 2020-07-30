@@ -48,9 +48,10 @@ namespace Emergence.API.Controllers
 
         [HttpGet]
         [Route("Find")]
-        public async Task<IEnumerable<Activity>> FindActivities(string search = null, int skip = 0, int take = 10)
+        public async Task<IEnumerable<Activity>> FindActivities(string search = null, int skip = 0, int take = 10, string sortBy = null,
+            SortDirection sortDir = SortDirection.Ascending)
         {
-            var results = await _activityService.FindActivities(search, UserId, skip, take);
+            var results = await _activityService.FindActivities(search, UserId, skip, take, sortBy, sortDir);
             return results;
         }
     }

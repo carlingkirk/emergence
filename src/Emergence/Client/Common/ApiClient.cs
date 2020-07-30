@@ -38,9 +38,10 @@ namespace Emergence.Client.Common
             return await ReadResult<IEnumerable<Specimen>>(result);
         }
 
-        public async Task<IEnumerable<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10)
+        public async Task<IEnumerable<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending)
         {
-            var result = await _httpClient.GetAsync($"/api/activity/find?search={searchText}&skip={skip}&take={take}");
+            var result = await _httpClient.GetAsync($"/api/activity/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
 
             return await ReadResult<IEnumerable<Activity>>(result);
         }

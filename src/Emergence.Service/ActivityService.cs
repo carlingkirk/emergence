@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +14,11 @@ namespace Emergence.Service
 {
     public class ActivityService : IActivityService
     {
-        private readonly IRepository<Data.Shared.Stores.Activity> _activityRepository;
+        private readonly IRepository<Activity> _activityRepository;
         private readonly ISpecimenService _specimenService;
         private readonly IInventoryService _inventoryService;
 
-        public ActivityService(IRepository<Data.Shared.Stores.Activity> activityRepository, ISpecimenService specimenService, IInventoryService inventoryService)
+        public ActivityService(IRepository<Activity> activityRepository, ISpecimenService specimenService, IInventoryService inventoryService)
         {
             _activityRepository = activityRepository;
             _specimenService = specimenService;
@@ -70,22 +73,24 @@ namespace Emergence.Service
             return activityResult.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Activity>> FindActivities(string search, string userId, int skip, int take)
+        public async Task<IEnumerable<Data.Shared.Models.Activity>> FindActivities(string search, string userId, int skip, int take, string sortBy = null,
+            Data.Shared.Models.SortDirection sortDirection = Data.Shared.Models.SortDirection.Ascending)
         {
             if (search != null)
             {
                 search = "%" + search + "%";
             }
 
-            var activityResult = _activityRepository.WhereWithIncludesAsync(a => (a.Specimen.InventoryItem.Inventory.UserId == userId) &&
+            var activityQuery = _activityRepository.WhereWithIncludesAsync(a => (a.Specimen.InventoryItem.Inventory.UserId == userId) &&
                                                                        (search == null ||
                                                                        EF.Functions.Like(a.Name, search) ||
                                                                         EF.Functions.Like(a.Specimen.InventoryItem.Name, search)),
                                                                         a => a.Include(a => a.Specimen)
                                                                               .Include(s => s.Specimen.InventoryItem)
-                                                                              .Include(s => s.Specimen.Lifeform))
-                                                    .WithOrder(s => s.OrderByDescending(s => s.DateCreated))
-                                                    .GetSomeAsync(skip: skip, take: take, track: false);
+                                                                              .Include(s => s.Specimen.Lifeform));
+            activityQuery = OrderBy(activityQuery, sortBy, sortDirection);
+
+            var activityResult = activityQuery.GetSomeAsync(skip: skip, take: take, track: false);
 
             var activities = new List<Data.Shared.Models.Activity>();
             await foreach (var activity in activityResult)
@@ -93,6 +98,36 @@ namespace Emergence.Service
                 activities.Add(activity.AsModel());
             }
             return activities;
+        }
+
+        private IQueryable<Activity> OrderBy(IQueryable<Activity> activityQuery, string sortBy = "DateCreated",
+            Data.Shared.Models.SortDirection sortDirection = Data.Shared.Models.SortDirection.None)
+        {
+            if (sortDirection == Data.Shared.Models.SortDirection.None)
+            {
+                return activityQuery;
+            }
+
+            var activitySorts = new Dictionary<string, Expression<Func<Activity, object>>>
+            {
+                { "Name", a => a.Name },
+                { "ScientificName", a => a.Specimen.Lifeform.ScientificName },
+                { "ActivityType", a => a.ActivityType },
+                { "DateOccured", a => a.DateOccured },
+                { "DateScheduled", a => a.DateOccured },
+                { "DateCreated", a => a.DateCreated }
+            };
+
+            if (sortDirection == Data.Shared.Models.SortDirection.Descending)
+            {
+                activityQuery = activityQuery.WithOrder(a => a.OrderByDescending(activitySorts[sortBy]));
+            }
+            else
+            {
+                activityQuery = activityQuery.WithOrder(a => a.OrderBy(activitySorts[sortBy]));
+            }
+
+            return activityQuery;
         }
     }
 }

@@ -182,6 +182,7 @@ app {
     }
 }
 
+/* Forms */
 ul.checklist {
   list-style-type: none;
   padding: 0 0 0 .5em;
@@ -199,4 +200,14 @@ div.range-input {
 
 div.range-input-unit {
   padding-left: .25em;
+}
+
+/* Sorting */
+td.sortable {
+    cursor:pointer;
+    font-weight:bold;
+}
+
+td.sortable span.oi {
+  padding-right: 5px;
 }
