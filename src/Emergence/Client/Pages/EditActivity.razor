@@ -81,8 +81,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <input type="file" accept="image/*" capture="" />
-                    <InputFile OnChange="UploadPhotosAsync" multiple></InputFile>
+                    <InputFile OnChange="UploadPhotosAsync" multiple capture="camera" accept="image/*"></InputFile>
                     @if (UploadedPhotos != null)
                     {
                     <div class="row">

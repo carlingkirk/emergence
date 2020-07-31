@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -14,17 +16,25 @@ namespace Emergence.Client.Components
         public string SearchText { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
-        public int Skip { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages => (int)Math.Ceiling(Count / (double)Take);
         public int Take { get; set; }
+        public int Count { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            Skip = 0;
+            CurrentPage = 1;
             Take = 10;
             await FindActivitiesAsync();
         }
 
-        protected async Task FindActivitiesAsync() => Activities = await ApiClient.FindActivitiesAsync(SearchText, Skip, Take, SortBy, SortDirection);
+        protected async Task FindActivitiesAsync()
+        {
+            var skip = (CurrentPage - 1) * Take;
+            var result = await ApiClient.FindActivitiesAsync(SearchText, skip, Take, SortBy, SortDirection);
+            Activities = result.Results;
+            Count = result.Count;
+        }
 
         protected async Task SortActivitiesAsync(string sortBy)
         {
@@ -55,6 +65,12 @@ namespace Emergence.Client.Components
                 }
             }
             return "";
+        }
+
+        protected async Task PageAsync(int pages)
+        {
+            CurrentPage += pages;
+            await FindActivitiesAsync();
         }
     }
 }

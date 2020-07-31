@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Service.Interfaces
@@ -9,7 +10,7 @@ namespace Emergence.Service.Interfaces
         Task<Activity> GetActivityAsync(int id);
         Task<IEnumerable<Activity>> GetActivitiesAsync();
         Task<Activity> AddOrUpdateActivityAsync(Activity activity, string userId);
-        Task<IEnumerable<Activity>> FindActivities(string search, string userId, int skip, int take, string sortBy = null,
+        Task<FindResult<Activity>> FindActivities(string search, string userId, int skip, int take, string sortBy = null,
             SortDirection sortDirection = SortDirection.Ascending);
     }
 }

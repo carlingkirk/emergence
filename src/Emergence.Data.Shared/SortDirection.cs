@@ -1,4 +1,4 @@
-namespace Emergence.Data.Shared.Models
+namespace Emergence.Data.Shared
 {
     public enum SortDirection
     {

@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
@@ -73,8 +74,8 @@ namespace Emergence.Service
             return activityResult.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Activity>> FindActivities(string search, string userId, int skip, int take, string sortBy = null,
-            Data.Shared.Models.SortDirection sortDirection = Data.Shared.Models.SortDirection.Ascending)
+        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(string search, string userId, int skip, int take, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending)
         {
             if (search != null)
             {
@@ -90,6 +91,7 @@ namespace Emergence.Service
                                                                               .Include(s => s.Specimen.Lifeform));
             activityQuery = OrderBy(activityQuery, sortBy, sortDirection);
 
+            var count = activityQuery.Count();
             var activityResult = activityQuery.GetSomeAsync(skip: skip, take: take, track: false);
 
             var activities = new List<Data.Shared.Models.Activity>();
@@ -97,13 +99,17 @@ namespace Emergence.Service
             {
                 activities.Add(activity.AsModel());
             }
-            return activities;
+            return new FindResult<Data.Shared.Models.Activity>
+            {
+                Count = count,
+                Results = activities
+            };
         }
 
         private IQueryable<Activity> OrderBy(IQueryable<Activity> activityQuery, string sortBy = "DateCreated",
-            Data.Shared.Models.SortDirection sortDirection = Data.Shared.Models.SortDirection.None)
+            SortDirection sortDirection = SortDirection.None)
         {
-            if (sortDirection == Data.Shared.Models.SortDirection.None)
+            if (sortDirection == SortDirection.None)
             {
                 return activityQuery;
             }
@@ -118,7 +124,7 @@ namespace Emergence.Service
                 { "DateCreated", a => a.DateCreated }
             };
 
-            if (sortDirection == Data.Shared.Models.SortDirection.Descending)
+            if (sortDirection == SortDirection.Descending)
             {
                 activityQuery = activityQuery.WithOrder(a => a.OrderByDescending(activitySorts[sortBy]));
             }

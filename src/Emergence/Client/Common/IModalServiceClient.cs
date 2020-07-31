@@ -12,5 +12,7 @@ namespace Emergence.Client.Common
         Task<ModalResult> ShowOriginModal(Origin origin);
         Task<ModalResult> ShowPlantInfoModal(int id);
         Task<ModalResult> ShowPlantInfoModal(PlantInfo plantInfo);
+        Task<ModalResult> ShowActivityModal(int id);
+        Task<ModalResult> ShowActivityModal(Activity activity);
     }
 }

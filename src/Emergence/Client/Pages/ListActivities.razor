@@ -1,8 +1,9 @@
 @page "/activity/list"
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
-@using Data.Shared.Models;
+@using Emergence.Client.Common
 @inherits ListActivitiesComponent
+@inject IModalServiceClient ModalServiceClient
 <input type="text" @bind="SearchText" id="search" />
 <button class="btn btn-secondary" @onclick="FindActivitiesAsync">Search</button>
 @if (Activities != null)
@@ -37,31 +38,39 @@
         }
         @foreach (var activity in Activities)
         {
-    <tr>
-        <td>
-            <a href="/activity/edit/@activity.ActivityId"><span>@activity.Name</span></a>
-        </td>
-        <td>
-            <span>@activity.Specimen.Lifeform.ScientificName</span>
-        </td>
-        <td>
-            <span>@activity.ActivityType.ToFriendlyName()</span>
-        </td>
-        <td>
-            <span>
-                @(activity.DateOccured.HasValue ?
+            <tr>
+                <td>
+                    <a href="/activity/edit/@activity.ActivityId"><span>@activity.Name</span></a>
+                </td>
+                <td>
+                    <span>@activity.Specimen.Lifeform.ScientificName</span>
+                </td>
+                <td>
+                    <span>@activity.ActivityType.ToFriendlyName()</span>
+                </td>
+                <td>
+                    <span>
+                        @(activity.DateOccured.HasValue ?
                             activity.DateOccured.Value.ToLocalTime().ToShortDateString() : "")
-            </span>
-        </td>
-        <td>
-            <span>
-                @(activity.DateScheduled.HasValue ?
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        @(activity.DateScheduled.HasValue ?
                             activity.DateScheduled.Value.ToLocalTime().ToShortDateString() : "")
-            </span>
-        </td>
-    </tr>
+                    </span>
+                </td>
+            </tr>
         }
     </table>
+    <div>
+        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(-5))" disabled="@(CurrentPage < 6)"><span class="oi oi-media-step-backward"></span></button>
+        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(-1))" disabled="@(CurrentPage < 2)"><span class="oi oi-media-skip-backward"></span></button>
+        <span>@CurrentPage of @TotalPages</span>
+        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(1))" disabled="@(CurrentPage == TotalPages)"><span class="oi oi-media-skip-forward"></span></button>
+        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(5))" disabled="@(CurrentPage > (TotalPages - 5))"><span class="oi oi-media-step-forward"></span></button>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(0))">Add New Activity</button>
+    </div>
 }
 
 @code {

@@ -67,5 +67,23 @@ namespace Emergence.Client.Common
             var modal = _modalService.Show<EditPlantInfo>("", modalParams);
             return await modal.Result;
         }
+
+        public async Task<ModalResult> ShowActivityModal(int id)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Id", id);
+
+            var modal = _modalService.Show<EditActivity>("", modalParams);
+            return await modal.Result;
+        }
+
+        public async Task<ModalResult> ShowActivityModal(Activity activity)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Activity", activity);
+
+            var modal = _modalService.Show<EditActivity>("", modalParams);
+            return await modal.Result;
+        }
     }
 }
