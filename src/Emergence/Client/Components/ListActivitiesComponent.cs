@@ -36,35 +36,12 @@ namespace Emergence.Client.Components
             Count = result.Count;
         }
 
-        protected async Task SortActivitiesAsync(string sortBy)
+        protected async Task<IEnumerable<Activity>> GetSortActivitiesAsync(string sortBy, SortDirection sortDirection)
         {
-            if (SortDirection == SortDirection.Descending)
-            {
-                SortDirection = SortDirection.Ascending;
-            }
-            else
-            {
-                SortDirection = SortDirection.Descending;
-            }
-
+            SortDirection = sortDirection;
             SortBy = sortBy;
             await FindActivitiesAsync();
-        }
-
-        protected string GetSortClass(string name)
-        {
-            if (SortBy == name)
-            {
-                if (SortDirection == SortDirection.Descending)
-                {
-                    return "oi oi-caret-bottom";
-                }
-                else
-                {
-                    return "oi oi-caret-top";
-                }
-            }
-            return "";
+            return Activities;
         }
 
         protected async Task PageAsync(int pages)

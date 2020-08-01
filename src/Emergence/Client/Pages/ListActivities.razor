@@ -11,21 +11,11 @@
     <table>
         <thead>
             <tr>
-                <td @onclick="@(async () => await SortActivitiesAsync("Name"))" class="sortable">
-                    <span class="@GetSortClass("Name")"></span><span>Name</span>
-                </td>
-                <td @onclick="@(async () => await SortActivitiesAsync("ScientificName"))" class="sortable">
-                    <span class="@GetSortClass("ScientificName")"></span><span>Scientific Name</span>
-                </td>
-                <td @onclick="@(async () => await SortActivitiesAsync("ActivityType"))" class="sortable">
-                    <span class="@GetSortClass("ActivityType")"></span><span>Type</span>
-                </td>
-                <td @onclick="@(async () => await SortActivitiesAsync("DateOccured"))" class="sortable">
-                    <span class="@GetSortClass("DateOccured")"></span><span>Date Occured</span>
-                </td>
-                <td @onclick="@(async () => await SortActivitiesAsync("DateScheduled"))" class="sortable">
-                    <span class="@GetSortClass("DateScheduled")"></span><span>Date Scheduled</span>
-                </td>
+                <SortableHeader HeaderName="Name" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
+                <SortableHeader HeaderName="ScientificName" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
+                <SortableHeader HeaderName="ActivityType" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
+                <SortableHeader HeaderName="DateOccured" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
+                <SortableHeader HeaderName="DateScheduled" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
             </tr>
         </thead>
         @if (!Activities.Any())
