@@ -11,11 +11,8 @@
     <table>
         <thead>
             <tr>
-                <SortableHeader HeaderName="Name" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
-                <SortableHeader HeaderName="ScientificName" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
-                <SortableHeader HeaderName="ActivityType" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
-                <SortableHeader HeaderName="DateOccured" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
-                <SortableHeader HeaderName="DateScheduled" Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeader>
+                <SortableHeaders HeaderNames="@(new List<string> { "Name", "ScientificName", "ActivityType", "DateOccured", "DateScheduled" })"
+                                 Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeaders>
             </tr>
         </thead>
         @if (!Activities.Any())

@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Shared
 {
-    public partial class SortableHeader<T> : ComponentBase
+    public partial class SortableHeaders<T> : ComponentBase
     {
         [Parameter]
-        public string HeaderName { get; set; }
+        public IList<string> HeaderNames { get; set; }
         [Parameter]
         public IEnumerable<T> Values { get; set; }
         [Parameter]
@@ -21,9 +21,9 @@ namespace Emergence.Client.Shared
         [Parameter]
         public Func<string, SortDirection, Task<IEnumerable<T>>> Sort { get; set; }
 
-        protected string GetSortClass()
+        protected string GetSortClass(string header)
         {
-            if (SortBy == HeaderName)
+            if (SortBy == header)
             {
                 if (SortDirection == SortDirection.Descending)
                 {
@@ -37,9 +37,9 @@ namespace Emergence.Client.Shared
             return "";
         }
 
-        protected async Task DoSort()
+        protected async Task DoSort(string header)
         {
-            if (SortDirection == SortDirection.Descending)
+            if (SortDirection != SortDirection.Ascending)
             {
                 SortDirection = SortDirection.Ascending;
             }
@@ -48,8 +48,8 @@ namespace Emergence.Client.Shared
                 SortDirection = SortDirection.Descending;
             }
 
-            SortBy = HeaderName;
-            Values = await Sort.Invoke(HeaderName, SortDirection);
+            SortBy = header;
+            Values = await Sort.Invoke(header, SortDirection);
             await ValuesChanged.InvokeAsync(Values);
         }
     }
