@@ -1,0 +1,8 @@
+@using Emergence.Client.Shared
+
+@typeparam T
+<button class="btn btn-secondary btn-sm" @onclick="@(async () => await DoPage(-5))" disabled="@(CurrentPage < 6)"><span class="oi oi-media-step-backward"></span></button>
+<button class="btn btn-secondary btn-sm" @onclick="@(async () => await DoPage(-1))" disabled="@(CurrentPage < 2)"><span class="oi oi-media-skip-backward"></span></button>
+<span>@CurrentPage of @TotalPages</span>
+<button class="btn btn-secondary btn-sm" @onclick="@(async () => await DoPage(1))" disabled="@(CurrentPage == TotalPages)"><span class="oi oi-media-skip-forward"></span></button>
+<button class="btn btn-secondary btn-sm" @onclick="@(async () => await DoPage(5))" disabled="@(CurrentPage > (TotalPages - 5))"><span class="oi oi-media-step-forward"></span></button>

@@ -215,3 +215,15 @@ td.sortable span.oi {
 button.btn-sm {
 
 }
+
+span.link {
+  color: #0056b3;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+  span.link:hover {
+    
+    text-decoration: underline;
+  }

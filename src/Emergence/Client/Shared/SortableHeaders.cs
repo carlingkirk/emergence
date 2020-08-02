@@ -9,17 +9,15 @@ namespace Emergence.Client.Shared
     public partial class SortableHeaders<T> : ComponentBase
     {
         [Parameter]
-        public IList<string> HeaderNames { get; set; }
+        public Dictionary<string, string> HeaderNames { get; set; }
         [Parameter]
         public IEnumerable<T> Values { get; set; }
         [Parameter]
         public EventCallback<IEnumerable<T>> ValuesChanged { get; set; }
-        [CascadingParameter]
-        public string SortBy { get; set; }
-        [CascadingParameter]
-        public SortDirection SortDirection { get; set; }
         [Parameter]
         public Func<string, SortDirection, Task<IEnumerable<T>>> Sort { get; set; }
+        public string SortBy { get; set; }
+        public SortDirection SortDirection { get; set; }
 
         protected string GetSortClass(string header)
         {

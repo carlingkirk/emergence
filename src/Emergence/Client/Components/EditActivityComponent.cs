@@ -19,6 +19,7 @@ namespace Emergence.Client.Components
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
         public int Id { get; set; }
+        [Parameter]
         public Activity Activity { get; set; }
         public Specimen SelectedSpecimen { get; set; }
         public IList<Photo> UploadedPhotos { get; set; }
@@ -26,9 +27,9 @@ namespace Emergence.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
-            if (Id > 0)
+            if (Id > 0 || Activity != null)
             {
-                Activity = await ApiClient.GetActivityAsync(Id);
+                Activity ??= await ApiClient.GetActivityAsync(Id);
                 var photos = await ApiClient.GetPhotosAsync(PhotoType.Activity, Id);
                 if (photos.Any())
                 {

@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
 using Emergence.Data.Shared;
@@ -12,12 +12,13 @@ namespace Emergence.Client.Components
     {
         [Inject]
         protected IApiClient ApiClient { get; set; }
+        [Inject]
+        protected IModalServiceClient ModalServiceClient { get; set; }
         public IEnumerable<Activity> Activities { get; set; }
         public string SearchText { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
         public int CurrentPage { get; set; }
-        public int TotalPages => (int)Math.Ceiling(Count / (double)Take);
         public int Take { get; set; }
         public int Count { get; set; }
 
@@ -44,10 +45,18 @@ namespace Emergence.Client.Components
             return Activities;
         }
 
-        protected async Task PageAsync(int pages)
+        protected async Task<IEnumerable<Activity>> PageAsync(int page)
         {
-            CurrentPage += pages;
+            CurrentPage = page;
             await FindActivitiesAsync();
+            return Activities;
+        }
+
+        protected async Task UpdateActivity(Activity activity)
+        {
+            var result = await ModalServiceClient.ShowActivityModal(activity);
+            activity = Activities.Where(a => a.ActivityId == activity.ActivityId).First();
+            activity = result.Data as Activity;
         }
     }
 }

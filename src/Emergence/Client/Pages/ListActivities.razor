@@ -9,12 +9,18 @@
 @if (Activities != null)
 {
     <table>
-        <thead>
-            <tr>
-                <SortableHeaders HeaderNames="@(new List<string> { "Name", "ScientificName", "ActivityType", "DateOccured", "DateScheduled" })"
-                                 Sort="GetSortActivitiesAsync" @bind-Values="Activities"></SortableHeaders>
-            </tr>
-        </thead>
+        <SortableHeaders
+            HeaderNames="@(
+                new Dictionary<string, string>
+                {
+                    { "Name", "Name" },
+                    { "ScientificName", "Scientific Name" },
+                    { "ActivityType", "Activity Type" },
+                    { "DateOccured", "Date Occured" },
+                    { "DateScheduled", "Date Scheduled" }
+                })"
+            Sort="GetSortActivitiesAsync"
+            @bind-Values="Activities" />
         @if (!Activities.Any())
         {
             <tr>
@@ -27,7 +33,7 @@
         {
             <tr>
                 <td>
-                    <a href="/activity/edit/@activity.ActivityId"><span>@activity.Name</span></a>
+                    <span @onclick="@(async () => await UpdateActivity(activity))" class="link">@activity.Name</span>
                 </td>
                 <td>
                     <span>@activity.Specimen.Lifeform.ScientificName</span>
@@ -51,15 +57,7 @@
         }
     </table>
     <div>
-        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(-5))" disabled="@(CurrentPage < 6)"><span class="oi oi-media-step-backward"></span></button>
-        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(-1))" disabled="@(CurrentPage < 2)"><span class="oi oi-media-skip-backward"></span></button>
-        <span>@CurrentPage of @TotalPages</span>
-        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(1))" disabled="@(CurrentPage == TotalPages)"><span class="oi oi-media-skip-forward"></span></button>
-        <button class="btn btn-secondary btn-sm" @onclick="@(async () => await PageAsync(5))" disabled="@(CurrentPage > (TotalPages - 5))"><span class="oi oi-media-step-forward"></span></button>
+        <Pager Page="PageAsync" @bind-Values="Activities" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
         <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(0))">Add New Activity</button>
     </div>
-}
-
-@code {
-
 }

@@ -1,16 +1,12 @@
-@using Emergence.Data.Shared
-@using Emergence.Data.Shared.Models
-@using Emergence.Client.Shared
-
 @typeparam T
 
-@foreach (var header in HeaderNames)
-{
-    <td @onclick="async () => await DoSort(header)" class="sortable">
-        <span class="@GetSortClass(header)"></span><span>@header</span>
-    </td>
-}
-
-@code {
-
-}
+<thead>
+    <tr>
+        @foreach (var header in HeaderNames)
+        {
+            <td @onclick="async () => await DoSort(header.Key)" class="sortable">
+                <span class="@GetSortClass(header.Key)"></span><span>@header.Value</span>
+            </td>
+        }
+    </tr>
+</thead>
