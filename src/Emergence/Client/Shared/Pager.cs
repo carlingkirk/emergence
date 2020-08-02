@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Shared
 {
-    public partial class Pager<T> : ComponentBase
+    public partial class Pager<T> : ComponentBase, IPageable<T>
     {
         [Parameter]
         public int CurrentPage { get; set; }
@@ -13,7 +13,7 @@ namespace Emergence.Client.Shared
         public int Count { get; set; }
         [Parameter]
         public int Take { get; set; }
-        public int TotalPages { get; set; }
+        public int TotalPages => (int)Math.Ceiling(Count / (double)Take);
         [Parameter]
         public IEnumerable<T> Values { get; set; }
         [Parameter]
@@ -21,15 +21,15 @@ namespace Emergence.Client.Shared
         [Parameter]
         public Func<int, Task<IEnumerable<T>>> Page { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            if (Count > 0 && Take > 0)
-            {
-                TotalPages = (int)Math.Ceiling(Count / (double)Take);
-            }
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    if (Count > 0 && Take > 0)
+        //    {
+        //        TotalPages = (int)Math.Ceiling(Count / (double)Take);
+        //    }
 
-            await Task.CompletedTask;
-        }
+        //    await Task.CompletedTask;
+        //}
 
         protected async Task DoPage(int page)
         {

@@ -5,8 +5,8 @@
 @inherits ListActivitiesComponent
 @inject IModalServiceClient ModalServiceClient
 <input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="FindActivitiesAsync">Search</button>
-@if (Activities != null)
+<button class="btn btn-secondary" @onclick="FindAsync">Search</button>
+@if (List != null)
 {
     <table>
         <SortableHeaders
@@ -19,9 +19,9 @@
                     { "DateOccured", "Date Occured" },
                     { "DateScheduled", "Date Scheduled" }
                 })"
-            Sort="GetSortActivitiesAsync"
-            @bind-Values="Activities" />
-        @if (!Activities.Any())
+            Sort="SortAsync"
+            @bind-Values="List" />
+        @if (!List.Any())
         {
             <tr>
                 <td>
@@ -29,7 +29,7 @@
                 </td>
             </tr>
         }
-        @foreach (var activity in Activities)
+        @foreach (var activity in List)
         {
             <tr>
                 <td>
@@ -57,7 +57,7 @@
         }
     </table>
     <div>
-        <Pager Page="PageAsync" @bind-Values="Activities" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+        <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
         <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(0))">Add New Activity</button>
     </div>
 }

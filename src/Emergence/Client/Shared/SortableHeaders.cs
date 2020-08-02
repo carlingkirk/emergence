@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Shared
 {
-    public partial class SortableHeaders<T> : ComponentBase
+    public partial class SortableHeaders<T> : ComponentBase, ISortable<T>
     {
         [Parameter]
         public Dictionary<string, string> HeaderNames { get; set; }
