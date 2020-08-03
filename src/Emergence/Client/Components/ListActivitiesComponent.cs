@@ -14,13 +14,13 @@ namespace Emergence.Client.Components
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
 
-        public override async Task<FindResult<Activity>> GetList(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
+        public override async Task<FindResult<Activity>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
         {
             var result = await ApiClient.FindActivitiesAsync(SearchText, skip, Take, SortBy, SortDirection);
             return result;
         }
 
-        protected async Task UpdateActivity(Activity activity)
+        protected async Task UpdateActivityAsync(Activity activity)
         {
             var result = await ModalServiceClient.ShowActivityModal(activity);
             activity = List.Where(a => a.ActivityId == activity.ActivityId).First();

@@ -32,11 +32,12 @@ namespace Emergence.Client.Common
             return await ReadResult<IEnumerable<Lifeform>>(result);
         }
 
-        public async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10)
+        public async Task<FindResult<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending)
         {
-            var result = await _httpClient.GetAsync($"/api/specimen/find?search={searchText}&skip={skip}&take={take}");
+            var result = await _httpClient.GetAsync($"/api/specimen/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
 
-            return await ReadResult<IEnumerable<Specimen>>(result);
+            return await ReadResult<FindResult<Specimen>>(result);
         }
 
         public async Task<FindResult<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,

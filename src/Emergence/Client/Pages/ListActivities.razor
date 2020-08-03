@@ -33,7 +33,7 @@
         {
             <tr>
                 <td>
-                    <span @onclick="@(async () => await UpdateActivity(activity))" class="link">@activity.Name</span>
+                    <span @onclick="@(async () => await UpdateActivityAsync(activity))" class="link">@activity.Name</span>
                 </td>
                 <td>
                     <span>@activity.Specimen.Lifeform.ScientificName</span>

@@ -36,7 +36,7 @@
         {
             <tr>
                 <td>
-                    <span @onclick="@(async () => await UpdatePlantInfo(plantInfo))" class="link">@plantInfo.Lifeform.ScientificName</span>
+                    <span @onclick="@(async () => await UpdatePlantInfoAsync(plantInfo))" class="link">@plantInfo.Lifeform.ScientificName</span>
                 </td>
                 <td>
                     <span>@plantInfo.CommonName</span>

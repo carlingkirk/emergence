@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
@@ -14,9 +13,8 @@ namespace Emergence.Client.Components
         protected IApiClient ApiClient { get; set; }
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
-        public IEnumerable<PlantInfo> PlantInfos { get; set; }
 
-        public override async Task<FindResult<PlantInfo>> GetList(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
+        public override async Task<FindResult<PlantInfo>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
         {
             var result = await ApiClient.FindPlantInfosAsync(SearchText, skip, Take, SortBy, SortDirection);
             return new FindResult<PlantInfo>
@@ -26,7 +24,7 @@ namespace Emergence.Client.Components
             };
         }
 
-        protected async Task UpdatePlantInfo(PlantInfo plantInfo)
+        protected async Task UpdatePlantInfoAsync(PlantInfo plantInfo)
         {
             var result = await ModalServiceClient.ShowPlantInfoModal(plantInfo);
             plantInfo = List.Where(p => p.PlantInfoId == plantInfo.PlantInfoId).First();

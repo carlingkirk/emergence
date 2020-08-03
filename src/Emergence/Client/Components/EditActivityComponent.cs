@@ -78,7 +78,8 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
         {
-            var specimens = (await ApiClient.FindSpecimensAsync(searchText)).ToList();
+            var specimenResult = await ApiClient.FindSpecimensAsync(searchText);
+            var specimens = specimenResult.Results.ToList();
             var lifeforms = await ApiClient.FindLifeformsAsync(searchText, 0, 3);
             foreach (var lifeform in lifeforms)
             {

@@ -19,7 +19,6 @@ namespace Emergence.Client.Components
         [Parameter]
         public int Id { get; set; }
         [Parameter]
-        public Specimen SpecimenParam { get; set; }
         public Specimen Specimen { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
@@ -30,20 +29,14 @@ namespace Emergence.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
-            if (Id > 0)
+            if (Id > 0 || Specimen != null)
             {
-                Specimen = await ApiClient.GetSpecimenAsync(Id);
+                Specimen ??= await ApiClient.GetSpecimenAsync(Id);
                 SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
                 SelectedLifeform = Specimen.Lifeform;
-            }
-            else if (SpecimenParam != null)
-            {
-                Specimen = SpecimenParam;
-                SelectedLifeform = Specimen.Lifeform;
-                SelectedOrigin = Specimen.InventoryItem.Origin;
-                if (SpecimenParam.Lifeform != null)
+                if (Specimen.Lifeform != null)
                 {
-                    Specimen.InventoryItem.Name = SpecimenParam.Lifeform.ScientificName;
+                    Specimen.InventoryItem.Name = Specimen.Lifeform.ScientificName;
                 }
             }
             else if (Specimen == null)
@@ -74,7 +67,7 @@ namespace Emergence.Client.Components
 
             if (BlazoredModal != null)
             {
-                BlazoredModal.Close(ModalResult.Ok(Specimen));
+                await BlazoredModal.Close(ModalResult.Ok(Specimen));
             }
         }
 

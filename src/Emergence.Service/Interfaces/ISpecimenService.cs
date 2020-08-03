@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Service.Interfaces
@@ -10,6 +11,7 @@ namespace Emergence.Service.Interfaces
         Task<IEnumerable<Specimen>> GetSpecimensForInventoryAsync(int inventoryId);
         Task<Specimen> AddOrUpdateAsync(Specimen specimen, string userId);
         Task<IEnumerable<Specimen>> GetSpecimensByIdsAsync(IEnumerable<int> specimenIds);
-        Task<IEnumerable<Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10);
+        Task<FindResult<Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending);
     }
 }

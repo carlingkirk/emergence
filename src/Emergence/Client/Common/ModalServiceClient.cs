@@ -26,7 +26,7 @@ namespace Emergence.Client.Common
         public async Task<ModalResult> ShowSpecimenModal(Specimen specimen)
         {
             var modalParams = new ModalParameters();
-            modalParams.Add("SpecimenParam", specimen);
+            modalParams.Add("Specimen", specimen);
 
             var specimenModal = _modalService.Show<EditSpecimen>("", modalParams);
             return await specimenModal.Result;

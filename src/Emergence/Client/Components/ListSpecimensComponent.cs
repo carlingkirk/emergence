@@ -1,20 +1,34 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class ListSpecimensComponent : ComponentBase
+    public class ListSpecimensComponent : ListComponent<Specimen>
     {
         [Inject]
         protected IApiClient ApiClient { get; set; }
-        public IEnumerable<Specimen> Specimens { get; set; }
-        public string SearchText { get; set; }
+        [Inject]
+        protected IModalServiceClient ModalServiceClient { get; set; }
 
-        protected override async Task OnInitializedAsync() => await GetSpecimensAsync();
+        public override async Task<FindResult<Specimen>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
+        {
+            var result = await ApiClient.FindSpecimensAsync(SearchText, skip, Take, SortBy, SortDirection);
+            return new FindResult<Specimen>
+            {
+                Results = result.Results,
+                Count = result.Count
+            };
+        }
 
-        protected async Task GetSpecimensAsync() => Specimens = await ApiClient.FindSpecimensAsync(SearchText);
+        protected async Task UpdateSpecimenAsync(Specimen specimen)
+        {
+            var result = await ModalServiceClient.ShowSpecimenModal(specimen);
+            specimen = List.Where(s => s.SpecimenId == specimen.SpecimenId).First();
+            specimen = result.Data as Specimen;
+        }
     }
 }

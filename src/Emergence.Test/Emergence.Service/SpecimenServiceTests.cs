@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Test.Mocks;
@@ -48,13 +49,14 @@ namespace Emergence.Test.API.Services
         public async Task TestFindSpecimens()
         {
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
-            var specimens = await specimenService.FindSpecimens("Liatris spicata", "me");
+            var specimenResult = await specimenService.FindSpecimens("Liatris spicata", "me", 0, 10, "", SortDirection.None);
 
-            specimens.Should().NotBeNull("it exists");
-            specimens.Should().HaveCount(3);
-            specimens.First().InventoryItem.Should().NotBeNull();
-            specimens.First().InventoryItem.Inventory.Should().NotBeNull();
-            specimens.First().Lifeform.Should().NotBeNull();
+            specimenResult.Results.Should().NotBeNull("it exists");
+            specimenResult.Count.Should().Be(3);
+            specimenResult.Results.Should().HaveCount(3);
+            specimenResult.Results.First().InventoryItem.Should().NotBeNull();
+            specimenResult.Results.First().InventoryItem.Inventory.Should().NotBeNull();
+            specimenResult.Results.First().Lifeform.Should().NotBeNull();
         }
     }
 }
