@@ -36,6 +36,8 @@ namespace Emergence.Test.Emergence.Transform
                 "Ruellia", "caroliniensis", "(Fernald) Kartesz & Gandhi", "ciliosa", "cinerascens", null };
             yield return new object[] { "Anatherum virginicum (L.) Spreng. subvar. mohrii (Hack.) Roberty",
                 "Anatherum", "virginicum", "(Hack.) Roberty", null, null, "mohrii" };
+            yield return new object[] { "Abelmoschus esculentus (L.) Moench",
+                "Abelmoschus", "esculentus", "(L.) Moench", null, null, null };
         }
     }
 }

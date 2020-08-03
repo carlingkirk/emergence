@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +15,8 @@ namespace Emergence.Service
 {
     public class PlantInfoService : IPlantInfoService
     {
-        private readonly IRepository<Data.Shared.Stores.PlantInfo> _plantInfoRepository;
-        public PlantInfoService(IRepository<Data.Shared.Stores.PlantInfo> plantInfoRepository)
+        private readonly IRepository<PlantInfo> _plantInfoRepository;
+        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository)
         {
             _plantInfoRepository = plantInfoRepository;
         }
@@ -53,30 +57,74 @@ namespace Emergence.Service
             return plantInfos;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> FindPlantInfos(string search, int skip, int take)
+        public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(string search, int skip, int take, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending)
         {
             if (search != null)
             {
                 search = "%" + search + "%";
             }
 
-            var plantInfoResult = _plantInfoRepository.WhereWithIncludesAsync(p => (search == null ||
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludesAsync(p => (search == null ||
                                                                        EF.Functions.Like(p.CommonName, search) ||
                                                                        EF.Functions.Like(p.ScientificName, search) ||
                                                                         EF.Functions.Like(p.Lifeform.CommonName, search) ||
                                                                         EF.Functions.Like(p.Lifeform.ScientificName, search)),
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
-                                                                              .Include(p => p.Origin))
-                                                    .WithOrder(p => p.OrderByDescending(p => p.DateCreated))
-                                                    .GetSomeAsync(skip: skip, take: take, track: false);
+                                                                              .Include(p => p.Origin));
+
+            plantInfoQuery = OrderBy(plantInfoQuery, sortBy, sortDirection);
+
+            var count = plantInfoQuery.Count();
+
+            var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: skip, take: take, track: false);
 
             var plantInfos = new List<Data.Shared.Models.PlantInfo>();
             await foreach (var plantInfo in plantInfoResult)
             {
                 plantInfos.Add(plantInfo.AsModel());
             }
-            return plantInfos;
+
+            return new FindResult<Data.Shared.Models.PlantInfo>
+            {
+                Count = count,
+                Results = plantInfos
+            };
+        }
+
+        private IQueryable<PlantInfo> OrderBy(IQueryable<PlantInfo> plantInfoQuery, string sortBy = "DateCreated",
+            SortDirection sortDirection = SortDirection.None)
+        {
+            if (sortDirection == SortDirection.None)
+            {
+                return plantInfoQuery;
+            }
+
+            var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
+            {
+                { "ScientificName", p => p.ScientificName },
+                { "CommonName", p => p.CommonName },
+                { "Origin", p => p.Origin.Name },
+                { "Zone", p => p.MinimumZone },
+                { "Light", p => p.MinimumLight },
+                { "Water", p => p.MinimumWater },
+                { "BloomTime", p => p.MinimumBloomTime },
+                { "Height", p => p.MinimumHeight },
+                { "Spread", p => p.MinimumSpread },
+                { "DateCreated", p => p.DateCreated }
+            };
+
+            if (sortDirection == SortDirection.Descending)
+            {
+                plantInfoQuery = plantInfoQuery.WithOrder(p => p.OrderByDescending(plantInfoSorts[sortBy]));
+            }
+            else
+            {
+                plantInfoQuery = plantInfoQuery.WithOrder(p => p.OrderBy(plantInfoSorts[sortBy]));
+            }
+
+            return plantInfoQuery;
         }
     }
 }

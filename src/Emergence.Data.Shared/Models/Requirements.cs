@@ -134,7 +134,7 @@ namespace Emergence.Data.Shared.Models
         PartSun,
         [Description("Part Shade")]
         PartShade,
-        [Description("Full Sun")]
+        [Description("Full Shade")]
         FullShade
     }
 

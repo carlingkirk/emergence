@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 
 namespace Emergence.Service.Interfaces
 {
@@ -10,6 +11,7 @@ namespace Emergence.Service.Interfaces
         Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, string scientificName);
         Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, int taxonId);
         Task<IEnumerable<Data.Shared.Models.PlantInfo>> GetPlantInfosAsync();
-        Task<IEnumerable<Data.Shared.Models.PlantInfo>> FindPlantInfos(string search, int skip, int take);
+        Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(string search, int skip, int take, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending);
     }
 }

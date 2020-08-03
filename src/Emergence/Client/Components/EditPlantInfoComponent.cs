@@ -18,6 +18,7 @@ namespace Emergence.Client.Components
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
         public int Id { get; set; }
+        [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
@@ -30,16 +31,19 @@ namespace Emergence.Client.Components
         public IEnumerable<StratificationType> StratificationTypes => Enum.GetValues(typeof(StratificationType)).Cast<StratificationType>();
         public List<SoilType> ChosenSoilTypes;
         public LinkedList<StratificationStage> ChosenStratificationStages = new LinkedList<StratificationStage>();
-        public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any();
+        public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages != null && (PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any());
 
         protected override async Task OnInitializedAsync()
         {
             ChosenSoilTypes = new List<SoilType>();
-            if (Id > 0)
+            if (Id > 0 || PlantInfo != null)
             {
-                PlantInfo = await ApiClient.GetPlantInfoAsync(Id);
+                PlantInfo ??= await ApiClient.GetPlantInfoAsync(Id);
                 SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
+
+                PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone ??= new Zone();
             }
             else
             {

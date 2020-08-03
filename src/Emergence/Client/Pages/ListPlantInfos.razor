@@ -2,86 +2,89 @@
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
 @inherits ListPlantInfosComponent
+@inject IModalServiceClient ModalServiceClient
 <input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="GetPlantInfosAsync">Search</button>
-@if (PlantInfos != null)
+<button class="btn btn-secondary" @onclick="FindAsync">Search</button>
+@if (List != null)
 {
-<table>
-    <thead>
-        <tr>
-
-            <td>Scientific Name</td>
-            <td>Common Name</td>
-            <td>Origin</td>
-            <td>Zone</td>
-            <td>Light</td>
-            <td>Water</td>
-            <td>Bloom</td>
-            <td>Height</td>
-            <td>Spread</td>
-        </tr>
-    </thead>
-    @if (!PlantInfos.Any())
-    {
-        <tr>
-            <td>
-                No results
-            </td>
-        </tr>
-    }
-    @foreach (var plantInfo in PlantInfos)
-    {
-<tr>
-    <td>
-        <a href="/plantInfo/edit/@plantInfo.PlantInfoId"><span>@plantInfo.Lifeform.ScientificName</span></a>
-    </td>
-    <td>
-        <span>@plantInfo.CommonName</span>
-    </td>
-    <td>
-        <span>@plantInfo.Origin.Name</span>
-    </td>
-    <td>
-        @if (plantInfo.Requirements?.ZoneRequirements != null)
+    <table>
+        <SortableHeaders
+            HeaderNames="@(
+                new Dictionary<string, string>
+                {
+                    { "ScientificName", "Scientific Name" },
+                    { "CommonName", "Common Name" },
+                    { "Origin", "Origin" },
+                    { "Zone", "Zone" },
+                    { "Light", "Light" },
+                    { "Water", "Water" },
+                    { "BloomTime", "Bloom Time" },
+                    { "Height", "Height" },
+                    { "Spread", "Spread" }
+                })"
+            Sort="SortAsync"
+            @bind-Values="List" />
+        @if (!List.Any())
         {
-            <span>@plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
+            <tr>
+                <td>
+                    No results
+                </td>
+            </tr>
         }
-    </td>
-    <td>
-        @if (plantInfo.Requirements?.LightRequirements != null)
+        @foreach (var plantInfo in List)
         {
-            <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
+            <tr>
+                <td>
+                    <span @onclick="@(async () => await UpdatePlantInfo(plantInfo))" class="link">@plantInfo.Lifeform.ScientificName</span>
+                </td>
+                <td>
+                    <span>@plantInfo.CommonName</span>
+                </td>
+                <td>
+                    <span>@plantInfo.Origin.Name</span>
+                </td>
+                <td>
+                    @if (plantInfo.Requirements?.ZoneRequirements != null)
+                    {
+                        <span>@plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
+                    }
+                </td>
+                <td>
+                    @if (plantInfo.Requirements?.LightRequirements != null)
+                    {
+                        <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
+                    }
+                </td>
+                <td>
+                    @if (plantInfo.Requirements?.WaterRequirements != null)
+                    {
+                        <span>@plantInfo.Requirements.WaterRequirements.ToFriendlyString()</span>
+                    }
+                </td>
+                <td>
+                    @if (plantInfo.BloomTime != null)
+                    {
+                        <span>@plantInfo.BloomTime.ToFriendlyString()</span>
+                    }
+                </td>
+                <td>
+                    @if (plantInfo.Height != null)
+                    {
+                        <span>@plantInfo.Height.ToFriendlyString()</span>
+                    }
+                </td>
+                <td>
+                    @if (plantInfo.Spread != null)
+                    {
+                        <span>@plantInfo.Spread.ToFriendlyString()</span>
+                    }
+                </td>
+            </tr>
         }
-    </td>
-    <td>
-        @if (plantInfo.Requirements?.WaterRequirements != null)
-        {
-            <span>@plantInfo.Requirements.WaterRequirements.ToFriendlyString()</span>
-        }
-    </td>
-    <td>
-        @if (plantInfo.BloomTime != null)
-        {
-            <span>@plantInfo.BloomTime.ToFriendlyString()</span>
-        }
-    </td>
-    <td>
-        @if (plantInfo.Height != null)
-        {
-            <span>@plantInfo.Height.ToFriendlyString()</span>
-        }
-    </td>
-    <td>
-        @if (plantInfo.Spread != null)
-        {
-            <span>@plantInfo.Spread.ToFriendlyString()</span>
-        }
-    </td>
-</tr>
-    }
-</table>
-}
-
-@code {
-
+    </table>
+    <div>
+        <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowPlantInfoModal(0))">Add New Plant Info</button>
+    </div>
 }
