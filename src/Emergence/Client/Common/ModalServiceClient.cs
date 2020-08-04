@@ -85,5 +85,15 @@ namespace Emergence.Client.Common
             var modal = _modalService.Show<EditActivity>("", modalParams);
             return await modal.Result;
         }
+
+        public async Task<ModalResult> ShowActivityModal(Specimen specimen)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Id", 0);
+            modalParams.Add("SelectedSpecimen", specimen);
+
+            var modal = _modalService.Show<EditActivity>("", modalParams);
+            return await modal.Result;
+        }
     }
 }

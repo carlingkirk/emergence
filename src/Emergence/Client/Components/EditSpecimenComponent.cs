@@ -44,7 +44,6 @@ namespace Emergence.Client.Components
                 Specimen = new Specimen
                 {
                     Lifeform = new Lifeform(),
-                    PlantInfo = new PlantInfo(),
                     InventoryItem = new InventoryItem()
                 };
             }
@@ -61,6 +60,11 @@ namespace Emergence.Client.Components
             if (SelectedOrigin != null)
             {
                 Specimen.InventoryItem.Origin = SelectedOrigin;
+            }
+
+            if (SelectedOrigin != null)
+            {
+                Specimen.Lifeform = SelectedLifeform;
             }
 
             Specimen = await ApiClient.PutSpecimenAsync(Specimen);
@@ -81,7 +85,7 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
         {
-            var originResult = await ApiClient.FindOriginsAsync(searchText);
+            var originResult = await ApiClient.FindOriginsAsync(searchText, 0, 10, "Name", Data.Shared.SortDirection.Ascending);
             var origins = originResult.Results.ToList();
 
             if (!string.IsNullOrEmpty(searchText))

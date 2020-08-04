@@ -14,6 +14,7 @@ namespace Emergence.Data.Shared.Extensions
             Specimen = source.Specimen != null ? source.Specimen.AsModel() : source.SpecimenId.HasValue ? new Models.Specimen { SpecimenId = source.SpecimenId.Value } : null,
             UserId = source.UserId,
             DateOccured = source.DateOccured,
+            DateScheduled = source.DateScheduled,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
@@ -27,6 +28,7 @@ namespace Emergence.Data.Shared.Extensions
             SpecimenId = source.Specimen?.SpecimenId,
             UserId = source.UserId,
             DateOccured = source.DateOccured,
+            DateScheduled = source.DateScheduled,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

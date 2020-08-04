@@ -21,6 +21,7 @@ namespace Emergence.Client.Components
         public int Id { get; set; }
         [Parameter]
         public Activity Activity { get; set; }
+        [Parameter]
         public Specimen SelectedSpecimen { get; set; }
         public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<ActivityType> ActivityTypes => Enum.GetValues(typeof(ActivityType)).Cast<ActivityType>();
@@ -78,7 +79,7 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
         {
-            var specimenResult = await ApiClient.FindSpecimensAsync(searchText);
+            var specimenResult = await ApiClient.FindSpecimensAsync(searchText, 0, 10, "ScientificName", Data.Shared.SortDirection.Ascending);
             var specimens = specimenResult.Results.ToList();
             var lifeforms = await ApiClient.FindLifeformsAsync(searchText, 0, 3);
             foreach (var lifeform in lifeforms)

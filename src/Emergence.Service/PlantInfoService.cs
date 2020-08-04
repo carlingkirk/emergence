@@ -93,12 +93,16 @@ namespace Emergence.Service
             };
         }
 
-        private IQueryable<PlantInfo> OrderBy(IQueryable<PlantInfo> plantInfoQuery, string sortBy = "DateCreated",
-            SortDirection sortDirection = SortDirection.None)
+        private IQueryable<PlantInfo> OrderBy(IQueryable<PlantInfo> plantInfoQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {
             if (sortDirection == SortDirection.None)
             {
                 return plantInfoQuery;
+            }
+
+            if (sortBy == null)
+            {
+                sortBy = "DateCreated";
             }
 
             var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
