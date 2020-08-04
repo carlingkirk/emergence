@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Microsoft.AspNetCore.Components;
 
@@ -7,6 +8,10 @@ namespace Emergence.Client
 {
     public abstract class ListComponent<T> : ComponentBase, ISortable<T>, ISearchable<T>, IPageable<T> where T : class
     {
+        [Inject]
+        protected IApiClient ApiClient { get; set; }
+        [Inject]
+        protected IModalServiceClient ModalServiceClient { get; set; }
         public IEnumerable<T> List { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
