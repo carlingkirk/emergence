@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
@@ -50,18 +53,21 @@ namespace Emergence.Service
             return origin?.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Origin>> FindOrigins(string search, string userId, int skip = 0, int take = 10)
+        public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(string search, string userId, int skip = 0, int take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending)
         {
             search = "%" + search + "%";
-            var originResult = _originRepository.WhereWithIncludesAsync(o => o.UserId == userId &&
+            var originQuery = _originRepository.WhereWithIncludesAsync(o => o.UserId == userId &&
                                                                     (EF.Functions.Like(o.Name, search) ||
                                                                     EF.Functions.Like(o.Description, search) ||
                                                                     EF.Functions.Like(o.Location.City, search) ||
                                                                     EF.Functions.Like(o.Location.AddressLine1, search) ||
                                                                     EF.Functions.Like(o.Location.StateOrProvince, search)),
-                                                                        o => o.Include(o => o.Location))
-                                                    .WithOrder(o => o.OrderByDescending(o => o.DateCreated))
-                                                    .GetSomeAsync(skip: skip, take: take, track: false);
+                                                                        o => o.Include(o => o.Location));
+            originQuery = OrderBy(originQuery, sortBy, sortDirection);
+
+            var count = originQuery.Count();
+            var originResult = originQuery.GetSomeAsync(skip: skip, take: take, track: false);
 
             var origins = new List<Data.Shared.Models.Origin>();
             await foreach (var origin in originResult)
@@ -69,7 +75,42 @@ namespace Emergence.Service
                 origins.Add(origin.AsModel());
             }
 
-            return origins;
+            return new FindResult<Data.Shared.Models.Origin>
+            {
+                Results = origins,
+                Count = count
+            };
+        }
+
+        private IQueryable<Origin> OrderBy(IQueryable<Origin> originQuery, string sortBy = "DateCreated",
+            SortDirection sortDirection = SortDirection.None)
+        {
+            if (sortDirection == SortDirection.None)
+            {
+                return originQuery;
+            }
+
+            var originSorts = new Dictionary<string, Expression<Func<Origin, object>>>
+            {
+                { "Name", o => o.Name },
+                { "Type", o => o.Type },
+                { "Description", o => o.Description },
+                { "ParentOrigin", o => o.ParentOrigin.Name },
+                { "City", o => o.Location.City },
+                { "Link", o => o.Uri },
+                { "DateCreated", o => o.DateCreated }
+            };
+
+            if (sortDirection == SortDirection.Descending)
+            {
+                originQuery = originQuery.WithOrder(p => p.OrderByDescending(originSorts[sortBy]));
+            }
+            else
+            {
+                originQuery = originQuery.WithOrder(p => p.OrderBy(originSorts[sortBy]));
+            }
+
+            return originQuery;
         }
     }
 }

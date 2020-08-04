@@ -18,11 +18,12 @@ namespace Emergence.Client.Common
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10)
+        public async Task<FindResult<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending)
         {
-            var result = await _httpClient.GetAsync($"/api/origin/find?search={searchText}&skip={skip}&take={take}");
+            var result = await _httpClient.GetAsync($"/api/origin/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
 
-            return await ReadResult<IEnumerable<Origin>>(result);
+            return await ReadResult<FindResult<Origin>>(result);
         }
 
         public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10)

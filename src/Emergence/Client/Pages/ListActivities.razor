@@ -4,6 +4,7 @@
 @using Emergence.Client.Common
 @inherits ListActivitiesComponent
 @inject IModalServiceClient ModalServiceClient
+
 <input type="text" @bind="SearchText" id="search" />
 <button class="btn btn-secondary" @onclick="FindAsync">Search</button>
 @if (List != null)

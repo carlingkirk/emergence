@@ -2,22 +2,27 @@
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
 @inherits ListOriginsComponent
+@inject IModalServiceClient ModalServiceClient
+
 <input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="GetOriginsAsync">Search</button>
-@if (Origins != null)
+<button class="btn btn-secondary" @onclick="FindAsync">Search</button>
+@if (List != null)
 {
     <table>
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Type</td>
-                <td>Description</td>
-                <td>Parent Origin</td>
-                <td>City</td>
-                <td>Link</td>
-            </tr>
-        </thead>
-        @if (!Origins.Any())
+        <SortableHeaders
+            HeaderNames="@(
+                new Dictionary<string, string>
+                {
+                    { "Name", "Name" },
+                    { "Type", "Type" },
+                    { "Description", "Description" },
+                    { "ParentOrigin", "Parent Origin" },
+                    { "City", "City" },
+                    { "Link", "Link" }
+                })"
+            Sort="SortAsync"
+            @bind-Values="List" />
+        @if (!List.Any())
         {
             <tr>
                 <td>
@@ -25,40 +30,40 @@
                 </td>
             </tr>
         }
-        @foreach (var origin in Origins)
+        @foreach (var origin in List)
         {
-    <tr>
-        <td>
-            <a href="/origin/edit/@origin.OriginId"><span>@origin.Name</span></a>
-        </td>
-        <td>
-            <span>@origin.Type.ToFriendlyName()</span>
-        </td>
-        <td>
-            <span>@origin.Description</span>
-        </td>
-        <td>
-            @if (@origin.ParentOrigin != null)
-            {
-                <a href="/origin/edit/@origin.ParentOrigin.OriginId"><span>@origin.ParentOrigin.Name</span></a>
-            }
-        </td>
-        <td>
-            <span>@(origin.Location.CityState)</span>
-        </td>
-        <td>
-            <span>
-                @if (@origin.Uri != null)
-                {
-                    <a href="@origin.Uri" target="_blank"><span>@origin.Uri.ToString()</span></a>
-                }
-            </span>
-        </td>
-    </tr>
+            <tr>
+                <td>
+                    <span @onclick="@(async () => await UpdateOriginAsync(origin))" class="link">@origin.Name</span>
+                </td>
+                <td>
+                    <span>@origin.Type.ToFriendlyName()</span>
+                </td>
+                <td>
+                    <span>@origin.Description</span>
+                </td>
+                <td>
+                    @if (@origin.ParentOrigin != null)
+                    {
+                        <span @onclick="@(async () => await UpdateOriginAsync(origin.ParentOrigin))" class="link">@origin.ParentOrigin.Name</span>
+                    }
+                </td>
+                <td>
+                    <span>@(origin.Location?.CityState)</span>
+                </td>
+                <td>
+                    <span>
+                        @if (@origin.Uri != null)
+                        {
+                            <a href="@origin.Uri" target="_blank"><span>@origin.Uri.ToString()</span></a>
+                        }
+                    </span>
+                </td>
+            </tr>
         }
     </table>
-}
-
-@code {
-
+    <div>
+        <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowOriginModal(0))">Add New Origin</button>
+    </div>
 }

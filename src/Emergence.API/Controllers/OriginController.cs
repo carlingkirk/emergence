@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +29,11 @@ namespace Emergence.API.Controllers
 
         [HttpGet]
         [Route("Find")]
-        public async Task<IEnumerable<Origin>> FindOrigins(string search, int skip = 0, int take = 10)
+        public async Task<FindResult<Origin>> FindOrigins(string search, int skip = 0, int take = 10, string sortBy = null,
+            SortDirection sortDir = SortDirection.Ascending)
         {
-            var results = await _originService.FindOrigins(search, UserId, skip, take);
-            return results;
+            var result = await _originService.FindOrigins(search, UserId, skip, take, sortBy, sortDir);
+            return result;
         }
     }
 }

@@ -149,7 +149,8 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
         {
-            var origins = (await ApiClient.FindOriginsAsync(searchText)).ToList();
+            var originResult = await ApiClient.FindOriginsAsync(searchText);
+            var origins = originResult.Results.ToList();
 
             if (!string.IsNullOrEmpty(searchText))
             {

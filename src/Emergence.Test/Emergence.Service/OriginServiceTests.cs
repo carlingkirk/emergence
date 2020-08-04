@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Test.Mocks;
@@ -47,10 +48,10 @@ namespace Emergence.Test.API.Services
             var mockOriginRepository = RepositoryMocks.GetStandardMockOriginRepository(Data.Fakes.Stores.FakeOrigins.Get().Where(o => o.Name == "Botany Yards"));
 
             var originService = new OriginService(mockOriginRepository.Object);
-            var specimens = await originService.FindOrigins("Botany", "me");
+            var specimens = await originService.FindOrigins("Botany", "me", 0, 10, "", SortDirection.None);
 
-            specimens.Should().NotBeNull("it exists");
-            specimens.Should().HaveCount(1);
+            specimens.Results.Should().NotBeNull("it exists");
+            specimens.Results.Should().HaveCount(1);
         }
     }
 }

@@ -8,7 +8,8 @@ namespace Emergence.Client.Common
 {
     public interface IApiClient
     {
-        Task<IEnumerable<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10);
+        Task<FindResult<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
+            SortDirection sortDirection = SortDirection.Ascending);
         Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10);
         Task<FindResult<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
             SortDirection sortDirection = SortDirection.Ascending);
