@@ -71,13 +71,13 @@ namespace Emergence.Service
             return result.AsModel();
         }
 
-        public async Task<Data.Shared.Models.InventoryItem> AddOrUpdateInventoryItemAsync(Data.Shared.Models.InventoryItem inventoryItem)
+        public async Task<Data.Shared.Models.InventoryItem> AddOrUpdateInventoryItemAsync(Data.Shared.Models.InventoryItem inventoryItem, string userId)
         {
             inventoryItem.DateModified = DateTime.UtcNow;
 
             if (inventoryItem.Origin != null && inventoryItem.Origin.OriginId == 0)
             {
-                inventoryItem.Origin = await _originService.AddOrUpdateOriginAsync(inventoryItem.Origin);
+                inventoryItem.Origin = await _originService.AddOrUpdateOriginAsync(inventoryItem.Origin, userId);
             }
 
             var result = await _inventoryItemRepository.AddOrUpdateAsync(i => i.Id == inventoryItem.InventoryItemId, inventoryItem.AsStore());

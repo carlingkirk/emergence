@@ -27,7 +27,7 @@ namespace Emergence.API.Controllers
         {
             if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0)
             {
-                plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin);
+                plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, UserId);
             }
 
             return await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);

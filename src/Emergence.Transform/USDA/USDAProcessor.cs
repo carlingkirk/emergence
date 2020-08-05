@@ -28,7 +28,7 @@ namespace Emergence.Transform.USDA
             Origin = await _originService.GetOriginAsync(origin.OriginId);
             if (Origin == null)
             {
-                Origin = await _originService.AddOrUpdateOriginAsync(origin);
+                Origin = await _originService.AddOrUpdateOriginAsync(origin, null);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Emergence.Transform.USDA
             var originResult = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
             if (originResult == null)
             {
-                originResult = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin);
+                originResult = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, null);
             }
 
             var taxonResult = await _taxonService.GetTaxonAsync(plantInfo.Taxon.Genus, plantInfo.Taxon.Species, plantInfo.Taxon.Subspecies,

@@ -41,7 +41,7 @@ namespace Emergence.API.Controllers
                 specimen.InventoryItem.Inventory = inventory;
             }
 
-            specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem);
+            specimen.InventoryItem = await _inventoryService.AddOrUpdateInventoryItemAsync(specimen.InventoryItem, UserId);
 
             return await _specimenService.AddOrUpdateAsync(specimen, UserId);
         }

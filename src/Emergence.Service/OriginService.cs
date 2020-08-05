@@ -38,9 +38,11 @@ namespace Emergence.Service
             return origins;
         }
 
-        public async Task<Data.Shared.Models.Origin> AddOrUpdateOriginAsync(Data.Shared.Models.Origin origin)
+        public async Task<Data.Shared.Models.Origin> AddOrUpdateOriginAsync(Data.Shared.Models.Origin origin, string userId)
         {
             origin.DateModified = DateTime.UtcNow;
+            origin.UserId = userId;
+
             var originResult = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.OriginId, origin.AsStore());
             return originResult.AsModel();
         }
