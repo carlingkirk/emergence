@@ -1,0 +1,75 @@
+@using Emergence.Data.Shared.Models
+@using Blazored.Typeahead
+@inject IApiClient ApiClient
+
+<BlazoredTypeahead SearchMethod="FindOriginsAsync"
+                   @bind-Value="_origin"
+                   MinimumLength="3"
+                   Debounce="500" Context="origin">
+    <SelectedTemplate>
+        @if (!string.IsNullOrEmpty(origin.Name))
+        {
+            <span class="text-body">@(origin.Name)</span>
+        }
+        else if (origin.Uri != null)
+        {
+            <span class="text-body">@(origin.Uri.ToString())</span>
+        }
+    </SelectedTemplate>
+    <ResultTemplate>
+        @if (origin.OriginId == 0)
+        {
+            if (!string.IsNullOrEmpty(origin.Name))
+            {
+                <span class="text-body">Add new "@(origin.Name)" </span>
+            }
+            else if (origin.Uri != null)
+            {
+                <span class="text-body">Add new "@(origin.Uri)" </span>
+            }
+        }
+        else
+        {
+            <span class="text-body">@(origin.Name) </span>
+        }
+    </ResultTemplate>
+    <NotFoundTemplate>
+    </NotFoundTemplate>
+</BlazoredTypeahead>
+@code {
+    Origin _origin
+    {
+        get => SelectedOrigin;
+        set
+        {
+            SelectedOrigin = value;
+            SelectedOriginChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public Origin SelectedOrigin { get; set; }
+
+    [Parameter]
+    public EventCallback<Origin> SelectedOriginChanged { get; set; }
+
+    protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
+    {
+        var originResult = await ApiClient.FindOriginsAsync(searchText, 0, 10, "Name", Data.Shared.SortDirection.Ascending);
+        var origins = originResult.Results.ToList();
+
+        if (!string.IsNullOrEmpty(searchText))
+        {
+            if (Uri.TryCreate(searchText, UriKind.Absolute, out Uri uriResult) &&
+                (uriResult.Scheme == Uri.UriSchemeHttps || uriResult.Scheme == Uri.UriSchemeHttp))
+            {
+                origins.Add(new Origin { Uri = uriResult });
+            }
+            else
+            {
+                origins.Add(new Origin { Name = searchText });
+            }
+        }
+
+        return origins;
+    }
+}

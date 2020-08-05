@@ -33,28 +33,7 @@
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="origin">Origin</label>
-                    <BlazoredTypeahead SearchMethod="FindOriginsAsync"
-                                       @bind-Value="SelectedOrigin"
-                                       MinimumLength="3"
-                                       Debounce="500" Context="origin">
-                        <SelectedTemplate>
-                            @(origin.Name)
-                        </SelectedTemplate>
-                        <ResultTemplate>
-                            @if (origin.OriginId == 0)
-                                {
-                                <span class="text-body">Add new "@(origin.Name)" </span>
-                                }
-                                else
-                                {
-                                <span class="text-body">@(origin.Name) </span>
-                                }
-
-                        </ResultTemplate>
-                        <NotFoundTemplate>
-
-                        </NotFoundTemplate>
-                    </BlazoredTypeahead>
+                    <OriginTypeahead SelectedOrigin="SelectedOrigin" />
                 </div>
             </div>
         </div>

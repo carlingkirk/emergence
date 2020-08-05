@@ -22,7 +22,6 @@ namespace Emergence.Client.Components
         public Specimen Specimen { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
-        public string OriginSearch { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
         public IEnumerable<Status> Statuses => Enum.GetValues(typeof(Status)).Cast<Status>();
@@ -81,19 +80,6 @@ namespace Emergence.Client.Components
             {
                 Specimen.InventoryItem.Name = SelectedLifeform.ScientificName;
             }
-        }
-
-        protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
-        {
-            var originResult = await ApiClient.FindOriginsAsync(searchText, 0, 10, "Name", Data.Shared.SortDirection.Ascending);
-            var origins = originResult.Results.ToList();
-
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                origins.Add(new Origin { Name = searchText });
-            }
-
-            return origins;
         }
 
         protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(searchText);

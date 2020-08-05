@@ -86,7 +86,7 @@ namespace Emergence.Client.Components
 
             if (BlazoredModal != null)
             {
-                BlazoredModal.Close(ModalResult.Ok(PlantInfo));
+                await BlazoredModal.Close(ModalResult.Ok(PlantInfo));
             }
         }
 
@@ -145,19 +145,6 @@ namespace Emergence.Client.Components
                 newStage.Step++;
                 ChosenStratificationStages.AddBefore(oldNode, newNode);
             }
-        }
-
-        protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
-        {
-            var originResult = await ApiClient.FindOriginsAsync(searchText, 0, 10, "Name", Data.Shared.SortDirection.Ascending);
-            var origins = originResult.Results.ToList();
-
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                origins.Add(new Origin { Name = searchText });
-            }
-
-            return origins;
         }
 
         protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(searchText);

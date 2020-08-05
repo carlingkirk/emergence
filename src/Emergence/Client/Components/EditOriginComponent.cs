@@ -20,6 +20,7 @@ namespace Emergence.Client.Components
         public int Id { get; set; }
         [Parameter]
         public Origin Origin { get; set; }
+        public Origin SelectedParentOrigin { get; set; }
         public string OriginUri { get; set; }
         public IEnumerable<OriginType> OriginTypes => Enum.GetValues(typeof(OriginType)).Cast<OriginType>();
 

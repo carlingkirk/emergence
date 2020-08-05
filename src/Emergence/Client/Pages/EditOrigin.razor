@@ -4,6 +4,7 @@
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions
+@using Blazored.Typeahead
 @attribute [Authorize]
 @inherits EditOriginComponent
 
@@ -26,22 +27,10 @@
                         }
                     </select>
                 </div>
-                @if (Origin.ParentOrigin != null)
-                {
-                    <div class="col-4">
-                        <label for="parent-origin">Parent Origin</label>
-                        <a href="@($"/origin/edit/{Origin.ParentOrigin?.OriginId}")" target="_blank">
-                            <span @bind="@Origin.ParentOrigin?.Name" type="text" class="form-control" id="parent-origin" />
-                        </a>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-4">
-                        <label for="parent-origin">Parent Origin</label>
-                        <button value="Add Parent" class="btn btn-sm btn-primary"></button>
-                    </div>
-                }
+                <div class="col-3 col-xs-1">
+                    <label for="origin">Origin</label>
+                    <OriginTypeahead SelectedOrigin="SelectedParentOrigin" />
+                </div>
             </div>
             <div class="row">
                 <div class="col-8">
@@ -132,11 +121,11 @@
             <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
         }
     </EditForm>
-    }
-    else
-    {
-        <span>Loading...</span>
-    }
+}
+else
+{
+    <span>Loading...</span>
+}
 
 @code {
 
