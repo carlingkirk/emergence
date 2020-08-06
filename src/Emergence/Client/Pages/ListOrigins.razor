@@ -45,7 +45,7 @@
                 <td>
                     @if (@origin.ParentOrigin != null)
                     {
-                        <span @onclick="@(async () => await UpdateOriginAsync(origin.ParentOrigin))" class="link">@origin.ParentOrigin.Name</span>
+                        <span @onclick="@(async () => await UpdateParentOriginAsync(origin.ParentOrigin))" class="link">@origin.ParentOrigin.Name</span>
                     }
                 </td>
                 <td>

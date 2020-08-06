@@ -20,8 +20,23 @@ namespace Emergence.Client.Components
         protected async Task UpdatePlantInfoAsync(PlantInfo plantInfo)
         {
             var result = await ModalServiceClient.ShowPlantInfoModal(plantInfo);
-            plantInfo = List.Where(p => p.PlantInfoId == plantInfo.PlantInfoId).First();
-            plantInfo = result.Data as PlantInfo;
+            if (!result.Cancelled)
+            {
+                plantInfo = List.Where(p => p.PlantInfoId == plantInfo.PlantInfoId).First();
+                plantInfo = result.Data as PlantInfo;
+            }
+        }
+
+        protected async Task UpdateOriginAsync(Origin origin)
+        {
+            var result = await ModalServiceClient.ShowOriginModal(origin);
+            if (!result.Cancelled)
+            {
+                List.Where(p => p.Origin.OriginId == origin.OriginId).ToList().ForEach(p =>
+                {
+                    p.Origin = result.Data as Origin;
+                });
+            }
         }
     }
 }

@@ -37,7 +37,7 @@
                     <span @onclick="@(async () => await UpdateActivityAsync(activity))" class="link">@activity.Name</span>
                 </td>
                 <td>
-                    <span>@activity.Specimen.Lifeform.ScientificName</span>
+                    <span @onclick="@(async () => await UpdateSpecimenAsync(activity.Specimen))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
                 </td>
                 <td>
                     <span>@activity.ActivityType.ToFriendlyName()</span>

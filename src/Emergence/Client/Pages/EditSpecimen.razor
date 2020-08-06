@@ -11,7 +11,6 @@
 @if (Specimen != null)
 {
     <EditForm Model="@Specimen">
-        <h3>@(Id > 0 ? "Edit" : "Add") Specimen</h3>
         <div class="form-group container">
             <div class="row">
                 <div class="col-12">
@@ -72,7 +71,7 @@
                 </div>
                 <div class="col-4 col-xs-1">
                     <label for="quantity">Type</label>
-                    <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="status">
+                    <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="type">
                         @foreach (var itemType in ItemTypes)
                         {
                             <option value="@itemType">@itemType.ToFriendlyName()</option>

@@ -42,7 +42,7 @@
                     <span>@plantInfo.CommonName</span>
                 </td>
                 <td>
-                    <span>@plantInfo.Origin.Name</span>
+                    <span @onclick="@(async () => await UpdateOriginAsync(plantInfo.Origin))" class="link">@plantInfo.Origin.Name</span>
                 </td>
                 <td>
                     @if (plantInfo.Requirements?.ZoneRequirements != null)

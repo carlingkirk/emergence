@@ -16,8 +16,23 @@ namespace Emergence.Client.Components
         protected async Task UpdateActivityAsync(Activity activity)
         {
             var result = await ModalServiceClient.ShowActivityModal(activity);
-            activity = List.Where(a => a.ActivityId == activity.ActivityId).First();
-            activity = result.Data as Activity;
+            if (!result.Cancelled)
+            {
+                activity = List.Where(a => a.ActivityId == activity.ActivityId).First();
+                activity = result.Data as Activity;
+            }
+        }
+
+        protected async Task UpdateSpecimenAsync(Specimen specimen)
+        {
+            var result = await ModalServiceClient.ShowSpecimenModal(specimen);
+            if (!result.Cancelled)
+            {
+                List.Where(a => a.Specimen.SpecimenId == specimen.SpecimenId).ToList().ForEach(a =>
+                {
+                    a.Specimen = result.Data as Specimen;
+                });
+            }
         }
     }
 }

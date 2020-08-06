@@ -55,7 +55,7 @@
         </span>
     </td>
     <td>
-        <span>@specimen.InventoryItem.Origin?.Name</span>
+        <span @onclick="@(async () => await UpdateOriginAsync(specimen.InventoryItem.Origin))" class="link">@specimen.InventoryItem?.Origin?.Name</span>
     </td>
     <td>
         <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(specimen))">Add New Activity</button>

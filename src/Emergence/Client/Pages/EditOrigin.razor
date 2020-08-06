@@ -11,7 +11,6 @@
 @if (Origin != null)
 {
     <EditForm Model="@Origin">
-        <h3>@(Id > 0 ? "Edit" : "Add") Origin</h3>
         <div class="form-group container">
             <div class="row">
                 <div class="col-6">
@@ -73,8 +72,8 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="address-line-1">Address Line 1</label>
-                            <input @bind="@Origin.Location.AddressLine1" type="text" class="form-control" id="address-line-1" />
+                            <label for="address-line-1">Address Line 2</label>
+                            <input @bind="@Origin.Location.AddressLine2" type="text" class="form-control" id="address-line-2" />
                         </div>
                     </div>
                     <div class="row">
@@ -83,8 +82,8 @@
                             <input @bind="@Origin.Location.City" type="text" class="form-control" id="city" />
                         </div>
                         <div class="col">
-                            <label for="city">State/Provice</label>
-                            <input @bind="@Origin.Location.StateOrProvince" type="text" class="form-control" id="city" />
+                            <label for="city">State/Province</label>
+                            <input @bind="@Origin.Location.StateOrProvince" type="text" class="form-control" id="state-province" />
                         </div>
                     </div>
                     <div class="row">
