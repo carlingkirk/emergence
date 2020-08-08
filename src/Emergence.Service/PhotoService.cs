@@ -24,7 +24,7 @@ namespace Emergence.Service
             _photoRepository = photoRepository;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadPhotosAsync(IEnumerable<IFormFile> photos, Data.Shared.Models.PhotoType type, string userId)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, Data.Shared.Models.PhotoType type, string userId)
         {
             var photoResult = new List<Data.Shared.Models.Photo>();
 
@@ -32,9 +32,9 @@ namespace Emergence.Service
             {
                 var name = Guid.NewGuid().ToString();
                 var fileInfo = new FileInfo(photo.FileName);
-                name += fileInfo.Extension;
+                var blobpath = name + "/original" + fileInfo.Extension;
 
-                var result = await _blobService.UploadPhotoAsync(photo, type.ToString(), userId, name);
+                var result = await _blobService.UploadPhotoAsync(photo, userId, blobpath);
                 if (result != null)
                 {
                     var location = GetLocationFromMetadata(result.Metadata);
@@ -60,7 +60,7 @@ namespace Emergence.Service
 
                     photoResult.Add(new Data.Shared.Models.Photo
                     {
-                        Filename = name,
+                        Filename = blobpath,
                         Type = type,
                         UserId = userId,
                         ContentType = result.ContentType,
@@ -126,7 +126,7 @@ namespace Emergence.Service
         public async Task<bool> RemovePhotoAsync(int id, string userId)
         {
             var photo = await GetPhotoAsync(id);
-            await _blobService.RemovePhotoAsync(photo.Type.ToString(), photo.Filename);
+            await _blobService.RemovePhotoAsync(photo.Filename);
             var result = await _photoRepository.RemoveAsync(photo.AsStore());
             return result;
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
@@ -17,16 +18,16 @@ namespace Emergence.Service
 
         public BlobService(IConfiguration configuration)
         {
-            _connectionString = configuration["ConnectionStrings:BlobStorage"];
+            _connectionString = configuration["AzureStorageConnectionString"];
         }
 
-        public async Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string type, string userId, string name)
+        public async Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string userId, string blobPath)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, type.ToLower());
+            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
             await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
 
             HttpStatusCode status;
-            var photoClient = typeContainerClient.GetBlobClient(name);
+            var photoClient = typeContainerClient.GetBlobClient(blobPath);
             using (var stream = photo.OpenReadStream())
             {
                 var result = await photoClient.UploadAsync(stream);
@@ -43,32 +44,35 @@ namespace Emergence.Service
             return null;
         }
 
-        public async Task<IEnumerable<IBlobResult>> UploadPhotosAsync(IEnumerable<IFormFile> photos, string type, string userId, string name)
+        public async Task<bool> RemovePhotoAsync(string filename)
         {
-            var results = new List<BlobResult>();
-            var typeContainerClient = new BlobContainerClient(_connectionString, type.ToLower());
-            await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
-
-            foreach (var photo in photos)
+            var name = filename.Substring(0, 40);
+            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var blobs = typeContainerClient.GetBlobsAsync(prefix: name);
+            await foreach (var blob in blobs)
             {
-                var result = await UploadPhotoAsync(photo, type, userId, name);
-                results.Add((BlobResult)result);
+                var result = await typeContainerClient.DeleteBlobAsync(blob.Name, DeleteSnapshotsOption.IncludeSnapshots);
+                if ((HttpStatusCode)result.Status != HttpStatusCode.Accepted)
+                {
+                    return false;
+                }
             }
-            return results;
+            return true;
         }
 
-        public async Task<bool> RemovePhotoAsync(string type, string filename)
+        public async Task<bool> UploadPhotoStreamAsync(MemoryStream stream, string blobPath)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, type.ToLower());
-            var result = await typeContainerClient.DeleteBlobAsync(filename, DeleteSnapshotsOption.IncludeSnapshots);
-            if ((HttpStatusCode)result.Status == HttpStatusCode.Accepted)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            HttpStatusCode status;
+            var photoClient = typeContainerClient.GetBlobClient(blobPath);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var result = await photoClient.UploadAsync(stream);
+            status = (HttpStatusCode)result.GetRawResponse().Status;
+
+            return status == HttpStatusCode.Created ? true : false;
         }
 
         private async Task<IBlobResult> SetBlobProperties(BlobClient client, IFormFile file, string userId)

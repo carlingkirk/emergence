@@ -7,7 +7,7 @@ namespace Emergence.Service.Interfaces
 {
     public interface IPhotoService
     {
-        Task<IEnumerable<Photo>> UploadPhotosAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId);
+        Task<IEnumerable<Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId);
         Task<Photo> AddOrUpdatePhotoAsync(Photo photo);
         Task<IEnumerable<Photo>> AddOrUpdatePhotosAsync(IEnumerable<Photo> photos);
         Task<Photo> GetPhotoAsync(int id);

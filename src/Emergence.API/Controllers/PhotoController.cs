@@ -29,7 +29,7 @@ namespace Emergence.API.Controllers
         [Route("{type}/UploadMany")]
         public async Task<IEnumerable<Photo>> UploadMany(IEnumerable<IFormFile> photos, PhotoType type)
         {
-            var photoResult = await _photoService.UploadPhotosAsync(photos, type, UserId);
+            var photoResult = await _photoService.UploadOriginalsAsync(photos, type, UserId);
             var locations = photoResult.Select(p => p.Location).ToList();
 
             var locationResult = await _locationService.AddLocationsAsync(locations);
@@ -38,17 +38,22 @@ namespace Emergence.API.Controllers
             {
                 var location = locationResult.Where(l => l.Latitude == photo.Location.Latitude && l.Longitude == photo.Location.Longitude).FirstOrDefault();
                 photo.Location = location;
-                photo.AbsoluteUri = _blobStorageRoot + photo.RelativeUri;
             }
 
-            return await _photoService.AddOrUpdatePhotosAsync(photoResult);
+            photoResult = (await _photoService.AddOrUpdatePhotosAsync(photoResult)).ToList();
+
+            foreach (var photo in photoResult)
+            {
+                photo.AbsoluteUri = GetPhotoUri(photo.Filename);
+            }
+            return photoResult;
         }
 
         [HttpPost]
         [Route("{type}/Upload")]
         public async Task<Photo> Upload(IFormFile photo, PhotoType type)
         {
-            var photoResults = await _photoService.UploadPhotosAsync(new IFormFile[] { photo }, type, UserId);
+            var photoResults = await _photoService.UploadOriginalsAsync(new IFormFile[] { photo }, type, UserId);
             if (photoResults.Any())
             {
                 var photoResult = photoResults.First();
@@ -59,7 +64,7 @@ namespace Emergence.API.Controllers
                 }
 
                 photoResult = await _photoService.AddOrUpdatePhotoAsync(photoResult);
-                photoResult.AbsoluteUri = _blobStorageRoot + photoResult.RelativeUri;
+                photoResult.AbsoluteUri = GetPhotoUri(photoResult.Filename);
                 return photoResult;
             }
             return null;
@@ -90,10 +95,12 @@ namespace Emergence.API.Controllers
 
             foreach (var photo in photoResult)
             {
-                photo.AbsoluteUri = _blobStorageRoot + photo.RelativeUri;
+                photo.AbsoluteUri = GetPhotoUri(photo.Filename);
             }
 
             return photoResult;
         }
+
+        private string GetPhotoUri(string filename) => _blobStorageRoot + "photos/" + filename;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -6,8 +6,8 @@ namespace Emergence.Service.Interfaces
 {
     public interface IBlobService
     {
-        Task<IEnumerable<IBlobResult>> UploadPhotosAsync(IEnumerable<IFormFile> photos, string type, string userId, string name);
-        Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string type, string userId, string name);
-        Task<bool> RemovePhotoAsync(string type, string filename);
+        Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string userId, string blobPath);
+        Task<bool> RemovePhotoAsync(string filename);
+        Task<bool> UploadPhotoStreamAsync(MemoryStream stream, string blobPath);
     }
 }
