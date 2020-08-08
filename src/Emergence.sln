@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emergence.Service", "Emergence.Service\Emergence.Service.csproj", "{0AAB8398-8089-4710-82AA-103DC36551B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emergence.Functions", "Emergence.Functions\Emergence.Functions.csproj", "{6648D44E-6B72-4CFE-95FF-7717C61A49BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emergence.Functions", "Emergence.Functions\Emergence.Functions.csproj", "{6648D44E-6B72-4CFE-95FF-7717C61A49BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

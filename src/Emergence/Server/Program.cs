@@ -16,7 +16,7 @@ namespace Emergence.Server
                 {
                     logging.AddFilter("System", LogLevel.Debug)
                     .AddFilter<DebugLoggerProvider>("Microsoft", LogLevel.Information)
-                    .AddFilter<ConsoleLoggerProvider>("Microsoft", LogLevel.Trace);
+                    .AddFilter<ConsoleLoggerProvider>("Microsoft", LogLevel.Debug);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

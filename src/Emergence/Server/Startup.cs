@@ -1,12 +1,14 @@
 using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
+using Emergence.Data.Shared.Email;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +36,15 @@ namespace Emergence.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-            services.AddAuthentication().AddIdentityServerJwt();
+            services.AddAuthentication().AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["GoogleOAuthClientId"];
+                    options.ClientSecret = Configuration["GoogleOAuthClientSecret"];
+                })
+                .AddIdentityServerJwt();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddLogging();
 
