@@ -12,6 +12,7 @@ namespace Emergence.Data.Shared.Extensions
             InventoryItem = source.InventoryItem != null ? source.InventoryItem.AsModel() : new Models.InventoryItem { InventoryItemId = source.InventoryItemId },
             Lifeform = source.Lifeform != null ? source.Lifeform.AsModel() : source.LifeformId.HasValue ? new Models.Lifeform { LifeformId = source.LifeformId.Value } : null,
             PlantInfo = source.PlantInfo != null ? source.PlantInfo.AsModel() : source.PlantInfoId.HasValue ? new Models.PlantInfo { PlantInfoId = source.PlantInfoId.Value } : null,
+
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };

@@ -21,16 +21,6 @@ namespace Emergence.Client.Shared
         [Parameter]
         public Func<int, Task<IEnumerable<T>>> Page { get; set; }
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    if (Count > 0 && Take > 0)
-        //    {
-        //        TotalPages = (int)Math.Ceiling(Count / (double)Take);
-        //    }
-
-        //    await Task.CompletedTask;
-        //}
-
         protected async Task DoPage(int page)
         {
             CurrentPage += page;

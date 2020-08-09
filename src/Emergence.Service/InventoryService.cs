@@ -75,7 +75,7 @@ namespace Emergence.Service
         {
             inventoryItem.DateModified = DateTime.UtcNow;
 
-            if (inventoryItem.Origin != null && inventoryItem.Origin.OriginId == 0)
+            if (inventoryItem.Origin != null && inventoryItem.Origin.OriginId == 0 && !string.IsNullOrEmpty(inventoryItem.Origin.Name))
             {
                 inventoryItem.Origin = await _originService.AddOrUpdateOriginAsync(inventoryItem.Origin, userId);
             }

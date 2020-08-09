@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
@@ -23,8 +24,15 @@ namespace Emergence.API.Controllers
         [HttpPut]
         public async Task<Origin> Put(Origin origin)
         {
-            origin.UserId = UserId;
-            return await _originService.AddOrUpdateOriginAsync(origin, UserId);
+            if (!string.IsNullOrEmpty(origin.Name))
+            {
+                origin.UserId = UserId;
+                return await _originService.AddOrUpdateOriginAsync(origin, UserId);
+            }
+            else
+            {
+                throw new InvalidOperationException("Origin name cannot be blank.");
+            }
         }
 
         [HttpGet]

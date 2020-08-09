@@ -63,11 +63,11 @@
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="date-acquired">Date Acquired</label>
-                    <input type="date" />
+                    <input type="date" @bind="Specimen.InventoryItem.DateAcquired" class="form-control" />
                 </div>
                 <div class="col-3 col-xs-1">
                     <label for="origin">Origin</label>
-                    <OriginTypeahead SelectedOrigin="SelectedOrigin"></OriginTypeahead>
+                    <OriginTypeahead @bind-SelectedOrigin="SelectedOrigin" />
                 </div>
                 <div class="col-4 col-xs-1">
                     <label for="quantity">Type</label>

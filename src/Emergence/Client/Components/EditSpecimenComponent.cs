@@ -61,7 +61,7 @@ namespace Emergence.Client.Components
                 Specimen.InventoryItem.Origin = SelectedOrigin;
             }
 
-            if (SelectedOrigin != null)
+            if (SelectedLifeform != null)
             {
                 Specimen.Lifeform = SelectedLifeform;
             }

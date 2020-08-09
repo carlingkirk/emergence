@@ -3,7 +3,9 @@
 @inject IApiClient ApiClient
 
 <BlazoredTypeahead SearchMethod="FindOriginsAsync"
-                   @bind-Value="_origin"
+                   Value="SelectedOrigin"
+                   ValueChanged="@((Origin o) => InvokeSelectedOriginChangedAsync(o))"
+                   ValueExpression="@(() => SelectedOrigin)"
                    MinimumLength="3"
                    Debounce="500" Context="origin">
     <SelectedTemplate>
@@ -37,20 +39,17 @@
     </NotFoundTemplate>
 </BlazoredTypeahead>
 @code {
-    Origin _origin
-    {
-        get => SelectedOrigin;
-        set
-        {
-            SelectedOrigin = value;
-            SelectedOriginChanged.InvokeAsync(value);
-        }
-    }
     [Parameter]
     public Origin SelectedOrigin { get; set; }
 
     [Parameter]
     public EventCallback<Origin> SelectedOriginChanged { get; set; }
+
+    protected async Task InvokeSelectedOriginChangedAsync(Origin origin)
+    {
+        SelectedOrigin = origin;
+        await SelectedOriginChanged.InvokeAsync(origin);
+    }
 
     protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
     {

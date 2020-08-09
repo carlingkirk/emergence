@@ -65,7 +65,7 @@ namespace Emergence.Service
                                                                     EF.Functions.Like(o.Location.City, search) ||
                                                                     EF.Functions.Like(o.Location.AddressLine1, search) ||
                                                                     EF.Functions.Like(o.Location.StateOrProvince, search)),
-                                                                        o => o.Include(o => o.Location));
+                                                                        o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
             originQuery = OrderBy(originQuery, sortBy, sortDirection);
 
             var count = originQuery.Count();

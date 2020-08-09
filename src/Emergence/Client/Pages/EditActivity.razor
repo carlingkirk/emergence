@@ -80,25 +80,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <InputFile OnChange="UploadPhotosAsync" multiple capture="camera" accept="image/*"></InputFile>
-                    @if (UploadedPhotos != null)
-                    {
-                    <div class="row">
-                        @foreach (var photo in UploadedPhotos)
-                        {
-                        <div class="row">
-                            <div class="col">
-                                <button class="btn btn-primary" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <img src="@(photo.AbsoluteUri)" />
-                            </div>
-                        </div>
-                        }
-                    </div>
-                    }
+                    <UploadPhoto UploadedPhotos="UploadedPhotos" />
                 </div>
             </div>
         </div>

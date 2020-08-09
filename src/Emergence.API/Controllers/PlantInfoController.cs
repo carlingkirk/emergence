@@ -25,7 +25,7 @@ namespace Emergence.API.Controllers
         [HttpPut]
         public async Task<PlantInfo> Put(PlantInfo plantInfo)
         {
-            if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0)
+            if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0 && !string.IsNullOrEmpty(plantInfo.Origin.Name))
             {
                 plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, UserId);
             }

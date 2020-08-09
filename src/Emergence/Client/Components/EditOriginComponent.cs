@@ -49,9 +49,15 @@ namespace Emergence.Client.Components
                 Origin.DateCreated = DateTime.UtcNow;
             }
             Origin.DateModified = DateTime.UtcNow;
+
             if (!string.IsNullOrEmpty(OriginUri))
             {
                 Origin.Uri = new Uri(OriginUri);
+            }
+
+            if (SelectedParentOrigin != null)
+            {
+                Origin.ParentOrigin = SelectedParentOrigin;
             }
 
             Origin = await ApiClient.PutOriginAsync(Origin);

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
-using BlazorInputFile;
 using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
@@ -87,28 +86,6 @@ namespace Emergence.Client.Components
                 specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
             }
             return specimens;
-        }
-
-        protected async Task UploadPhotosAsync(IFileListEntry[] files)
-        {
-            var photos = await ApiClient.UploadPhotosAsync(files, PhotoType.Activity);
-            UploadedPhotos = photos.ToList();
-        }
-
-        protected async Task UploadPhotoAsync(IFileListEntry[] files)
-        {
-            var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType.Activity);
-            UploadedPhotos.Add(photo);
-        }
-
-        protected async Task RemovePhotoAsync(int id)
-        {
-            var photo = UploadedPhotos.First(p => p.PhotoId == id);
-            var result = await ApiClient.RemovePhotoAsync(photo.PhotoId);
-            if (result)
-            {
-                UploadedPhotos.Remove(photo);
-            }
         }
     }
 }
