@@ -25,7 +25,7 @@ namespace Emergence.Client.Components
 
         protected async Task UpdateSpecimenAsync(Specimen specimen)
         {
-            var result = await ModalServiceClient.ShowSpecimenModal(specimen);
+            var result = await ModalServiceClient.ShowSpecimenModal(specimen.SpecimenId);
             if (!result.Cancelled)
             {
                 List.Where(a => a.Specimen.SpecimenId == specimen.SpecimenId).ToList().ForEach(a =>

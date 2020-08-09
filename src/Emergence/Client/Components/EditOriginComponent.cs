@@ -31,6 +31,11 @@ namespace Emergence.Client.Components
                 Origin ??= await ApiClient.GetOriginAsync(Id);
                 Origin.Location ??= new Location();
                 OriginUri = Origin.Uri?.ToString();
+
+                if (Origin.ParentOrigin != null)
+                {
+                    SelectedParentOrigin = Origin.ParentOrigin;
+                }
             }
             else
             {

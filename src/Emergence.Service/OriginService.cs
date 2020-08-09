@@ -23,7 +23,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id)
         {
-            var origin = await _originRepository.GetAsync(l => l.Id == id);
+            var origin = await _originRepository.GetWithIncludesAsync(l => l.Id == id, false, o => o.Include(o => o.ParentOrigin));
             return origin?.AsModel();
         }
 

@@ -29,7 +29,7 @@ namespace Emergence.Client.Components
 
         protected async Task UpdateOriginAsync(Origin origin)
         {
-            var result = await ModalServiceClient.ShowOriginModal(origin);
+            var result = await ModalServiceClient.ShowOriginModal(origin.OriginId);
             if (!result.Cancelled)
             {
                 List.Where(p => p.Origin.OriginId == origin.OriginId).ToList().ForEach(p =>
