@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Email;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -16,9 +17,9 @@ namespace Emergence.Service
 
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
 
-        public Task SendEmailAsync(string email, string subject, string message) => Execute(Options.SendGridKey, subject, message, email);
+        public async Task SendEmailAsync(string email, string subject, string message) => await ExecuteAsync(Options.SendGridKey, subject, message, email);
 
-        public Task Execute(string apiKey, string subject, string message, string email)
+        public async Task ExecuteAsync(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
@@ -34,7 +35,12 @@ namespace Emergence.Service
             // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
             msg.SetClickTracking(false, false);
 
-            return client.SendEmailAsync(msg);
+            var response = await client.SendEmailAsync(msg);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
+            {
+                throw new Exception($"SendGrid SendEmailAsync returned {response.StatusCode}");
+            }
         }
     }
 }
