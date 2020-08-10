@@ -227,3 +227,45 @@ span.link {
     
     text-decoration: underline;
   }
+
+  /* Colors */
+
+.light {
+  color: #F0EDE7;
+}
+
+.light-accent {
+  color: #A9A074;
+}
+
+.main {
+  color: #579B0C;
+}
+
+.dark-accent {
+  color: #767250;
+}
+
+.dark {
+  color: #202820;
+}
+
+.primary {
+  color: #56a51c;
+}
+
+.info {
+  color: #202820;
+}
+
+.success {
+  color: #4fac40;
+}
+
+.warning {
+  color: #cc9c08;
+}
+
+.danger {
+  color: #f44336;
+}
