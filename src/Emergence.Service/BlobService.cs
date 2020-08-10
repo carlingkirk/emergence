@@ -83,15 +83,34 @@ namespace Emergence.Service
             {
                 metadata = GetMetadata(reader);
             }
+
             metadata.Add("UserId", userId);
 
-            await client.SetMetadataAsync(metadata);
-            var metadataResult = client.GetProperties().Value;
-            return new BlobResult
+            var result = await client.SetMetadataAsync(metadata);
+            if (result.Value != null)
             {
-                Metadata = metadataResult.Metadata,
-                ContentType = metadataResult.ContentType
-            };
+                var metadataResult = client.GetProperties().Value;
+
+                result = await client.SetHttpHeadersAsync(
+                new BlobHttpHeaders
+                {
+                    ContentType = file.ContentType,
+                    ContentDisposition = metadataResult.ContentDisposition,
+                    ContentHash = metadataResult.ContentHash,
+                    ContentEncoding = metadataResult.ContentEncoding,
+                    ContentLanguage = metadataResult.ContentLanguage
+                });
+
+                if (result != null)
+                {
+                    return new BlobResult
+                    {
+                        Metadata = metadataResult.Metadata,
+                        ContentType = metadataResult.ContentType
+                    };
+                }
+            }
+            return null;
         }
 
         private Dictionary<string, string> GetMetadata(ExifReader reader)

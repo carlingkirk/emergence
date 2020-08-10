@@ -22,6 +22,7 @@ namespace Emergence.Client.Components
         public Specimen Specimen { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
+        public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
         public IEnumerable<Status> Statuses => Enum.GetValues(typeof(Status)).Cast<Status>();
@@ -33,9 +34,20 @@ namespace Emergence.Client.Components
                 Specimen ??= await ApiClient.GetSpecimenAsync(Id);
                 SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
                 SelectedLifeform = Specimen.Lifeform;
+
                 if (Specimen.Lifeform != null)
                 {
                     Specimen.InventoryItem.Name = Specimen.Lifeform.ScientificName;
+                }
+
+                var photos = await ApiClient.GetPhotosAsync(PhotoType.Specimen, Id);
+                if (photos.Any())
+                {
+                    UploadedPhotos = photos.ToList();
+                }
+                else
+                {
+                    UploadedPhotos = new List<Photo>();
                 }
             }
             else if (Specimen == null)
@@ -45,6 +57,7 @@ namespace Emergence.Client.Components
                     Lifeform = new Lifeform(),
                     InventoryItem = new InventoryItem()
                 };
+                UploadedPhotos = new List<Photo>();
             }
         }
 
@@ -64,6 +77,11 @@ namespace Emergence.Client.Components
             if (SelectedLifeform != null)
             {
                 Specimen.Lifeform = SelectedLifeform;
+            }
+
+            if (UploadedPhotos.Any())
+            {
+                Specimen.Photos = UploadedPhotos;
             }
 
             Specimen = await ApiClient.PutSpecimenAsync(Specimen);
