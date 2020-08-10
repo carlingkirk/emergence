@@ -50,6 +50,10 @@ namespace Emergence.Test.Mocks
             mockOriginRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(mockOrigins.First());
 
+            mockOriginRepo.Setup(o => o.GetWithIncludesAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<Origin>, IIncludable>[]>()))
+                .ReturnsAsync(mockOrigins.First());
+
             mockOriginRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(mockOrigins.ToAsyncEnumerable());
 
