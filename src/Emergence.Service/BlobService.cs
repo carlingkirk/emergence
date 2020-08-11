@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
 using ExifLib;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +14,12 @@ namespace Emergence.Service
     public class BlobService : IBlobService
     {
         private readonly string _connectionString;
+        private readonly IExifService _exifService;
 
-        public BlobService(IConfiguration configuration)
+        public BlobService(IConfiguration configuration, IExifService exifService)
         {
             _connectionString = configuration["AzureStorageConnectionString"];
+            _exifService = exifService;
         }
 
         public async Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string userId, string blobPath)
@@ -81,7 +82,7 @@ namespace Emergence.Service
             using (var stream = file.OpenReadStream())
             using (var reader = new ExifReader(stream))
             {
-                metadata = GetMetadata(reader);
+                metadata = _exifService.GetMetadata(reader);
             }
 
             metadata.Add("UserId", userId);
@@ -111,44 +112,6 @@ namespace Emergence.Service
                 }
             }
             return null;
-        }
-
-        private Dictionary<string, string> GetMetadata(ExifReader reader)
-        {
-            var metadata = new Dictionary<string, string>();
-            var latitude = reader.GetLatitude();
-            var longitude = reader.GetLongitude();
-            var altitude = reader.GetAltitude();
-            var length = reader.GetLength();
-            var width = reader.GetWidth();
-            var dateTaken = reader.GetDateTaken();
-
-            if (latitude.HasValue)
-            {
-                metadata.Add("Latitude", latitude.Value.ToString());
-            }
-            if (longitude.HasValue)
-            {
-                metadata.Add("Longitude", longitude.Value.ToString());
-            }
-            if (dateTaken.HasValue)
-            {
-                metadata.Add("DateTaken", dateTaken.Value.ToString());
-            }
-            if (altitude.HasValue)
-            {
-                metadata.Add("Altitude", altitude.Value.ToString());
-            }
-            if (length.HasValue)
-            {
-                metadata.Add("Length", length.Value.ToString());
-            }
-            if (width.HasValue)
-            {
-                metadata.Add("Width", width.Value.ToString());
-            }
-
-            return metadata;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Emergence.Service
                 if (result != null)
                 {
                     var location = GetLocationFromMetadata(result.Metadata);
-                    var (length, width) = GetDimensionsFromMetadata(result.Metadata);
+                    var (height, width) = GetDimensionsFromMetadata(result.Metadata);
                     var timezone = TimeZoneInfo.Local;
                     if (location != null && location.Latitude.HasValue && location.Longitude.HasValue)
                     {
@@ -65,7 +65,7 @@ namespace Emergence.Service
                         UserId = userId,
                         ContentType = result.ContentType,
                         Location = location,
-                        Length = length,
+                        Height = height,
                         Width = width,
                         DateTaken = dateTaken,
                         DateCreated = DateTime.UtcNow
@@ -177,20 +177,20 @@ namespace Emergence.Service
             return hasValues ? location : null;
         }
 
-        private (int? Length, int? Width) GetDimensionsFromMetadata(IDictionary<string, string> metadata)
+        private (int? Height, int? Width) GetDimensionsFromMetadata(IDictionary<string, string> metadata)
         {
-            int? length = null;
+            int? height = null;
             int? width = null;
 
             if (metadata.Count > 0)
             {
-                if (metadata.TryGetValue(Constants.Length, out var lengthEntry))
+                if (metadata.TryGetValue(Constants.Height, out var heightEntry))
                 {
-                    if (!string.IsNullOrEmpty(lengthEntry))
+                    if (!string.IsNullOrEmpty(heightEntry))
                     {
-                        if (int.TryParse(lengthEntry, out var lengthValue))
+                        if (int.TryParse(heightEntry, out var heightValue))
                         {
-                            length = lengthValue;
+                            height = heightValue;
                         }
                     }
                 }
@@ -207,7 +207,7 @@ namespace Emergence.Service
                 }
             }
 
-            return (length, width);
+            return (height, width);
         }
     }
 }

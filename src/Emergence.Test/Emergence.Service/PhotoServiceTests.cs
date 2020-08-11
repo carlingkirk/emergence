@@ -8,7 +8,6 @@ using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
-using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
 using Emergence.Test.Mocks;
 using FluentAssertions;
@@ -38,7 +37,7 @@ namespace Emergence.Test.Emergence.API.Services
                 { Constants.Latitude, "38.885986" },
                 { Constants.Longitude, "-77.036880" },
                 { Constants.Altitude, "145" },
-                { Constants.Length, "3024" },
+                { Constants.Height, "3024" },
                 { Constants.Width, "4032" },
                 { Constants.DateTaken, "2020-07-22 13:45:26" },
             };
@@ -59,7 +58,7 @@ namespace Emergence.Test.Emergence.API.Services
             result.FirstOrDefault().Location.Latitude.Should().Be(38.885986);
             result.FirstOrDefault().Location.Longitude.Should().Be(-77.036880);
             result.FirstOrDefault().Location.Altitude.Should().Be(145);
-            result.FirstOrDefault().Length.Should().Be(3024);
+            result.FirstOrDefault().Height.Should().Be(3024);
             result.FirstOrDefault().Width.Should().Be(4032);
             result.FirstOrDefault().DateTaken.Should().Be(new DateTime(2020, 7, 22, 17, 45, 26, DateTimeKind.Utc));
         }
@@ -69,7 +68,7 @@ namespace Emergence.Test.Emergence.API.Services
         {
             var metadata = new Dictionary<string, string>
             {
-                { Constants.Length, "3024" },
+                { Constants.Height, "3024" },
                 { Constants.Width, "4032" },
                 { Constants.DateTaken, "2020-07-22 13:45:26" },
             };
@@ -88,9 +87,10 @@ namespace Emergence.Test.Emergence.API.Services
 
             var timezone = TimeZoneInfo.Local;
             var expectedDate = TimeZoneInfo.ConvertTimeToUtc(new DateTime(2020, 7, 22, 13, 45, 26, DateTimeKind.Unspecified), timezone);
+
             result.FirstOrDefault().Filename.Length.Should().Be(49);
             result.FirstOrDefault().Location.Should().BeNull();
-            result.FirstOrDefault().Length.Should().Be(3024);
+            result.FirstOrDefault().Height.Should().Be(3024);
             result.FirstOrDefault().Width.Should().Be(4032);
             result.FirstOrDefault().DateTaken.Should().Be(expectedDate);
         }
@@ -104,29 +104,6 @@ namespace Emergence.Test.Emergence.API.Services
 
             photos.FirstOrDefault().Type.Should().Be(Models.PhotoType.Activity);
             photos.FirstOrDefault().Location.LocationId.Should().Be(1);
-        }
-
-        [Fact(Skip = "Integration test")]
-        public void TestExifReader()
-        {
-            using (var stream = new FileStream("D:/Pictures/IMG_20200724_170738.jpg", FileMode.Open, FileAccess.Read))
-            {
-                var file = new FormFile(stream, 0, 0, "IMG_20200724_170738", "IMG_20200724_170738.jpg");
-                var exifReader = new ExifLib.ExifReader(stream);
-                var latitude = exifReader.GetLatitude();
-                var longitude = exifReader.GetLongitude();
-                var altitude = exifReader.GetAltitude();
-                var dateTaken = exifReader.GetDateTaken();
-                var length = exifReader.GetLength();
-                var width = exifReader.GetWidth();
-
-                latitude.Should().Be(34.022947222222221);
-                longitude.Should().Be(84.336325);
-                altitude.Should().Be(267);
-                dateTaken.Should().Be(new DateTime(2020, 7, 24, 17, 07, 38, DateTimeKind.Local));
-                length.Should().Be(4032);
-                width.Should().Be(3024);
-            }
         }
     }
 }

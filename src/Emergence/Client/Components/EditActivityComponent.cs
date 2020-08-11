@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Emergence.Client.Common;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -86,6 +87,14 @@ namespace Emergence.Client.Components
                 specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
             }
             return specimens;
+        }
+
+        protected void PopulateActivityName()
+        {
+            if (Activity.ActivityType != ActivityType.Custom && SelectedSpecimen != null)
+            {
+                Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + SelectedSpecimen.Lifeform.ScientificName;
+            }
         }
     }
 }

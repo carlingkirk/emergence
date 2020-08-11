@@ -61,6 +61,7 @@ namespace Emergence.Server
             services.AddTransient<ISpecimenService, SpecimenService>();
             services.AddTransient<IBlobService, BlobService>();
             services.AddTransient<IPhotoService, PhotoService>();
+            services.AddTransient<IExifService, ExifService>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));

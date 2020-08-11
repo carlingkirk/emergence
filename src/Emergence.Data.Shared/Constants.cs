@@ -5,7 +5,7 @@ namespace Emergence.Data.Shared
         public const string Latitude = "Latitude";
         public const string Longitude = "Longitude";
         public const string Altitude = "Altitude";
-        public const string Length = "Length";
+        public const string Height = "Height";
         public const string Width = "Width";
         public const string DateTaken = "DateTaken";
     }

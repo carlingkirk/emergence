@@ -11,8 +11,8 @@ namespace Emergence.Data.Shared.Stores
         public string Filename { get; set; }
         public string UserId { get; set; }
         public string ContentType { get; set; }
-        public int? Length { get; set; }
         public int? Width { get; set; }
+        public int? Height { get; set; }
         public DateTime? DateTaken { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }

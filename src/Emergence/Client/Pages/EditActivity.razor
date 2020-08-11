@@ -17,10 +17,6 @@
         <div class="form-group container">
             <div class="row">
                 <div class="col-3">
-                    <label for="name">Name</label>
-                    <input @bind="@Activity.Name" type="text" class="form-control" id="name" />
-                </div>
-                <div class="col-3">
                     <label for="type">Type</label>
                     <select @bind="@Activity.ActivityType" type="text" class="form-control" id="type">
                         @foreach (var type in ActivityTypes)
@@ -60,6 +56,10 @@
                             No results found
                         </NotFoundTemplate>
                     </BlazoredTypeahead>
+                </div>
+                <div class="col-3">
+                    <label for="name">Name</label>
+                    <input @bind="@Activity.Name" type="text" class="form-control" id="name" @onfocus="PopulateActivityName" />
                 </div>
             </div>
             <div class="row">

@@ -24,19 +24,15 @@ namespace Emergence.Data.Shared.Models
 
     public enum ActivityType
     {
-        Custom,
-        [Description("Add to wishlist")]
-        AddToWishlist,
-        Purchase,
         [Description("Stratify")]
         Stratification,
         [Description("Germinate")]
         Germination,
         [Description("Divide")]
         Division,
-        [Description("Cutting")]
+        [Description("Take cutting")]
         Cutting,
-        [Description("Seed collection")]
+        [Description("Collect seeds")]
         SeedCollection,
         [Description("Progress check")]
         ProgressCheck,
@@ -47,6 +43,10 @@ namespace Emergence.Data.Shared.Models
         [Description("Water")]
         Watering,
         [Description("Fertilize")]
-        Fertilization
+        Fertilization,
+        Custom,
+        [Description("Add to wishlist")]
+        AddToWishlist,
+        Purchase
     }
 }
