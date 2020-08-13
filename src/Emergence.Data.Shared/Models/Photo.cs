@@ -8,6 +8,7 @@ namespace Emergence.Data.Shared.Models
         public PhotoType Type { get; set; }
         public int? TypeId { get; set; }
         public string Filename { get; set; }
+        public string BlobPath { get; set; }
         public string UserId { get; set; }
         public string ContentType { get; set; }
         public int? Width { get; set; }
@@ -16,9 +17,17 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Location Location { get; set; }
-        public string AbsoluteUri { get; set; }
+        public string BlobPathRoot { get; set; }
+        public string OriginalUri =>
+            !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
+                ? BlobPathRoot + BlobPath + "/" + Filename : null;
+        public string FullUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
+                ? BlobPathRoot + BlobPath + "/" + "full.png" : null;
+        public string MediumUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
+                ? BlobPathRoot + BlobPath + "/" + "medium.png" : null;
+        public string ThumbnailUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
+                ? BlobPathRoot + BlobPath + "/" + "thumb.png" : null;
     }
-
     public enum PhotoType
     {
         Activity,

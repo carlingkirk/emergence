@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using GeoTimeZone;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 using TimeZoneConverter;
 
 namespace Emergence.Service
@@ -30,11 +34,11 @@ namespace Emergence.Service
 
             foreach (var photo in photos)
             {
-                var name = Guid.NewGuid().ToString();
+                var blobpath = Guid.NewGuid().ToString();
                 var fileInfo = new FileInfo(photo.FileName);
-                var blobpath = name + "/original" + fileInfo.Extension;
+                var name = "original" + fileInfo.Extension;
 
-                var result = await _blobService.UploadPhotoAsync(photo, userId, blobpath);
+                var result = await _blobService.UploadPhotoAsync(photo, userId, Path.Combine(blobpath, name));
                 if (result != null)
                 {
                     var location = GetLocationFromMetadata(result.Metadata);
@@ -60,7 +64,8 @@ namespace Emergence.Service
 
                     photoResult.Add(new Data.Shared.Models.Photo
                     {
-                        Filename = blobpath,
+                        Filename = name,
+                        BlobPath = blobpath,
                         Type = type,
                         UserId = userId,
                         ContentType = result.ContentType,
@@ -131,7 +136,49 @@ namespace Emergence.Service
             return result;
         }
 
-        private Data.Shared.Models.Location GetLocationFromMetadata(IDictionary<string, string> metadata)
+        public async Task<Image> ProcessPhotoAsync(Stream stream, Image image, ImageSize imageSize)
+        {
+            image = OrientPhoto(image);
+            image = ResizePhoto(image, (int)imageSize);
+            image = await SaveAsPngAsync(stream, image);
+
+            return image;
+        }
+
+        private Image ResizePhoto(Image image, int maxDimension)
+        {
+            if (image.Width > maxDimension || image.Height > maxDimension)
+            {
+                var aspectRatio = image.Width / (double)image.Height;
+                var newWidth = (int)Math.Floor(aspectRatio > 1 ? maxDimension : maxDimension * aspectRatio);
+                var newHeight = (int)Math.Floor(aspectRatio < 1 ? maxDimension : maxDimension * aspectRatio);
+                return image.Clone(i => i.Resize(newWidth, newHeight));
+            }
+            return image;
+        }
+
+        private async Task<Image> SaveAsPngAsync(Stream stream, Image image)
+        {
+            var pngEncoder = new PngEncoder
+            {
+                CompressionLevel = PngCompressionLevel.BestCompression,
+                BitDepth = PngBitDepth.Bit8,
+                IgnoreMetadata = true,
+                FilterMethod = PngFilterMethod.Adaptive
+            };
+
+            await image.SaveAsPngAsync(stream, pngEncoder);
+
+            return image;
+        }
+
+        private Image OrientPhoto(Image image)
+        {
+            image.Mutate(i => i.AutoOrient());
+            return image;
+        }
+
+        private Location GetLocationFromMetadata(IDictionary<string, string> metadata)
         {
             var location = new Data.Shared.Models.Location();
             var hasValues = false;

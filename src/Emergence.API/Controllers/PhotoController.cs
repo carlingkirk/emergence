@@ -22,7 +22,7 @@ namespace Emergence.API.Controllers
             _photoService = photoService;
             _locationService = locationService;
             _configurationService = configurationService;
-            _blobStorageRoot = _configurationService.Settings.BlobStorageRoot;
+            _blobStorageRoot = _configurationService.Settings.BlobStorageRoot + "photos/";
         }
 
         [HttpPost]
@@ -44,7 +44,7 @@ namespace Emergence.API.Controllers
 
             foreach (var photo in photoResult)
             {
-                photo.AbsoluteUri = GetPhotoUri(photo.Filename);
+                photo.BlobPathRoot = _blobStorageRoot;
             }
             return photoResult;
         }
@@ -64,7 +64,7 @@ namespace Emergence.API.Controllers
                 }
 
                 photoResult = await _photoService.AddOrUpdatePhotoAsync(photoResult);
-                photoResult.AbsoluteUri = GetPhotoUri(photoResult.Filename);
+                photoResult.BlobPathRoot = _blobStorageRoot;
                 return photoResult;
             }
             return null;
@@ -95,12 +95,10 @@ namespace Emergence.API.Controllers
 
             foreach (var photo in photoResult)
             {
-                photo.AbsoluteUri = GetPhotoUri(photo.Filename);
+                photo.BlobPathRoot = _blobStorageRoot;
             }
 
             return photoResult;
         }
-
-        private string GetPhotoUri(string filename) => _blobStorageRoot + "photos/" + filename;
     }
 }

@@ -102,7 +102,7 @@ namespace Emergence.Service
             return null;
         }
 
-        private uint? GetLength(ExifReader exifReader)
+        private ulong? GetLength(ExifReader exifReader)
         {
             try
             {
@@ -111,15 +111,39 @@ namespace Emergence.Service
                     return length;
                 }
             }
-            catch (Exception ex)
+            catch (InvalidCastException ex)
             {
-                _logger.LogError("Error reading tag ImageLength", ex);
+                _logger.LogWarning("Error reading tag ImageLength as uint", ex);
+            }
+
+            try
+            {
+                if (exifReader.GetTagValue<ushort>(ExifTags.ImageLength, out var length))
+                {
+                    return length;
+                }
+            }
+            catch (InvalidCastException ex)
+            {
+                _logger.LogError("Error reading tag ImageLength as ushort", ex);
+            }
+
+            try
+            {
+                if (exifReader.GetTagValue<ulong>(ExifTags.ImageLength, out var length))
+                {
+                    return length;
+                }
+            }
+            catch (InvalidCastException ex)
+            {
+                _logger.LogError("Error reading tag ImageLength as ulong, giving up", ex);
             }
 
             return null;
         }
 
-        private uint? GetWidth(ExifReader exifReader)
+        private ulong? GetWidth(ExifReader exifReader)
         {
             try
             {
@@ -130,8 +154,33 @@ namespace Emergence.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error reading tag ImageWidth", ex);
+                _logger.LogError("Error reading tag ImageWidth as uint", ex);
             }
+
+            try
+            {
+                if (exifReader.GetTagValue<ushort>(ExifTags.ImageWidth, out var width))
+                {
+                    return width;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error reading tag ImageWidth as ushort", ex);
+            }
+
+            try
+            {
+                if (exifReader.GetTagValue<ulong>(ExifTags.ImageWidth, out var width))
+                {
+                    return width;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error reading tag ImageWidth as ulong, giving up", ex);
+            }
+
             return null;
         }
 

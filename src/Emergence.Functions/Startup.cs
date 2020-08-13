@@ -30,6 +30,8 @@ namespace Emergence.Functions
             builder.Services.AddLogging();
             builder.Services.AddSingleton<IConfiguration>(configuration);
             builder.Services.AddTransient<IBlobService, BlobService>();
+            builder.Services.AddTransient<IPhotoService, PhotoService>();
+            builder.Services.AddTransient<IExifService, ExifService>();
         }
     }
 }

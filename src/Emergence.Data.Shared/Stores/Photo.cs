@@ -9,6 +9,7 @@ namespace Emergence.Data.Shared.Stores
         public int? TypeId { get; set; }
         public int? LocationId { get; set; }
         public string Filename { get; set; }
+        public string BlobPath { get; set; }
         public string UserId { get; set; }
         public string ContentType { get; set; }
         public int? Width { get; set; }

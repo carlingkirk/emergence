@@ -40,7 +40,7 @@ namespace Emergence.Client.Components
                     Specimen.InventoryItem.Name = Specimen.Lifeform.ScientificName;
                 }
 
-                var photos = await ApiClient.GetPhotosAsync(PhotoType.Specimen, Id);
+                var photos = await ApiClient.GetPhotosAsync(PhotoType.Specimen, Specimen?.SpecimenId ?? Id);
                 if (photos.Any())
                 {
                     UploadedPhotos = photos.ToList();

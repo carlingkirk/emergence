@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
 
 namespace Emergence.Service.Interfaces
 {
@@ -14,5 +16,6 @@ namespace Emergence.Service.Interfaces
         Task<IEnumerable<Photo>> GetPhotosAsync(IEnumerable<int> ids);
         Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int typeId);
         Task<bool> RemovePhotoAsync(int id, string userId);
+        Task<Image> ProcessPhotoAsync(Stream stream, Image image, ImageSize imageSize);
     }
 }
