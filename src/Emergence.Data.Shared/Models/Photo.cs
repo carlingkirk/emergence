@@ -21,8 +21,8 @@ namespace Emergence.Data.Shared.Models
         public string OriginalUri =>
             !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
                 ? BlobPathRoot + BlobPath + "/" + Filename : null;
-        public string FullUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
-                ? BlobPathRoot + BlobPath + "/" + "full.png" : null;
+        public string LargeUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
+                ? BlobPathRoot + BlobPath + "/" + "large.png" : null;
         public string MediumUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
                 ? BlobPathRoot + BlobPath + "/" + "medium.png" : null;
         public string ThumbnailUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)

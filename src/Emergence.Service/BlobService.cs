@@ -45,11 +45,10 @@ namespace Emergence.Service
             return null;
         }
 
-        public async Task<bool> RemovePhotoAsync(string filename)
+        public async Task<bool> RemovePhotoAsync(string blobPath)
         {
-            var name = filename.Substring(0, 40);
             var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
-            var blobs = typeContainerClient.GetBlobsAsync(prefix: name);
+            var blobs = typeContainerClient.GetBlobsAsync(prefix: blobPath);
             await foreach (var blob in blobs)
             {
                 var result = await typeContainerClient.DeleteBlobAsync(blob.Name, DeleteSnapshotsOption.IncludeSnapshots);

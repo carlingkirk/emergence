@@ -131,7 +131,7 @@ namespace Emergence.Service
         public async Task<bool> RemovePhotoAsync(int id, string userId)
         {
             var photo = await GetPhotoAsync(id);
-            await _blobService.RemovePhotoAsync(photo.Filename);
+            await _blobService.RemovePhotoAsync(photo.BlobPath);
             var result = await _photoRepository.RemoveAsync(photo.AsStore());
             return result;
         }

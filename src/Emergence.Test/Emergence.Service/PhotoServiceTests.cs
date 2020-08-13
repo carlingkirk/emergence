@@ -117,7 +117,7 @@ namespace Emergence.Test.Emergence.API.Services
             photos.FirstOrDefault().Location.LocationId.Should().Be(1);
         }
 
-        [Fact]
+        [Fact(Skip = "Integration test")]
         public async Task TestResizePhoto()
         {
             var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object);

@@ -35,10 +35,4 @@
     <Folder Include="Emergence.API\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\original.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

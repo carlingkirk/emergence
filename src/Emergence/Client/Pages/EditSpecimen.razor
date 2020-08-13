@@ -79,7 +79,7 @@
                     </select>
                 </div>
             </div>
-            <UploadPhoto UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen" />
+            <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen"  />
             <div class="row">
                 <div class="col">
                     <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Submit</button>

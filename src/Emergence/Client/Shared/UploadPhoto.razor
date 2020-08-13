@@ -16,7 +16,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <img srcset="@(photo.FullUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)" alt="Uploaded photo of @(photo.Type)" />
+                <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)" alt="Uploaded photo of @(photo.Type)" />
             </div>
         </div>
     </div>
@@ -36,12 +36,14 @@
         {
             var photos = await ApiClient.UploadPhotosAsync(files, PhotoType);
             UploadedPhotos = photos.ToList();
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
         }
 
         protected async Task UploadPhotoAsync(IFileListEntry[] files)
         {
             var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType);
             UploadedPhotos.Add(photo);
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
         }
 
         protected async Task RemovePhotoAsync(int id)
@@ -52,6 +54,7 @@
             {
                 UploadedPhotos.Remove(photo);
             }
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
         }
 
         private void UseFallbackSrc()
