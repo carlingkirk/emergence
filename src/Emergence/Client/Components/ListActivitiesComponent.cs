@@ -2,14 +2,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
     public class ListActivitiesComponent : ListComponent<Activity>
     {
+        [Parameter]
+        public Specimen Specimen { get; set; }
+
         public override async Task<FindResult<Activity>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
         {
-            var result = await ApiClient.FindActivitiesAsync(SearchText, skip, Take, SortBy, SortDirection);
+            var result = new FindResult<Activity>();
+            if (Specimen != null)
+            {
+                result = await ApiClient.FindActivitiesAsync(Specimen, skip, Take, SortBy, SortDirection);
+            }
+            else
+            {
+                result = await ApiClient.FindActivitiesAsync(SearchText, skip, Take, SortBy, SortDirection);
+            }
             return result;
         }
 

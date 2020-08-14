@@ -49,6 +49,13 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Activity>>(result);
         }
 
+        public async Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, int? skip, int take, string sortBy, SortDirection sortDirection)
+        {
+            var result = await _httpClient.GetAsync($"/api/activity/find?specimenId={specimen.SpecimenId}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
+
+            return await ReadResult<FindResult<Activity>>(result);
+        }
+
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
             SortDirection sortDirection = SortDirection.Ascending)
         {

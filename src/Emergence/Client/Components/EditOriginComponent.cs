@@ -53,7 +53,10 @@ namespace Emergence.Client.Components
             {
                 Origin.DateCreated = DateTime.UtcNow;
             }
-            Origin.DateModified = DateTime.UtcNow;
+            else
+            {
+                Origin.DateModified = DateTime.UtcNow;
+            }
 
             if (!string.IsNullOrEmpty(OriginUri))
             {

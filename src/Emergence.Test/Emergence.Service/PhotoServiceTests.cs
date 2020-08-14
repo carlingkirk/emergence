@@ -69,7 +69,7 @@ namespace Emergence.Test.Emergence.API.Services
             result.DateTaken.Should().Be(new DateTime(2020, 7, 22, 17, 45, 26, DateTimeKind.Utc));
             result.BlobPath.Length.Should().Be(36);
             result.OriginalUri.Should().Be(BlobStorageRoot + "photos/" + result.BlobPath + "/original.jpg");
-            result.FullUri.Should().Be(BlobStorageRoot + "photos/" + result.BlobPath + "/full.png");
+            result.LargeUri.Should().Be(BlobStorageRoot + "photos/" + result.BlobPath + "/large.png");
             result.MediumUri.Should().Be(BlobStorageRoot + "photos/" + result.BlobPath + "/medium.png");
             result.ThumbnailUri.Should().Be(BlobStorageRoot + "photos/" + result.BlobPath + "/thumb.png");
         }

@@ -14,7 +14,7 @@ namespace Emergence.Test.Data.Fakes.Models
                 {
                     ActivityId = 1,
                     ActivityType = ActivityType.Stratification,
-                    Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata Seeds"),
+                    Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata seeds"),
                     Name = "Liatris spicata Seeds Stratification",
                     Description = "Stratify in fridge in woody mix",
                     DateScheduled = new System.DateTime(2020,03,25),
@@ -27,7 +27,7 @@ namespace Emergence.Test.Data.Fakes.Models
                 {
                     ActivityId = 2,
                     ActivityType = ActivityType.Germination,
-                    Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata Seeds"),
+                    Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata seeds"),
                     Name = "Liatris spicata Seeds Germination",
                     Description = "Put outside in greenhouse",
                     DateScheduled = new System.DateTime(2020,05,24),
@@ -40,7 +40,7 @@ namespace Emergence.Test.Data.Fakes.Models
                 {
                     ActivityId = 2,
                     ActivityType = ActivityType.Division,
-                    Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata Seeds"),
+                    Specimen = FakeSpecimens.Get().First(s => s.InventoryItem.Name == "Liatris spicata seeds"),
                     Name = "Liatris spicata Seeds Division",
                     Description = "Split about 15 seedlings into 2\" containers with woody mix",
                     DateScheduled = new System.DateTime(2020, 06, 24),

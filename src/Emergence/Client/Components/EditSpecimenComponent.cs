@@ -67,7 +67,10 @@ namespace Emergence.Client.Components
             {
                 Specimen.DateCreated = DateTime.UtcNow;
             }
-            Specimen.DateModified = DateTime.UtcNow;
+            else
+            {
+                Specimen.DateModified = DateTime.UtcNow;
+            }
 
             if (SelectedOrigin != null)
             {

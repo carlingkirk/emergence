@@ -6,6 +6,7 @@ namespace Emergence.Test
     {
         private readonly ILoggerFactory _loggerFactory;
         protected ILogger Logger { get; }
+
         public TestBase()
         {
             _loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());

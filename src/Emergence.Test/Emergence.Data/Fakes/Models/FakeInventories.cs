@@ -20,7 +20,7 @@ namespace Emergence.Test.Data.Fakes.Models
                             InventoryItemId = 1,
                             DateAcquired = new DateTime(2020,06,26),
                             ItemType = ItemType.Specimen,
-                            Name = "Liatris spicata Seeds",
+                            Name = "Liatris spicata seeds",
                             Quantity = 50,
                             Status = Status.Available,
                             Origin = new Origin

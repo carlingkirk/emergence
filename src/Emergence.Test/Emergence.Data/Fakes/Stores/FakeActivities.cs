@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -7,7 +8,6 @@ namespace Emergence.Test.Data.Fakes.Stores
     {
         public static IEnumerable<Activity> Get()
         {
-
             var activities = new List<Activity>
             {
                 new Activity
@@ -15,35 +15,38 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Id = 1,
                     ActivityType = "Stratification",
                     SpecimenId = 1,
+                    Specimen = FakeSpecimens.Get().Where(s => s.Id == 1).First(),
                     Name = "Liatris spicata Seeds Stratification",
                     Description = "Stratify in fridge in woody mix",
-                    DateScheduled = new System.DateTime(2020,03,25),
-                    DateOccured = new System.DateTime(2020,03,25),
-                    DateCreated = new System.DateTime(2020,07,10),
-                    DateModified = null
+                    DateScheduled = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateOccured = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateCreated = Helpers.Today,
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 },
                 new Activity
                 {
                     Id = 1,
                     ActivityType = "Germination",
                     SpecimenId = 1,
-                    Name = "Liatris spicata Seeds Germination",
+                    Specimen = FakeSpecimens.Get().Where(s => s.Id == 1).First(),
+                    Name = "Germinate: Liatris spicata ",
                     Description = "Put outside in greenhouse",
-                    DateScheduled = new System.DateTime(2020,05,24),
-                    DateOccured = new System.DateTime(2020,05,25),
-                    DateCreated = new System.DateTime(2020,07,09),
-                    DateModified = new System.DateTime(2020,07,10)
+                    DateScheduled = null,
+                    DateOccured = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateCreated = Helpers.Today,
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 },
                 new Activity
                 {
                     Id = 1,
                     ActivityType = "Division",
                     SpecimenId = 1,
-                    Name = "Liatris spicata Seeds Division",
+                    Specimen = FakeSpecimens.Get().Where(s => s.Id == 1).First(),
+                    Name = "Divide: Liatris spicata",
                     Description = "Split about 15 seedlings into 2\" containers with woody mix",
-                    DateScheduled = new System.DateTime(2020,06,24),
-                    DateOccured = new System.DateTime(2020,06,12),
-                    DateCreated = new System.DateTime(2020,07,10),
+                    DateScheduled = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateOccured = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateCreated = Helpers.Today,
                     DateModified = null
                 }
             };

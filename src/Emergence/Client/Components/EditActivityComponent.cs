@@ -55,13 +55,15 @@ namespace Emergence.Client.Components
             {
                 Activity.DateCreated = DateTime.UtcNow;
             }
+            else
+            {
+                Activity.DateModified = DateTime.UtcNow;
+            }
 
             if (UploadedPhotos.Any())
             {
                 Activity.Photos = UploadedPhotos;
             }
-
-            Activity.DateModified = DateTime.UtcNow;
 
             if (SelectedSpecimen != null)
             {

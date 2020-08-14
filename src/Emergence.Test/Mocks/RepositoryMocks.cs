@@ -121,12 +121,17 @@ namespace Emergence.Test.Mocks
         public static Mock<IRepository<Activity>> GetStandardMockActivityRepository()
         {
             var mockActivityRepo = new Mock<IRepository<Activity>>();
+            var mockActivities = Data.Fakes.Stores.FakeActivities.Get().AsQueryable().BuildMockDbSet().Object;
 
             mockActivityRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<bool>()))
-                .ReturnsAsync(Data.Fakes.Stores.FakeActivities.Get().First());
+                .ReturnsAsync(mockActivities.First());
 
             mockActivityRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
-                .Returns(Data.Fakes.Stores.FakeActivities.Get().ToAsyncEnumerable());
+                .Returns(mockActivities.ToAsyncEnumerable());
+
+            mockActivityRepo.Setup(p => p.WhereWithIncludesAsync(It.IsAny<Expression<Func<Activity, bool>>>(),
+                It.IsAny<Func<IIncludable<Activity>, IIncludable>[]>()))
+                .Returns(mockActivities);
 
             return mockActivityRepo;
         }

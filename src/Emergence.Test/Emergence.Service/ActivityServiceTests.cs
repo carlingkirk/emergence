@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Test.Mocks;
@@ -41,9 +42,31 @@ namespace Emergence.Test.Emergence.API.Services
 
             activities.Should().NotBeNull("it exists");
             activities.Should().HaveCount(3);
-            activities.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata Seeds").Should().HaveCount(3);
+            activities.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
             activities.Where(a => a.ActivityType == Models.ActivityType.Stratification).Should().HaveCount(1);
-            activities.Where(a => a.DateOccured != null && a.DateOccured.Value.Month == 3).Should().HaveCount(1);
+            activities.Where(a => a.DateOccured != null).Should().HaveCount(3);
+            activities.Where(a => a.DateScheduled != null).Should().HaveCount(2);
+            activities.Where(a => a.DateCreated != null).Should().HaveCount(3);
+            activities.Where(a => a.DateModified != null).Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task TestFindActivities()
+        {
+            var specimenService = ServiceMocks.GetStandardMockSpecimenService();
+            var inventoryService = ServiceMocks.GetStandardMockInventoryService();
+            var activityService = new ActivityService(_mockActivityRepository.Object, specimenService.Object, inventoryService.Object);
+            var activities = await activityService.FindActivities("Liatris spicata", null, "me", 0, 10, "", SortDirection.None);
+
+            activities.Should().NotBeNull("it exists");
+            activities.Results.Should().HaveCount(3);
+            activities.Count.Should().Be(3);
+            activities.Results.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
+            activities.Results.Where(a => a.ActivityType == Models.ActivityType.Stratification).Should().HaveCount(1);
+            activities.Results.Where(a => a.DateOccured != null).Should().HaveCount(3);
+            activities.Results.Where(a => a.DateScheduled != null).Should().HaveCount(2);
+            activities.Results.Where(a => a.DateCreated != null).Should().HaveCount(3);
+            activities.Results.Where(a => a.DateModified != null).Should().HaveCount(2);
         }
     }
 }

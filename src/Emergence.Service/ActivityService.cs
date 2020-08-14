@@ -74,7 +74,7 @@ namespace Emergence.Service
             return activityResult.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(string search, string userId, int skip, int take, string sortBy = null,
+        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(string search, int? specimenId, string userId, int skip, int take, string sortBy = null,
             SortDirection sortDirection = SortDirection.Ascending)
         {
             if (search != null)
@@ -82,13 +82,15 @@ namespace Emergence.Service
                 search = "%" + search + "%";
             }
 
-            var activityQuery = _activityRepository.WhereWithIncludesAsync(a => (a.Specimen.InventoryItem.Inventory.UserId == userId) &&
-                                                                       (search == null ||
-                                                                       EF.Functions.Like(a.Name, search) ||
-                                                                        EF.Functions.Like(a.Specimen.InventoryItem.Name, search)),
-                                                                        a => a.Include(a => a.Specimen)
-                                                                              .Include(s => s.Specimen.InventoryItem)
-                                                                              .Include(s => s.Specimen.Lifeform));
+            var activityQuery = _activityRepository.WhereWithIncludesAsync(a => a.Specimen.InventoryItem.Inventory.UserId == userId &&
+                                                                                specimenId.HasValue &&
+                                                                                a.SpecimenId == specimenId &&
+                                                                                search != null &&
+                                                                                (EF.Functions.Like(a.Name, search) ||
+                                                                                 EF.Functions.Like(a.Specimen.InventoryItem.Name, search)),
+                                                                           a => a.Include(a => a.Specimen)
+                                                                                 .Include(s => s.Specimen.InventoryItem)
+                                                                                 .Include(s => s.Specimen.Lifeform));
             activityQuery = OrderBy(activityQuery, sortBy, sortDirection);
 
             var count = activityQuery.Count();

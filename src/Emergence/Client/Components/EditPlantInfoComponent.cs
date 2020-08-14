@@ -74,7 +74,10 @@ namespace Emergence.Client.Components
             {
                 PlantInfo.DateCreated = DateTime.UtcNow;
             }
-            PlantInfo.DateModified = DateTime.UtcNow;
+            else
+            {
+                PlantInfo.DateModified = DateTime.UtcNow;
+            }
 
             if (SelectedOrigin != null)
             {
