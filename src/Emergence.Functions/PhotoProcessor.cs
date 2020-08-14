@@ -41,14 +41,15 @@ namespace Emergence.Functions
                 RemoveTag(ExifTag.GPSAltitude, exifProfile);
                 RemoveTag(ExifTag.GPSAltitudeRef, exifProfile);
 
+                var originalName = "original" + fileExt;
                 // Large
-                var largeResult = await ProcessPhoto(image, name, ImageSize.Large);
+                var largeResult = await ProcessPhoto(image, name, originalName, ImageSize.Large);
 
                 // Medium
-                var mediumResult = await ProcessPhoto(image, name, ImageSize.Medium);
+                var mediumResult = await ProcessPhoto(image, name, originalName, ImageSize.Medium);
 
                 // Thumb
-                var thumbResult = await ProcessPhoto(image, name, ImageSize.Thumb);
+                var thumbResult = await ProcessPhoto(image, name, originalName, ImageSize.Thumb);
 
                 if (largeResult && mediumResult && thumbResult)
                 {
@@ -57,7 +58,7 @@ namespace Emergence.Functions
             }
         }
 
-        private async Task<bool> ProcessPhoto(Image image, string name, ImageSize imageSize)
+        private async Task<bool> ProcessPhoto(Image image, string name, string originalName, ImageSize imageSize)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -66,7 +67,7 @@ namespace Emergence.Functions
 
                 await _blobService.UploadPhotoStreamAsync(memoryStream, blobPath);
 
-                var blobProperties = await _blobService.GetBlobPropertiesAsync(blobPath);
+                var blobProperties = await _blobService.GetBlobPropertiesAsync($"{name}/{originalName}");
                 blobProperties.Metadata.TryGetValue("UserId", out var userId);
 
                 var result = await _blobService.SetBlobPropertiesAsync(blobProperties, blobPath, userId);

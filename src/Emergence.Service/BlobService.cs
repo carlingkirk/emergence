@@ -126,7 +126,7 @@ namespace Emergence.Service
 
         private async Task<IBlobResult> SetBlobPropertiesAsync(BlobClient client, IDictionary<string, string> metadata, string userId, string contentType)
         {
-            if (!string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(userId) && !metadata.ContainsKey("UserId"))
             {
                 metadata.Add("UserId", userId);
             }
