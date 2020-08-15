@@ -2,15 +2,17 @@
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
 @inherits ListOriginsComponent
-@inject IModalServiceClient ModalServiceClient
 
-<input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="FindAsync">Search</button>
+@if (ShowSearch)
+{
+    <input type="text" @bind="SearchText" id="search" />
+    <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+}
+
 @if (List != null)
 {
     <table>
-        <SortableHeaders
-            HeaderNames="@(
+        <SortableHeaders HeaderNames="@(
                 new Dictionary<string, string>
                 {
                     { "Name", "Name" },
@@ -20,13 +22,13 @@
                     { "City", "City" },
                     { "Link", "Link" }
                 })"
-            Sort="SortAsync"
-            @bind-Values="List" />
+                         Sort="SortAsync"
+                         @bind-Values="List" />
         @if (!List.Any())
         {
             <tr>
                 <td>
-                    No results
+                    <span>No origins found</span>
                 </td>
             </tr>
         }
@@ -64,6 +66,6 @@
     </table>
     <div>
         <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
-        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowOriginModal(0))">Add New Origin</button>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowOriginModal(0))"><span class="oi oi-plus btn-oi"></span>Origin</button>
     </div>
 }

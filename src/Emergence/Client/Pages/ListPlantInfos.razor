@@ -2,14 +2,17 @@
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions;
 @inherits ListPlantInfosComponent
-@inject IModalServiceClient ModalServiceClient
-<input type="text" @bind="SearchText" id="search" />
-<button class="btn btn-secondary" @onclick="FindAsync">Search</button>
+
+@if (ShowSearch)
+{
+    <input type="text" @bind="SearchText" id="search" />
+    <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+}
+
 @if (List != null)
 {
     <table>
-        <SortableHeaders
-            HeaderNames="@(
+        <SortableHeaders HeaderNames="@(
                 new Dictionary<string, string>
                 {
                     { "ScientificName", "Scientific Name" },
@@ -22,13 +25,13 @@
                     { "Height", "Height" },
                     { "Spread", "Spread" }
                 })"
-            Sort="SortAsync"
-            @bind-Values="List" />
+                         Sort="SortAsync"
+                         @bind-Values="List" />
         @if (!List.Any())
         {
             <tr>
                 <td>
-                    No results
+                    <span>No plant infos found</span>
                 </td>
             </tr>
         }
@@ -83,8 +86,11 @@
             </tr>
         }
     </table>
+    @if (List.Any())
+    {
     <div>
         <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
-        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowPlantInfoModal(0))">Add New Plant Info</button>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowPlantInfoModal(0))"><span class="oi oi-plus btn-oi"></span>Plant Info</button>
     </div>
+    }
 }

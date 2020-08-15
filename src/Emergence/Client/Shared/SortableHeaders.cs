@@ -16,8 +16,14 @@ namespace Emergence.Client.Shared
         public EventCallback<IEnumerable<T>> ValuesChanged { get; set; }
         [Parameter]
         public Func<string, SortDirection, Task<IEnumerable<T>>> Sort { get; set; }
+        [Parameter]
         public string SortBy { get; set; }
+        [Parameter]
+        public EventCallback<string> SortByChanged { get; set; }
+        [Parameter]
         public SortDirection SortDirection { get; set; }
+        [Parameter]
+        public EventCallback<SortDirection> SortDirectionChanged { get; set; }
 
         protected string GetSortClass(string header)
         {

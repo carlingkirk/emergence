@@ -13,7 +13,8 @@ namespace Emergence.Client.Components
 
         public override async Task<FindResult<Activity>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
         {
-            var result = new FindResult<Activity>();
+            FindResult<Activity> result;
+
             if (Specimen != null)
             {
                 result = await ApiClient.FindActivitiesAsync(Specimen, skip, Take, SortBy, SortDirection);
@@ -22,12 +23,14 @@ namespace Emergence.Client.Components
             {
                 result = await ApiClient.FindActivitiesAsync(SearchText, skip, Take, SortBy, SortDirection);
             }
+
             return result;
         }
 
         protected async Task UpdateActivityAsync(Activity activity)
         {
             var result = await ModalServiceClient.ShowActivityModal(activity);
+
             if (!result.Cancelled)
             {
                 activity = List.Where(a => a.ActivityId == activity.ActivityId).First();
@@ -38,6 +41,7 @@ namespace Emergence.Client.Components
         protected async Task UpdateSpecimenAsync(Specimen specimen)
         {
             var result = await ModalServiceClient.ShowSpecimenModal(specimen.SpecimenId);
+
             if (!result.Cancelled)
             {
                 List.Where(a => a.Specimen.SpecimenId == specimen.SpecimenId).ToList().ForEach(a =>

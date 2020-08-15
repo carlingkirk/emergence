@@ -1,5 +1,7 @@
 @typeparam T
 
+@if (Values != null && Values.Any())
+{
 <thead>
     <tr>
         @foreach (var header in HeaderNames)
@@ -17,3 +19,4 @@
         }
     </tr>
 </thead>
+}

@@ -16,9 +16,9 @@
                 <div class="col-12">
                     <label for="lifeform">Plant Name </label>
                     <BlazoredTypeahead SearchMethod="FindLifeformsAsync"
-                                        @bind-Value="SelectedLifeform"
-                                        MinimumLength="3"
-                                        Debounce="500" Context="lifeform">
+                                       @bind-Value="SelectedLifeform"
+                                       MinimumLength="3"
+                                       Debounce="500" Context="lifeform">
                         <SelectedTemplate>
                             <span class="text-body">@(lifeform.CommonName)</span>&nbsp;<span class="text-body font-italic">@(lifeform.ScientificName)</span>
                         </SelectedTemplate>
@@ -32,15 +32,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-8 col-xs-1">
-                    <label for="specimen-name">Name</label>
+                <div class="col-7 col-xs-1">
+                    <label for="specimen-name">Specimen Name</label>
                     <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" @onfocus="PopulateInventoryItemName" />
                 </div>
-                <div class="col-3 col-xs-1">
+                <div class="col-2 col-xs-1">
                     <label for="quantity">Quantity</label>
                     <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
                 </div>
-                <div class="col-4 col-xs-1">
+                <div class="col-3 col-xs-1">
                     <label for="quantity">Status</label>
                     <select @bind="@Specimen.InventoryItem.Status" type="text" class="form-control" id="status">
                         @foreach (var status in Statuses)
@@ -60,13 +60,9 @@
                         }
                     </select>
                 </div>
-                <div class="col-3 col-xs-1">
+                <div class="col-4 col-xs-1">
                     <label for="date-acquired">Date Acquired</label>
                     <input type="date" @bind="Specimen.InventoryItem.DateAcquired" class="form-control" />
-                </div>
-                <div class="col-3 col-xs-1">
-                    <label for="origin">Origin</label>
-                    <OriginTypeahead @bind-SelectedOrigin="SelectedOrigin" />
                 </div>
                 <div class="col-4 col-xs-1">
                     <label for="quantity">Type</label>
@@ -78,7 +74,15 @@
                     </select>
                 </div>
             </div>
-            <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen"  />
+            <div class="row">
+                <div class="col col-xs-1">
+                    <label for="origin">Origin</label>
+                    <OriginTypeahead @bind-SelectedOrigin="SelectedOrigin" />
+                </div>
+            </div>
+            <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen" />
+        </div>
+        <div class="form-group container">
             <div class="row">
                 <div class="col">
                     <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Submit</button>
@@ -90,7 +94,14 @@
             </div>
         </div>
     </EditForm>
-    <ListActivities @bind-Specimen="Specimen" />
+    <div class="form-group container">
+        <div class="row">
+            <div class="col">
+                <label for="activities">Activities</label>
+                <ListActivities Specimen="Specimen" ShowSearch="false" />
+            </div>
+        </div>
+    </div>
 }
 else
 {

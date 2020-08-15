@@ -12,6 +12,8 @@ namespace Emergence.Client
         protected IApiClient ApiClient { get; set; }
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
+        [Parameter]
+        public bool ShowSearch { get; set; }
         public IEnumerable<T> List { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
@@ -19,6 +21,12 @@ namespace Emergence.Client
         public int CurrentPage { get; set; }
         public int Take { get; set; }
         public int Count { get; set; }
+
+        public ListComponent()
+        {
+            ShowSearch = true;
+        }
+
         public abstract Task<FindResult<T>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
             SortDirection sortDirection = SortDirection.Ascending);
 
@@ -35,6 +43,14 @@ namespace Emergence.Client
             var result = await GetListAsync(SearchText, skip, Take, SortBy, SortDirection);
             List = result.Results;
             Count = result.Count;
+        }
+
+        public async Task SearchAsync()
+        {
+            CurrentPage = 1;
+            SortBy = null;
+            SortDirection = SortDirection.Ascending;
+            await FindAsync();
         }
 
         protected async Task<IEnumerable<T>> SortAsync(string sortBy, SortDirection sortDirection)

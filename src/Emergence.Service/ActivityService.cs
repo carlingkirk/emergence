@@ -83,10 +83,10 @@ namespace Emergence.Service
             }
 
             var activityQuery = _activityRepository.WhereWithIncludesAsync(a => a.Specimen.InventoryItem.Inventory.UserId == userId &&
-                                                                                specimenId.HasValue &&
-                                                                                a.SpecimenId == specimenId &&
-                                                                                search != null &&
-                                                                                (EF.Functions.Like(a.Name, search) ||
+                                                                                (!specimenId.HasValue ||
+                                                                                a.SpecimenId == specimenId) &&
+                                                                                (search == null ||
+                                                                                 EF.Functions.Like(a.Name, search) ||
                                                                                  EF.Functions.Like(a.Specimen.InventoryItem.Name, search)),
                                                                            a => a.Include(a => a.Specimen)
                                                                                  .Include(s => s.Specimen.InventoryItem)
