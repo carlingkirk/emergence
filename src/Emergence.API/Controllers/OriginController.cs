@@ -35,12 +35,11 @@ namespace Emergence.API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<Origin>> FindOrigins(string search, int skip = 0, int take = 10, string sortBy = null,
-            SortDirection sortDir = SortDirection.Ascending)
+        public async Task<FindResult<Origin>> FindOrigins(FindParams findParams)
         {
-            var result = await _originService.FindOrigins(search, UserId, skip, take, sortBy, sortDir);
+            var result = await _originService.FindOrigins(findParams, UserId);
             return result;
         }
     }

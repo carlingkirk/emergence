@@ -60,26 +60,25 @@ namespace Emergence.Service
             return specimens;
         }
 
-        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(string search, string userId, int skip = 0, int take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams, string userId)
         {
-            if (search != null)
+            if (findParams.SearchText != null)
             {
-                search = "%" + search + "%";
+                findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
             var specimenQuery = _specimenRepository.WhereWithIncludesAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
-                                                                       (search == null ||
-                                                                       EF.Functions.Like(s.InventoryItem.Name, search) ||
-                                                                        EF.Functions.Like(s.Lifeform.CommonName, search) ||
-                                                                        EF.Functions.Like(s.Lifeform.ScientificName, search)),
+                                                                       (findParams.SearchText == null ||
+                                                                       EF.Functions.Like(s.InventoryItem.Name, findParams.SearchText) ||
+                                                                        EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||
+                                                                        EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchText)),
                                                                         s => s.Include(s => s.InventoryItem)
                                                                               .Include(s => s.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
-            specimenQuery = OrderBy(specimenQuery, sortBy, sortDirection);
+            specimenQuery = OrderBy(specimenQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = specimenQuery.Count();
-            var specimenResult = specimenQuery.GetSomeAsync(skip: skip, take: take, track: false);
+            var specimenResult = specimenQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
             var specimens = new List<Data.Shared.Models.Specimen>();
             await foreach (var specimen in specimenResult)

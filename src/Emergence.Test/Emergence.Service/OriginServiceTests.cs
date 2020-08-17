@@ -48,7 +48,14 @@ namespace Emergence.Test.API.Services
             var mockOriginRepository = RepositoryMocks.GetStandardMockOriginRepository(Data.Fakes.Stores.FakeOrigins.Get().Where(o => o.Name == "Botany Yards"));
 
             var originService = new OriginService(mockOriginRepository.Object);
-            var specimens = await originService.FindOrigins("Botany", "me", 0, 10, "", SortDirection.None);
+            var specimens = await originService.FindOrigins(new FindParams
+            {
+                SearchText = "Botany",
+                Skip = 0,
+                Take = 10,
+                SortBy = "",
+                SortDirection = SortDirection.None
+            }, "me");
 
             specimens.Results.Should().NotBeNull("it exists");
             specimens.Results.Should().HaveCount(1);

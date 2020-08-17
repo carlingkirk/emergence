@@ -69,12 +69,11 @@ namespace Emergence.API.Controllers
             return specimenResult;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<Specimen>> FindSpecimens(string search = null, int skip = 0, int take = 10, string sortBy = null,
-            SortDirection sortDir = SortDirection.Ascending)
+        public async Task<FindResult<Specimen>> FindSpecimens(FindParams findParams)
         {
-            var result = await _specimenService.FindSpecimens(search, UserId, skip, take, sortBy, sortDir);
+            var result = await _specimenService.FindSpecimens(findParams, UserId);
             return result;
         }
     }

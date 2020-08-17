@@ -49,7 +49,14 @@ namespace Emergence.Test.API.Services
         public async Task TestFindSpecimens()
         {
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
-            var specimenResult = await specimenService.FindSpecimens("Liatris spicata", "me", 0, 10, "", SortDirection.None);
+            var specimenResult = await specimenService.FindSpecimens(new FindParams
+            {
+                SearchText = "Liatris spicata",
+                Skip = 0,
+                Take = 10,
+                SortBy = "",
+                SortDirection = SortDirection.None
+            }, "me");
 
             specimenResult.Results.Should().NotBeNull("it exists");
             specimenResult.Count.Should().Be(3);

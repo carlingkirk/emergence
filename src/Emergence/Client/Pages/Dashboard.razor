@@ -5,12 +5,10 @@
 <AuthorizeView>
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
     <h3>Dashboard</h3>
-    <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowSpecimenModal(0))">Add New Specimen</button>
-    <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowOriginModal(0))">Add New Origin</button>
-    <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowPlantInfoModal(0))">Add New Plant Profile</button>
-    <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(0))">Add New Activity</button>
+    <label for="upcoming-activities"></label>
+    <ListActivities ShowSearch="false"  />
     @code
-        {
+    {
 
     }
 </AuthorizeView>

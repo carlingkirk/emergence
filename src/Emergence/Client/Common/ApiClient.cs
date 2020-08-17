@@ -41,17 +41,16 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Specimen>>(result);
         }
 
-        public async Task<FindResult<Activity>> FindActivitiesAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams)
         {
-            var result = await _httpClient.GetAsync($"/api/activity/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
+            var result = await _httpClient.PostAsJsonAsync($"/api/activity/find", findParams);
 
             return await ReadResult<FindResult<Activity>>(result);
         }
 
-        public async Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, int? skip, int take, string sortBy, SortDirection sortDirection)
+        public async Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams)
         {
-            var result = await _httpClient.GetAsync($"/api/activity/find?specimenId={specimen.SpecimenId}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
+            var result = await _httpClient.PostAsJsonAsync($"/api/activity/find?specimenId={specimen.SpecimenId}", findParams);
 
             return await ReadResult<FindResult<Activity>>(result);
         }

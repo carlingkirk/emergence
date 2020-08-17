@@ -28,7 +28,6 @@ namespace Emergence.API.Controllers
         }
 
         [HttpPut]
-
         public async Task<Activity> Put(Activity activity)
         {
             var activityResult = await _activityService.AddOrUpdateActivityAsync(activity, UserId);
@@ -46,12 +45,11 @@ namespace Emergence.API.Controllers
             return activityResult;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<Activity>> FindActivities(string search = null, int? specimenId = null, int skip = 0, int take = 10, string sortBy = null,
-            SortDirection sortDir = SortDirection.Ascending)
+        public async Task<FindResult<Activity>> FindActivities(FindParams findParams, int? specimenId)
         {
-            var result = await _activityService.FindActivities(search, specimenId, UserId, skip, take, sortBy, sortDir);
+            var result = await _activityService.FindActivities(findParams, UserId, specimenId);
             return result;
         }
     }

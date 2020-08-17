@@ -11,7 +11,6 @@ namespace Emergence.Service.Interfaces
         Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, string scientificName);
         Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int originId, int taxonId);
         Task<IEnumerable<Data.Shared.Models.PlantInfo>> GetPlantInfosAsync();
-        Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(string search, int skip, int take, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending);
+        Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams);
     }
 }

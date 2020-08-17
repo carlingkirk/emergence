@@ -55,21 +55,20 @@ namespace Emergence.Service
             return origin?.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(string search, string userId, int skip = 0, int take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, string userId)
         {
-            search = "%" + search + "%";
+            findParams.SearchText = "%" + findParams.SearchText + "%";
             var originQuery = _originRepository.WhereWithIncludesAsync(o => o.UserId == userId &&
-                                                                    (EF.Functions.Like(o.Name, search) ||
-                                                                    EF.Functions.Like(o.Description, search) ||
-                                                                    EF.Functions.Like(o.Location.City, search) ||
-                                                                    EF.Functions.Like(o.Location.AddressLine1, search) ||
-                                                                    EF.Functions.Like(o.Location.StateOrProvince, search)),
+                                                                    (EF.Functions.Like(o.Name, findParams.SearchText) ||
+                                                                    EF.Functions.Like(o.Description, findParams.SearchText) ||
+                                                                    EF.Functions.Like(o.Location.City, findParams.SearchText) ||
+                                                                    EF.Functions.Like(o.Location.AddressLine1, findParams.SearchText) ||
+                                                                    EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchText)),
                                                                         o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
-            originQuery = OrderBy(originQuery, sortBy, sortDirection);
+            originQuery = OrderBy(originQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = originQuery.Count();
-            var originResult = originQuery.GetSomeAsync(skip: skip, take: take, track: false);
+            var originResult = originQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
             var origins = new List<Data.Shared.Models.Origin>();
             await foreach (var origin in originResult)

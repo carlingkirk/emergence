@@ -10,7 +10,6 @@ namespace Emergence.Service.Interfaces
         Task<Activity> GetActivityAsync(int id);
         Task<IEnumerable<Activity>> GetActivitiesAsync();
         Task<Activity> AddOrUpdateActivityAsync(Activity activity, string userId);
-        Task<FindResult<Activity>> FindActivities(string search, int? specimenId, string userId, int skip, int take, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending);
+        Task<FindResult<Activity>> FindActivities(FindParams findParams, string userId, int? specimenId = 0);
     }
 }

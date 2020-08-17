@@ -14,14 +14,14 @@ namespace Emergence.Client.Components
         public override async Task<FindResult<Activity>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
         {
             FindResult<Activity> result;
-
+            var findParams = new FindParams { SearchText = searchText, Skip = skip.Value, Take = take.Value, SortBy = sortBy, SortDirection = sortDirection };
             if (Specimen != null)
             {
-                result = await ApiClient.FindActivitiesAsync(Specimen, skip, Take, SortBy, SortDirection);
+                result = await ApiClient.FindActivitiesAsync(Specimen, findParams);
             }
             else
             {
-                result = await ApiClient.FindActivitiesAsync(SearchText, skip, Take, SortBy, SortDirection);
+                result = await ApiClient.FindActivitiesAsync(findParams);
             }
 
             return result;

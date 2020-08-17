@@ -57,28 +57,27 @@ namespace Emergence.Service
             return plantInfos;
         }
 
-        public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(string search, int skip, int take, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams)
         {
-            if (search != null)
+            if (findParams.SearchText != null)
             {
-                search = "%" + search + "%";
+                findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludesAsync(p => (search == null ||
-                                                                       EF.Functions.Like(p.CommonName, search) ||
-                                                                       EF.Functions.Like(p.ScientificName, search) ||
-                                                                        EF.Functions.Like(p.Lifeform.CommonName, search) ||
-                                                                        EF.Functions.Like(p.Lifeform.ScientificName, search)),
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludesAsync(p => (findParams.SearchText == null ||
+                                                                       EF.Functions.Like(p.CommonName, findParams.SearchText) ||
+                                                                       EF.Functions.Like(p.ScientificName, findParams.SearchText) ||
+                                                                        EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchText) ||
+                                                                        EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchText)),
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
                                                                               .Include(p => p.Origin));
 
-            plantInfoQuery = OrderBy(plantInfoQuery, sortBy, sortDirection);
+            plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = plantInfoQuery.Count();
 
-            var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: skip, take: take, track: false);
+            var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
             var plantInfos = new List<Data.Shared.Models.PlantInfo>();
             await foreach (var plantInfo in plantInfoResult)

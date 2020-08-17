@@ -74,27 +74,28 @@ namespace Emergence.Service
             return activityResult.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(string search, int? specimenId, string userId, int skip, int take, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(FindParams findParams, string userId, int? specimenId = 0)
         {
-            if (search != null)
+            if (findParams.SearchText != null)
             {
-                search = "%" + search + "%";
+                findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
             var activityQuery = _activityRepository.WhereWithIncludesAsync(a => a.Specimen.InventoryItem.Inventory.UserId == userId &&
                                                                                 (!specimenId.HasValue ||
                                                                                 a.SpecimenId == specimenId) &&
-                                                                                (search == null ||
-                                                                                 EF.Functions.Like(a.Name, search) ||
-                                                                                 EF.Functions.Like(a.Specimen.InventoryItem.Name, search)),
+                                                                                (findParams.SearchText == null ||
+                                                                                 EF.Functions.Like(a.Name, findParams.SearchText) ||
+                                                                                 EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchText) ||
+                                                                                 EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchText) ||
+                                                                                 EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchText)),
                                                                            a => a.Include(a => a.Specimen)
                                                                                  .Include(s => s.Specimen.InventoryItem)
                                                                                  .Include(s => s.Specimen.Lifeform));
-            activityQuery = OrderBy(activityQuery, sortBy, sortDirection);
+            activityQuery = OrderBy(activityQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = activityQuery.Count();
-            var activityResult = activityQuery.GetSomeAsync(skip: skip, take: take, track: false);
+            var activityResult = activityQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
             var activities = new List<Data.Shared.Models.Activity>();
             await foreach (var activity in activityResult)
