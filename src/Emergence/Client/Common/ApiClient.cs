@@ -18,25 +18,23 @@ namespace Emergence.Client.Common
             _httpClient = httpClient;
         }
 
-        public async Task<FindResult<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams)
         {
-            var result = await _httpClient.GetAsync($"/api/origin/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
+            var result = await _httpClient.PostAsJsonAsync($"/api/origin/find", findParams);
 
             return await ReadResult<FindResult<Origin>>(result);
         }
 
-        public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10)
+        public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(FindParams findParams)
         {
-            var result = await _httpClient.GetAsync($"/api/lifeform/find?search={searchText}&skip={skip}&take={take}");
+            var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
 
             return await ReadResult<IEnumerable<Lifeform>>(result);
         }
 
-        public async Task<FindResult<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
         {
-            var result = await _httpClient.GetAsync($"/api/specimen/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
 
             return await ReadResult<FindResult<Specimen>>(result);
         }
@@ -55,10 +53,9 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Activity>>(result);
         }
 
-        public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending)
+        public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
-            var result = await _httpClient.GetAsync($"/api/plantinfo/find?search={searchText}&skip={skip}&take={take}&sortBy={sortBy}&sortDir={sortDirection}");
+            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
         }

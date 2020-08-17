@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Emergence.Client.Common;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -150,6 +151,13 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(searchText);
+        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(new FindParams
+        {
+            SearchText = searchText,
+            Skip = 0,
+            Take = 10,
+            SortBy = "ScientificName",
+            SortDirection = SortDirection.Ascending
+        });
     }
 }

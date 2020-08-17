@@ -24,7 +24,7 @@ namespace Emergence.Data.Repository
             return entities;
         }
 
-        public IQueryable<T> WhereWithIncludesAsync(Expression<Func<T, bool>> predicate, params Func<IIncludable<T>, IIncludable>[] includes)
+        public IQueryable<T> WhereWithIncludes(Expression<Func<T, bool>> predicate, params Func<IIncludable<T>, IIncludable>[] includes)
         {
             var entities = _context.Set<T>().Where(predicate);
             if (includes != null)

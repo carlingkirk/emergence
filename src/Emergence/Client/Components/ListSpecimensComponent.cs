@@ -7,9 +7,9 @@ namespace Emergence.Client.Components
 {
     public class ListSpecimensComponent : ListComponent<Specimen>
     {
-        public override async Task<FindResult<Specimen>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null, SortDirection sortDirection = SortDirection.Ascending)
+        public override async Task<FindResult<Specimen>> GetListAsync(FindParams findParams)
         {
-            var result = await ApiClient.FindSpecimensAsync(SearchText, skip, Take, SortBy, SortDirection);
+            var result = await ApiClient.FindSpecimensAsync(findParams);
             return new FindResult<Specimen>
             {
                 Results = result.Results,

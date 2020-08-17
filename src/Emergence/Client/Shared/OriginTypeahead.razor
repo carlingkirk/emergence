@@ -1,3 +1,4 @@
+@using Emergence.Data.Shared
 @using Emergence.Data.Shared.Models
 @using Blazored.Typeahead
 @inject IApiClient ApiClient
@@ -53,7 +54,15 @@
 
     protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
     {
-        var originResult = await ApiClient.FindOriginsAsync(searchText, 0, 10, "Name", Data.Shared.SortDirection.Ascending);
+        var originResult = await ApiClient.FindOriginsAsync(new FindParams
+        {
+            SearchText = searchText,
+            Take = 10,
+            Skip = 0,
+            SortBy = "Name",
+            SortDirection = SortDirection.Ascending
+        });
+
         var origins = originResult.Results.ToList();
 
         if (!string.IsNullOrEmpty(searchText))

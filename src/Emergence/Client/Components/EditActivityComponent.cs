@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Emergence.Client.Common;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
@@ -81,13 +82,31 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
         {
-            var specimenResult = await ApiClient.FindSpecimensAsync(searchText, 0, 10, "ScientificName", Data.Shared.SortDirection.Ascending);
+            var specimenResult = await ApiClient.FindSpecimensAsync(new FindParams
+            {
+                SearchText = searchText,
+                Skip = 0,
+                Take = 10,
+                SortBy = "ScientificName",
+                SortDirection = SortDirection.Ascending
+            });
+
             var specimens = specimenResult.Results.ToList();
-            var lifeforms = await ApiClient.FindLifeformsAsync(searchText, 0, 3);
+
+            var lifeforms = await ApiClient.FindLifeformsAsync(new FindParams
+            {
+                SearchText = searchText,
+                Skip = 0,
+                Take = 3,
+                SortBy = "ScientificName",
+                SortDirection = SortDirection.Ascending
+            });
+
             foreach (var lifeform in lifeforms)
             {
                 specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
             }
+
             return specimens;
         }
 

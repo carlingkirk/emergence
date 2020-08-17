@@ -27,8 +27,7 @@ namespace Emergence.Client
             ShowSearch = true;
         }
 
-        public abstract Task<FindResult<T>> GetListAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending);
+        public abstract Task<FindResult<T>> GetListAsync(FindParams findParams);
 
         protected override async Task OnInitializedAsync()
         {
@@ -40,7 +39,14 @@ namespace Emergence.Client
         public async Task FindAsync()
         {
             var skip = (CurrentPage - 1) * Take;
-            var result = await GetListAsync(SearchText, skip, Take, SortBy, SortDirection);
+            var result = await GetListAsync(new FindParams
+            {
+                SearchText = SearchText,
+                Skip = skip,
+                Take = Take,
+                SortBy = SortBy,
+                SortDirection = SortDirection
+            });
             List = result.Results;
             Count = result.Count;
         }

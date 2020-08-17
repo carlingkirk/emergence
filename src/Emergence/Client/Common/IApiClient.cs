@@ -8,15 +8,12 @@ namespace Emergence.Client.Common
 {
     public interface IApiClient
     {
-        Task<FindResult<Origin>> FindOriginsAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending);
-        Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText, int? skip = 0, int? take = 10);
-        Task<FindResult<Specimen>> FindSpecimensAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending);
+        Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
+        Task<IEnumerable<Lifeform>> FindLifeformsAsync(FindParams findParams);
+        Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams);
-        Task<FindResult<PlantInfo>> FindPlantInfosAsync(string searchText, int? skip = 0, int? take = 10, string sortBy = null,
-            SortDirection sortDirection = SortDirection.Ascending);
+        Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);
         Task<PlantInfo> GetPlantInfoAsync(int id);

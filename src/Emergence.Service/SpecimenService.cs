@@ -67,7 +67,7 @@ namespace Emergence.Service
                 findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
-            var specimenQuery = _specimenRepository.WhereWithIncludesAsync(s => (s.InventoryItem.Inventory.UserId == userId) &&
+            var specimenQuery = _specimenRepository.WhereWithIncludes(s => (s.InventoryItem.Inventory.UserId == userId) &&
                                                                        (findParams.SearchText == null ||
                                                                        EF.Functions.Like(s.InventoryItem.Name, findParams.SearchText) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||

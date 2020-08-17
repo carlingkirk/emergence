@@ -1,6 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Extensions;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
@@ -44,12 +49,20 @@ namespace Emergence.Service
             return lifeforms;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Lifeform>> FindLifeforms(string search, int skip = 0, int take = 10)
+        public async Task<IEnumerable<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
         {
-            search = "%" + search + "%";
-            var lifeformResult = _lifeformRepository.GetSomeAsync(l => EF.Functions.Like(l.CommonName, search) ||
-                                                                  EF.Functions.Like(l.ScientificName, search),
-                                                                  skip: skip, take: take, track: false);
+            if (findParams.SearchText != null)
+            {
+                findParams.SearchText = "%" + findParams.SearchText + "%";
+            }
+
+            var lifeformQuery = _lifeformRepository.Where(l => findParams.SearchText == null ||
+                                                                        EF.Functions.Like(l.CommonName, findParams.SearchText) ||
+                                                                        EF.Functions.Like(l.ScientificName, findParams.SearchText));
+            lifeformQuery = OrderBy(lifeformQuery, findParams.SortBy, findParams.SortDirection);
+
+            var count = lifeformQuery.Count();
+            var lifeformResult = lifeformQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
             var lifeforms = new List<Data.Shared.Models.Lifeform>();
             await foreach (var lifeform in lifeformResult)
@@ -57,6 +70,36 @@ namespace Emergence.Service
                 lifeforms.Add(lifeform.AsModel());
             }
             return lifeforms;
+        }
+
+        private IQueryable<Lifeform> OrderBy(IQueryable<Lifeform> lifeformQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
+        {
+            if (sortDirection == SortDirection.None)
+            {
+                return lifeformQuery;
+            }
+
+            if (sortBy == null)
+            {
+                sortBy = "DateCreated";
+            }
+
+            var lifeformSorts = new Dictionary<string, Expression<Func<Lifeform, object>>>
+            {
+                { "ScientificName", l => l.ScientificName },
+                { "CommonName", l => l.CommonName }
+            };
+
+            if (sortDirection == SortDirection.Descending)
+            {
+                lifeformQuery = lifeformQuery.WithOrder(p => p.OrderByDescending(lifeformSorts[sortBy]));
+            }
+            else
+            {
+                lifeformQuery = lifeformQuery.WithOrder(p => p.OrderBy(lifeformSorts[sortBy]));
+            }
+
+            return lifeformQuery;
         }
     }
 }

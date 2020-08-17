@@ -64,7 +64,7 @@ namespace Emergence.Service
                 findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludesAsync(p => (findParams.SearchText == null ||
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchText == null ||
                                                                        EF.Functions.Like(p.CommonName, findParams.SearchText) ||
                                                                        EF.Functions.Like(p.ScientificName, findParams.SearchText) ||
                                                                         EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchText) ||

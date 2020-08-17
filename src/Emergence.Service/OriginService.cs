@@ -58,7 +58,7 @@ namespace Emergence.Service
         public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, string userId)
         {
             findParams.SearchText = "%" + findParams.SearchText + "%";
-            var originQuery = _originRepository.WhereWithIncludesAsync(o => o.UserId == userId &&
+            var originQuery = _originRepository.WhereWithIncludes(o => o.UserId == userId &&
                                                                     (EF.Functions.Like(o.Name, findParams.SearchText) ||
                                                                     EF.Functions.Like(o.Description, findParams.SearchText) ||
                                                                     EF.Functions.Like(o.Location.City, findParams.SearchText) ||

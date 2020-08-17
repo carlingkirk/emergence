@@ -27,7 +27,7 @@ namespace Emergence.Test.Mocks
             mockSpecimenRepo.Setup(p => p.Where(It.IsAny<Expression<Func<Specimen, bool>>>()))
                 .Returns(mockSpecimens);
 
-            mockSpecimenRepo.Setup(p => p.WhereWithIncludesAsync(It.IsAny<Expression<Func<Specimen, bool>>>(),
+            mockSpecimenRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<Specimen, bool>>>(),
                 It.IsAny<Func<IIncludable<Specimen>, IIncludable>[]>()))
                 .Returns(mockSpecimens);
 
@@ -57,7 +57,7 @@ namespace Emergence.Test.Mocks
             mockOriginRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(mockOrigins.ToAsyncEnumerable());
 
-            mockOriginRepo.Setup(p => p.WhereWithIncludesAsync(It.IsAny<Expression<Func<Origin, bool>>>(),
+            mockOriginRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<Origin, bool>>>(),
                 It.IsAny<Func<IIncludable<Origin>, IIncludable>[]>()))
                 .Returns(mockOrigins);
 
@@ -129,7 +129,7 @@ namespace Emergence.Test.Mocks
             mockActivityRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Activity, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(mockActivities.ToAsyncEnumerable());
 
-            mockActivityRepo.Setup(p => p.WhereWithIncludesAsync(It.IsAny<Expression<Func<Activity, bool>>>(),
+            mockActivityRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<Activity, bool>>>(),
                 It.IsAny<Func<IIncludable<Activity>, IIncludable>[]>()))
                 .Returns(mockActivities);
 
