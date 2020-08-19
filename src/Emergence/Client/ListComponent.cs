@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Emergence.Client
 {
@@ -12,6 +13,8 @@ namespace Emergence.Client
         protected IApiClient ApiClient { get; set; }
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
+        [CascadingParameter]
+        protected Task<AuthenticationState> ExistingCascadedAuthenticationState { get; set; }
         [Parameter]
         public bool ShowSearch { get; set; }
         public IEnumerable<T> List { get; set; }

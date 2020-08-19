@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emergence.API.Controllers
@@ -33,6 +34,7 @@ namespace Emergence.API.Controllers
             return await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Find")]
         public async Task<FindResult<PlantInfo>> FindPlantInfos(FindParams findParams)
