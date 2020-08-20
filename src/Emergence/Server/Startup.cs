@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using Emergence.Client.Server;
 using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
@@ -8,7 +11,10 @@ using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,9 +39,19 @@ namespace Emergence.Server
             services.AddDbContext<EmergenceDbContext>();
 
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+            services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+            {
+                options.IdentityResources["openid"].UserClaims.Add("name");
+                options.ApiResources.Single().UserClaims.Add("name");
+                options.IdentityResources["openid"].UserClaims.Add("role");
+                options.ApiResources.Single().UserClaims.Add("role");
+            });
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+
             services.AddAuthentication().AddGoogle(options =>
                 {
                     options.ClientId = Configuration["GoogleOAuthClientId"];
@@ -74,6 +90,9 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>

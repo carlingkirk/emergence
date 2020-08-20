@@ -9,19 +9,7 @@ namespace Emergence.Client.Components
     {
         public override async Task<FindResult<PlantInfo>> GetListAsync(FindParams findParams)
         {
-            var result = new FindResult<PlantInfo>();
-            if (ExistingCascadedAuthenticationState != null)
-            {
-                var state = await ExistingCascadedAuthenticationState;
-                if (state.User.Identity.IsAuthenticated)
-                {
-                    result = await ApiClient.FindPlantInfosAsync(findParams);
-                }
-                else
-                {
-                    result = await ApiClient.FindPublicPlantInfosAsync(findParams);
-                }
-            }
+            var result = await ApiClient.FindPlantInfosAsync(findParams);
 
             return new FindResult<PlantInfo>
             {

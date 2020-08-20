@@ -3,18 +3,13 @@ using System.Threading.Tasks;
 using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Emergence.Client
 {
-    public abstract class ListComponent<T> : ComponentBase, ISortable<T>, ISearchable<T>, IPageable<T> where T : class
+    public abstract class ListComponent<T> : EmergenceComponent, ISortable<T>, ISearchable<T>, IPageable<T> where T : class
     {
         [Inject]
-        protected IApiClient ApiClient { get; set; }
-        [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
-        [CascadingParameter]
-        protected Task<AuthenticationState> ExistingCascadedAuthenticationState { get; set; }
         [Parameter]
         public bool ShowSearch { get; set; }
         public IEnumerable<T> List { get; set; }
@@ -34,6 +29,8 @@ namespace Emergence.Client
 
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+
             CurrentPage = 1;
             Take = 10;
             await FindAsync();

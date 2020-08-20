@@ -19,6 +19,7 @@ namespace Emergence.API.Controllers
             _originService = originService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
         public async Task<PlantInfo> Get(int id) => await _plantInfoService.GetPlantInfoAsync(id);

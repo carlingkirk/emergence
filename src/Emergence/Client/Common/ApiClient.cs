@@ -12,15 +12,11 @@ namespace Emergence.Client.Common
 {
     public class ApiClient : IApiClient
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _httpClient;
-        private readonly HttpClient _anonymousHttpClient;
 
-        public ApiClient(IHttpClientFactory httpClientFactory)
+        public ApiClient(HttpClient httpClient)
         {
-            _httpClientFactory = httpClientFactory;
-            _httpClient = _httpClientFactory.CreateClient("Emergence.ServerAPI");
-            _anonymousHttpClient = _httpClientFactory.CreateClient("Emergence.AnonymousAPI");
+            _httpClient = httpClient;
         }
 
         public async Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams)
@@ -63,20 +59,6 @@ namespace Emergence.Client.Common
             var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
-        }
-
-        public async Task<FindResult<PlantInfo>> FindPublicPlantInfosAsync(FindParams findParams)
-        {
-            var result = await _anonymousHttpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
-
-            return await ReadResult<FindResult<PlantInfo>>(result);
-        }
-
-        public async Task<FindResult<Origin>> FindPublicOriginsAsync(FindParams findParams)
-        {
-            var result = await _anonymousHttpClient.PostAsJsonAsync($"/api/origin/find", findParams);
-
-            return await ReadResult<FindResult<Origin>>(result);
         }
 
         public async Task<Specimen> GetSpecimenAsync(int id)

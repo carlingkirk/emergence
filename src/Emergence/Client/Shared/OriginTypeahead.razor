@@ -1,14 +1,14 @@
 @using Emergence.Data.Shared
 @using Emergence.Data.Shared.Models
 @using Blazored.Typeahead
-@inject IApiClient ApiClient
+@inherits EmergenceComponent
 
 <BlazoredTypeahead SearchMethod="FindOriginsAsync"
-                   Value="SelectedOrigin"
-                   ValueChanged="@((Origin o) => InvokeSelectedOriginChangedAsync(o))"
-                   ValueExpression="@(() => SelectedOrigin)"
-                   MinimumLength="3"
-                   Debounce="500" Context="origin">
+                    Value="SelectedOrigin"
+                    ValueChanged="@((Origin o) => InvokeSelectedOriginChangedAsync(o))"
+                    ValueExpression="@(() => SelectedOrigin)"
+                    MinimumLength="3"
+                    Debounce="500" Context="origin">
     <SelectedTemplate>
         @if (!string.IsNullOrEmpty(origin.Name))
         {

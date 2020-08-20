@@ -10,10 +10,8 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class EditOriginComponent : ComponentBase
+    public class EditOriginComponent : EmergenceComponent
     {
-        [Inject]
-        protected IApiClient ApiClient { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
@@ -26,6 +24,8 @@ namespace Emergence.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+
             if (Id > 0 || Origin != null)
             {
                 Origin ??= await ApiClient.GetOriginAsync(Id);

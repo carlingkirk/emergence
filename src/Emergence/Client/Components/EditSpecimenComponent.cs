@@ -11,10 +11,8 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class EditSpecimenComponent : ComponentBase
+    public class EditSpecimenComponent : EmergenceComponent
     {
-        [Inject]
-        protected IApiClient ApiClient { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
@@ -30,6 +28,8 @@ namespace Emergence.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+
             if (Id > 0 || Specimen != null)
             {
                 Specimen ??= await ApiClient.GetSpecimenAsync(Id);

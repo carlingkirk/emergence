@@ -24,13 +24,16 @@ namespace Emergence.Client
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Emergence.ServerAPI"));
 
-            builder.Services.AddApiAuthorization();
+            builder.Services.AddApiAuthorization(options =>
+            {
+                options.UserOptions.NameClaim = "name";
+                options.UserOptions.RoleClaim = "role";
+            }).AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
             builder.Services.AddBlazoredModal();
 
             // Client services
             builder.Services.AddTransient<IModalServiceClient, ModalServiceClient>();
-            builder.Services.AddTransient<IApiClient, ApiClient>();
 
             await builder.Build().RunAsync();
         }

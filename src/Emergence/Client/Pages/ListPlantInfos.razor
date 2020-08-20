@@ -39,7 +39,7 @@
         {
             <tr>
                 <td>
-                    <span @onclick="@(async () => await UpdatePlantInfoAsync(plantInfo))" class="link">@plantInfo.Lifeform.ScientificName</span>
+                    <a href="plantinfo/@plantInfo.PlantInfoId"><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
                 </td>
                 <td>
                     <span>@plantInfo.CommonName</span>

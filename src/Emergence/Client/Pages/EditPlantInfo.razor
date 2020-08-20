@@ -8,7 +8,7 @@
 @attribute [Authorize]
 @inherits EditPlantInfoComponent
 
-@if (PlantInfo != null)
+@if (PlantInfo !=null)
 {
 <EditForm Model="@PlantInfo">
     <div class="form-group container">
@@ -98,13 +98,13 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-5 range-input">
-                                        <input @bind="@PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter" type="text" class="form-control" id="req-zones-min" />
+                                        <input @bind="@MinZone" type="text" class="form-control" id="req-zones-min" />
                                     </div>
                                     <div class="col-1 range-separator">
                                         <span>to</span>
                                     </div>
                                     <div class="col-5 range-input">
-                                        <input @bind="@PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter" type="text" class="form-control" id="req-zones-max" />
+                                        <input @bind="@MaxZone" type="text" class="form-control" id="req-zones-max" />
                                     </div>
                                 </div>
                             </div>
@@ -193,32 +193,32 @@
                                 <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
                             </div>
 
-                            @foreach (var chosenStratificationStage in ChosenStratificationStages)
+                            @foreach (var stage in ChosenStratificationStages)
                             {
-                                var key = chosenStratificationStage.Step.ToString();
-                                var firstRow = chosenStratificationStage.Step == 1;
-                                var lastRow = ChosenStratificationStages.Count == chosenStratificationStage.Step;
+                                var key = stage.Step.ToString();
+                                var firstRow = stage.Step == 1;
+                                var lastRow = ChosenStratificationStages.Count == stage.Step;
                                 <div class="row">
                                     <div class="col-1">
                                         <div>
                                             <div class="@(firstRow ? "" : "d-none")"><label>+ / -</label></div>
-                                            <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(chosenStratificationStage.Step))"><span class="oi oi-minus"></span></button>
+                                            <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(stage.Step))"><span class="oi oi-minus"></span></button>
                                         </div>
                                     </div>
                                     <div class="col-1">
                                         <div class="@(firstRow ? "" : "d-none")"><label>Step</label></div>
-                                        <span id="@GetElementId("req-scarification", key)">@chosenStratificationStage.Step</span>
+                                        <span id="@GetElementId("req-scarification", key)">@stage.Step</span>
                                     </div>
                                     <div class="col-1">
                                         <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-days", key)">Days</label>
-                                        <input @bind="@chosenStratificationStage.DayLength" type="text" class="form-control" id="@GetElementId("req-scarification-days", key)" />
+                                        <input @bind="@stage.DayLength" type="text" class="form-control" id="@GetElementId("req-scarification-days", key)" />
                                     </div>
                                     <div class="col-7">
-                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-temp-min", key)">Temperature Range</label>
+                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-type", key)">Statification Method</label>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col">
-                                                    <select @bind="@chosenStratificationStage.StratificationType" class="form-control" id="@GetElementId("req-scarification-temp-min", key)">
+                                                    <select @bind="@stage.StratificationType" class="form-control" id="@GetElementId("req-scarification-type", key)">
                                                         @foreach (var stratificationType in StratificationTypes)
                                                         {
                                                             <option value="@stratificationType">@stratificationType.ToFriendlyName()</option>
@@ -269,10 +269,4 @@
 else
 {
     <span>Loading...</span>
-}
-@code {
-    protected string GetElementId(string element, string id)
-    {
-        return element + "-" + id;
-    }
 }
