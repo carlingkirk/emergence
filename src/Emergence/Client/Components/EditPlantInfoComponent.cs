@@ -51,6 +51,8 @@ namespace Emergence.Client.Components
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone.Number = maxZoneInt;
             }
 
+            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.ToList();
+
             PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
 
             if (BlazoredModal != null)

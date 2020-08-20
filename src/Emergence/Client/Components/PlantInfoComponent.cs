@@ -42,6 +42,10 @@ namespace Emergence.Client.Components
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone ??= new Zone();
+                PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>
+                {
+                    ChosenStratificationStages.AddLast(s);
+                });
             }
             else
             {
