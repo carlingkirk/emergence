@@ -97,7 +97,7 @@
         }
     }
 }
-else if (Id > 0)
+else if (Id > 0 || IsItemLoaded)
 {
     <PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></PlantInfoViewer>
 }

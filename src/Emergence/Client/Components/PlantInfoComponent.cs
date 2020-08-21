@@ -62,6 +62,7 @@ namespace Emergence.Client.Components
             }
             else
             {
+                IsEditing = true;
                 PlantInfo = new PlantInfo
                 {
                     Origin = new Origin(),
