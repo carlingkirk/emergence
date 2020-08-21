@@ -1,0 +1,67 @@
+@page "/activity/list"
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions;
+@using Emergence.Client.Common
+@inherits ListActivitiesComponent
+
+
+@if (ShowSearch)
+{
+    <input type="text" @bind="SearchText" id="search" />
+    <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+}
+
+@if (List != null)
+{
+    <table>
+        <SortableHeaders HeaderNames="@(
+                new Dictionary<string, string>
+                {
+                    { "Name", "Name" },
+                    { "ScientificName", "Scientific Name" },
+                    { "ActivityType", "Activity Type" },
+                    { "DateOccured", "Date Occured" },
+                    { "DateScheduled", "Date Scheduled" }
+                })"
+                         Sort="SortAsync"
+                         @bind-Values="List" />
+        @if (!List.Any())
+        {
+            <tr>
+                <td>
+                    <span>No activities found</span>
+                </td>
+            </tr>
+        }
+        @foreach (var activity in List)
+        {
+            <tr>
+                <td>
+                    <span @onclick="@(async () => await UpdateActivityAsync(activity))" class="link">@activity.Name</span>
+                </td>
+                <td>
+                    <span @onclick="@(async () => await UpdateSpecimenAsync(activity.Specimen))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
+                </td>
+                <td>
+                    <span>@activity.ActivityType.ToFriendlyName()</span>
+                </td>
+                <td>
+                    <span>
+                        @(activity.DateOccured.HasValue ?
+                            activity.DateOccured.Value.ToLocalTime().ToShortDateString() : "")
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        @(activity.DateScheduled.HasValue ?
+                            activity.DateScheduled.Value.ToLocalTime().ToShortDateString() : "")
+                    </span>
+                </td>
+            </tr>
+        }
+    </table>
+    <div>
+        <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(0))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+    </div>
+}
