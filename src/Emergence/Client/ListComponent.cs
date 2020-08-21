@@ -19,6 +19,8 @@ namespace Emergence.Client
         public int CurrentPage { get; set; }
         public int Take { get; set; }
         public int Count { get; set; }
+        public bool IsItemLoaded { get; set; }
+        public int Id { get; set; }
 
         public ListComponent()
         {

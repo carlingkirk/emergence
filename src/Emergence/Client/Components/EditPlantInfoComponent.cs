@@ -59,6 +59,11 @@ namespace Emergence.Client.Components
             {
                 await BlazoredModal.Close(ModalResult.Ok(PlantInfo));
             }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+                await IsItemLoadedChanged.InvokeAsync(false);
+            }
         }
 
         protected void AddSoilType(SoilType soilType) => ChosenSoilTypes.Add(soilType);

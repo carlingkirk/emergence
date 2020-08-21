@@ -3,17 +3,18 @@
 
 @inherits PlantInfoComponent
 
+<button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
 @if (IsEditable)
 {
     <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
 }
 @if (IsEditing && PlantInfo != null)
 {
-    <EditPlantInfo PlantInfo="PlantInfo" />
+    <EditPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
 }
 else if (PlantInfo != null)
 {
-    <ViewPlantInfo PlantInfo="PlantInfo" />
+    <ViewPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
 }
 else
 {
@@ -21,5 +22,5 @@ else
 }
 
 @code {
-    public bool IsEditing { get; set; }
+
 }

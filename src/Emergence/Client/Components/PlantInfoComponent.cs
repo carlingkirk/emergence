@@ -14,6 +14,16 @@ namespace Emergence.Client.Components
         [Parameter]
         public int Id { get; set; }
         [Parameter]
+        public EventCallback<int> IdChanged { get; set; }
+        [Parameter]
+        public bool IsItemLoaded { get; set; }
+        [Parameter]
+        public EventCallback<bool> IsItemLoadedChanged { get; set; }
+        [Parameter]
+        public bool IsEditing { get; set; }
+        [Parameter]
+        public EventCallback<bool> IsEditingChanged { get; set; }
+        [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
@@ -42,10 +52,13 @@ namespace Emergence.Client.Components
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone ??= new Zone();
-                PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>
+                if (PlantInfo.Requirements.StratificationStages != null)
                 {
-                    ChosenStratificationStages.AddLast(s);
-                });
+                    PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>
+                    {
+                        ChosenStratificationStages.AddLast(s);
+                    });
+                }
             }
             else
             {

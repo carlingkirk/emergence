@@ -16,10 +16,7 @@ namespace Emergence.Client.Components
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-        }
+        protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
 
         protected async Task SaveActivityAsync()
         {
