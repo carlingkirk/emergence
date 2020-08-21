@@ -1,7 +1,10 @@
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
-using Emergence.Client.Pages;
+using Emergence.Client.Pages.Activities;
+using Emergence.Client.Pages.Origins;
+using Emergence.Client.Pages.PlantInfos;
+using Emergence.Client.Pages.Specimens;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common

@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Reflection;
 using Emergence.Client.Server;
 using Emergence.Data;
 using Emergence.Data.Identity;
@@ -101,6 +102,7 @@ namespace Emergence.Server
             });
 
             services.AddControllersWithViews();
+            services.AddControllers().AddApplicationPart(Assembly.Load("Emergence.API"));
             services.AddRazorPages();
         }
 

@@ -1,12 +1,12 @@
 @page "/dashboard"
 @using Emergence.Client.Common
-@inject IModalServiceClient ModalServiceClient
+@using Emergence.Client.Pages.Activities
 
 <AuthorizeView>
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
     <h3>Dashboard</h3>
     <label for="upcoming-activities"></label>
-    <ListActivities ShowSearch="false"  />
+    <ListActivities ShowSearch="false" />
     @code
     {
 
