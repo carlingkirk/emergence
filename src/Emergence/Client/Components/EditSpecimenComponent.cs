@@ -4,63 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
-using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class EditSpecimenComponent : EmergenceComponent
+    public class EditSpecimenComponent : SpecimenComponent
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
-        [Parameter]
-        public int Id { get; set; }
-        [Parameter]
-        public Specimen Specimen { get; set; }
-        public Origin SelectedOrigin { get; set; }
-        public Lifeform SelectedLifeform { get; set; }
-        public IList<Photo> UploadedPhotos { get; set; }
-        public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
-        public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
-        public IEnumerable<Status> Statuses => Enum.GetValues(typeof(Status)).Cast<Status>();
-
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            if (Id > 0 || Specimen != null)
-            {
-                Specimen ??= await ApiClient.GetSpecimenAsync(Id);
-                SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
-                SelectedLifeform = Specimen.Lifeform;
-
-                if (Specimen.Lifeform != null)
-                {
-                    Specimen.InventoryItem.Name = Specimen.Lifeform.ScientificName;
-                }
-
-                var photos = await ApiClient.GetPhotosAsync(PhotoType.Specimen, Specimen?.SpecimenId ?? Id);
-                if (photos.Any())
-                {
-                    UploadedPhotos = photos.ToList();
-                }
-                else
-                {
-                    UploadedPhotos = new List<Photo>();
-                }
-            }
-            else if (Specimen == null)
-            {
-                Specimen = new Specimen
-                {
-                    Lifeform = new Lifeform(),
-                    InventoryItem = new InventoryItem()
-                };
-                UploadedPhotos = new List<Photo>();
-            }
-        }
 
         protected async Task SaveSpecimenAsync()
         {
@@ -93,6 +46,11 @@ namespace Emergence.Client.Components
             if (BlazoredModal != null)
             {
                 await BlazoredModal.Close(ModalResult.Ok(Specimen));
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+                await IsItemLoadedChanged.InvokeAsync(false);
             }
         }
 

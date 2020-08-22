@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.Authorization
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.Activities
 @using Emergence.Data.Shared.Extensions
 @using Blazored.Typeahead
 
@@ -53,7 +52,7 @@
             </div>
             <div class="row">
                 <div class="col-4 col-xs-1">
-                    <label for="quantity">Stage</label>
+                    <label for="stage">Stage</label>
                     <select @bind="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
                         @foreach (var stage in SpecimenStages)
                         {
@@ -66,7 +65,7 @@
                     <input type="date" @bind="Specimen.InventoryItem.DateAcquired" class="form-control" />
                 </div>
                 <div class="col-4 col-xs-1">
-                    <label for="quantity">Type</label>
+                    <label for="type">Type</label>
                     <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="type">
                         @foreach (var itemType in ItemTypes)
                         {
@@ -86,7 +85,7 @@
         <div class="form-group container">
             <div class="row">
                 <div class="col">
-                    <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Submit</button>
+                    <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Save</button>
                     @if (BlazoredModal != null)
                     {
                         <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
@@ -95,14 +94,6 @@
             </div>
         </div>
     </EditForm>
-    <div class="form-group container">
-        <div class="row">
-            <div class="col">
-                <label for="activities">Activities</label>
-                <ListActivities Specimen="Specimen" ShowSearch="false" />
-            </div>
-        </div>
-    </div>
 }
 else
 {

@@ -1,0 +1,26 @@
+@page "/specimen/{Id:int}"
+@using Emergence.Client.Components
+
+@inherits SpecimenComponent
+
+<button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+@if (IsEditable)
+{
+    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+}
+@if (IsEditing && Specimen != null)
+{
+    <EditSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else if (Specimen != null)
+{
+    <ViewSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else
+{
+    <span>Loading...</span>
+}
+
+@code {
+
+}

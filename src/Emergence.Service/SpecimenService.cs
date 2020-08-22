@@ -33,6 +33,7 @@ namespace Emergence.Service
         {
             var result = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenId, track: false,
                                                                         s => s.Include(s => s.InventoryItem)
+                                                                              .Include(ii => ii.InventoryItem.Inventory)
                                                                               .Include(ii => ii.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
             return result?.AsModel();
@@ -73,6 +74,7 @@ namespace Emergence.Service
                                                                         EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||
                                                                         EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchText)),
                                                                         s => s.Include(s => s.InventoryItem)
+                                                                              .Include(s => s.InventoryItem.Inventory)
                                                                               .Include(s => s.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
             specimenQuery = OrderBy(specimenQuery, findParams.SortBy, findParams.SortDirection);
