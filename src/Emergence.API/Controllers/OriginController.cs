@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emergence.API.Controllers
@@ -17,6 +18,7 @@ namespace Emergence.API.Controllers
             _originService = originService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
         public async Task<Origin> Get(int id) => await _originService.GetOriginAsync(id);
@@ -35,6 +37,7 @@ namespace Emergence.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Find")]
         public async Task<FindResult<Origin>> FindOrigins(FindParams findParams)

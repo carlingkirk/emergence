@@ -18,7 +18,7 @@ namespace Emergence.Transform.USDA
         public USDAProcessor(EmergenceDbContext dbContext)
         {
             _lifeformService = new LifeformService(new Repository<Lifeform>(dbContext));
-            _originService = new OriginService(new Repository<Origin>(dbContext));
+            _originService = new OriginService(new Repository<Origin>(dbContext), new LocationService(new Repository<Location>(dbContext)));
             _plantInfoService = new PlantInfoService(new Repository<PlantInfo>(dbContext));
             _taxonService = new TaxonService(new Repository<Taxon>(dbContext));
         }

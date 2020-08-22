@@ -41,7 +41,7 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadPlantInfo(plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
+                        <a href="" @onclick="() => LoadInfo(plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
                     </td>
                     <td>
                         <span>@plantInfo.CommonName</span>
@@ -90,14 +90,19 @@
         </table>
         @if (List.Any())
         {
+            <div>
+                <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(UserId))
+        {
         <div>
-            <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
-            <button class="btn btn-primary" @onclick="@(() => LoadPlantInfo(0))"><span class="oi oi-plus btn-oi"></span>Plant Info</button>
+            <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Plant Info</button>
         </div>
         }
     }
 }
 else if (Id > 0 || IsItemLoaded)
 {
-    <PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></PlantInfoViewer>
+<PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></PlantInfoViewer>
 }

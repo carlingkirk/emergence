@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Data.Fakes.Models
@@ -39,14 +40,7 @@ namespace Emergence.Test.Data.Fakes.Models
                                     OriginId = 3,
                                     Name = "GNPS Symposium 2020",
                                     Type = OriginType.Event,
-                                    Location = new Location
-                                    {
-                                        AddressLine1 = "100 University Parkway",
-                                        AddressLine2 = "Charles H. Jones Building",
-                                        City = "Macon",
-                                        StateOrProvince = "GA",
-                                        PostalCode = "31206"
-                                    },
+                                    Location = FakeLocations.Get().First(),
                                     Uri = new Uri("https://gnps.org/2020-georgia-native-plant-society-annual-symposium/")
                                 }
                             }

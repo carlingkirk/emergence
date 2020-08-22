@@ -1,51 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
-using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class EditOriginComponent : EmergenceComponent
+    public class EditOriginComponent : OriginComponent
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
-        [Parameter]
-        public int Id { get; set; }
-        [Parameter]
-        public Origin Origin { get; set; }
-        public Origin SelectedParentOrigin { get; set; }
-        public string OriginUri { get; set; }
-        public IEnumerable<OriginType> OriginTypes => Enum.GetValues(typeof(OriginType)).Cast<OriginType>();
-
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            if (Id > 0 || Origin != null)
-            {
-                Origin ??= await ApiClient.GetOriginAsync(Id);
-                Origin.Location ??= new Location();
-                OriginUri = Origin.Uri?.ToString();
-
-                if (Origin.ParentOrigin != null)
-                {
-                    SelectedParentOrigin = Origin.ParentOrigin;
-                }
-            }
-            else
-            {
-                Origin = new Origin
-                {
-                    ParentOrigin = null,
-                    Location = new Location()
-                };
-            }
-        }
 
         protected async Task SaveOriginAsync()
         {
@@ -68,11 +33,30 @@ namespace Emergence.Client.Components
                 Origin.ParentOrigin = SelectedParentOrigin;
             }
 
+            Origin.UserId = UserId;
+            if (Origin.Location != null)
+            {
+                if (Origin.Location.LocationId == 0)
+                {
+                    Origin.Location.DateCreated = DateTime.UtcNow;
+                }
+
+                Origin.Location.DateModified = DateTime.UtcNow;
+            }
+            else
+            {
+                Console.WriteLine("WHYYYYY");
+            }
             Origin = await ApiClient.PutOriginAsync(Origin);
 
             if (BlazoredModal != null)
             {
                 await BlazoredModal.Close(ModalResult.Ok(Origin));
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+                await IsItemLoadedChanged.InvokeAsync(false);
             }
         }
     }

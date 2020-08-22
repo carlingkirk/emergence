@@ -16,14 +16,16 @@ namespace Emergence.Service
     public class OriginService : IOriginService
     {
         private readonly IRepository<Origin> _originRepository;
-        public OriginService(IRepository<Origin> originRepository)
+        private readonly ILocationService _locationService;
+        public OriginService(IRepository<Origin> originRepository, ILocationService locationService)
         {
             _originRepository = originRepository;
+            _locationService = locationService;
         }
 
         public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id)
         {
-            var origin = await _originRepository.GetWithIncludesAsync(l => l.Id == id, false, o => o.Include(o => o.ParentOrigin));
+            var origin = await _originRepository.GetWithIncludesAsync(l => l.Id == id, false, o => o.Include(o => o.ParentOrigin).Include(o => o.Location));
             return origin?.AsModel();
         }
 
@@ -42,6 +44,8 @@ namespace Emergence.Service
         {
             origin.DateModified = DateTime.UtcNow;
             origin.UserId = userId;
+
+            origin.Location = await _locationService.AddOrUpdateLocationAsync(origin.Location);
 
             var originResult = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.OriginId, origin.AsStore());
             return originResult.AsModel();

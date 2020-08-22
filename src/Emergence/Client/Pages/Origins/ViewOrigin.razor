@@ -1,5 +1,151 @@
-﻿<h3>ViewOrigin</h3>
+@page "/origin/view/{Id:int}"
+@using Emergence.Data.Shared.Models
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions
 
-@code {
+@inherits OriginComponent
 
+@if (Origin != null)
+{
+<div class="form-group container">
+    <div class="col-6 col-xs-1">
+        <div>
+            <label for="name">Name</label>
+        </div>
+        <div>
+            <span class="text-body">@Origin.Name</span>
+        </div>
+    </div>
+    @if (@Origin.Type != OriginType.Unknown)
+    {
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="type">Type</label>
+            </div>
+            <div>
+                <span class="text-body">@Origin.Type.ToFriendlyName()</span>
+            </div>
+        </div>
+    }
+    @if (@Origin.ParentOrigin != null)
+    {
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="name">Parent Origin</label>
+            </div>
+            <div>
+                <span class="text-body">@Origin.ParentOrigin.Name</span>
+            </div>
+        </div>
+    }
+    @if (Origin.Uri != null)
+    {
+        <div class="col col-xs-1">
+            <div>
+                <label for="uri">Link</label>
+            </div>
+            <div>
+                <span class="text-body">@Origin.Uri</span>
+            </div>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Origin.Description))
+    {
+        <div class="row">
+            <div class="col col-xs-1">
+                <div>
+                    <label for="description">Description</label>
+                </div>
+                <div>
+                    <span class="text-body">@Origin.Description</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="form-group container">
+@if (!string.IsNullOrEmpty(Origin.Authors))
+{
+    <div class="col col-xs-1">
+        <div>
+            <label for="authors">Authors</label>
+        </div>
+        <div>
+            <span class="text-body">@Origin.Authors</span>
+        </div>
+    </div>
 }
+@if (!string.IsNullOrEmpty(Origin.ExternalId))
+{
+    <div class="col col-xs-1">
+        <div>
+            <label for="external-id">External Identifier</label>
+        </div>
+        <div>
+            <span class="text-body">@Origin.ExternalId</span>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Origin.AltExternalId))
+{
+    <div class="col col-xs-1">
+        <div>
+            <label for="alt-external-id">Alternate External Identifier</label>
+        </div>
+        <div>
+            <span class="text-body">@Origin.AltExternalId</span>
+        </div>
+    </div>
+}
+</div>
+<div class="form-group container">
+    @if (Origin.Location.HasAddressInfo)
+    {
+    <div class="col-9">
+        <div>
+            <label for="address">Physical Address</label>
+        </div>
+        @if (Origin.Location.AddressLine1 != null)
+        {
+            <div class="col col-xs-1">
+                <span class="text-body">@Origin.Location.AddressLine1</span>
+            </div>
+        }
+        @if (Origin.Location.AddressLine2 != null)
+        {
+            <div class="col col-xs-1">
+                <span class="text-body">@Origin.Location.AddressLine2</span>
+            </div>
+        }
+        @if (Origin.Location.CityState != null)
+        {
+            <div class="col col-xs-1">
+                <span class="text-body">@Origin.Location.CityState</span>
+            </div>
+        }
+        @if (Origin.Location.PostalCode != null)
+        {
+            <div class="col col-xs-1">
+                <span class="text-body">@Origin.Location.PostalCode</span>
+            </div>
+        }
+        @if (Origin.Location.Country != null)
+        {
+            <div class="col col-xs-1">
+                <span class="text-body">@Origin.Location.Country</span>
+            </div>
+        }
+    </div>
+    }
+    <div class="col">
+        @if (Origin.Location.Latitude.HasValue && Origin.Location.Longitude.HasValue)
+        {
+            <div class="col col-xs-1">
+                <span class="text-body">@Origin.Location.LatLong</span>
+            </div>
+        }
+    </div>
+</div>
+}
+
+@code {}

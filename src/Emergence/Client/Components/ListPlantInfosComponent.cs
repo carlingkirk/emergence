@@ -39,11 +39,5 @@ namespace Emergence.Client.Components
                 });
             }
         }
-
-        protected void LoadPlantInfo(int id)
-        {
-            Id = id;
-            IsItemLoaded = true;
-        }
     }
 }

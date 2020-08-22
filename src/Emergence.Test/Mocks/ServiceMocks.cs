@@ -41,5 +41,15 @@ namespace Emergence.Test.Mocks
 
             return mockOriginService;
         }
+
+        public static Mock<ILocationService> GetStandardMockLocationService(IEnumerable<Location> result = null)
+        {
+            var mockLocationService = new Mock<ILocationService>();
+
+            mockLocationService.Setup(l => l.GetLocationsAsync(It.IsAny<IEnumerable<int>>()))
+                .ReturnsAsync(result ?? FakeLocations.Get());
+
+            return mockLocationService;
+        }
     }
 }

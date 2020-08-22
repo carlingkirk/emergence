@@ -75,5 +75,11 @@ namespace Emergence.Client
             await FindAsync();
             return List;
         }
+
+        protected void LoadInfo(int id)
+        {
+            Id = id;
+            IsItemLoaded = true;
+        }
     }
 }

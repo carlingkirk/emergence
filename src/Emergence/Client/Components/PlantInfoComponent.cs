@@ -2,33 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class PlantInfoComponent : EmergenceComponent
+    public class PlantInfoComponent : ViewerComponent
     {
-        [Parameter]
-        public int Id { get; set; }
-        [Parameter]
-        public EventCallback<int> IdChanged { get; set; }
-        [Parameter]
-        public bool IsItemLoaded { get; set; }
-        [Parameter]
-        public EventCallback<bool> IsItemLoadedChanged { get; set; }
-        [Parameter]
-        public bool IsEditing { get; set; }
-        [Parameter]
-        public EventCallback<bool> IsEditingChanged { get; set; }
         [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
         public string OriginSearch { get; set; }
-        public bool IsEditable { get; set; }
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();

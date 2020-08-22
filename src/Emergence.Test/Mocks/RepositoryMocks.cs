@@ -66,15 +66,28 @@ namespace Emergence.Test.Mocks
 
         public static Mock<IRepository<Lifeform>> GetStandardMockLifeformRepository()
         {
-            var mockLifeformItemRepo = new Mock<IRepository<Lifeform>>();
+            var mockLifeformRepo = new Mock<IRepository<Lifeform>>();
 
-            mockLifeformItemRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+            mockLifeformRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(Data.Fakes.Stores.FakeLifeforms.Get().ToAsyncEnumerable());
 
-            mockLifeformItemRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
+            mockLifeformRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<bool>()))
                 .ReturnsAsync(Data.Fakes.Stores.FakeLifeforms.Get().First());
 
-            return mockLifeformItemRepo;
+            return mockLifeformRepo;
+        }
+
+        public static Mock<IRepository<Location>> GetStandardMockLocationRepository()
+        {
+            var mockLocationRepo = new Mock<IRepository<Location>>();
+
+            mockLocationRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Location, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(Data.Fakes.Stores.FakeLocations.Get().ToAsyncEnumerable());
+
+            mockLocationRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Location, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(Data.Fakes.Stores.FakeLocations.Get().First());
+
+            return mockLocationRepo;
         }
 
         public static Mock<IRepository<InventoryItem>> GetStandardMockInventoryItemRepository()

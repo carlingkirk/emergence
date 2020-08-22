@@ -1,4 +1,25 @@
-﻿<h3>OriginViewer</h3>
+@page "/origin/{Id:int}"
+@using Emergence.Client.Components
+
+@inherits OriginComponent
+
+<button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+@if (IsEditable)
+{
+    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+}
+@if (IsEditing && Origin != null)
+{
+    <EditOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else if (Origin != null)
+{
+    <ViewOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else
+{
+    <span>Loading...</span>
+}
 
 @code {
 
