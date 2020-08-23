@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Models;
+using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using GeoTimeZone;
 using Microsoft.AspNetCore.Http;
@@ -20,12 +20,14 @@ namespace Emergence.Service
     public class PhotoService : IPhotoService
     {
         private readonly IBlobService _blobService;
-        private readonly IRepository<Data.Shared.Stores.Photo> _photoRepository;
+        private readonly IRepository<Photo> _photoRepository;
+        private readonly string _blobStorageRoot;
 
-        public PhotoService(IBlobService blobService, IRepository<Data.Shared.Stores.Photo> photoRepository)
+        public PhotoService(IBlobService blobService, IRepository<Photo> photoRepository, IConfigurationService configurationService)
         {
             _blobService = blobService;
             _photoRepository = photoRepository;
+            _blobStorageRoot = configurationService.Settings.BlobStorageRoot + "photos/";
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, Data.Shared.Models.PhotoType type, string userId)
@@ -66,6 +68,7 @@ namespace Emergence.Service
                     {
                         Filename = name,
                         BlobPath = blobpath,
+                        BlobPathRoot = _blobStorageRoot,
                         Type = type,
                         UserId = userId,
                         ContentType = result.ContentType,
@@ -85,7 +88,8 @@ namespace Emergence.Service
         {
             photo.DateModified = DateTime.UtcNow;
             var photoResult = await _photoRepository.AddOrUpdateAsync(l => l.Id == photo.PhotoId, photo.AsStore());
-            return photoResult.AsModel();
+
+            return photoResult.AsModel(_blobStorageRoot);
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> AddOrUpdatePhotosAsync(IEnumerable<Data.Shared.Models.Photo> photos)
@@ -96,7 +100,7 @@ namespace Emergence.Service
             var adds = photos.Where(p => p.PhotoId == 0);
             var addResult = await _photoRepository.AddSomeAsync(adds.Select(p => p.AsStore()));
 
-            return updateResult.Union(addResult).Select(p => p.AsModel());
+            return updateResult.Union(addResult).Select(p => p.AsModel(_blobStorageRoot));
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(IEnumerable<int> ids)
@@ -105,7 +109,7 @@ namespace Emergence.Service
             var photos = new List<Data.Shared.Models.Photo>();
             await foreach (var photo in photoResult)
             {
-                photos.Add(photo.AsModel());
+                photos.Add(photo.AsModel(_blobStorageRoot));
             }
             return photos;
         }
@@ -113,7 +117,7 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Photo> GetPhotoAsync(int id)
         {
             var photoResult = await _photoRepository.GetAsync(p => p.Id == id);
-            var photo = photoResult.AsModel();
+            var photo = photoResult.AsModel(_blobStorageRoot);
             return photo;
         }
 
@@ -123,7 +127,7 @@ namespace Emergence.Service
             var photos = new List<Data.Shared.Models.Photo>();
             await foreach (var photo in photoResult)
             {
-                photos.Add(photo.AsModel());
+                photos.Add(photo.AsModel(_blobStorageRoot));
             }
             return photos;
         }
@@ -136,7 +140,7 @@ namespace Emergence.Service
             return result;
         }
 
-        public async Task<Image> ProcessPhotoAsync(Stream stream, Image image, ImageSize imageSize)
+        public async Task<Image> ProcessPhotoAsync(Stream stream, Image image, Data.Shared.Models.ImageSize imageSize)
         {
             image = OrientPhoto(image);
             image = ResizePhoto(image, (int)imageSize);
@@ -178,7 +182,7 @@ namespace Emergence.Service
             return image;
         }
 
-        private Location GetLocationFromMetadata(IDictionary<string, string> metadata)
+        private Data.Shared.Models.Location GetLocationFromMetadata(IDictionary<string, string> metadata)
         {
             var location = new Data.Shared.Models.Location();
             var hasValues = false;

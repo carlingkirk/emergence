@@ -26,7 +26,15 @@ namespace Emergence.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<Specimen> Get(int id) => await _specimenService.GetSpecimenAsync(id);
+        public async Task<Specimen> Get(int id)
+        {
+            var specimen = await _specimenService.GetSpecimenAsync(id);
+            var photos = await _photoService.GetPhotosAsync(PhotoType.Specimen, id);
+
+            specimen.Photos = photos;
+
+            return specimen;
+        }
 
         [HttpPut]
 

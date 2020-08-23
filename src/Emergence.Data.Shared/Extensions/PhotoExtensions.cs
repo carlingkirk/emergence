@@ -5,13 +5,14 @@ namespace Emergence.Data.Shared.Extensions
 {
     public static class PhotoExtensions
     {
-        public static Models.Photo AsModel(this Photo source) => new Models.Photo
+        public static Models.Photo AsModel(this Photo source, string blobPathRoot = null) => new Models.Photo
         {
             PhotoId = source.Id,
             Type = Enum.Parse<Models.PhotoType>(source.Type),
             TypeId = source.TypeId,
             Filename = source.Filename,
             BlobPath = source.BlobPath,
+            BlobPathRoot = blobPathRoot,
             UserId = source.UserId,
             Location = source.Location != null ? source.Location.AsModel() : source.LocationId.HasValue ? new Models.Location { LocationId = source.LocationId.Value } : null,
             ContentType = source.ContentType,

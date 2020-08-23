@@ -24,10 +24,9 @@ namespace Emergence.Client.Components
             {
                 Activity ??= await ApiClient.GetActivityAsync(Id);
 
-                var photos = await ApiClient.GetPhotosAsync(PhotoType.Activity, Id);
-                if (photos.Any())
+                if (Activity.Photos != null && Activity.Photos.Any())
                 {
-                    UploadedPhotos = photos.ToList();
+                    UploadedPhotos = Activity.Photos.ToList();
                 }
                 else
                 {

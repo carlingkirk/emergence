@@ -24,6 +24,10 @@ namespace Emergence.API.Controllers
         public async Task<Activity> Get(int id)
         {
             var activity = await _activityService.GetActivityAsync(id);
+            var photos = await _photoService.GetPhotosAsync(PhotoType.Activity, id);
+
+            activity.Photos = photos;
+
             return activity;
         }
 

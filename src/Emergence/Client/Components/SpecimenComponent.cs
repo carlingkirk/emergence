@@ -33,10 +33,9 @@ namespace Emergence.Client.Components
                     Specimen.InventoryItem.Name = Specimen.Lifeform.ScientificName;
                 }
 
-                var photos = await ApiClient.GetPhotosAsync(PhotoType.Specimen, Specimen?.SpecimenId ?? Id);
-                if (photos.Any())
+                if (Specimen.Photos != null && Specimen.Photos.Any())
                 {
-                    UploadedPhotos = photos.ToList();
+                    UploadedPhotos = Specimen.Photos.ToList();
                 }
                 else
                 {

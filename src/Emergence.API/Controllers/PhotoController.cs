@@ -14,15 +14,11 @@ namespace Emergence.API.Controllers
     {
         private readonly IPhotoService _photoService;
         private readonly ILocationService _locationService;
-        private readonly IConfigurationService _configurationService;
-        private readonly string _blobStorageRoot;
 
-        public PhotoController(IPhotoService photoService, ILocationService locationService, IConfigurationService configurationService)
+        public PhotoController(IPhotoService photoService, ILocationService locationService)
         {
             _photoService = photoService;
             _locationService = locationService;
-            _configurationService = configurationService;
-            _blobStorageRoot = _configurationService.Settings.BlobStorageRoot + "photos/";
         }
 
         [HttpPost]
@@ -42,10 +38,6 @@ namespace Emergence.API.Controllers
 
             photoResult = (await _photoService.AddOrUpdatePhotosAsync(photoResult)).ToList();
 
-            foreach (var photo in photoResult)
-            {
-                photo.BlobPathRoot = _blobStorageRoot;
-            }
             return photoResult;
         }
 
@@ -63,9 +55,7 @@ namespace Emergence.API.Controllers
                     photoResult.Location = await _locationService.AddOrUpdateLocationAsync(photoResult.Location);
                 }
 
-                photoResult = await _photoService.AddOrUpdatePhotoAsync(photoResult);
-                photoResult.BlobPathRoot = _blobStorageRoot;
-                return photoResult;
+                return await _photoService.AddOrUpdatePhotoAsync(photoResult);
             }
             return null;
         }
@@ -92,11 +82,6 @@ namespace Emergence.API.Controllers
         public async Task<IEnumerable<Photo>> Get(PhotoType type, int id)
         {
             var photoResult = await _photoService.GetPhotosAsync(type, id);
-
-            foreach (var photo in photoResult)
-            {
-                photo.BlobPathRoot = _blobStorageRoot;
-            }
 
             return photoResult;
         }
