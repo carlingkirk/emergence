@@ -36,6 +36,7 @@ namespace Emergence.Client.Components
             }
             else
             {
+                IsEditing = true;
                 Activity = new Activity();
                 UploadedPhotos = new List<Photo>();
             }

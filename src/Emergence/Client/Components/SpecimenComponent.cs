@@ -41,21 +41,21 @@ namespace Emergence.Client.Components
                 {
                     UploadedPhotos = new List<Photo>();
                 }
-
-                if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.UserId == UserId)
-                {
-                    IsEditable = true;
-                }
             }
             else if (Specimen == null)
             {
-                IsEditable = true;
+                IsEditing = true;
                 Specimen = new Specimen
                 {
                     Lifeform = new Lifeform(),
-                    InventoryItem = new InventoryItem()
+                    InventoryItem = new InventoryItem { Inventory = new Inventory { UserId = UserId } }
                 };
                 UploadedPhotos = new List<Photo>();
+            }
+
+            if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.UserId == UserId)
+            {
+                IsEditable = true;
             }
         }
     }

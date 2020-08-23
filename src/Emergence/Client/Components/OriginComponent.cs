@@ -32,6 +32,7 @@ namespace Emergence.Client.Components
             }
             else
             {
+                IsEditing = true;
                 Origin = new Origin
                 {
                     ParentOrigin = null,

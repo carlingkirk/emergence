@@ -45,7 +45,10 @@ namespace Emergence.Service
             origin.DateModified = DateTime.UtcNow;
             origin.UserId = userId;
 
-            origin.Location = await _locationService.AddOrUpdateLocationAsync(origin.Location);
+            if (origin.Location != null)
+            {
+                origin.Location = await _locationService.AddOrUpdateLocationAsync(origin.Location);
+            }
 
             var originResult = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.OriginId, origin.AsStore());
             return originResult.AsModel();

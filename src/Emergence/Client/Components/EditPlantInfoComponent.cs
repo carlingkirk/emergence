@@ -31,6 +31,7 @@ namespace Emergence.Client.Components
                 PlantInfo.Origin = SelectedOrigin;
             }
             PlantInfo.Lifeform = SelectedLifeform;
+            PlantInfo.CreatedBy = UserId;
 
             if (!string.IsNullOrEmpty(MinZone))
             {

@@ -3,7 +3,7 @@
 
 @inherits SpecimenComponent
 
-<button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+<button class="btn btn-primary" @onclick="async () => { Specimen = null; await IsItemLoadedChanged.InvokeAsync(false); }">Back</button>
 @if (IsEditable)
 {
     <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
