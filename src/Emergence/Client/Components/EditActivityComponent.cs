@@ -46,6 +46,11 @@ namespace Emergence.Client.Components
             {
                 await BlazoredModal.Close(ModalResult.Ok(Activity));
             }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+                await IsItemLoadedChanged.InvokeAsync(false);
+            }
         }
 
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)

@@ -65,18 +65,16 @@
                 </tr>
             }
         </table>
-        @if (List.Any())
-        {
-            <div>
+        <div>
+            @if (List.Any())
+            {
                 <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
-            </div>
-        }
-        else if (!string.IsNullOrEmpty(UserId))
-        {
-            <div>
+            }
+            @if (!string.IsNullOrEmpty(UserId))
+            {
                 <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Origin</button>
-            </div>
-        }
+            }
+        </div>
     }
 }
 else if (Id > 0 || IsItemLoaded && !string.IsNullOrEmpty(UserId))

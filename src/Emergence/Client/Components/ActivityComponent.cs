@@ -2,16 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Emergence.Client.Common;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class ActivityComponent : EmergenceComponent
+    public class ActivityComponent : ViewerComponent
     {
-        [Parameter]
-        public int Id { get; set; }
         [Parameter]
         public Activity Activity { get; set; }
         [Parameter]
@@ -26,6 +23,7 @@ namespace Emergence.Client.Components
             if (Id > 0 || Activity != null)
             {
                 Activity ??= await ApiClient.GetActivityAsync(Id);
+
                 var photos = await ApiClient.GetPhotosAsync(PhotoType.Activity, Id);
                 if (photos.Any())
                 {
@@ -41,6 +39,11 @@ namespace Emergence.Client.Components
             {
                 Activity = new Activity();
                 UploadedPhotos = new List<Photo>();
+            }
+
+            if (!string.IsNullOrEmpty(UserId) && Activity.UserId == UserId)
+            {
+                IsEditable = true;
             }
         }
     }

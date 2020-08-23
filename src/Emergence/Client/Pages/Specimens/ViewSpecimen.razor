@@ -44,14 +44,14 @@
             </div>
             @if (@Specimen.InventoryItem.DateAcquired.HasValue)
             {
-            <div class="col-6 col-xs-1">
-                <div>
-                    <label for="date-acquired">Date Acquired</label>
+                <div class="col-6 col-xs-1">
+                    <div>
+                        <label for="date-acquired">Date Acquired</label>
+                    </div>
+                    <div>
+                        <span class="text-body">@Specimen.InventoryItem.DateAcquired.Value.ToShortDateString()</span>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-body">@Specimen.InventoryItem.DateAcquired.Value.ToShortDateString()</span>
-                </div>
-            </div>
             }
             <div class="col-6 col-xs-1">
                 <div>
@@ -71,9 +71,12 @@
             </div>
         </div>
     </div>
-    <div class="form-group container">
-        <ViewPhotos UploadedPhotos="UploadedPhotos" />
-    </div>
+    @if (UploadedPhotos != null && UploadedPhotos.Any())
+    {
+        <div class="form-group container">
+            <ViewPhotos UploadedPhotos="UploadedPhotos" />
+        </div>
+    }
     <div class="form-group container">
         <div class="row">
             <div class="col">
