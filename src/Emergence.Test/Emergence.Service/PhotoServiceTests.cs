@@ -55,11 +55,10 @@ namespace Emergence.Test.Emergence.API.Services
 
             var file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.jpg");
 
-            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object);
+            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
 
             var result = (await photoService.UploadOriginalsAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me")).FirstOrDefault();
 
-            result.BlobPathRoot = BlobStorageRoot + "photos/";
             result.Filename.Should().Be("original.jpg");
             result.Location.Latitude.Should().Be(38.885986);
             result.Location.Longitude.Should().Be(-77.036880);
@@ -92,7 +91,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt");
 
-            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object);
+            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
 
             var result = (await photoService.UploadOriginalsAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me")).FirstOrDefault();
 
@@ -109,7 +108,7 @@ namespace Emergence.Test.Emergence.API.Services
         [Fact]
         public async Task TestGetPhotosAsync()
         {
-            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object);
+            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
 
             var photos = await photoService.GetPhotosAsync(new int[] { 1, 2, 3 });
 
@@ -120,7 +119,7 @@ namespace Emergence.Test.Emergence.API.Services
         [Fact(Skip = "Integration test")]
         public async Task TestResizePhoto()
         {
-            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object);
+            var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
             using (var stream = new MemoryStream())
             using (var image = Image.Load("../../../Data/original.jpg"))
             {
