@@ -3,35 +3,20 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
 {
-    public static class FakePlants
+    public static class FakePlantInfos
     {
-        public static IEnumerable<Lifeform> Plants()
-        {
-            var plants = new List<Lifeform>
-            {
-                new Lifeform
-                {
-                    Id = 0,
-                    CommonName = "Dense Blazing Star",
-                    ScientificName = "Liatris spicata"
-                }
-            };
-
-            return plants;
-        }
-
-        public static IEnumerable<PlantInfo> PlantInfos()
+        public static IEnumerable<PlantInfo> Get()
         {
             var plantInfos = new List<PlantInfo>
             {
                 new PlantInfo
                 {
-                    LifeformId = 0,
-                    Id = 0,
-                    OriginId = 0,
-                    TaxonId = 0,
-                    CommonName = "",
-                    ScientificName = "",
+                    LifeformId = 1,
+                    Id = 1,
+                    OriginId = 1,
+                    TaxonId = 1,
+                    CommonName = "Dense Blazing Star",
+                    ScientificName = "Liatris spicata",
                     MinimumBloomTime = 7,
                     MaximumBloomTime = 8,
                     MinimumHeight = 1,
@@ -46,13 +31,31 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumLight = "FullSun",
                     MinimumZone = "3",
                     MaximumZone = "8",
-                    SeedRefrigerate = false,
-                    StratificationStage1 = "",
-                    StratificationStage2 = null,
-                    StratificationStage3 = null,
-                    ScarificationType1 = "Nick",
-                    ScarificationType2 = "Soak",
-                    ScarificationType3 = null
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]"
+                },
+                new PlantInfo
+                {
+                    LifeformId = 2,
+                    Id = 2,
+                    OriginId = 2,
+                    TaxonId = 0,
+                    CommonName = "White wild indigo",
+                    ScientificName = "Baptisia alba",
+                    MinimumBloomTime = 4,
+                    MaximumBloomTime = 5,
+                    MinimumHeight = 2,
+                    MaximumHeight = 4,
+                    HeightUnit = "Feet",
+                    MinimumSpread = 2,
+                    MaximumSpread = 2.5,
+                    SpreadUnit = "Feet",
+                    MinimumWater = "Dry",
+                    MaximumWater = "Medium",
+                    MinimumLight = "PartShade",
+                    MaximumLight = "FullSun",
+                    MinimumZone = "5",
+                    MaximumZone = "8",
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"1\",\"StratificationType\":\"AbrasionScarify\"},{\"Step\":\"2\",\"DayLength\":\"10\",\"StratificationType\":\"ColdMoist\"}]"
                 }
             };
             return plantInfos;

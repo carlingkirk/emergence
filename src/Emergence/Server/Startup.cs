@@ -1,12 +1,21 @@
-﻿using Emergence.API.Services;
-using Emergence.API.Services.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Reflection;
+using Emergence.Client.Server;
 using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
+using Emergence.Data.Shared.Email;
 using Emergence.Data.Shared.Stores;
+using Emergence.Service;
+using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,19 +40,60 @@ namespace Emergence.Server
             services.AddDbContext<EmergenceDbContext>();
 
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-            services.AddAuthentication().AddIdentityServerJwt();
+            services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+            {
+                options.IdentityResources["openid"].UserClaims.Add("name");
+                options.ApiResources.Single().UserClaims.Add("name");
+                options.IdentityResources["openid"].UserClaims.Add("role");
+                options.ApiResources.Single().UserClaims.Add("role");
+            });
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+
+            services.AddAuthentication().AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["GoogleOAuthClientId"];
+                    options.ClientSecret = Configuration["GoogleOAuthClientSecret"];
+                })
+                .AddIdentityServerJwt();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+
+            services.AddLogging();
+
+            // Configuration
+            services.AddSingleton<IConfigurationService, ConfigurationService>();
 
             // Application Services
-            services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<ILifeformService, LifeformService>();
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<IOriginService, OriginService>();
+            services.AddTransient<IPlantInfoService, PlantInfoService>();
+            services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<IBlobService, BlobService>();
+            services.AddTransient<IPhotoService, PhotoService>();
+            services.AddTransient<IExifService, ExifService>();
 
             //Add repositories
-            services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
             services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
             services.AddScoped(typeof(IRepository<InventoryItem>), typeof(Repository<InventoryItem>));
+            services.AddScoped(typeof(IRepository<Lifeform>), typeof(Repository<Lifeform>));
+            services.AddScoped(typeof(IRepository<Location>), typeof(Repository<Location>));
+            services.AddScoped(typeof(IRepository<Origin>), typeof(Repository<Origin>));
+            services.AddScoped(typeof(IRepository<Photo>), typeof(Repository<Photo>));
+            services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
+            services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -52,6 +102,7 @@ namespace Emergence.Server
             });
 
             services.AddControllersWithViews();
+            services.AddControllers().AddApplicationPart(Assembly.Load("Emergence.API"));
             services.AddRazorPages();
         }
 

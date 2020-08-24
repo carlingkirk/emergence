@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Emergence.API.Services.Interfaces;
 using Emergence.Data.Shared.Models;
+using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emergence.API.Controllers
@@ -17,6 +17,7 @@ namespace Emergence.API.Controllers
         }
 
         [HttpGet]
+        [Route("{id}")]
         public async Task<Inventory> Get(int id) => await _inventoryService.GetInventoryAsync(id);
 
         [HttpPut]

@@ -8,7 +8,7 @@ namespace Emergence.Data.Shared.Stores
         public string UserId { get; set; }
     }
 
-    public class InventoryItem
+    public class InventoryItem : IIncludable<InventoryItem, Inventory>
     {
         public int InventoryId { get; set; }
         public int Id { get; set; }
@@ -18,7 +18,9 @@ namespace Emergence.Data.Shared.Stores
         public int Quantity { get; set; }
         public string Status { get; set; }
         public DateTime? DateAcquired { get; set; }
-        public DateTime? DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
+        public Inventory Inventory { get; set; }
+        public Origin Origin { get; set; }
     }
 }

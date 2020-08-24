@@ -1,0 +1,19 @@
+@using Emergence.Data.Shared.Models
+@inherits EmergenceComponent
+
+@if (UploadedPhotos != null)
+{
+    @foreach (var photo in UploadedPhotos)
+    {
+    <div class="col">
+        <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
+                onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
+                style="max-width:300px;" />
+    </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public IList<Photo> UploadedPhotos { get; set; }
+}

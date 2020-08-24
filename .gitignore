@@ -351,3 +351,8 @@ MigrationBackup/
 
 # sqlite database
 *.db
+
+# publishing
+ServiceDependencies/
+PublishProfiles/
+serviceDependencies*

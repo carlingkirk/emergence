@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -11,13 +12,19 @@ namespace Emergence.Data.Shared.Models
         public string Description { get; set; }
         public string Authors { get; set; }
         public Uri Uri { get; set; }
+        public int? LocationId { get; set; }
         public Location Location { get; set; }
         public string ExternalId { get; set; }
         public string AltExternalId { get; set; }
+        public string UserId { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
     }
 
     public enum OriginType
     {
+        [Description("")]
+        Unknown,
         Nursery,
         Store,
         Location,
@@ -25,6 +32,7 @@ namespace Emergence.Data.Shared.Models
         Event,
         Website,
         Webpage,
-        Publication
+        Publication,
+        File
     }
 }

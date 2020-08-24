@@ -1,12 +1,11 @@
 # Data Design
-- PlantProfile
+- Plant Profile
   - Taxonomy
-    - 
   - CommonName
     - List
 - Item
   - Specimen
-- Source
+- Origin
   - Name
   - RelatedType: Item, Info
   - Type: Person, Event, Nursery, Store, Area

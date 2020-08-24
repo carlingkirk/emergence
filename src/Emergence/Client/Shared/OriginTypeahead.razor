@@ -1,0 +1,83 @@
+@using Emergence.Data.Shared
+@using Emergence.Data.Shared.Models
+@using Blazored.Typeahead
+@inherits EmergenceComponent
+
+<BlazoredTypeahead SearchMethod="FindOriginsAsync"
+                    Value="SelectedOrigin"
+                    ValueChanged="@((Origin o) => InvokeSelectedOriginChangedAsync(o))"
+                    ValueExpression="@(() => SelectedOrigin)"
+                    MinimumLength="3"
+                    Debounce="500" Context="origin">
+    <SelectedTemplate>
+        @if (!string.IsNullOrEmpty(origin.Name))
+        {
+            <span class="text-body">@(origin.Name)</span>
+        }
+        else if (origin.Uri != null)
+        {
+            <span class="text-body">@(origin.Uri.ToString())</span>
+        }
+    </SelectedTemplate>
+    <ResultTemplate>
+        @if (origin.OriginId == 0)
+        {
+            if (!string.IsNullOrEmpty(origin.Name))
+            {
+                <span class="text-body">Add new "@(origin.Name)" </span>
+            }
+            else if (origin.Uri != null)
+            {
+                <span class="text-body">Add new "@(origin.Uri)" </span>
+            }
+        }
+        else
+        {
+            <span class="text-body">@(origin.Name) </span>
+        }
+    </ResultTemplate>
+    <NotFoundTemplate>
+    </NotFoundTemplate>
+</BlazoredTypeahead>
+@code {
+    [Parameter]
+    public Origin SelectedOrigin { get; set; }
+
+    [Parameter]
+    public EventCallback<Origin> SelectedOriginChanged { get; set; }
+
+    protected async Task InvokeSelectedOriginChangedAsync(Origin origin)
+    {
+        SelectedOrigin = origin;
+        await SelectedOriginChanged.InvokeAsync(origin);
+    }
+
+    protected async Task<IEnumerable<Origin>> FindOriginsAsync(string searchText)
+    {
+        var originResult = await ApiClient.FindOriginsAsync(new FindParams
+        {
+            SearchText = searchText,
+            Take = 10,
+            Skip = 0,
+            SortBy = "Name",
+            SortDirection = SortDirection.Ascending
+        });
+
+        var origins = originResult.Results.ToList();
+
+        if (!string.IsNullOrEmpty(searchText))
+        {
+            if (Uri.TryCreate(searchText, UriKind.Absolute, out Uri uriResult) &&
+                (uriResult.Scheme == Uri.UriSchemeHttps || uriResult.Scheme == Uri.UriSchemeHttp))
+            {
+                origins.Add(new Origin { Uri = uriResult });
+            }
+            else
+            {
+                origins.Add(new Origin { Name = searchText });
+            }
+        }
+
+        return origins;
+    }
+}

@@ -1,0 +1,83 @@
+@page "/origin/list"
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions;
+@inherits ListOriginsComponent
+
+@if (!IsItemLoaded)
+{
+    @if (ShowSearch)
+    {
+        <input type="text" @bind="SearchText" id="search" />
+        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+    }
+
+    @if (List != null)
+    {
+        <table>
+            <SortableHeaders HeaderNames="@(new Dictionary<string, string>
+                {
+                        { "Name", "Name" },
+                        { "Type", "Type" },
+                        { "Description", "Description" },
+                        { "ParentOrigin", "Parent Origin" },
+                        { "City", "City" },
+                        { "Link", "Link" }
+                })"
+                             Sort="SortAsync"
+                             @bind-Values="List" />
+            @if (!List.Any())
+            {
+                <tr>
+                    <td>
+                        <span>No origins found</span>
+                    </td>
+                </tr>
+            }
+            @foreach (var origin in List)
+            {
+                <tr>
+                    <td>
+                        <a href="" @onclick="() => LoadInfo(origin.OriginId)" @onclick:preventDefault><span class="link">@origin.Name</span></a>
+                    </td>
+                    <td>
+                        <span>@origin.Type.ToFriendlyName()</span>
+                    </td>
+                    <td>
+                        <span>@origin.Description</span>
+                    </td>
+                    <td>
+                        @if (@origin.ParentOrigin != null)
+                        {
+                            <span @onclick="@(async () => await UpdateParentOriginAsync(origin.ParentOrigin))" class="link">@origin.ParentOrigin.Name</span>
+                        }
+                    </td>
+                    <td>
+                        <span>@(origin.Location?.CityState)</span>
+                    </td>
+                    <td>
+                        <span>
+                            @if (@origin.Uri != null)
+                            {
+                                <a href="@origin.Uri" target="_blank"><span>@origin.Uri.ToString()</span></a>
+                            }
+                        </span>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div>
+            @if (List.Any())
+            {
+                <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+            }
+            @if (!string.IsNullOrEmpty(UserId))
+            {
+                <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Origin</button>
+            }
+        </div>
+    }
+}
+else if (Id > 0 || IsItemLoaded && !string.IsNullOrEmpty(UserId))
+{
+<OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></OriginViewer>
+}

@@ -1,0 +1,26 @@
+@page "/activity/{Id:int}"
+@using Emergence.Client.Components
+
+@inherits ActivityComponent
+
+<button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+@if (IsEditable)
+{
+    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+}
+@if (IsEditing && Activity != null)
+{
+    <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else if (Activity != null)
+{
+    <ViewActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else
+{
+    <span>Loading...</span>
+}
+
+@code {
+
+}

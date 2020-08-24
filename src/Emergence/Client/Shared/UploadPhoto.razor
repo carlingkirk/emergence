@@ -1,0 +1,66 @@
+@using BlazorInputFile
+@using Emergence.Data.Shared.Models
+@inherits EmergenceComponent
+
+@if (UploadedPhotos != null)
+{
+<div class="row">
+    <div class="col-6">
+        <label for="photos">Photos</label>
+        <InputFile OnChange="UploadPhotosAsync" multiple capture="camera" accept="image/*" class="form-control" style="border: 0; padding: .25em 0;"></InputFile>
+    </div>
+</div>
+<div class="row">
+    @foreach (var photo in UploadedPhotos)
+    {
+        <div class="col-3">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
+                         onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
+                         style="max-width:300px;" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+}
+
+@code {
+    [Parameter]
+    public PhotoType PhotoType { get; set; }
+    [Parameter]
+    public IList<Photo> UploadedPhotos { get; set; }
+    [Parameter]
+    public EventCallback<IList<Photo>> UploadedPhotosChanged { get; set; }
+
+    protected async Task UploadPhotosAsync(IFileListEntry[] files)
+    {
+        var photos = await ApiClient.UploadPhotosAsync(files, PhotoType);
+        UploadedPhotos = photos.ToList();
+        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
+    }
+
+    protected async Task UploadPhotoAsync(IFileListEntry[] files)
+    {
+        var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType);
+        UploadedPhotos.Add(photo);
+        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
+    }
+
+    protected async Task RemovePhotoAsync(int id)
+    {
+        var photo = UploadedPhotos.First(p => p.PhotoId == id);
+        var result = await ApiClient.RemovePhotoAsync(photo.PhotoId);
+        if (result)
+        {
+            UploadedPhotos.Remove(photo);
+        }
+        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
+    }
+}

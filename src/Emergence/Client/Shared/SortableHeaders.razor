@@ -1,0 +1,22 @@
+@typeparam T
+
+@if (Values != null && Values.Any())
+{
+<thead>
+    <tr>
+        @foreach (var header in HeaderNames)
+        {
+            if (!string.IsNullOrEmpty(header.Key))
+            {
+                <td @onclick="async () => await DoSort(header.Key)" class="sortable">
+                    <span class="@GetSortClass(header.Key)"></span><span>@header.Value</span>
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+        }
+    </tr>
+</thead>
+}

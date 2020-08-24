@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -10,7 +11,7 @@ namespace Emergence.Test.Data.Fakes.Stores
             {
                 new Inventory
                 {
-                    Id = 0,
+                    Id = 1,
                     UserId = new Guid().ToString()
                 }
             };
@@ -19,10 +20,11 @@ namespace Emergence.Test.Data.Fakes.Stores
             {
                 new InventoryItem
                 {
-                    Id = 0,
-                    InventoryId = 0,
-                    Name = "Liatris Spicata seeds",
-                    OriginId = 0,
+                    Id = 1,
+                    InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
+                    Name = "Liatris spicata seeds",
+                    OriginId = 1,
                     ItemType = "Specimen",
                     Quantity = 25,
                     Status = "Available",
@@ -32,10 +34,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 },
                 new InventoryItem
                 {
-                    Id = 1,
-                    InventoryId = 0,
+                    Id = 2,
+                    InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
                     Name = "Liatris spicata plants",
-                    OriginId = 0,
+                    OriginId = 1,
                     ItemType = "Specimen",
                     Quantity = 3,
                     Status = "Available",
@@ -45,10 +48,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 },
                 new InventoryItem
                 {
-                    Id = 2,
-                    InventoryId = 0,
+                    Id = 3,
+                    InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
                     Name = "Mushroom compost",
-                    OriginId = 0,
+                    OriginId = 3,
                     ItemType = "Supply",
                     Quantity = 1,
                     Status = "Wishlist",

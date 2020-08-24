@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -9,21 +10,36 @@ namespace Emergence.Test.Data.Fakes.Stores
         {
             new Specimen
             {
-                Id = 0,
-                InventoryItemId = 0,
-                SpecimenStage = "Seed"
-            },
-            new Specimen
-            {
                 Id = 1,
                 InventoryItemId = 1,
-                SpecimenStage = "Stratification"
+                SpecimenStage = "Seed",
+                LifeformId = 1,
+                InventoryItem = FakeInventories.GetItems().First(i => i.InventoryId == 1),
+                Lifeform = FakeLifeforms.Get().First(l => l.Id == 1),
+                DateCreated = Helpers.Today,
+                DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
             },
             new Specimen
             {
                 Id = 2,
-                InventoryItemId = 2,
-                SpecimenStage = "Growing"
+                InventoryItemId = 1,
+                SpecimenStage = "Stratification",
+                LifeformId = 1,
+                InventoryItem = FakeInventories.GetItems().First(i => i.InventoryId == 1),
+                Lifeform = FakeLifeforms.Get().First(l => l.Id == 1),
+                DateCreated = Helpers.Today,
+                DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
+            },
+            new Specimen
+            {
+                Id = 3,
+                InventoryItemId = 1,
+                SpecimenStage = "Growing",
+                LifeformId = 1,
+                InventoryItem = FakeInventories.GetItems().First(i => i.InventoryId == 1),
+                Lifeform = FakeLifeforms.Get().First(l => l.Id == 1),
+                DateCreated = Helpers.Today,
+                DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
             }
         };
     }

@@ -1,28 +1,23 @@
 @page "/"
-@inject IModalService Modal
 @using Emergence.Client.Components
-<link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
 
-<h1>Emergence</h1>
+<h2>Emergence is a tool to share plants and knowledge.</h2>
+<p></p>
+<p>Just getting started with your garden?  Find species that will thrive in your particular environment and learn more information about it.</p>
 
-<button class="btn btn-primary" @onclick="@(() => AddSpecimen(0))">Add New Specimen</button>
+<p>Already have seeds?  Share your seed inventory with others for swapping for new ones.</p>
+
+<p>You can track your propagation activities, like dividing seedlings, stratification, or seed collection.
+    Ever mean to collect those seeds from that special plant in your yard but forget?
+    Schedule it and get notified when it's the best time!</p>
+
+<p>It can be hard to find a particular plant that you want to add to your garden. Perhaps someone a few miles a way has an extra, or seed to give?</p>
+
+<p>Emergence was born because it is so hard to find native plants at big box nurseries.
+    Let's empower each other to promote biodiversity in our backyards and make sure the birds, bees and butterflies have a place to call home.</p>
+
 
 @code
 {
-    async Task AddSpecimen(int Id)
-    {
-        var modalParams = new ModalParameters();
-        modalParams.Add("Id", Id);
-        var specimenModal = Modal.Show<EditSpecimen>("setgh", modalParams);
-        var result = await specimenModal.Result;
 
-        if (result.Cancelled)
-        {
-            Console.WriteLine("Modal was cancelled");
-        }
-        else
-        {
-            Console.WriteLine("Modal was closed");
-        }
-    }
 }

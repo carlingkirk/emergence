@@ -1,53 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class SpecimenComponent : ComponentBase
+    public class SpecimenComponent : ViewerComponent
     {
-        [Inject]
-        protected HttpClient Client { get; set; }
-        [CascadingParameter]
-        protected BlazoredModalInstance BlazoredModal { get; set; }
         [Parameter]
-        public int Id { get; set; }
         public Specimen Specimen { get; set; }
+        public Origin SelectedOrigin { get; set; }
+        public Lifeform SelectedLifeform { get; set; }
+        public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
         public IEnumerable<Status> Statuses => Enum.GetValues(typeof(Status)).Cast<Status>();
 
         protected override async Task OnInitializedAsync()
         {
-            if (Id > 0)
+            await base.OnInitializedAsync();
+
+            if (Id > 0 || Specimen != null)
             {
-                Specimen = await Client.GetFromJsonAsync<Specimen>($"/api/specimen/{Id}");
+                Specimen ??= await ApiClient.GetSpecimenAsync(Id);
+                SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
+                SelectedLifeform = Specimen.Lifeform;
+
+                if (Specimen.Lifeform != null)
+                {
+                    Specimen.InventoryItem.Name = Specimen.Lifeform.ScientificName;
+                }
+
+                if (Specimen.Photos != null && Specimen.Photos.Any())
+                {
+                    UploadedPhotos = Specimen.Photos.ToList();
+                }
+                else
+                {
+                    UploadedPhotos = new List<Photo>();
+                }
             }
-            else
+            else if (Specimen == null)
             {
+                IsEditing = true;
                 Specimen = new Specimen
                 {
-                    PlantInfo = new PlantInfo(),
-                    InventoryItem = new InventoryItem()
+                    Lifeform = new Lifeform(),
+                    InventoryItem = new InventoryItem { Inventory = new Inventory { UserId = UserId } }
                 };
+                UploadedPhotos = new List<Photo>();
             }
-        }
 
-        protected async Task SaveSpecimen()
-        {
-            var result = await Client.PutAsJsonAsync("/api/specimen", Specimen);
-            if (result.IsSuccessStatusCode)
+            if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.UserId == UserId)
             {
-                Specimen = await result.Content.ReadFromJsonAsync<Specimen>();
+                IsEditable = true;
             }
-            BlazoredModal.Close(ModalResult.Ok(Specimen));
         }
     }
 }

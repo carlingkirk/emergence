@@ -3,8 +3,12 @@ name: .NET Core
 on:
   push:
     branches: [ initial ]
+    paths-ignore:
+    - 'docs/**'
   pull_request:
     branches: [ initial ]
+    paths-ignore:
+    - 'docs/**'
 
 jobs:
   build:

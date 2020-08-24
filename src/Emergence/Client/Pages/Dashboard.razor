@@ -1,0 +1,14 @@
+@page "/dashboard"
+@using Emergence.Client.Common
+@using Emergence.Client.Pages.Activities
+
+<AuthorizeView>
+    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
+    <h3>Dashboard</h3>
+    <label for="upcoming-activities"></label>
+    <ListActivities ShowSearch="false" />
+    @code
+    {
+
+    }
+</AuthorizeView>

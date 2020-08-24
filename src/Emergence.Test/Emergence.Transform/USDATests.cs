@@ -9,22 +9,35 @@ namespace Emergence.Test.Emergence.Transform
     {
         [Theory]
         [MemberData(nameof(GetNames))]
-        public void ChecklistParserTest(string scientificNameWithAuthor, string genus, string species, string author, string variant)
+        public void ChecklistParserTest(string scientificNameWithAuthor, string expectedGenus, string expectedSpecies, string expectedAuthor,
+            string expectedSubspecies, string expectedVariety, string expectedSubvariety)
         {
-            var (Genus, Species, Author, Variant) = ChecklistParser.ParseScientificNameWithAuthor(scientificNameWithAuthor);
+            var (genus, species, author, subspecies, variety, subvariety) = ChecklistParser.ParseScientificNameWithAuthor(scientificNameWithAuthor);
 
-            Genus.Should().Be(genus);
-            Species.Should().Be(species);
-            Author.Should().Be(author);
-            Variant.Should().Be(variant);
+            genus.Should().Be(expectedGenus);
+            species.Should().Be(expectedSpecies);
+            author.Should().Be(expectedAuthor);
+            subspecies.Should().Be(expectedSubspecies);
+            variety.Should().Be(expectedVariety);
+            subvariety.Should().Be(expectedSubvariety);
         }
 
         public static IEnumerable<object[]> GetNames()
         {
-            yield return new object[] { "Abies magnifica A. Murray bis var. critchfieldii Lanner", "Abies", "magnifica", "Lanner", "critchfieldii" };
-            yield return new object[] { "Hibiscus manihot L.", "Hibiscus", "manihot", "L.", null };
-            yield return new object[] { "Lindernia dubia (L.) Pennell var. inundata (Pennell) Pennell", "Lindernia", "dubia", "(Pennell) Pennell", "inundata" };
-            yield return new object[] { "Amaranthus ×tucsonensis Henrickson", "Amaranthus", "×tucsonensis", "Henrickson", null };
+            yield return new object[] { "Abies magnifica A. Murray bis var. critchfieldii Lanner",
+                "Abies", "magnifica", "Lanner", null, "critchfieldii", null };
+            yield return new object[] { "Hibiscus manihot L.",
+                "Hibiscus", "manihot", "L.", null, null, null };
+            yield return new object[] { "Lindernia dubia (L.) Pennell var. inundata (Pennell) Pennell",
+                "Lindernia", "dubia", "(Pennell) Pennell", null, "inundata", null };
+            yield return new object[] { "Amaranthus ×tucsonensis Henrickson",
+                "Amaranthus", "×tucsonensis", "Henrickson", null, null, null };
+            yield return new object[] { "Ruellia caroliniensis (J.F. Gmel.) Steud. ssp. ciliosa (Pursh) R.W. Long var. cinerascens (Fernald) Kartesz & Gandhi",
+                "Ruellia", "caroliniensis", "(Fernald) Kartesz & Gandhi", "ciliosa", "cinerascens", null };
+            yield return new object[] { "Anatherum virginicum (L.) Spreng. subvar. mohrii (Hack.) Roberty",
+                "Anatherum", "virginicum", "(Hack.) Roberty", null, null, "mohrii" };
+            yield return new object[] { "Abelmoschus esculentus (L.) Moench",
+                "Abelmoschus", "esculentus", "(L.) Moench", null, null, null };
         }
     }
 }

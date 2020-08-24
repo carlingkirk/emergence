@@ -13,8 +13,8 @@ namespace Emergence.Data.Shared.Models
 
     public class InventoryItem
     {
-        public int InventoryId { get; set; }
         public int InventoryItemId { get; set; }
+        public Inventory Inventory { get; set; }
         public ItemType ItemType { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }

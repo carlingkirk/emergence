@@ -1,0 +1,136 @@
+@page "/origin/edit/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Emergence.Data.Shared.Models
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions
+@using Blazored.Typeahead
+@attribute [Authorize]
+@inherits EditOriginComponent
+
+@if (Origin != null)
+{
+    <EditForm Model="@Origin">
+        <div class="form-group container">
+            <div class="row">
+                <div class="col-6">
+                    <label for="name">Name</label>
+                    <input @bind="@Origin.Name" type="text" class="form-control" id="name" />
+                </div>
+                <div class="col-2">
+                    <label for="type">Type</label>
+                    <select @bind="@Origin.Type" type="text" class="form-control" id="type">
+                        @foreach (var type in OriginTypes)
+                        {
+                            <option value="@type">@type.ToFriendlyName()</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-3 col-xs-1">
+                    <label for="origin">Origin</label>
+                    <OriginTypeahead @bind-SelectedOrigin="SelectedParentOrigin" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <label for="uri">Link</label>
+                    <input @bind="@OriginUri" type="text" class="form-control" id="uri" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="description">Description</label>
+                    <textarea @bind="@Origin.Description" type="text" class="form-control" id="description" />
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group container">
+            <div class="row">
+                <div class="col-6">
+                    <label for="authors">Authors</label>
+                    <input @bind="@Origin.Authors" type="text" class="form-control" id="authors" />
+                </div>
+                <div class="col-3">
+                    <label for="external-id">External Identifier</label>
+                    <input @bind="@Origin.ExternalId" type="text" class="form-control" id="external-id" />
+                </div>
+                <div class="col-3">
+                    <label for="alt-external-id">Alternate External Identifier</label>
+                    <input @bind="@Origin.AltExternalId" type="text" class="form-control" id="alt-external-id" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group container">
+            <div class="row">
+                <div class="col-9">
+                    <div class="row">
+                        <div class="col">
+                            <label for="address-line-1">Address Line 1</label>
+                            <input @bind="@Origin.Location.AddressLine1" type="text" class="form-control" id="address-line-1" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="address-line-1">Address Line 2</label>
+                            <input @bind="@Origin.Location.AddressLine2" type="text" class="form-control" id="address-line-2" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="city">City</label>
+                            <input @bind="@Origin.Location.City" type="text" class="form-control" id="city" />
+                        </div>
+                        <div class="col">
+                            <label for="city">State/Province</label>
+                            <input @bind="@Origin.Location.StateOrProvince" type="text" class="form-control" id="state-province" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="postal-code">Postal Code</label>
+                            <input @bind="@Origin.Location.PostalCode" type="text" class="form-control" id="postal-code" />
+                        </div>
+                        <div class="col">
+                            <label for="country">Country</label>
+                            <input @bind="@Origin.Location.Country" type="text" class="form-control" id="country" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <label for="latitude">Latitude</label>
+                            <input @bind="@Origin.Location.Latitude" type="text" class="form-control" id="latitude" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="longitude">Longitude</label>
+                            <input @bind="@Origin.Location.Longitude" type="text" class="form-control" id="longitude" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group container">
+            <div class="row">
+                <div class="col">
+                    <button @onclick="(async () => await SaveOriginAsync())" class="btn btn-primary">Save</button>
+                    @if (BlazoredModal != null)
+                    {
+                        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <span>Loading...</span>
+}
+
+@code {
+
+}

@@ -6,19 +6,26 @@ namespace Emergence.Test.Data.Fakes.Models
 {
     public static class FakeSpecimens
     {
-        public static IEnumerable<Specimen> Specimens()
+        public static IEnumerable<Specimen> Get()
         {
             var specimens = new List<Specimen>
             {
                 new Specimen
                 {
+                    SpecimenId = 1,
+                    Lifeform = new Lifeform
+                    {
+                        LifeformId = 1,
+                        CommonName = "Dense Blazing Star",
+                        ScientificName = "Liatris spicata",
+                    },
                     InventoryItem = new InventoryItem
                     {
-                        InventoryId = 0,
-                        InventoryItemId = 0,
+                        Inventory = new Inventory { InventoryId = 1, UserId = "me" },
+                        InventoryItemId = 1,
                         DateAcquired = new DateTime(2020,06,26),
                         ItemType = ItemType.Specimen,
-                        Name = "Liatris Spicata Seeds",
+                        Name = "Liatris spicata Seeds",
                         Quantity = 50,
                         Status = Status.Available,
                         Origin = new Origin
@@ -51,7 +58,8 @@ namespace Emergence.Test.Data.Fakes.Models
                     },
                     PlantInfo = new PlantInfo
                     {
-                        LifeformId = 0,
+                        PlantInfoId = 1,
+                        LifeformId = 1,
                         CommonName = "Dense Blazing Star",
                         ScientificName = "Liatris spicata",
                         BloomTime = new BloomTime
@@ -63,13 +71,13 @@ namespace Emergence.Test.Data.Fakes.Models
                         {
                             MinimumHeight = 1,
                             MaximumHeight = 2,
-                            Unit = Unit.Feet
+                            Unit = DistanceUnit.Feet
                         },
                         Spread = new Spread
                         {
                             MinimumSpread = .75,
                             MaximumSpread = 1.5,
-                            Unit = Unit.Feet
+                            Unit = DistanceUnit.Feet
                         },
                         Requirements = new Requirements
                         {
@@ -84,27 +92,37 @@ namespace Emergence.Test.Data.Fakes.Models
                                 MaximumWater = WaterType.Medium
                             },
                             SoilRequirements = null,
-                            ScarificationRequirements = new ScarificationRequirements
+                            StratificationStages = new List<StratificationStage>
                             {
-                                ScarificationTypes = new List<ScarificationType>() { ScarificationType.Nick }
-                            },
-                            StratificationRequirements = new StratificationRequirements
-                            {
-                                StratificationStages = new Dictionary<int, StratificationStage>()
+                                new StratificationStage
                                 {
-                                    {
-                                        0,
-                                        new StratificationStage { DayLength = 60, MinimumTemperature = 37, MaximumTemperature = 43 }
-                                    }
+                                    Step = 1,
+                                    DayLength = 0,
+                                    StratificationType = StratificationType.NickScarify
+                                },
+                                new StratificationStage
+                                {
+                                    Step = 2,
+                                    DayLength = 30,
+                                    StratificationType = StratificationType.ColdMoist
                                 }
                             },
-                            SeedStorageRequirements = new SeedStorageRequirements { Refrigerate = false },
                             ZoneRequirements = new ZoneRequirements
                             {
                                 MinimumZone = new Zone { Number = 3 },
                                 MaximumZone = new Zone { Number = 8 }
                             }
-                        }
+                        },
+                        Origin = new Origin
+                        {
+                            OriginId = 1,
+                        },
+                        Taxon = new Taxon
+                        {
+                            TaxonId = 1
+                        },
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = null
                     },
                     SpecimenStage = SpecimenStage.Seed
                 }
