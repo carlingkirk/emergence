@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -12,6 +16,22 @@ namespace Emergence.Server
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    if (context.HostingEnvironment.IsProduction())
+                    {
+                        var settings = config.Build();
+
+                        var azureServiceTokenProvider = new AzureServiceTokenProvider();
+                        var keyVaultClient = new KeyVaultClient(
+                            new KeyVaultClient.AuthenticationCallback(
+                                azureServiceTokenProvider.KeyVaultTokenCallback));
+
+                        config.AddAzureKeyVault(settings["App.KeyVault"],
+                            keyVaultClient,
+                            new DefaultKeyVaultSecretManager());
+                    }
+                })
                 .ConfigureLogging(logging =>
                 {
                     logging.AddFilter("System", LogLevel.Debug)
