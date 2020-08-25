@@ -27,7 +27,7 @@ namespace Emergence.Server
                             new KeyVaultClient.AuthenticationCallback(
                                 azureServiceTokenProvider.KeyVaultTokenCallback));
 
-                        config.AddAzureKeyVault(settings["App.KeyVault"],
+                        config.AddAzureKeyVault(settings["App:KeyVault"],
                             keyVaultClient,
                             new DefaultKeyVaultSecretManager());
                     }
