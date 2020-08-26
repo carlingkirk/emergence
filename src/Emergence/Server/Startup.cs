@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Emergence.Client.Server;
 using Emergence.Data;
 using Emergence.Data.Identity;
@@ -43,7 +44,10 @@ namespace Emergence.Server
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+            var cert = LoadCertificate(Configuration["CertificateThumbprint"]);
+            services.AddIdentityServer()
+                .AddSigningCredential(cert)
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
             {
                 options.IdentityResources["openid"].UserClaims.Add("name");
                 options.ApiResources.Single().UserClaims.Add("name");
@@ -148,6 +152,23 @@ namespace Emergence.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
+        }
+
+        private X509Certificate2 LoadCertificate(string thumbprint)
+        {
+            X509Certificate2 cert = null;
+            using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            {
+                certStore.Open(OpenFlags.ReadOnly);
+                var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
+
+                if (certCollection.Count > 0)
+                {
+                    cert = certCollection[0];
+                }
+            }
+
+            return cert;
         }
     }
 }
