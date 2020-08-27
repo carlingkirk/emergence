@@ -24,6 +24,7 @@ using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Emergence.Server
@@ -59,6 +60,7 @@ namespace Emergence.Server
                 .AddSigningCredential(cert)
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
             {
+                options.SigningCredential = new SigningCredentials(new X509SecurityKey(cert), "RS256");
                 options.IdentityResources["openid"].UserClaims.Add("name");
                 options.ApiResources.Single().UserClaims.Add("name");
                 options.IdentityResources["openid"].UserClaims.Add("role");
@@ -172,6 +174,7 @@ namespace Emergence.Server
                     azureServiceTokenProvider.KeyVaultTokenCallback));
             var certSecret = keyVaultClient.GetSecretAsync(Configuration["App:KeyVault"], certName).Result;
             var certBytes = Convert.FromBase64String(certSecret.Value);
+
             return new X509Certificate2(certBytes);
         }
     }
