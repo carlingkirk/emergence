@@ -1,3 +1,5 @@
+using System;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +19,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -44,7 +48,13 @@ namespace Emergence.Server
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var cert = LoadCertificate(Configuration["CertificateThumbprint"]);
+            var certName = Configuration["CertificateName"];
+            if (string.IsNullOrEmpty(certName))
+            {
+                throw new ConfigurationErrorsException("Unable to read certificate thumbprint");
+            }
+
+            var cert = LoadCertificate(certName);
             services.AddIdentityServer()
                 .AddSigningCredential(cert)
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
@@ -154,21 +164,15 @@ namespace Emergence.Server
             });
         }
 
-        private X509Certificate2 LoadCertificate(string thumbprint)
+        private X509Certificate2 LoadCertificate(string certName)
         {
-            X509Certificate2 cert = null;
-            using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-            {
-                certStore.Open(OpenFlags.ReadOnly);
-                var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
-
-                if (certCollection.Count > 0)
-                {
-                    cert = certCollection[0];
-                }
-            }
-
-            return cert;
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var keyVaultClient = new KeyVaultClient(
+                new KeyVaultClient.AuthenticationCallback(
+                    azureServiceTokenProvider.KeyVaultTokenCallback));
+            var certSecret = keyVaultClient.GetSecretAsync(Configuration["App:KeyVault"], certName).Result;
+            var certBytes = Convert.FromBase64String(certSecret.Value);
+            return new X509Certificate2(certBytes);
         }
     }
 }
