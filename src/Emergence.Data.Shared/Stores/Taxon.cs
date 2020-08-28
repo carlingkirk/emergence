@@ -2,7 +2,7 @@ using System;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class Taxon
+    public class Taxon : IAuditable
     {
         public int Id { get; set; }
         public string Kingdom { get; set; }
@@ -33,6 +33,8 @@ namespace Emergence.Data.Shared.Stores
         public string Variety { get; set; }
         public string Subvariety { get; set; }
         public string Form { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }

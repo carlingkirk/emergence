@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Emergence.Data.External.iNaturalist;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Transform.Data

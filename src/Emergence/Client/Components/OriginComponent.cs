@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -35,12 +36,14 @@ namespace Emergence.Client.Components
                 IsEditing = true;
                 Origin = new Origin
                 {
+                    CreatedBy = UserId,
+                    DateCreated = DateTime.Now,
                     ParentOrigin = null,
                     Location = new Location()
                 };
             }
 
-            if (!string.IsNullOrEmpty(UserId) && Origin.UserId == UserId)
+            if (!string.IsNullOrEmpty(UserId) && Origin.CreatedBy == UserId)
             {
                 IsEditable = true;
             }

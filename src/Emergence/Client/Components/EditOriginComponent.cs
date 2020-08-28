@@ -33,7 +33,9 @@ namespace Emergence.Client.Components
                 Origin.ParentOrigin = SelectedParentOrigin;
             }
 
-            Origin.UserId = UserId;
+            Origin.CreatedBy ??= UserId;
+            Origin.ModifiedBy = UserId;
+
             if (Origin.Location != null)
             {
                 if (Origin.Location.LocationId == 0)

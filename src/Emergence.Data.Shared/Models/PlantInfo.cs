@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Interfaces;
 
@@ -9,7 +8,6 @@ namespace Emergence.Data.Shared.Models
     {
         public int PlantInfoId { get; set; }
         public int LifeformId { get; set; }
-        public Taxon Taxon { get; set; }
         public string ScientificName { get; set; }
         public string CommonName { get; set; }
         public bool? Preferred { get; set; }
@@ -17,11 +15,14 @@ namespace Emergence.Data.Shared.Models
         public Height Height { get; set; }
         public Spread Spread { get; set; }
         public Requirements Requirements { get; set; }
-        public Origin Origin { get; set; }
-        public Lifeform Lifeform { get; set; }
         public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
+
+        public Taxon Taxon { get; set; }
+        public Origin Origin { get; set; }
+        public Lifeform Lifeform { get; set; }
     }
 
     public class BloomTime
@@ -107,37 +108,5 @@ namespace Emergence.Data.Shared.Models
 
             return height;
         }
-    }
-
-    public enum Month
-    {
-        [Description("")]
-        Unknown,
-        Jan,
-        Feb,
-        Mar,
-        Apr,
-        May,
-        Jun,
-        Jul,
-        Aug,
-        Sep,
-        Oct,
-        Nov,
-        Dec
-    }
-
-    public enum DistanceUnit
-    {
-        [Description("")]
-        Unknown,
-        [Description("ft")]
-        Feet,
-        [Description("in")]
-        Inches,
-        [Description("m")]
-        Meters,
-        [Description("cm")]
-        Centimeters
     }
 }

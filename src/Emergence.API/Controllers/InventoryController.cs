@@ -23,15 +23,16 @@ namespace Emergence.API.Controllers
         [HttpPut]
         public async Task<Inventory> Put(Inventory inventory)
         {
-            if (inventory.UserId == null)
-            {
-                inventory.UserId = UserId;
-            }
-
-            if (inventory.UserId != UserId)
+            if (inventory.OwnerId != UserId)
             {
                 throw new UnauthorizedAccessException();
             }
+
+            inventory.OwnerId ??= UserId;
+            inventory.CreatedBy ??= UserId;
+            inventory.ModifiedBy = UserId;
+            inventory.DateCreated ??= DateTime.UtcNow;
+            inventory.DateModified = DateTime.UtcNow;
 
             return await _inventoryService.AddOrUpdateInventoryAsync(inventory);
         }

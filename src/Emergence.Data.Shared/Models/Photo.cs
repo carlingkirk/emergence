@@ -14,6 +14,8 @@ namespace Emergence.Data.Shared.Models
         public int? Width { get; set; }
         public int? Height { get; set; }
         public DateTime? DateTaken { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Location Location { get; set; }
@@ -27,14 +29,5 @@ namespace Emergence.Data.Shared.Models
                 ? BlobPathRoot + BlobPath + "/" + "medium.png" : null;
         public string ThumbnailUri => !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
                 ? BlobPathRoot + BlobPath + "/" + "thumb.png" : null;
-    }
-    public enum PhotoType
-    {
-        Activity,
-        Specimen,
-        InventoryItem,
-        Origin,
-        PlantInfo,
-        User
     }
 }

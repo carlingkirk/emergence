@@ -9,7 +9,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.API.Services
 {
@@ -40,9 +39,9 @@ namespace Emergence.Test.API.Services
 
             specimens.Should().NotBeNull("it exists");
             specimens.Should().HaveCount(3);
-            specimens.Where(s => s.SpecimenStage == Models.SpecimenStage.Seed).Should().HaveCount(1);
-            specimens.Where(s => s.SpecimenStage == Models.SpecimenStage.Stratification).Should().HaveCount(1);
-            specimens.Where(s => s.SpecimenStage == Models.SpecimenStage.Growing).Should().HaveCount(1);
+            specimens.Where(s => s.SpecimenStage == SpecimenStage.Seed).Should().HaveCount(1);
+            specimens.Where(s => s.SpecimenStage == SpecimenStage.Stratification).Should().HaveCount(1);
+            specimens.Where(s => s.SpecimenStage == SpecimenStage.Growing).Should().HaveCount(1);
         }
 
         [Fact]

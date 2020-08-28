@@ -57,7 +57,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
 
-            var result = (await photoService.UploadOriginalsAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me")).FirstOrDefault();
+            var result = (await photoService.UploadOriginalsAsync(new List<FormFile> { file }, PhotoType.Activity, "me")).FirstOrDefault();
 
             result.Filename.Should().Be("original.jpg");
             result.Location.Latitude.Should().Be(38.885986);
@@ -93,7 +93,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
 
-            var result = (await photoService.UploadOriginalsAsync(new List<FormFile> { file }, Models.PhotoType.Activity, "me")).FirstOrDefault();
+            var result = (await photoService.UploadOriginalsAsync(new List<FormFile> { file }, PhotoType.Activity, "me")).FirstOrDefault();
 
             var timezone = TimeZoneInfo.Local;
             var expectedDate = TimeZoneInfo.ConvertTimeToUtc(new DateTime(2020, 7, 22, 13, 45, 26, DateTimeKind.Unspecified), timezone);
@@ -112,7 +112,7 @@ namespace Emergence.Test.Emergence.API.Services
 
             var photos = await photoService.GetPhotosAsync(new int[] { 1, 2, 3 });
 
-            photos.FirstOrDefault().Type.Should().Be(Models.PhotoType.Activity);
+            photos.FirstOrDefault().Type.Should().Be(PhotoType.Activity);
             photos.FirstOrDefault().Location.LocationId.Should().Be(1);
         }
 

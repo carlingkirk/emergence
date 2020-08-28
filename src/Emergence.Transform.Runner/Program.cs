@@ -14,9 +14,15 @@ namespace Emergence.Transform.Runner
         {
             var configuration = LoadConfiguration();
             var importers = LoadImporters(configuration);
-            var dataDirectory = configuration["dataDirectory"];
-            var databaseDirectory = configuration["databaseDirectory"];
-            var connectionString = $"Data Source={databaseDirectory}emergence.db";
+            string dataDirectory;
+            if (args.Length != 0)
+            {
+                dataDirectory = args[0];
+            }
+            else
+            {
+                dataDirectory = configuration["dataDirectory"];
+            }
 
             var transformer = new USDATransformer();
             var startRow = 22914;
@@ -43,7 +49,7 @@ namespace Emergence.Transform.Runner
                         }
                         else
                         {
-                            using (var dbContext = new EmergenceDbContext(connectionString, false))
+                            using (var dbContext = new EmergenceDbContext(false))
                             {
                                 var processor = new USDA.USDAProcessor(dbContext);
                                 await processor.InitializeOrigin(transformer.Origin);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Data.Fakes.Models

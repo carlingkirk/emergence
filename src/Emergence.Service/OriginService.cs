@@ -43,7 +43,7 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Origin> AddOrUpdateOriginAsync(Data.Shared.Models.Origin origin, string userId)
         {
             origin.DateModified = DateTime.UtcNow;
-            origin.UserId = userId;
+            origin.CreatedBy = userId;
 
             if (origin.Location != null)
             {
@@ -65,7 +65,7 @@ namespace Emergence.Service
         public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, string userId)
         {
             findParams.SearchText = "%" + findParams.SearchText + "%";
-            var originQuery = _originRepository.WhereWithIncludes(o => o.UserId == userId &&
+            var originQuery = _originRepository.WhereWithIncludes(o => o.CreatedBy == userId &&
                                                                     (EF.Functions.Like(o.Name, findParams.SearchText) ||
                                                                     EF.Functions.Like(o.Description, findParams.SearchText) ||
                                                                     EF.Functions.Like(o.Location.City, findParams.SearchText) ||

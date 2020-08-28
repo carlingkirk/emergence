@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
@@ -8,7 +9,6 @@ using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
 using Xunit;
-using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.API.Services
 {
@@ -33,9 +33,9 @@ namespace Emergence.Test.API.Services
 
             inventory.Should().NotBeNull("it exists");
             inventory.Items.Should().HaveCount(3);
-            inventory.Items.Where(i => i.Status == Models.Status.Available).Should().HaveCount(2);
-            inventory.Items.Where(i => i.Status == Models.Status.Wishlist).Should().HaveCount(1);
-            inventory.Items.Where(i => i.ItemType == Models.ItemType.Supply).Should().HaveCount(1);
+            inventory.Items.Where(i => i.Status == ItemStatus.Available).Should().HaveCount(2);
+            inventory.Items.Where(i => i.Status == ItemStatus.Wishlist).Should().HaveCount(1);
+            inventory.Items.Where(i => i.ItemType == ItemType.Supply).Should().HaveCount(1);
         }
     }
 }

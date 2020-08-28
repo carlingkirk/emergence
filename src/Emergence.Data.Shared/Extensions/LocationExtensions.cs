@@ -17,6 +17,8 @@ namespace Emergence.Data.Shared.Extensions
             StateOrProvince = source.StateOrProvince,
             PostalCode = source.PostalCode,
             Country = source.Country,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
@@ -33,6 +35,8 @@ namespace Emergence.Data.Shared.Extensions
             StateOrProvince = source.StateOrProvince,
             PostalCode = source.PostalCode,
             Country = source.Country,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Data.Fakes.Models
@@ -23,7 +24,7 @@ namespace Emergence.Test.Data.Fakes.Models
                             ItemType = ItemType.Specimen,
                             Name = "Liatris spicata seeds",
                             Quantity = 50,
-                            Status = Status.Available,
+                            Status = ItemStatus.Available,
                             Origin = new Origin
                             {
                                 OriginId = 2,

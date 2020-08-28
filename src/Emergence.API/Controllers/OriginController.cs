@@ -28,7 +28,6 @@ namespace Emergence.API.Controllers
         {
             if (!string.IsNullOrEmpty(origin.Name))
             {
-                origin.UserId = UserId;
                 return await _originService.AddOrUpdateOriginAsync(origin, UserId);
             }
             else

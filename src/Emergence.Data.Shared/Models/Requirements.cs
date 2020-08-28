@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using Emergence.Data.Shared.Extensions;
 
 namespace Emergence.Data.Shared.Models
@@ -109,72 +108,6 @@ namespace Emergence.Data.Shared.Models
                 return null;
             }
         }
-    }
-
-    public enum WaterType
-    {
-        [Description("")]
-        Unknown,
-        Wet,
-        [Description("Medium Wet")]
-        MediumWet,
-        Medium,
-        [Description("Medium Dry")]
-        MediumDry,
-        Dry
-    }
-
-    public enum LightType
-    {
-        [Description("")]
-        Unknown,
-        [Description("Full Sun")]
-        FullSun,
-        [Description("Part Sun")]
-        PartSun,
-        [Description("Part Shade")]
-        PartShade,
-        [Description("Full Shade")]
-        FullShade
-    }
-
-    public enum SoilType
-    {
-        Fertile,
-        Loamy,
-        Rocky,
-        Clay,
-        Peaty,
-        Swamp,
-        Water
-    }
-
-    public enum StratificationType
-    {
-        [Description("Refrigerate seed for storage")]
-        Refrigeration,
-        [Description("Sand scarification")]
-        AbrasionScarify,
-        [Description("Nick scarification")]
-        NickScarify,
-        [Description("Hot water treatment")]
-        HotWater,
-        [Description("Cold moist stratification")]
-        ColdMoist,
-        [Description("Warm moist stratification")]
-        WarmMoist,
-        [Description("Needs light to germinate")]
-        LightGermination,
-        [Description("Sow in late fall")]
-        CoolSoil,
-        [Description("Sow outdoors in fall")]
-        FallOutdoors,
-        [Description("Requires inoculum")]
-        Rhizobia,
-        [Description("Requires host plant")]
-        HostPlant,
-        [Description("Fern spores")]
-        FernSpores
     }
 }
 

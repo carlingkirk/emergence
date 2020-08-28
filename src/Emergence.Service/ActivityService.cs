@@ -69,7 +69,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Activity> AddOrUpdateActivityAsync(Data.Shared.Models.Activity activity, string userId)
         {
-            activity.UserId = userId;
+            activity.CreatedBy = userId;
             var activityResult = await _activityRepository.AddOrUpdateAsync(a => a.Id == activity.ActivityId, activity.AsStore());
             return activityResult.AsModel();
         }
@@ -81,7 +81,7 @@ namespace Emergence.Service
                 findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
-            var activityQuery = _activityRepository.WhereWithIncludes(a => a.Specimen.InventoryItem.Inventory.UserId == userId &&
+            var activityQuery = _activityRepository.WhereWithIncludes(a => a.Specimen.InventoryItem.Inventory.OwnerId == userId &&
                                                                                 (!specimenId.HasValue ||
                                                                                 a.SpecimenId == specimenId) &&
                                                                                 (findParams.SearchText == null ||

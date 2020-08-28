@@ -1,13 +1,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
 using Xunit;
-using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.API.Services
 {
@@ -37,8 +37,8 @@ namespace Emergence.Test.API.Services
 
             plantInfos.Should().NotBeNull("it exists");
             plantInfos.Should().HaveCount(2);
-            plantInfos.Where(p => p.BloomTime.MinimumBloomTime == Models.Month.Jul).Should().HaveCount(1);
-            plantInfos.Where(p => p.Requirements.StratificationStages.Any(s => s.StratificationType == Models.StratificationType.AbrasionScarify)).Should().HaveCount(1);
+            plantInfos.Where(p => p.BloomTime.MinimumBloomTime == Month.Jul).Should().HaveCount(1);
+            plantInfos.Where(p => p.Requirements.StratificationStages.Any(s => s.StratificationType == StratificationType.AbrasionScarify)).Should().HaveCount(1);
         }
 
         [Fact]

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
@@ -55,7 +56,7 @@ namespace Emergence.API.Controllers
                 var inventory = await _inventoryService.GetInventoryAsync(UserId);
                 if (inventory == null)
                 {
-                    inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { UserId = UserId });
+                    inventory = await _inventoryService.AddOrUpdateInventoryAsync(new Inventory { OwnerId = UserId, CreatedBy = UserId, DateCreated = DateTime.Now });
                 }
                 specimen.InventoryItem.Inventory = inventory;
             }

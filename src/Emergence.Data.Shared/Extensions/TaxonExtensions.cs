@@ -36,6 +36,8 @@ namespace Emergence.Data.Shared.Extensions
             Variety = source.Variety,
             Subvariety = source.Subvariety,
             Form = source.Form,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
@@ -71,6 +73,8 @@ namespace Emergence.Data.Shared.Extensions
             Variety = source.Variety,
             Subvariety = source.Subvariety,
             Form = source.Form,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

@@ -6,19 +6,11 @@ namespace Emergence.Data.Repository
 {
     public class EmergenceDbContext : DbContext
     {
-        private string ConnectionString { get; }
         private bool IsLoggingEnabled { get; }
 
-        public EmergenceDbContext()
+        public EmergenceDbContext(bool isLoggingEnabled = true)
         {
-            ConnectionString = "Data Source=emergence.db";
-            IsLoggingEnabled = true;
-        }
-
-        public EmergenceDbContext(string connectionString, bool loggingEnabled = true)
-        {
-            ConnectionString = connectionString;
-            IsLoggingEnabled = loggingEnabled;
+            IsLoggingEnabled = isLoggingEnabled;
         }
 
         public static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
@@ -44,7 +36,6 @@ namespace Emergence.Data.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite(ConnectionString);
             if (IsLoggingEnabled)
             {
                 options.UseLoggerFactory(Logger)

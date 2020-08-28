@@ -11,14 +11,15 @@ namespace Emergence.Data.Shared.Extensions
             ParentOrigin = source.ParentOrigin != null ? source.ParentOrigin.AsModel() : source.ParentOriginId.HasValue ? new Models.Origin { OriginId = source.ParentOriginId.Value } : null,
             Name = source.Name,
             Description = source.Description,
-            Type = Enum.Parse<Models.OriginType>(source.Type),
+            Type = Enum.Parse<OriginType>(source.Type),
             LocationId = source.LocationId,
             Location = source.Location != null ? source.Location.AsModel() : source.LocationId.HasValue ? new Models.Location { LocationId = source.LocationId.Value } : null,
             Uri = source.Uri,
             Authors = source.Authors,
             ExternalId = source.ExternalId,
             AltExternalId = source.AltExternalId,
-            UserId = source.UserId,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
@@ -37,7 +38,8 @@ namespace Emergence.Data.Shared.Extensions
             Authors = source.Authors,
             ExternalId = source.ExternalId,
             AltExternalId = source.AltExternalId,
-            UserId = source.UserId,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

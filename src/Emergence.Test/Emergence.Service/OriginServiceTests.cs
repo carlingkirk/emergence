@@ -9,7 +9,6 @@ using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
 using Xunit;
-using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.API.Services
 {
@@ -40,7 +39,7 @@ namespace Emergence.Test.API.Services
 
             origins.Should().NotBeNull("it exists");
             origins.Should().HaveCount(3);
-            origins.Where(o => o.Type == Models.OriginType.Website).Should().HaveCount(1);
+            origins.Where(o => o.Type == OriginType.Website).Should().HaveCount(1);
             origins.Where(o => o.Uri == null).Should().HaveCount(1);
             origins.Where(o => o.Name == "Botany Yards").Should().HaveCount(1);
         }

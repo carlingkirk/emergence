@@ -8,17 +8,18 @@ namespace Emergence.Data.Shared.Extensions
         public static Models.Photo AsModel(this Photo source, string blobPathRoot = null) => new Models.Photo
         {
             PhotoId = source.Id,
-            Type = Enum.Parse<Models.PhotoType>(source.Type),
+            Type = Enum.Parse<PhotoType>(source.Type),
             TypeId = source.TypeId,
             Filename = source.Filename,
             BlobPath = source.BlobPath,
             BlobPathRoot = blobPathRoot,
-            UserId = source.UserId,
             Location = source.Location != null ? source.Location.AsModel() : source.LocationId.HasValue ? new Models.Location { LocationId = source.LocationId.Value } : null,
             ContentType = source.ContentType,
             Height = source.Height,
             Width = source.Width,
             DateTaken = source.DateTaken,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
@@ -30,12 +31,13 @@ namespace Emergence.Data.Shared.Extensions
             TypeId = source.TypeId,
             Filename = source.Filename,
             BlobPath = source.BlobPath,
-            UserId = source.UserId,
             LocationId = source.Location?.LocationId,
             ContentType = source.ContentType,
             Height = source.Height,
             Width = source.Width,
             DateTaken = source.DateTaken,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -16,7 +17,7 @@ namespace Emergence.Client.Components
         public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
-        public IEnumerable<Status> Statuses => Enum.GetValues(typeof(Status)).Cast<Status>();
+        public IEnumerable<ItemStatus> Statuses => Enum.GetValues(typeof(ItemStatus)).Cast<ItemStatus>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,12 +49,12 @@ namespace Emergence.Client.Components
                 Specimen = new Specimen
                 {
                     Lifeform = new Lifeform(),
-                    InventoryItem = new InventoryItem { Inventory = new Inventory { UserId = UserId } }
+                    InventoryItem = new InventoryItem { Inventory = new Inventory { CreatedBy = UserId, OwnerId = UserId, DateCreated = DateTime.UtcNow } }
                 };
                 UploadedPhotos = new List<Photo>();
             }
 
-            if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.UserId == UserId)
+            if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.CreatedBy == UserId)
             {
                 IsEditable = true;
             }

@@ -1,5 +1,6 @@
 using System;
 using Emergence.Data.External.USDA;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Transform.USDA;
 

@@ -1,7 +1,9 @@
 using System;
+using Emergence.Data.Repository;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +28,10 @@ namespace Emergence.Functions
                 .AddJsonFile($"local.appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
+
+            builder.Services.AddDbContext<EmergenceDbContext>(options =>
+                options.UseSqlServer(
+                    configuration.GetConnectionString("EmergenceDbConnection")));
 
             builder.Services.AddLogging();
             builder.Services.AddSingleton<IConfiguration>(configuration);

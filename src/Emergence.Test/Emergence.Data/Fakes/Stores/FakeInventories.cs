@@ -12,7 +12,9 @@ namespace Emergence.Test.Data.Fakes.Stores
                 new Inventory
                 {
                     Id = 1,
-                    UserId = new Guid().ToString()
+                    OwnerId = "me",
+                    CreatedBy = "me",
+                    DateCreated = Helpers.Today.AddDays(-5)
                 }
             };
 

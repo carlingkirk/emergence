@@ -8,7 +8,6 @@ using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
 using Xunit;
-using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Emergence.API.Services
 {
@@ -43,7 +42,7 @@ namespace Emergence.Test.Emergence.API.Services
             activities.Should().NotBeNull("it exists");
             activities.Should().HaveCount(3);
             activities.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
-            activities.Where(a => a.ActivityType == Models.ActivityType.Stratification).Should().HaveCount(1);
+            activities.Where(a => a.ActivityType == ActivityType.Stratification).Should().HaveCount(1);
             activities.Where(a => a.DateOccured != null).Should().HaveCount(3);
             activities.Where(a => a.DateScheduled != null).Should().HaveCount(2);
             activities.Where(a => a.DateCreated != null).Should().HaveCount(3);
@@ -62,7 +61,7 @@ namespace Emergence.Test.Emergence.API.Services
             activities.Results.Should().HaveCount(3);
             activities.Count.Should().Be(3);
             activities.Results.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
-            activities.Results.Where(a => a.ActivityType == Models.ActivityType.Stratification).Should().HaveCount(1);
+            activities.Results.Where(a => a.ActivityType == ActivityType.Stratification).Should().HaveCount(1);
             activities.Results.Where(a => a.DateOccured != null).Should().HaveCount(3);
             activities.Results.Where(a => a.DateScheduled != null).Should().HaveCount(2);
             activities.Results.Where(a => a.DateCreated != null).Should().HaveCount(3);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Data.Fakes.Models
@@ -21,13 +22,13 @@ namespace Emergence.Test.Data.Fakes.Models
                     },
                     InventoryItem = new InventoryItem
                     {
-                        Inventory = new Inventory { InventoryId = 1, UserId = "me" },
+                        Inventory = new Inventory { InventoryId = 1, OwnerId = "me" },
                         InventoryItemId = 1,
                         DateAcquired = new DateTime(2020,06,26),
                         ItemType = ItemType.Specimen,
                         Name = "Liatris spicata Seeds",
                         Quantity = 50,
-                        Status = Status.Available,
+                        Status = ItemStatus.Available,
                         Origin = new Origin
                         {
                             OriginId = 2,

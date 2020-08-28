@@ -14,6 +14,8 @@ namespace Emergence.Data.Shared.Stores
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public double? Altitude { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
     }

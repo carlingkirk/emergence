@@ -13,7 +13,5 @@ namespace Emergence.Data.Repository
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=emergence.db");
     }
 }

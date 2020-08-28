@@ -57,32 +57,32 @@ namespace Emergence.Data.Shared.Extensions
                 Origin = source.Origin != null ? source.Origin.AsModel() : source.OriginId.HasValue ? new Models.Origin { OriginId = source.OriginId.Value } : null,
                 BloomTime = new Models.BloomTime
                 {
-                    MinimumBloomTime = source.MinimumBloomTime.HasValue ? (Models.Month)source.MinimumBloomTime.Value : Models.Month.Unknown,
-                    MaximumBloomTime = source.MaximumBloomTime.HasValue ? (Models.Month)source.MaximumBloomTime.Value : Models.Month.Unknown
+                    MinimumBloomTime = source.MinimumBloomTime.HasValue ? (Month)source.MinimumBloomTime.Value : Month.Unknown,
+                    MaximumBloomTime = source.MaximumBloomTime.HasValue ? (Month)source.MaximumBloomTime.Value : Month.Unknown
                 },
                 Height = new Models.Height
                 {
                     MinimumHeight = source.MinimumHeight,
                     MaximumHeight = source.MaximumHeight,
-                    Unit = !string.IsNullOrEmpty(source.HeightUnit) ? Enum.Parse<Models.DistanceUnit>(source.HeightUnit) : Models.DistanceUnit.Unknown
+                    Unit = !string.IsNullOrEmpty(source.HeightUnit) ? Enum.Parse<DistanceUnit>(source.HeightUnit) : DistanceUnit.Unknown
                 },
                 Spread = new Models.Spread
                 {
                     MinimumSpread = source.MinimumSpread,
                     MaximumSpread = source.MaximumSpread,
-                    Unit = !string.IsNullOrEmpty(source.SpreadUnit) ? Enum.Parse<Models.DistanceUnit>(source.SpreadUnit) : Models.DistanceUnit.Unknown
+                    Unit = !string.IsNullOrEmpty(source.SpreadUnit) ? Enum.Parse<DistanceUnit>(source.SpreadUnit) : DistanceUnit.Unknown
                 },
                 Requirements = new Models.Requirements
                 {
                     LightRequirements = new Models.LightRequirements
                     {
-                        MinimumLight = !string.IsNullOrEmpty(source.MinimumLight) ? Enum.Parse<Models.LightType>(source.MinimumLight) : Models.LightType.Unknown,
-                        MaximumLight = !string.IsNullOrEmpty(source.MaximumLight) ? Enum.Parse<Models.LightType>(source.MaximumLight) : Models.LightType.Unknown
+                        MinimumLight = !string.IsNullOrEmpty(source.MinimumLight) ? Enum.Parse<LightType>(source.MinimumLight) : LightType.Unknown,
+                        MaximumLight = !string.IsNullOrEmpty(source.MaximumLight) ? Enum.Parse<LightType>(source.MaximumLight) : LightType.Unknown
                     },
                     WaterRequirements = new Models.WaterRequirements
                     {
-                        MinimumWater = !string.IsNullOrEmpty(source.MinimumWater) ? Enum.Parse<Models.WaterType>(source.MinimumWater) : Models.WaterType.Unknown,
-                        MaximumWater = !string.IsNullOrEmpty(source.MaximumWater) ? Enum.Parse<Models.WaterType>(source.MaximumWater) : Models.WaterType.Unknown,
+                        MinimumWater = !string.IsNullOrEmpty(source.MinimumWater) ? Enum.Parse<WaterType>(source.MinimumWater) : WaterType.Unknown,
+                        MaximumWater = !string.IsNullOrEmpty(source.MaximumWater) ? Enum.Parse<WaterType>(source.MaximumWater) : WaterType.Unknown,
                     },
                     SoilRequirements = null,
                     StratificationStages = stratificationStages,
@@ -93,7 +93,9 @@ namespace Emergence.Data.Shared.Extensions
                     }
                 },
                 Taxon = source.Taxon != null ? source.Taxon.AsModel() : source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
+                Preferred = source.Preferred,
                 CreatedBy = source.CreatedBy,
+                ModifiedBy = source.ModifiedBy,
                 DateCreated = source.DateCreated,
                 DateModified = source.DateModified
             };
@@ -110,20 +112,21 @@ namespace Emergence.Data.Shared.Extensions
             MaximumBloomTime = (short?)source.BloomTime?.MaximumBloomTime,
             MinimumHeight = source.Height?.MinimumHeight,
             MaximumHeight = source.Height?.MaximumHeight,
-            HeightUnit = source.Height?.Unit != Models.DistanceUnit.Unknown ? source.Height?.Unit.ToString() : null,
+            HeightUnit = source.Height?.Unit != DistanceUnit.Unknown ? source.Height?.Unit.ToString() : null,
             MinimumSpread = source.Spread?.MinimumSpread,
             MaximumSpread = source.Spread?.MaximumSpread,
-            SpreadUnit = source.Spread?.Unit != Models.DistanceUnit.Unknown ? source.Spread?.Unit.ToString() : null,
-            MinimumLight = source.Requirements?.LightRequirements?.MinimumLight != Models.LightType.Unknown ? source.Requirements?.LightRequirements?.MinimumLight.ToString() : null,
-            MaximumLight = source.Requirements?.LightRequirements?.MaximumLight != Models.LightType.Unknown ? source.Requirements?.LightRequirements?.MaximumLight.ToString() : null,
-            MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != Models.WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater.ToString() : null,
-            MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != Models.WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
+            SpreadUnit = source.Spread?.Unit != DistanceUnit.Unknown ? source.Spread?.Unit.ToString() : null,
+            MinimumLight = source.Requirements?.LightRequirements?.MinimumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MinimumLight.ToString() : null,
+            MaximumLight = source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MaximumLight.ToString() : null,
+            MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater.ToString() : null,
+            MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
             MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone?.Letter + source.Requirements?.ZoneRequirements?.MinimumZone?.Number ?? "",
             MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone?.Letter + source.Requirements?.ZoneRequirements?.MaximumZone?.Number ?? "",
             StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
             Preferred = source.Preferred,
             TaxonId = source.Taxon?.TaxonId,
             CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };

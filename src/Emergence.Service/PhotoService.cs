@@ -30,7 +30,7 @@ namespace Emergence.Service
             _blobStorageRoot = configurationService.Settings.BlobStorageRoot + "photos/";
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, Data.Shared.Models.PhotoType type, string userId)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId)
         {
             var photoResult = new List<Data.Shared.Models.Photo>();
 
@@ -121,7 +121,7 @@ namespace Emergence.Service
             return photo;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(Data.Shared.Models.PhotoType type, int typeId)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(PhotoType type, int typeId)
         {
             var photoResult = _photoRepository.GetSomeAsync(p => p.Type == type.ToString() && p.TypeId == typeId);
             var photos = new List<Data.Shared.Models.Photo>();

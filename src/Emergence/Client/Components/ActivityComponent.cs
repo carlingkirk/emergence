@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -37,11 +38,16 @@ namespace Emergence.Client.Components
             else
             {
                 IsEditing = true;
-                Activity = new Activity();
+                Activity = new Activity
+                {
+                    CreatedBy = UserId,
+                    AssignedTo = UserId,
+                    DateCreated = DateTime.Now
+                };
                 UploadedPhotos = new List<Photo>();
             }
 
-            if (!string.IsNullOrEmpty(UserId) && Activity.UserId == UserId)
+            if (!string.IsNullOrEmpty(UserId) && Activity.CreatedBy == UserId)
             {
                 IsEditable = true;
             }

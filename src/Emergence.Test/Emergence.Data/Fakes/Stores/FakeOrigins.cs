@@ -16,7 +16,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 "gardens (plus selected additions) by scientific name, common name and/or selected plant characteristics.",
                 Type = "Website",
                 Uri = new Uri("http://www.missouribotanicalgarden.org/plantfinder/plantfindersearch.aspx"),
-                UserId = "me"
+                CreatedBy = "me",
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5)
             },
             new Origin
             {
@@ -25,7 +26,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 Type = "Nursery",
                 Name = "Botany Yards",
                 Description = "",
-                UserId = "me"
+                CreatedBy = "me",
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(5)
             },
             new Origin
             {
@@ -36,7 +38,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 "February book release of Nature’s Best Hope: A New Approach to Conservation that Starts in Your Yard from Doug Tallamy, we invite you to " +
                 "be among the first to hear his new message. Growing more native plants to sustain all of nature is more urgent than ever.",
                 Uri = new Uri("https://gnps.org/2020-georgia-native-plant-society-annual-symposium/"),
-                UserId = "me"
+                CreatedBy = "me",
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(8)
             }
         };
     }

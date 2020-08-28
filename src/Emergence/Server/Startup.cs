@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -44,6 +45,12 @@ namespace Emergence.Server
         {
             services.AddDbContext<ApplicationDbContext>();
             services.AddDbContext<EmergenceDbContext>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("EmergenceDbConnection")));
+            services.AddDbContext<EmergenceDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("EmergenceDbConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
