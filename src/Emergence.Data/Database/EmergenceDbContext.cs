@@ -8,9 +8,9 @@ namespace Emergence.Data.Repository
     {
         private bool IsLoggingEnabled { get; }
 
-        public EmergenceDbContext(bool isLoggingEnabled = true)
+        public EmergenceDbContext(DbContextOptions<EmergenceDbContext> options) : base(options)
         {
-            IsLoggingEnabled = isLoggingEnabled;
+            IsLoggingEnabled = true;
         }
 
         public static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>

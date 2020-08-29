@@ -1,13 +1,11 @@
 using System.Threading.Tasks;
-using Emergence.Data.Repository;
 using Emergence.Data.Shared.Stores;
-using Emergence.Service;
 using Emergence.Service.Interfaces;
 using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Transform.USDA
 {
-    public class USDAProcessor
+    public class USDAProcessor : IUSDAProcessor
     {
         private readonly ILifeformService _lifeformService;
         private readonly IOriginService _originService;
@@ -15,12 +13,12 @@ namespace Emergence.Transform.USDA
         private readonly ITaxonService _taxonService;
         private Models.Origin Origin;
 
-        public USDAProcessor(EmergenceDbContext dbContext)
+        public USDAProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService)
         {
-            _lifeformService = new LifeformService(new Repository<Lifeform>(dbContext));
-            _originService = new OriginService(new Repository<Origin>(dbContext), new LocationService(new Repository<Location>(dbContext)));
-            _plantInfoService = new PlantInfoService(new Repository<PlantInfo>(dbContext));
-            _taxonService = new TaxonService(new Repository<Taxon>(dbContext));
+            _lifeformService = lifeformService;
+            _originService = originService;
+            _plantInfoService = plantInfoService;
+            _taxonService = taxonService;
         }
 
         public async Task InitializeOrigin(Models.Origin origin)

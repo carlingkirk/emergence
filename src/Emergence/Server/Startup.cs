@@ -43,14 +43,12 @@ namespace Emergence.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>();
-            services.AddDbContext<EmergenceDbContext>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("EmergenceDbConnection")));
+                    Configuration["EmergenceDbConnection"]));
             services.AddDbContext<EmergenceDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("EmergenceDbConnection")));
+                    Configuration["EmergenceDbConnection"]));
 
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()

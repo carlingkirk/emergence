@@ -1,10 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Emergence.Data.External.USDA;
+using Emergence.Data;
 using Emergence.Data.Repository;
+using Emergence.Data.Shared.Stores;
+using Emergence.Service;
+using Emergence.Service.Interfaces;
+using Emergence.Transform.USDA;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Emergence.Transform.Runner
 {
@@ -12,82 +17,66 @@ namespace Emergence.Transform.Runner
     {
         public static async Task Main(string[] args)
         {
-            var configuration = LoadConfiguration();
-            var importers = LoadImporters(configuration);
-            string dataDirectory;
-            if (args.Length != 0)
-            {
-                dataDirectory = args[0];
-            }
-            else
-            {
-                dataDirectory = configuration["dataDirectory"];
-            }
+            // create service collection
+            var services = new ServiceCollection();
+            ConfigureServices(services);
 
-            var transformer = new USDATransformer();
-            var startRow = 22914;
-            var batchSize = 50;
+            // create service provider
+            var serviceProvider = services.BuildServiceProvider();
 
-            foreach (var importer in importers)
-            {
-                if (importer.Type == ImporterType.TextImporter)
-                {
-                    var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
-                    var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
-                    var row = 1;
-                    var checklists = new List<Checklist>();
-                    await foreach (var result in textImporter.Import())
-                    {
-                        row++;
-                        if (row < startRow)
-                        {
-                            continue;
-                        }
-                        else if (row % batchSize != 0)
-                        {
-                            checklists.Add(result);
-                        }
-                        else
-                        {
-                            using (var dbContext = new EmergenceDbContext(false))
-                            {
-                                var processor = new USDA.USDAProcessor(dbContext);
-                                await processor.InitializeOrigin(transformer.Origin);
-                                foreach (var checklist in checklists)
-                                {
-                                    if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
-                                    {
-                                        var plantInfo = transformer.Transform(checklist);
-                                        var plantInfoResult = await processor.Process(plantInfo);
-
-                                        Console.WriteLine("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
-                                                          " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
-                                    }
-                                }
-                            }
-                            checklists.Clear();
-                        }
-                    }
-                }
-            }
-            Console.ReadKey();
+            // entry to run app
+            await serviceProvider.GetService<Runner>().Run(args);
         }
 
-        public static IEnumerable<ImporterConfiguration> LoadImporters(IConfigurationRoot configuration)
+        private static void ConfigureServices(IServiceCollection services)
         {
-            var importers = configuration.GetSection("importers").GetChildren();
-            foreach (var importer in importers)
+            // configure logging
+            services.AddLogging(builder =>
             {
-                yield return new ImporterConfiguration
-                {
-                    Name = importer["name"],
-                    Type = Enum.Parse<ImporterType>(importer["type"]),
-                    Filename = importer["filename"],
-                    HasHeaders = bool.Parse(importer["hasHeaders"])
-                };
-            }
-        }
+                builder.AddConsole();
+                builder.AddDebug();
+            });
 
-        public static IConfigurationRoot LoadConfiguration() => new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+            // build config
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddEnvironmentVariables()
+                .Build();
+
+
+            // DbContext
+            services.AddDbContext<EmergenceDbContext>(options =>
+                options.UseSqlServer(
+                    configuration["EmergenceDbConnection"]));
+
+            // Application Services
+            services.AddTransient<IActivityService, ActivityService>();
+            services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<ILifeformService, LifeformService>();
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<IOriginService, OriginService>();
+            services.AddTransient<IPlantInfoService, PlantInfoService>();
+            services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<IBlobService, BlobService>();
+            services.AddTransient<IPhotoService, PhotoService>();
+            services.AddTransient<IExifService, ExifService>();
+
+            //Add repositories
+            services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
+            services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
+            services.AddScoped(typeof(IRepository<InventoryItem>), typeof(Repository<InventoryItem>));
+            services.AddScoped(typeof(IRepository<Lifeform>), typeof(Repository<Lifeform>));
+            services.AddScoped(typeof(IRepository<Location>), typeof(Repository<Location>));
+            services.AddScoped(typeof(IRepository<Origin>), typeof(Repository<Origin>));
+            services.AddScoped(typeof(IRepository<Photo>), typeof(Repository<Photo>));
+            services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
+            services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
+
+            // add app
+            services.AddTransient(typeof(IUSDAProcessor), typeof(USDAProcessor));
+            services.AddTransient<Runner>();
+        }
     }
 }
