@@ -7,8 +7,13 @@ namespace Emergence.Transform.USDA
         public static (string Genus, string Species, string Author, string Subspecies, string Variety, string Subvariety)
             ParseScientificNameWithAuthor(string scientificNameWithAuthor)
         {
-            // TODO - split ssp and subvar
             var scientificNameParts = scientificNameWithAuthor.Split(" ");
+
+            var hasSpecies = true;
+            if (char.IsUpper(scientificNameParts[1][0]) || scientificNameParts[1][0] == '(')
+            {
+                hasSpecies = false;
+            }
 
             if (scientificNameParts.Length >= 3)
             {
@@ -17,6 +22,7 @@ namespace Emergence.Transform.USDA
                 var variety = "";
                 var subvariety = "";
                 var subspecies = "";
+
 
                 // Is it a var. or ssp.? If so we don't care about the first author
                 var isVariety = scientificNameWithAuthor.Contains(" var. ");
@@ -72,25 +78,40 @@ namespace Emergence.Transform.USDA
                         }
                     }
 
+                    if (!hasSpecies)
+                    {
+                        return (scientificNameParts[0], null, author.Trim(),
+                            string.IsNullOrEmpty(subspecies) ? null : subspecies,
+                            string.IsNullOrEmpty(variety) ? null : variety,
+                            string.IsNullOrEmpty(subvariety) ? null : subvariety);
+                    }
+                    else
+                    {
+                        return (scientificNameParts[0], scientificNameParts[1], author.Trim(),
+                            string.IsNullOrEmpty(subspecies) ? null : subspecies,
+                            string.IsNullOrEmpty(variety) ? null : variety,
+                            string.IsNullOrEmpty(subvariety) ? null : subvariety);
+                    }
 
-                    return (scientificNameParts[0], scientificNameParts[1], author.Trim(),
-                        string.IsNullOrEmpty(subspecies) ? null : subspecies,
-                        string.IsNullOrEmpty(variety) ? null : variety,
-                        string.IsNullOrEmpty(subvariety) ? null : subvariety);
                 }
                 else
                 {
-                    for (var i = 2; i < scientificNameParts.Length; i++)
+                    var start = hasSpecies ? 2 : 1;
+
+                    for (var i = start; i < scientificNameParts.Length; i++)
                     {
                         author += scientificNameParts[i] + " ";
                     }
-                    return (scientificNameParts[0], scientificNameParts[1], author.Trim(), null, null, null);
+
+                    var species = hasSpecies ? scientificNameParts[1] : null;
+
+                    return (scientificNameParts[0], species, author.Trim(), null, null, null);
                 }
             }
             else if (scientificNameParts.Length == 2)
             {
                 // Is the second word an author?
-                if (char.IsUpper(scientificNameParts[1][0]))
+                if (!hasSpecies)
                 {
                     return (scientificNameParts[0], null, scientificNameParts[1], null, null, null);
                 }

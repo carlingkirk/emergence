@@ -15,11 +15,23 @@ namespace Emergence.Transform.Runner
 {
     public class Program
     {
+        public static IConfiguration Configuration;
+
         public static async Task Main(string[] args)
         {
+            // build config
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddUserSecrets<Program>()
+                .AddEnvironmentVariables()
+                .Build();
+
+            Configuration = configuration;
+
             // create service collection
             var services = new ServiceCollection();
-            ConfigureServices(services);
+            ConfigureServices(services, configuration);
 
             // create service provider
             var serviceProvider = services.BuildServiceProvider();
@@ -28,7 +40,7 @@ namespace Emergence.Transform.Runner
             await serviceProvider.GetService<Runner>().Run(args);
         }
 
-        private static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             // configure logging
             services.AddLogging(builder =>
@@ -37,13 +49,7 @@ namespace Emergence.Transform.Runner
                 builder.AddDebug();
             });
 
-            // build config
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
-                .AddEnvironmentVariables()
-                .Build();
-
+            services.AddSingleton(configuration);
 
             // DbContext
             services.AddDbContext<EmergenceDbContext>(options =>
@@ -58,6 +64,7 @@ namespace Emergence.Transform.Runner
             services.AddTransient<IOriginService, OriginService>();
             services.AddTransient<IPlantInfoService, PlantInfoService>();
             services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<ITaxonService, TaxonService>();
             services.AddTransient<IBlobService, BlobService>();
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IExifService, ExifService>();

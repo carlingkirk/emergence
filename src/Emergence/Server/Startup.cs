@@ -97,6 +97,7 @@ namespace Emergence.Server
             services.AddTransient<IOriginService, OriginService>();
             services.AddTransient<IPlantInfoService, PlantInfoService>();
             services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<ITaxonService, TaxonService>();
             services.AddTransient<IBlobService, BlobService>();
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IExifService, ExifService>();

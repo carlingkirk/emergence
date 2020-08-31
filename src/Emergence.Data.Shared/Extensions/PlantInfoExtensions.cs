@@ -120,8 +120,12 @@ namespace Emergence.Data.Shared.Extensions
             MaximumLight = source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MaximumLight.ToString() : null,
             MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater.ToString() : null,
             MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
-            MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone?.Letter + source.Requirements?.ZoneRequirements?.MinimumZone?.Number ?? "",
-            MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone?.Letter + source.Requirements?.ZoneRequirements?.MaximumZone?.Number ?? "",
+            MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone != null
+                ? source.Requirements?.ZoneRequirements?.MinimumZone?.Letter + source.Requirements?.ZoneRequirements?.MinimumZone?.Number ?? ""
+                : null,
+            MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone != null
+                ? source.Requirements?.ZoneRequirements?.MaximumZone?.Letter + source.Requirements?.ZoneRequirements?.MaximumZone?.Number ?? ""
+                : null,
             StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
             Preferred = source.Preferred,
             TaxonId = source.Taxon?.TaxonId,

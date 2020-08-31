@@ -1,5 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Models = Emergence.Data.Shared.Models;
 
@@ -12,6 +13,8 @@ namespace Emergence.Transform.USDA
         private readonly IPlantInfoService _plantInfoService;
         private readonly ITaxonService _taxonService;
         private Models.Origin Origin;
+        private List<Models.Lifeform> Lifeforms { get; set; }
+        private List<Models.Taxon> Taxons { get; set; }
 
         public USDAProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService)
         {
@@ -30,12 +33,36 @@ namespace Emergence.Transform.USDA
             }
         }
 
+        public async Task InitializeLifeforms()
+        {
+            var lifeformResult = await _lifeformService.GetLifeformsAsync();
+            Lifeforms = lifeformResult.ToList();
+        }
+
+        public async Task InitializeTaxons()
+        {
+            var taxonResult = await _taxonService.GetTaxonsAsync();
+            Taxons = taxonResult.ToList();
+        }
+
         public async Task<Models.PlantInfo> Process(Models.PlantInfo plantInfo)
         {
-            var lifeformResult = await _lifeformService.GetLifeformByScientificNameAsync(plantInfo.ScientificName);
-            if (lifeformResult == null)
+            var lifeform = Lifeforms.FirstOrDefault(l => l.ScientificName == plantInfo.ScientificName);
+
+            if (lifeform == null)
             {
-                lifeformResult = await _lifeformService.AddOrUpdateLifeformAsync(plantInfo.Lifeform);
+                lifeform = await _lifeformService.AddOrUpdateLifeformAsync(plantInfo.Lifeform);
+            }
+
+            var taxon = Taxons.FirstOrDefault(t => t.Genus == plantInfo.Taxon.Genus && t.Species == plantInfo.Taxon.Species &&
+                                                                (plantInfo.Taxon.Subspecies == null || t.Subspecies == plantInfo.Taxon.Subspecies) &&
+                                                                (plantInfo.Taxon.Variety == null || t.Variety == plantInfo.Taxon.Variety) &&
+                                                                (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety) &&
+                                                                (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
+
+            if (taxon == null)
+            {
+                taxon = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
             }
 
             var originResult = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
@@ -44,20 +71,13 @@ namespace Emergence.Transform.USDA
                 originResult = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, null);
             }
 
-            var taxonResult = await _taxonService.GetTaxonAsync(plantInfo.Taxon.Genus, plantInfo.Taxon.Species, plantInfo.Taxon.Subspecies,
-                plantInfo.Taxon.Variety, plantInfo.Taxon.Subvariety, plantInfo.Taxon.Form);
-            if (taxonResult == null)
-            {
-                taxonResult = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
-            }
-
-            var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(originResult.OriginId, taxonResult.TaxonId);
+            var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(originResult.OriginId, taxon.TaxonId);
 
             if (plantInfoResult == null)
             {
                 plantInfo.Origin = originResult;
-                plantInfo.Lifeform = lifeformResult;
-                plantInfo.Taxon = taxonResult;
+                plantInfo.Lifeform = lifeform;
+                plantInfo.Taxon = taxon;
                 plantInfoResult = await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
             }
 

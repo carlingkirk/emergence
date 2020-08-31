@@ -38,6 +38,9 @@ namespace Emergence.Test.Emergence.Transform
                 "Anatherum", "virginicum", "(Hack.) Roberty", null, null, "mohrii" };
             yield return new object[] { "Abelmoschus esculentus (L.) Moench",
                 "Abelmoschus", "esculentus", "(L.) Moench", null, null, null };
+            yield return new object[] { "Acaulon Müll. Hal.", "Acaulon", null, "Müll. Hal.", null, null, null };
+            yield return new object[] { "Nodobryoria Common & Brodo", "Nodobryoria", null, "Common & Brodo", null, null, null };
+            yield return new object[] { "Acamptopappus (A. Gray) A. Gray", "Acamptopappus", null, "(A. Gray) A. Gray", null, null, null };
         }
     }
 }

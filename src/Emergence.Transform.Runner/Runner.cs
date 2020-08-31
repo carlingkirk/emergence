@@ -35,8 +35,12 @@ namespace Emergence.Transform.Runner
             }
 
             var transformer = new USDATransformer();
-            var startRow = 22914;
-            var batchSize = 50;
+            var startRow = 54000;
+            var batchSize = 100;
+
+            await _USDAProcessor.InitializeOrigin(transformer.Origin);
+            await _USDAProcessor.InitializeLifeforms();
+            await _USDAProcessor.InitializeTaxons();
 
             foreach (var importer in importers)
             {
@@ -59,16 +63,22 @@ namespace Emergence.Transform.Runner
                         }
                         else
                         {
-                            await _USDAProcessor.InitializeOrigin(transformer.Origin);
                             foreach (var checklist in checklists)
                             {
                                 if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
                                 {
-                                    var plantInfo = transformer.Transform(checklist);
-                                    var plantInfoResult = await _USDAProcessor.Process(plantInfo);
+                                    try
+                                    {
+                                        var plantInfo = transformer.Transform(checklist);
+                                        var plantInfoResult = await _USDAProcessor.Process(plantInfo);
 
-                                    _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
-                                                        " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+                                        _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
+                                                           " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.LogError($"Unable to process {checklist.Symbol} {checklist.CommonName} {checklist.ScientificNameWithAuthor} {ex.Message}", ex);
+                                    }
                                 }
                             }
 

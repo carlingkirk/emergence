@@ -20,27 +20,32 @@ namespace Emergence.Transform
         public PlantInfo Transform(Checklist source)
         {
             (var genus, var species, var author, var subspecies, var variety, var subvariety) = ChecklistParser.ParseScientificNameWithAuthor(source.ScientificNameWithAuthor);
+            var dateCreated = DateTime.UtcNow;
+            var scientificName = species != null ? genus + " " + species : genus;
 
             var origin = new Origin
             {
                 ParentOrigin = new Origin { OriginId = Origin.OriginId },
-                Name = author,
+                Name = "USDA Plants Profile for " + scientificName,
+                Authors = author,
                 ExternalId = source.Symbol,
                 AltExternalId = !string.IsNullOrEmpty(source.SynonymSymbol) ? source.SynonymSymbol : null,
                 Type = OriginType.File,
-                Uri = new Uri("https://plants.usda.gov/core/profile?symbol=" + source.Symbol)
+                Uri = new Uri("https://plants.usda.gov/core/profile?symbol=" + source.Symbol),
+                DateCreated = dateCreated
             };
 
             var lifeform = new Lifeform
             {
                 CommonName = source.CommonName,
-                ScientificName = genus + " " + species
+                ScientificName = scientificName,
+                DateCreated = dateCreated
             };
 
             return new PlantInfo
             {
                 CommonName = source.CommonName,
-                ScientificName = genus + " " + species,
+                ScientificName = scientificName,
                 Origin = origin,
                 Lifeform = lifeform,
                 Taxon = new Taxon
@@ -50,8 +55,10 @@ namespace Emergence.Transform
                     Species = species,
                     Subspecies = subspecies,
                     Variety = variety,
-                    Subvariety = subvariety
-                }
+                    Subvariety = subvariety,
+                    DateCreated = dateCreated
+                },
+                DateCreated = dateCreated
             };
         }
     }
