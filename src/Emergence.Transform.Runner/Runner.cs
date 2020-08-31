@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.External.USDA;
+using Emergence.Data.Shared.Models;
 using Emergence.Transform.USDA;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -35,7 +37,7 @@ namespace Emergence.Transform.Runner
             }
 
             var transformer = new USDATransformer();
-            var startRow = 54000;
+            var startRow = 81350;
             var batchSize = 100;
 
             await _USDAProcessor.InitializeOrigin(transformer.Origin);
@@ -63,26 +65,34 @@ namespace Emergence.Transform.Runner
                         }
                         else
                         {
-                            foreach (var checklist in checklists)
+                            if (checklists.Any())
                             {
-                                if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
+                                var plantInfos = new List<PlantInfo>();
+                                foreach (var checklist in checklists)
                                 {
-                                    try
+                                    if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
                                     {
-                                        var plantInfo = transformer.Transform(checklist);
-                                        var plantInfoResult = await _USDAProcessor.Process(plantInfo);
-
-                                        _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
-                                                           " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _logger.LogError($"Unable to process {checklist.Symbol} {checklist.CommonName} {checklist.ScientificNameWithAuthor} {ex.Message}", ex);
+                                        try
+                                        {
+                                            var plantInfo = transformer.Transform(checklist);
+                                            plantInfos.Add(plantInfo);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.LogError($"Unable to process {checklist.Symbol} {checklist.CommonName} {checklist.ScientificNameWithAuthor} {ex.Message}", ex);
+                                        }
                                     }
                                 }
-                            }
 
-                            checklists.Clear();
+                                var plantInfosResult = await _USDAProcessor.Process(plantInfos);
+                                foreach (var plantInfoResult in plantInfosResult)
+                                {
+                                    _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
+                                                           " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+                                }
+
+                                checklists.Clear();
+                            }
                         }
                     }
                 }

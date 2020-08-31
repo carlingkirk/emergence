@@ -124,5 +124,11 @@ namespace Emergence.Service
 
             return originQuery;
         }
+
+        public async Task<IEnumerable<Data.Shared.Models.Origin>> AddOriginsAsync(IEnumerable<Data.Shared.Models.Origin> origins)
+        {
+            var originsResult = await _originRepository.AddSomeAsync(origins.Select(o => o.AsStore()));
+            return originsResult.Select(o => o.AsModel());
+        }
     }
 }

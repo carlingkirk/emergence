@@ -129,5 +129,11 @@ namespace Emergence.Service
 
             return plantInfoQuery;
         }
+
+        public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> AddPlantInfosAsync(IEnumerable<Data.Shared.Models.PlantInfo> plantInfos)
+        {
+            var plantInfosResult = await _plantInfoRepository.AddSomeAsync(plantInfos.Select(o => o.AsStore()));
+            return plantInfosResult.Select(o => o.AsModel());
+        }
     }
 }

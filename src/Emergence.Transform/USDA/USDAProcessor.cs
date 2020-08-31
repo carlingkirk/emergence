@@ -83,5 +83,67 @@ namespace Emergence.Transform.USDA
 
             return plantInfoResult;
         }
+
+        public async Task<IEnumerable<Models.PlantInfo>> Process(IEnumerable<Models.PlantInfo> plantInfos)
+        {
+            var plantInfoResults = new List<Models.PlantInfo>();
+            var newOrigins = new List<Models.Origin>();
+            var newPlantInfos = new List<Models.PlantInfo>();
+            foreach (var plantInfo in plantInfos)
+            {
+                var lifeform = Lifeforms.FirstOrDefault(l => l.ScientificName == plantInfo.ScientificName);
+
+                if (lifeform == null)
+                {
+                    lifeform = await _lifeformService.AddOrUpdateLifeformAsync(plantInfo.Lifeform);
+                }
+                plantInfo.Lifeform = lifeform;
+
+                var taxon = Taxons.FirstOrDefault(t => t.Genus == plantInfo.Taxon.Genus && t.Species == plantInfo.Taxon.Species &&
+                                                                    (plantInfo.Taxon.Subspecies == null || t.Subspecies == plantInfo.Taxon.Subspecies) &&
+                                                                    (plantInfo.Taxon.Variety == null || t.Variety == plantInfo.Taxon.Variety) &&
+                                                                    (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety) &&
+                                                                    (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
+
+                if (taxon == null)
+                {
+                    taxon = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
+                }
+                plantInfo.Taxon = taxon;
+
+                var originResult = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
+                newOrigins.Add(plantInfo.Origin);
+            }
+
+            if (newOrigins.Any())
+            {
+                newOrigins = (await _originService.AddOriginsAsync(newOrigins)).ToList();
+            }
+
+            foreach (var plantInfo in plantInfos)
+            {
+                var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(plantInfo.Origin.OriginId, plantInfo.Taxon.TaxonId);
+
+                if (plantInfoResult == null)
+                {
+                    var origin = newOrigins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId && o.AltExternalId == plantInfo.Origin.AltExternalId);
+                    if (origin == null)
+                    {
+                        origin = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
+                    }
+
+                    plantInfo.Origin = origin;
+
+                    newPlantInfos.Add(plantInfo);
+                }
+            }
+
+            if (newPlantInfos.Any())
+            {
+                newPlantInfos = (await _plantInfoService.AddPlantInfosAsync(newPlantInfos)).ToList();
+            }
+
+            return newPlantInfos;
+        }
     }
 }

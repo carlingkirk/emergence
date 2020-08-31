@@ -12,5 +12,6 @@ namespace Emergence.Service.Interfaces
         Task<Origin> AddOrUpdateOriginAsync(Origin origin, string userId);
         Task<Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId);
         Task<FindResult<Origin>> FindOrigins(FindParams findParams, string userId);
+        Task<IEnumerable<Origin>> AddOriginsAsync(IEnumerable<Origin> origins);
     }
 }
