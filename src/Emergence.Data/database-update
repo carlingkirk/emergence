@@ -1,4 +1,4 @@
 dotnet ef migrations add InitialCreate --project Emergence.Data --context EmergenceDbContext --startup-project "Emergence/Server/"
-dotnet ef migrations add Incremental --project Emergence.Data --context EmergenceDbContext
+dotnet ef migrations add Incremental --project Emergence.Data --context EmergenceDbContext --startup-project "Emergence/Server/"
 dotnet ef database update --context EmergenceDbContext --startup-project "../Emergence/Server/"
 dotnet ef migrations list --context EmergenceDbContext --startup-project "../Emergence/Server/"
