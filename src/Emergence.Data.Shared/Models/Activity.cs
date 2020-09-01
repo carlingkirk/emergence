@@ -10,7 +10,7 @@ namespace Emergence.Data.Shared.Models
         public string Description { get; set; }
         public ActivityType ActivityType { get; set; }
         public string CustomActivityType { get; set; }
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
 
         public string AssignedTo { get; set; }
         public DateTime? DateOccured { get; set; }

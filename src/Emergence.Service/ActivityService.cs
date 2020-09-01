@@ -81,7 +81,7 @@ namespace Emergence.Service
                 findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
-            var activityQuery = _activityRepository.WhereWithIncludes(a => a.Specimen.InventoryItem.Inventory.OwnerId == userId &&
+            var activityQuery = _activityRepository.WhereWithIncludes(a => a.CreatedBy == userId &&
                                                                                 (!specimenId.HasValue ||
                                                                                 a.SpecimenId == specimenId) &&
                                                                                 (findParams.SearchText == null ||
