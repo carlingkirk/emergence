@@ -1,7 +1,5 @@
 using System;
 using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Emergence.Client.Server;
@@ -13,9 +11,11 @@ using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SignalR;
@@ -50,6 +50,10 @@ namespace Emergence.Server
                 options.UseSqlServer(
                     Configuration["EmergenceDbConnection"]));
 
+            // Authentication
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -66,13 +70,7 @@ namespace Emergence.Server
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
             {
                 options.SigningCredential = new SigningCredentials(new X509SecurityKey(cert), "RS256");
-                options.IdentityResources["openid"].UserClaims.Add("name");
-                options.ApiResources.Single().UserClaims.Add("name");
-                options.IdentityResources["openid"].UserClaims.Add("role");
-                options.ApiResources.Single().UserClaims.Add("role");
             });
-
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
             services.AddAuthentication().AddGoogle(options =>
                 {
@@ -161,6 +159,12 @@ namespace Emergence.Server
             app.UseRouting();
 
             app.UseIdentityServer();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 
