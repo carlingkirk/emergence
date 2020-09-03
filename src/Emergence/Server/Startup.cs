@@ -139,7 +139,7 @@ namespace Emergence.Server
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
