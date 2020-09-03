@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.KeyVault;
@@ -55,7 +54,6 @@ namespace Emergence.Server
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
-                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var certName = Configuration["CertificateName"];
@@ -131,12 +129,8 @@ namespace Emergence.Server
         {
             var debugMode = Configuration["App:DebugMode"] == "true";
 
-            if (env.IsDevelopment() || debugMode)
+            if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-                app.UseWebAssemblyDebugging();
-
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
                 app.UseSwagger();
 
@@ -147,6 +141,13 @@ namespace Emergence.Server
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Emergence V1");
                 });
 
+            }
+
+            if (debugMode)
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+                app.UseWebAssemblyDebugging();
             }
             else
             {
@@ -162,14 +163,13 @@ namespace Emergence.Server
             app.UseRouting();
 
             app.UseIdentityServer();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             });
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
