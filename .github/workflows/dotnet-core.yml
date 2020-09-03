@@ -2,18 +2,18 @@ name: .NET Core
 
 on:
   push:
-    branches: [ initial ]
+    branches: [ dev ]
     paths-ignore:
     - 'docs/**'
   pull_request:
-    branches: [ initial ]
+    branches: [ dev ]
     paths-ignore:
     - 'docs/**'
 
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
