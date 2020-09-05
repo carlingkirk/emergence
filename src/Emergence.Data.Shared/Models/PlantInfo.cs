@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Interfaces;
 
@@ -23,6 +24,7 @@ namespace Emergence.Data.Shared.Models
         public Taxon Taxon { get; set; }
         public Origin Origin { get; set; }
         public Lifeform Lifeform { get; set; }
+        public IEnumerable<PlantLocation> Locations { get; set; }
     }
 
     public class BloomTime

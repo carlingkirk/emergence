@@ -14,6 +14,7 @@ namespace Emergence.Data.Shared
         Website,
         Webpage,
         Publication,
-        File
+        File,
+        Database
     }
 }

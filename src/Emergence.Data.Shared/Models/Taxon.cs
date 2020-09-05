@@ -7,6 +7,9 @@ namespace Emergence.Data.Shared.Models
     {
         public int TaxonId { get; set; }
         public string Kingdom { get; set; }
+        public string Subkingdom { get; set; }
+        public string Infrakingdom { get; set; }
+        public string Superphylum { get; set; }
         public string Phylum { get; set; }
         public string Subphylum { get; set; }
         public string Superclass { get; set; }

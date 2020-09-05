@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.External.ITIS;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared.Models;
 using Emergence.Transform.USDA;
@@ -36,18 +38,18 @@ namespace Emergence.Transform.Runner
                 dataDirectory = Configuration["dataDirectory"];
             }
 
-            var transformer = new USDATransformer();
-            var startRow = 81350;
-            var batchSize = 100;
-
-            await _USDAProcessor.InitializeOrigin(transformer.Origin);
-            await _USDAProcessor.InitializeLifeforms();
-            await _USDAProcessor.InitializeTaxons();
-
-            foreach (var importer in importers)
+            foreach (var importer in importers.Where(i => i.IsActive))
             {
                 if (importer.Type == ImporterType.TextImporter)
                 {
+                    var transformer = new USDATransformer();
+                    var startRow = 1;
+                    var batchSize = 100;
+
+                    await _USDAProcessor.InitializeOrigin(transformer.Origin);
+                    await _USDAProcessor.InitializeLifeforms();
+                    await _USDAProcessor.InitializeTaxons();
+
                     var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
                     var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
                     var row = 1;
@@ -96,6 +98,51 @@ namespace Emergence.Transform.Runner
                         }
                     }
                 }
+                else if (importer.Type == ImporterType.SqlImporter)
+                {
+                    var sqlImporter = new SqlImporter<TaxonomicUnit>(importer.ConnectionString, importer.SqlQuery);
+                    var transformer = new ITISTransformer();
+                    var startRow = 1;
+                    var batchSize = 100;
+
+                    var row = 1;
+                    var taxonomicUnits = new List<TaxonomicUnit>();
+                    await foreach (var result in sqlImporter.Import())
+                    {
+                        row++;
+                        if (row < startRow)
+                        {
+                            continue;
+                        }
+                        else if (row % batchSize != 0)
+                        {
+                            taxonomicUnits.Add(result);
+                        }
+                        else
+                        {
+                            if (taxonomicUnits.Any())
+                            {
+                                var plantInfos = new List<PlantInfo>();
+                                foreach (var taxonomicUnit in taxonomicUnits.GroupBy(t => t.Tsn))
+                                {
+                                    var species = taxonomicUnit.First();
+                                    if (species != null)
+                                    {
+                                        try
+                                        {
+                                            var plantInfoResults = transformer.Transform(taxonomicUnit);
+                                            plantInfos.AddRange(plantInfoResults);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.LogError($"Unable to process {taxonomicUnit.Key} {species} {ex.Message}", ex);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -104,13 +151,27 @@ namespace Emergence.Transform.Runner
             var importers = configuration.GetSection("importers").GetChildren();
             foreach (var importer in importers)
             {
-                yield return new ImporterConfiguration
+                var config = new ImporterConfiguration
                 {
                     Name = importer["name"],
                     Type = Enum.Parse<ImporterType>(importer["type"]),
-                    Filename = importer["filename"],
-                    HasHeaders = bool.Parse(importer["hasHeaders"])
+                    IsActive = bool.Parse(importer["isActive"])
                 };
+
+                if (config.Type == ImporterType.TextImporter)
+                {
+                    config.Filename = importer["filename"];
+                    config.HasHeaders = bool.Parse(importer["hasHeaders"]);
+                }
+                else if (config.Type == ImporterType.SqlImporter)
+                {
+                    config.ConnectionString = importer["connectionString"];
+                    config.SqlQuery = importer["sqlQuery"];
+                }
+                if (true)
+                {
+                    yield return config;
+                }
             }
         }
     }

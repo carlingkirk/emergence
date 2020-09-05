@@ -3,6 +3,7 @@ namespace Emergence.Data.Shared.Interfaces
     public interface IClassifiable
     {
         string Kingdom { get; set; }
+        string Superphylum { get; set; }
         string Phylum { get; set; }
         string Subphylum { get; set; }
         string Class { get; set; }
