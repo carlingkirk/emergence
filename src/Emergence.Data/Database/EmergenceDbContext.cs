@@ -33,6 +33,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<PlantInfo> PlantInfos { get; set; }
         public virtual DbSet<Specimen> Specimens { get; set; }
         public virtual DbSet<Taxon> Taxons { get; set; }
+        public virtual DbSet<PlantLocation> PlantLocations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -55,6 +56,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Photo>().HasKey(i => i.Id);
             modelBuilder.Entity<Specimen>().HasKey(i => i.Id);
             modelBuilder.Entity<Taxon>().HasKey(i => i.Id);
+            modelBuilder.Entity<PlantLocation>().HasKey(i => i.Id);
         }
     }
 }
