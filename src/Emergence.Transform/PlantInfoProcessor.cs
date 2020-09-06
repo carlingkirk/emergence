@@ -4,24 +4,27 @@ using System.Threading.Tasks;
 using Emergence.Service.Interfaces;
 using Models = Emergence.Data.Shared.Models;
 
-namespace Emergence.Transform.USDA
+namespace Emergence.Transform
 {
-    public class USDAProcessor : IUSDAProcessor
+    public class PlantInfoProcessor : IPlantInfoProcessor
     {
         private readonly ILifeformService _lifeformService;
         private readonly IOriginService _originService;
         private readonly IPlantInfoService _plantInfoService;
         private readonly ITaxonService _taxonService;
+        private readonly ILocationService _locationService;
+
         private Models.Origin Origin;
         private List<Models.Lifeform> Lifeforms { get; set; }
         private List<Models.Taxon> Taxons { get; set; }
 
-        public USDAProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService)
+        public PlantInfoProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService, ILocationService locationService)
         {
             _lifeformService = lifeformService;
             _originService = originService;
             _plantInfoService = plantInfoService;
             _taxonService = taxonService;
+            _locationService = locationService;
         }
 
         public async Task InitializeOrigin(Models.Origin origin)
@@ -105,7 +108,7 @@ namespace Emergence.Transform.USDA
                                                                     (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety) &&
                                                                     (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
 
-                if (taxon == null)
+                if (taxon == null || taxon.Kingdom != plantInfo.Taxon.Kingdom || taxon.Family != plantInfo.Taxon.Family)
                 {
                     taxon = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
                 }
@@ -126,7 +129,9 @@ namespace Emergence.Transform.USDA
 
                 if (plantInfoResult == null)
                 {
-                    var origin = newOrigins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId && o.AltExternalId == plantInfo.Origin.AltExternalId);
+                    var origin = newOrigins.FirstOrDefault(o => o.ParentOrigin.OriginId == plantInfo.Origin.OriginId
+                                                             && o.ExternalId == plantInfo.Origin.ExternalId
+                                                             && o.AltExternalId == plantInfo.Origin.AltExternalId);
                     if (origin == null)
                     {
                         origin = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
@@ -141,6 +146,13 @@ namespace Emergence.Transform.USDA
             if (newPlantInfos.Any())
             {
                 newPlantInfos = (await _plantInfoService.AddPlantInfosAsync(newPlantInfos)).ToList();
+            }
+
+            if (newPlantInfos.Any(p => p.Locations.Any()))
+            {
+                var regions = newPlantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Region).Distinct();
+                var countries = newPlantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
+                var locations = _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || regions.Contains(l.Region));
             }
 
             return newPlantInfos;

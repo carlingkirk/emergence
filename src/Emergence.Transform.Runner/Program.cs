@@ -82,7 +82,7 @@ namespace Emergence.Transform.Runner
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
 
             // add app
-            services.AddTransient(typeof(IUSDAProcessor), typeof(USDAProcessor));
+            services.AddTransient(typeof(IPlantInfoProcessor), typeof(USDAProcessor));
             services.AddTransient<Runner>();
         }
     }

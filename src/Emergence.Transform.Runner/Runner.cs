@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Emergence.Data.External.ITIS;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared.Models;
-using Emergence.Transform.USDA;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,13 +14,13 @@ namespace Emergence.Transform.Runner
     public class Runner
     {
         private readonly ILogger<Runner> _logger;
-        private readonly IUSDAProcessor _USDAProcessor;
+        private readonly IPlantInfoProcessor _processor;
         private readonly IConfiguration Configuration;
 
-        public Runner(ILogger<Runner> logger, IConfiguration configuration, IUSDAProcessor uSDAProcessor)
+        public Runner(ILogger<Runner> logger, IConfiguration configuration, IPlantInfoProcessor processor)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _USDAProcessor = uSDAProcessor;
+            _processor = processor;
             Configuration = configuration;
         }
 
@@ -46,9 +45,9 @@ namespace Emergence.Transform.Runner
                     var startRow = 1;
                     var batchSize = 100;
 
-                    await _USDAProcessor.InitializeOrigin(transformer.Origin);
-                    await _USDAProcessor.InitializeLifeforms();
-                    await _USDAProcessor.InitializeTaxons();
+                    await _processor.InitializeOrigin(transformer.Origin);
+                    await _processor.InitializeLifeforms();
+                    await _processor.InitializeTaxons();
 
                     var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
                     var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
@@ -86,7 +85,7 @@ namespace Emergence.Transform.Runner
                                     }
                                 }
 
-                                var plantInfosResult = await _USDAProcessor.Process(plantInfos);
+                                var plantInfosResult = await _processor.Process(plantInfos);
                                 foreach (var plantInfoResult in plantInfosResult)
                                 {
                                     _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
@@ -104,9 +103,13 @@ namespace Emergence.Transform.Runner
                     var transformer = new ITISTransformer();
                     var startRow = 1;
                     var batchSize = 100;
-
                     var row = 1;
                     var taxonomicUnits = new List<TaxonomicUnit>();
+
+                    await _processor.InitializeOrigin(transformer.Origin);
+                    await _processor.InitializeLifeforms();
+                    await _processor.InitializeTaxons();
+
                     await foreach (var result in sqlImporter.Import())
                     {
                         row++;
@@ -139,6 +142,15 @@ namespace Emergence.Transform.Runner
                                         }
                                     }
                                 }
+
+                                var plantInfosResult = await _processor.Process(plantInfos);
+                                foreach (var plantInfoResult in plantInfosResult)
+                                {
+                                    _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
+                                                           " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+                                }
+
+                                taxonomicUnits.Clear();
                             }
                         }
                     }

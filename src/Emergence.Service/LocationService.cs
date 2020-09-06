@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
@@ -20,6 +22,17 @@ namespace Emergence.Service
         public async Task<IEnumerable<Data.Shared.Models.Location>> GetLocationsAsync(IEnumerable<int> ids)
         {
             var locationResult = _locationRepository.GetSomeAsync(l => ids.Any(i => i == l.Id));
+            var locations = new List<Data.Shared.Models.Location>();
+            await foreach (var location in locationResult)
+            {
+                locations.Add(location.AsModel());
+            }
+            return locations;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Location>> GetLocationsAsync(Expression<Func<Location, bool>> predicate)
+        {
+            var locationResult = _locationRepository.GetSomeAsync(predicate);
             var locations = new List<Data.Shared.Models.Location>();
             await foreach (var location in locationResult)
             {

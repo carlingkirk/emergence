@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 
-namespace Emergence.Transform.USDA
+namespace Emergence.Transform
 {
-    public interface IUSDAProcessor
+    public interface IPlantInfoProcessor
     {
         Task InitializeOrigin(Origin origin);
         Task InitializeLifeforms();
