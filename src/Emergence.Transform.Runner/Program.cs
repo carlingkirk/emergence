@@ -5,7 +5,6 @@ using Emergence.Data.Repository;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
-using Emergence.Transform.USDA;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -82,7 +81,7 @@ namespace Emergence.Transform.Runner
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
 
             // add app
-            services.AddTransient(typeof(IPlantInfoProcessor), typeof(USDAProcessor));
+            services.AddTransient(typeof(IPlantInfoProcessor), typeof(PlantInfoProcessor));
             services.AddTransient<Runner>();
         }
     }
