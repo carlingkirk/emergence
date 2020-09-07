@@ -14,16 +14,18 @@ namespace Emergence.Test.API.Services
     public class PlantInfoServiceTests
     {
         private readonly Mock<IRepository<PlantInfo>> _mockPlantInfoRepository;
+        private readonly Mock<IRepository<PlantLocation>> _mockPlantLocationRepository;
 
         public PlantInfoServiceTests()
         {
             _mockPlantInfoRepository = RepositoryMocks.GetStandardMockPlantInfoRepository();
+            _mockPlantLocationRepository = RepositoryMocks.GetStandardMockPlantLocationRepository();
         }
 
         [Fact]
         public async Task TestGetPlantInfoAsync()
         {
-            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object);
+            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
             var plantInfo = await plantInfoService.GetPlantInfoAsync(1);
 
             plantInfo.Should().NotBeNull("it exists");
@@ -32,7 +34,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestGetPlantInfosAsync()
         {
-            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object);
+            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
             var plantInfos = await plantInfoService.GetPlantInfosAsync();
 
             plantInfos.Should().NotBeNull("it exists");
@@ -44,7 +46,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestAddOrUpdatePlantInfoAsync()
         {
-            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object);
+            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
             var plantInfo = Data.Fakes.Models.FakePlantInfos.Get().First();
 
             var plantInfoResult = await plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);

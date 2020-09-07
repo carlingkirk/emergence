@@ -9,6 +9,16 @@ namespace Emergence.Test.Mocks
 {
     public static class ServiceMocks
     {
+        public static Mock<ILifeformService> GetStandardMockLifeformService(IEnumerable<Lifeform> result = null)
+        {
+            var mockLifeformService = new Mock<ILifeformService>();
+
+            mockLifeformService.Setup(s => s.GetLifeformByScientificNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(result.FirstOrDefault() ?? FakeLifeforms.Get().First());
+
+            return mockLifeformService;
+        }
+
         public static Mock<ISpecimenService> GetStandardMockSpecimenService(IEnumerable<Specimen> result = null)
         {
             var mockSpecimenService = new Mock<ISpecimenService>();
@@ -50,6 +60,16 @@ namespace Emergence.Test.Mocks
                 .ReturnsAsync(result ?? FakeLocations.Get());
 
             return mockLocationService;
+        }
+
+        public static Mock<ITaxonService> GetStandardMockTaxonService(IEnumerable<Taxon> result = null)
+        {
+            var mockTaxonService = new Mock<ITaxonService>();
+
+            mockTaxonService.Setup(l => l.GetTaxonAsync(It.IsAny<int>()))
+                .ReturnsAsync(result.FirstOrDefault() ?? FakeTaxons.Get().First());
+
+            return mockTaxonService;
         }
     }
 }

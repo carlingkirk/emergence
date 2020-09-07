@@ -77,7 +77,7 @@ namespace Emergence.Transform
                     Subfamily = source.Subfamily.NullIfEmpty(),
                     Genus = source.Genus.NullIfEmpty(),
                     Subgenus = source.Subgenus.NullIfEmpty(),
-                    Species = source.Species.NullIfEmpty(),
+                    Species = species,
                     Subspecies = source.Subspecies.NullIfEmpty(),
                     Variety = source.Variety.NullIfEmpty(),
                     Form = source.Form.NullIfEmpty(),
@@ -120,12 +120,13 @@ namespace Emergence.Transform
                         Subfamily = source.Subfamily.NullIfEmpty(),
                         Genus = source.Genus.NullIfEmpty(),
                         Subgenus = source.Subgenus.NullIfEmpty(),
-                        Species = source.Species.NullIfEmpty(),
+                        Species = species,
                         Subspecies = null,
                         Variety = null,
                         Form = null,
                         DateCreated = dateCreated
                     },
+                    Locations = plantInfo.Locations,
                     DateCreated = dateCreated
                 });
             }

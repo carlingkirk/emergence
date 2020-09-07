@@ -14,5 +14,6 @@ namespace Emergence.Service.Interfaces
         Task<IEnumerable<PlantInfo>> GetPlantInfosAsync();
         Task<FindResult<PlantInfo>> FindPlantInfos(FindParams findParams);
         Task<IEnumerable<PlantInfo>> AddPlantInfosAsync(IEnumerable<PlantInfo> plantInfos);
+        Task<IEnumerable<PlantLocation>> AddPlantLocations(IEnumerable<PlantLocation> plantLocations);
     }
 }

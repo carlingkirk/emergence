@@ -16,9 +16,11 @@ namespace Emergence.Service
     public class PlantInfoService : IPlantInfoService
     {
         private readonly IRepository<PlantInfo> _plantInfoRepository;
-        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository)
+        private readonly IRepository<PlantLocation> _plantLocationRepository;
+        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository, IRepository<PlantLocation> plantLocationRepository)
         {
             _plantInfoRepository = plantInfoRepository;
+            _plantLocationRepository = plantLocationRepository;
         }
 
         public async Task<Data.Shared.Models.PlantInfo> AddOrUpdatePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo)
@@ -134,6 +136,12 @@ namespace Emergence.Service
         {
             var plantInfosResult = await _plantInfoRepository.AddSomeAsync(plantInfos.Select(o => o.AsStore()));
             return plantInfosResult.Select(o => o.AsModel());
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.PlantLocation>> AddPlantLocations(IEnumerable<Data.Shared.Models.PlantLocation> plantLocations)
+        {
+            var plantLocationsResult = await _plantLocationRepository.AddSomeAsync(plantLocations.Select(o => o.AsStore()));
+            return plantLocationsResult.Select(o => o.AsModel());
         }
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared.Models;
+using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
 using Models = Emergence.Data.Shared.Models;
 
@@ -115,7 +117,11 @@ namespace Emergence.Transform
                 plantInfo.Taxon = taxon;
 
                 var originResult = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
-                newOrigins.Add(plantInfo.Origin);
+
+                if (originResult == null)
+                {
+                    newOrigins.Add(plantInfo.Origin);
+                }
             }
 
             if (newOrigins.Any())
@@ -148,11 +154,48 @@ namespace Emergence.Transform
                 newPlantInfos = (await _plantInfoService.AddPlantInfosAsync(newPlantInfos)).ToList();
             }
 
-            if (newPlantInfos.Any(p => p.Locations.Any()))
+            var plantInfoLocations = plantInfos.Where(p => p.Locations != null && p.Locations.Any()).SelectMany(p => p.Locations).ToList();
+
+            if (plantInfoLocations.Any())
             {
-                var regions = newPlantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Region).Distinct();
-                var countries = newPlantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
-                var locations = _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || regions.Contains(l.Region));
+                var regions = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Region).Distinct();
+                var countries = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
+                var locations = (await _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || regions.Contains(l.Region))).ToList();
+
+                var missingLocations = new List<Location>();
+                missingLocations = plantInfoLocations.GroupJoin(locations,
+                    pl => new { pl.Location.Region, pl.Location.Country },
+                    l => new { l.Region, l.Country },
+                    (pl, l) => pl.Location)
+                    .DistinctBy(l => new { l.Region, l.Country })
+                    .ToList();
+
+                if (missingLocations.Any())
+                {
+                    var locationResult = await _locationService.AddLocationsAsync(missingLocations);
+                    locations.AddRange(locationResult.ToList());
+                }
+
+                var plantLocations = new List<PlantLocation>();
+                foreach (var plantInfoLocation in plantInfoLocations)
+                {
+                    var newPlantInfo = newPlantInfos.Where(npl => npl.Origin.OriginId == plantInfoLocation.PlantInfo.Origin.OriginId
+                                                        && npl.Taxon.TaxonId == plantInfoLocation.PlantInfo.Taxon.TaxonId).First();
+                    var location = locations.Where(l => l.Country == plantInfoLocation.Location.Country
+                                                        && l.Region == plantInfoLocation.Location.Region).First();
+                    plantLocations.Add(new PlantLocation
+                    {
+                        PlantInfo = newPlantInfo,
+                        Location = location
+                    });
+                }
+
+                var plantLocationsResult = await _plantInfoService.AddPlantLocations(plantLocations);
+
+                foreach (var newPlantInfo in newPlantInfos)
+                {
+                    newPlantInfo.Locations = plantLocationsResult.Where(pl => pl.PlantInfo.PlantInfoId == newPlantInfo.PlantInfoId);
+                }
             }
 
             return newPlantInfos;
