@@ -63,9 +63,13 @@ namespace Emergence.Server
             }
 
             var cert = LoadCertificate(certName);
-            services.AddIdentityServer()
-                .AddSigningCredential(cert)
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+            services.AddIdentityServer(opt =>
+            {
+                // There's gotta be some bug around this, we shouldn't have to set this
+                opt.IssuerUri = Configuration["IssuerUri"];
+            })
+            .AddSigningCredential(cert)
+            .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
             {
                 options.SigningCredential = new SigningCredentials(new X509SecurityKey(cert), "RS256");
             });
