@@ -74,6 +74,14 @@ namespace Emergence.Test.Mocks
                     return origins;
                 });
 
+            mockOriginRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<Origin, bool>>>(), It.IsAny<Origin>()))
+                .ReturnsAsync((Expression<Func<Origin, bool>> expr, Origin origin) =>
+                {
+                    origin.Id = random.Next(1, int.MaxValue);
+
+                    return origin;
+                });
+
             mockOriginRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<Origin, bool>>>(),
                 It.IsAny<Func<IIncludable<Origin>, IIncludable>[]>()))
                 .Returns(mockOrigins);

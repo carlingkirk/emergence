@@ -12,7 +12,8 @@ namespace Emergence.Transform
     {
         public Origin Origin => new Origin
         {
-            OriginId = 89983
+            OriginId = 89983,
+            Type = OriginType.Database
         };
 
         public IEnumerable<PlantInfo> Transform(IEnumerable<TaxonomicUnit> sources)

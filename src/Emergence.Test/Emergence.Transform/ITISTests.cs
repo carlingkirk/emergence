@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.External.ITIS;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service;
 using Emergence.Service.Extensions;
@@ -43,14 +44,7 @@ namespace Emergence.Test.Emergence.Transform
             var plantInfos = new List<PlantInfo>();
             itisData.ForEach(i => plantInfos.AddRange(transformer.Transform(new List<TaxonomicUnit> { i })));
 
-            var originRepository = RepositoryMocks.GetStandardMockOriginRepository(new List<Stores.Origin>
-            {
-                new Stores.Origin
-                {
-                    Id = 89983,
-                    Type = "Database"
-                 }
-            });
+            var originRepository = RepositoryMocks.GetStandardMockOriginRepository(new List<Stores.Origin>());
             var locationRepository = RepositoryMocks.GetStandardMockLocationRepository(new List<Stores.Location>());
             var lifeformRepository = RepositoryMocks.GetStandardMockLifeformRepository(new List<Stores.Lifeform>());
             var plantInfoRepository = RepositoryMocks.GetStandardMockPlantInfoRepository(new List<Stores.PlantInfo>());
@@ -78,8 +72,8 @@ namespace Emergence.Test.Emergence.Transform
             result.Where(p => p.Taxon.Subspecies == "purpurea").Count().Should().Be(1);
             result.Where(p => p.Taxon.Variety == "graminea").Count().Should().Be(1);
             result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(6);
-            result.SelectMany(p => p.Locations).DistinctBy(l => l.Location.Region).Count().Should().Be(1);
-            result.Select(p => p.Origin).Count().Should().Be(10);
+            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count(l => l.Status == LocationStatus.Native).Should().Be(6);
+            result.Select(p => p.Origin).DistinctBy(o => o.OriginId).Count().Should().Be(5);
         }
 
         private static List<TaxonomicUnit> ITISData() => new List<TaxonomicUnit>
