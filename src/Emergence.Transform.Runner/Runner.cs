@@ -101,9 +101,9 @@ namespace Emergence.Transform.Runner
                 {
                     var sqlImporter = new SqlImporter<TaxonomicUnit>(importer.ConnectionString, importer.SqlQuery);
                     var transformer = new ITISTransformer();
-                    var startRow = 1;
-                    var batchSize = 100;
-                    var row = 1;
+                    var startRow = 178498;
+                    var batchSize = 500;
+                    var row = 0;
                     var taxonomicUnits = new List<TaxonomicUnit>();
 
                     await _processor.InitializeOrigin(transformer.Origin);

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
-using Models = Emergence.Data.Shared.Models;
 
 namespace Emergence.Transform
 {
@@ -104,7 +103,7 @@ namespace Emergence.Transform
             return plantInfoResult;
         }
 
-        public async Task<IEnumerable<PlantInfo>> Process(IEnumerable<Models.PlantInfo> plantInfos)
+        public async Task<IEnumerable<PlantInfo>> Process(IEnumerable<PlantInfo> plantInfos)
         {
             var plantInfoResults = new List<PlantInfo>();
             var newOrigins = new List<Origin>();
@@ -116,18 +115,21 @@ namespace Emergence.Transform
                 if (lifeform == null)
                 {
                     lifeform = await _lifeformService.AddOrUpdateLifeformAsync(plantInfo.Lifeform);
+                    Lifeforms.Add(lifeform);
                 }
                 plantInfo.Lifeform = lifeform;
 
-                var taxon = Taxons.FirstOrDefault(t => t.Genus == plantInfo.Taxon.Genus && t.Species == plantInfo.Taxon.Species &&
-                                                                    (plantInfo.Taxon.Subspecies == null || t.Subspecies == plantInfo.Taxon.Subspecies) &&
-                                                                    (plantInfo.Taxon.Variety == null || t.Variety == plantInfo.Taxon.Variety) &&
-                                                                    (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety) &&
-                                                                    (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
+                var taxon = Taxons.FirstOrDefault(t => t.Genus == plantInfo.Taxon.Genus
+                                                    && t.Species == plantInfo.Taxon.Species
+                                                    && (plantInfo.Taxon.Subspecies == null || t.Subspecies == plantInfo.Taxon.Subspecies)
+                                                    && (plantInfo.Taxon.Variety == null || t.Variety == plantInfo.Taxon.Variety)
+                                                    && (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety)
+                                                    && (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
 
                 if (taxon == null || taxon.Kingdom != plantInfo.Taxon.Kingdom || taxon.Family != plantInfo.Taxon.Family)
                 {
                     taxon = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
+                    Taxons.Add(taxon);
                 }
                 plantInfo.Taxon = taxon;
 
@@ -155,21 +157,31 @@ namespace Emergence.Transform
                 Origins.AddRange(newOrigins);
             }
 
-            foreach (var plantInfo in plantInfos)
+            var distinctPlantInfos = plantInfos.DistinctBy(p => new
             {
+                p.Taxon.Genus,
+                p.Taxon.Species,
+                p.Taxon.Subspecies,
+                p.Taxon.Variety,
+                p.Taxon.Subvariety,
+                p.Taxon.Form
+            });
+
+            foreach (var plantInfo in distinctPlantInfos)
+            {
+                var origin = Origins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId
+                                                      && o.AltExternalId == plantInfo.Origin.AltExternalId);
+                if (origin == null)
+                {
+                    origin = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
+                }
+
+                plantInfo.Origin = origin;
+
                 var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(plantInfo.Origin.OriginId, plantInfo.Taxon.TaxonId);
 
                 if (plantInfoResult == null)
                 {
-                    var origin = Origins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId
-                                                          && o.AltExternalId == plantInfo.Origin.AltExternalId);
-                    if (origin == null)
-                    {
-                        origin = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
-                    }
-
-                    plantInfo.Origin = origin;
-
                     newPlantInfos.Add(plantInfo);
                 }
             }
@@ -179,10 +191,24 @@ namespace Emergence.Transform
                 newPlantInfos = (await _plantInfoService.AddPlantInfosAsync(newPlantInfos)).ToList();
             }
 
-            var plantLocationsResult = new List<PlantLocation>();
-            var plantInfoLocations = plantInfos.Where(p => p.Locations != null && p.Locations.Any()).SelectMany(p => p.Locations).ToList();
+            foreach (var newPlantInfo in newPlantInfos)
+            {
+                var plantInfo = plantInfos.First(p => p.Origin.OriginId == newPlantInfo.Origin.OriginId
+                                                        && p.Taxon.TaxonId == newPlantInfo.Taxon.TaxonId);
 
-            if (plantInfoLocations.Any())
+                plantInfo.PlantInfoId = newPlantInfo.PlantInfoId;
+                newPlantInfo.Taxon = plantInfo.Taxon;
+                newPlantInfo.Origin = plantInfo.Origin;
+                newPlantInfo.Lifeform = plantInfo.Lifeform;
+            }
+
+            var plantLocationsResult = new List<PlantLocation>();
+            var plantInfoLocations = plantInfos.Where(p => p.Locations != null && p.Locations.Any())
+                                               .SelectMany(p => p.Locations)
+                                               .DistinctBy(pl => new { pl.PlantInfo.PlantInfoId, pl.Location.LocationId })
+                                               .ToList();
+
+            if (plantInfoLocations.Any() && newPlantInfos.Any())
             {
                 var regions = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Region).Distinct();
                 var countries = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
@@ -202,32 +228,34 @@ namespace Emergence.Transform
                     locations.AddRange(locationResult.ToList());
                 }
 
-                var plantLocations = new List<PlantLocation>();
+                var plantLocationsToAdd = new List<PlantLocation>();
                 foreach (var plantInfoLocation in plantInfoLocations)
                 {
                     var newPlantInfo = newPlantInfos.Where(npl => npl.Origin.OriginId == plantInfoLocation.PlantInfo.Origin.OriginId
-                                                        && npl.Taxon.TaxonId == plantInfoLocation.PlantInfo.Taxon.TaxonId).First();
-                    var location = locations.Where(l => l.Country == plantInfoLocation.Location.Country
-                                                        && l.Region == plantInfoLocation.Location.Region).First();
-                    plantLocations.Add(new PlantLocation
+                                                        && npl.Taxon.TaxonId == plantInfoLocation.PlantInfo.Taxon.TaxonId).FirstOrDefault();
+                    if (newPlantInfo != null)
                     {
-                        PlantInfo = newPlantInfo,
-                        Location = location,
-                        Status = plantInfoLocation.Status
-                    });
+                        var location = locations.Where(l => l.Country == plantInfoLocation.Location.Country
+                                                            && l.Region == plantInfoLocation.Location.Region).First();
+                        plantLocationsToAdd.Add(new PlantLocation
+                        {
+                            PlantInfo = newPlantInfo,
+                            Location = location,
+                            Status = plantInfoLocation.Status
+                        });
+                    }
                 }
 
-                plantLocationsResult = (await _plantInfoService.AddPlantLocations(plantLocations)).ToList();
-            }
+                if (plantInfoLocations.Any())
+                {
+                    plantLocationsResult = (await _plantInfoService.AddPlantLocations(plantLocationsToAdd)).ToList();
 
-            foreach (var newPlantInfo in newPlantInfos)
-            {
-                var plantInfo = plantInfos.First(p => p.Origin.OriginId == newPlantInfo.Origin.OriginId
-                                                        && p.Taxon.TaxonId == newPlantInfo.Taxon.TaxonId);
-                var plantLocations = plantLocationsResult.Where(pl => pl.PlantInfo.PlantInfoId == newPlantInfo.PlantInfoId);
-                newPlantInfo.Locations = plantLocations.Any() ? plantLocations : null;
-                newPlantInfo.Taxon = plantInfo.Taxon;
-                newPlantInfo.Origin = plantInfo.Origin;
+                    foreach (var newPlantInfo in newPlantInfos)
+                    {
+                        var newPlantInfoLocations = plantLocationsResult.Where(pl => pl.PlantInfo.PlantInfoId == newPlantInfo.PlantInfoId);
+                        newPlantInfo.Locations = newPlantInfoLocations.Any() ? newPlantInfoLocations : null;
+                    }
+                }
             }
 
             return newPlantInfos;

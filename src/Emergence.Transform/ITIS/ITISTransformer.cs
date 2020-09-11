@@ -22,8 +22,15 @@ namespace Emergence.Transform
             var source = sources.First();
             var dateCreated = DateTime.UtcNow;
             var species = source.Species ?? source.Subspecies ?? source.Variety ?? source.Form;
+
+            if (string.IsNullOrEmpty(species))
+            {
+                return plantInfos;
+            }
+
             var speciesParts = species.Split(' ');
-            species = speciesParts[0] + " " + speciesParts[1];
+            var scientificName = speciesParts[0] + " " + speciesParts[1];
+            var speciesName = speciesParts[1];
 
             if (!string.IsNullOrEmpty(source.Subspecies))
             {
@@ -78,7 +85,7 @@ namespace Emergence.Transform
                     Subfamily = source.Subfamily.NullIfEmpty(),
                     Genus = source.Genus.NullIfEmpty(),
                     Subgenus = source.Subgenus.NullIfEmpty(),
-                    Species = species,
+                    Species = speciesName,
                     Subspecies = source.Subspecies.NullIfEmpty(),
                     Variety = source.Variety.NullIfEmpty(),
                     Form = source.Form.NullIfEmpty(),
@@ -96,41 +103,6 @@ namespace Emergence.Transform
 
             plantInfos.Add(plantInfo);
 
-            // if we have a subspecies or variety - make sure to add an additional species record
-            if (!string.IsNullOrEmpty(source.Subspecies) || !string.IsNullOrEmpty(source.Variety) || !string.IsNullOrEmpty(source.Form))
-            {
-                plantInfos.Add(new PlantInfo
-                {
-                    ScientificName = source.Species,
-                    Origin = origin,
-                    Lifeform = lifeform,
-                    Taxon = new Taxon
-                    {
-                        Kingdom = source.Kingdom.NullIfEmpty(),
-                        Subkingdom = source.Subkingdom.NullIfEmpty(),
-                        Infrakingdom = source.Infrakingdom.NullIfEmpty(),
-                        Superphylum = source.Superdivision.NullIfEmpty(),
-                        Phylum = source.Division.NullIfEmpty(),
-                        Subphylum = source.Subdivision.NullIfEmpty(),
-                        Class = source.Class.NullIfEmpty(),
-                        Subclass = source.Subclass.NullIfEmpty(),
-                        Superorder = source.Superorder.NullIfEmpty(),
-                        Order = source.Order.NullIfEmpty(),
-                        Suborder = source.Suborder.NullIfEmpty(),
-                        Family = source.Family.NullIfEmpty(),
-                        Subfamily = source.Subfamily.NullIfEmpty(),
-                        Genus = source.Genus.NullIfEmpty(),
-                        Subgenus = source.Subgenus.NullIfEmpty(),
-                        Species = species,
-                        Subspecies = null,
-                        Variety = null,
-                        Form = null,
-                        DateCreated = dateCreated
-                    },
-                    Locations = plantInfo.Locations,
-                    DateCreated = dateCreated
-                });
-            }
             return plantInfos;
         }
 

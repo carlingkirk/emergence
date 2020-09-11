@@ -25,15 +25,15 @@ namespace Emergence.Test.Emergence.Transform
             var result = new List<PlantInfo>();
             itisData.ForEach(i => result.AddRange(transformer.Transform(new List<TaxonomicUnit> { i })));
 
-            result.Where(p => p.ScientificName == "Glandularia quadrangulata").Count().Should().Be(2);
-            result.Where(p => p.Taxon.Subfamily == null).Count().Should().Be(10);
-            result.Where(p => p.Taxon.Species == "Euphorbia cremersii").Count().Should().Be(2);
-            result.Where(p => p.Taxon.Form == "viridifolia").Count().Should().Be(1);
+            result.Where(p => p.ScientificName == "Glandularia quadrangulata").Count().Should().Be(1);
+            result.Where(p => p.Taxon.Subfamily == null).Count().Should().Be(6);
+            result.Where(p => p.Taxon.Species == "cremersii").Count().Should().Be(2);
+            result.Where(p => p.Taxon.Form == "viridifolia").Count().Should().Be(2);
             result.Where(p => p.Taxon.Subspecies == "purpurea").Count().Should().Be(1);
             result.Where(p => p.Taxon.Variety == "graminea").Count().Should().Be(1);
-            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(6);
+            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(3);
             result.SelectMany(p => p.Locations).DistinctBy(l => l.Location.Region).Count().Should().Be(1);
-            result.Select(p => p.Origin).Count().Should().Be(10);
+            result.Select(p => p.Origin).Count().Should().Be(6);
         }
 
         [Fact]
@@ -65,14 +65,14 @@ namespace Emergence.Test.Emergence.Transform
 
             var result = await processor.Process(plantInfos);
 
-            result.Where(p => p.ScientificName == "Glandularia quadrangulata").Count().Should().Be(2);
-            result.Where(p => p.Taxon.Subfamily == null).Count().Should().Be(10);
-            result.Where(p => p.Taxon.Species == "Euphorbia cremersii").Count().Should().Be(2);
+            result.Where(p => p.ScientificName == "Glandularia quadrangulata").Count().Should().Be(1);
+            result.Where(p => p.Taxon.Subfamily == null).Count().Should().Be(5);
+            result.Where(p => p.Taxon.Species == "cremersii").Count().Should().Be(1);
             result.Where(p => p.Taxon.Form == "viridifolia").Count().Should().Be(1);
             result.Where(p => p.Taxon.Subspecies == "purpurea").Count().Should().Be(1);
             result.Where(p => p.Taxon.Variety == "graminea").Count().Should().Be(1);
-            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(6);
-            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count(l => l.Status == LocationStatus.Native).Should().Be(6);
+            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(3);
+            result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count(l => l.Status == LocationStatus.Native).Should().Be(3);
             result.Select(p => p.Origin).DistinctBy(o => o.OriginId).Count().Should().Be(5);
         }
 
@@ -206,6 +206,38 @@ namespace Emergence.Test.Emergence.Transform
                 Region = "North America",
                 LocationStatus = "Native",
             },
+            new TaxonomicUnit
+            {
+                Tsn = "845711",
+                Kingdom = "Plantae",
+                Subkingdom = "Plantae",
+                Infrakingdom = "Viridiplantae",
+                Superdivision = "Streptophyta",
+                Division = "Embryophyta",
+                Subdivision = "Spermatophytina",
+                Class = "Magnoliopsida",
+                Subclass = "",
+                Superorder = "Rosanae",
+                Order = "Malpighiales",
+                Suborder = "",
+                Family = "Euphorbiaceae",
+                Subfamily = "",
+                Genus = "Euphorbia",
+                Subgenus = "",
+                Species = "Euphorbia cremersii",
+                Subspecies = "",
+                Variety = "Euphorbia cremersii var. cremersii",
+                Form = "Euphorbia cremersii f. viridifolia",
+                Author = "Rauh",
+                SourceId = "767",
+                SourceName = "Checklist of CITES Species Part 2 History of CITES listings",
+                SourceDescription = "UNEP-WCMC (Comps.) 2011. Checklist of CITES species (CD-ROM). CITES Secretariat, Geneva, Switzerland, and UNEP-WCMC, Cambridge, United Kingdom. ISBN 2-88323-030-7. Available online at http://www.cites.org/eng/resources/pub/checklist11/index.html or from CITES Secretariat, Chemin des Anémones, 1219 Châtelaine, Genève, Switzerland",
+                SourceType = "CD-ROM",
+                Country = "",
+                Region = "",
+                LocationStatus = "",
+            },
+            // Duplicate
             new TaxonomicUnit
             {
                 Tsn = "845711",

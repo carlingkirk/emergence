@@ -77,6 +77,7 @@ namespace Emergence.Transform.Runner
             services.AddScoped(typeof(IRepository<Origin>), typeof(Repository<Origin>));
             services.AddScoped(typeof(IRepository<Photo>), typeof(Repository<Photo>));
             services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
+            services.AddScoped(typeof(IRepository<PlantLocation>), typeof(Repository<PlantLocation>));
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
 
