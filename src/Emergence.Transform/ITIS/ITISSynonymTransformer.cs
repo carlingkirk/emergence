@@ -1,3 +1,4 @@
+using System.Linq;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
@@ -15,6 +16,7 @@ namespace Emergence.Transform
         public Synonym Transform(Vernacular source) => new Synonym
         {
             Name = source.Name,
+            Rank = source.Rank,
             Language = source.Language,
             DateUpdated = source.DateUpdated,
             Origin = new Origin
@@ -22,11 +24,16 @@ namespace Emergence.Transform
                 ExternalId = source.Tsn,
                 ParentOrigin = Origin
             },
-            Taxon = GetTaxon(source.Rank, source.Name)
+            Taxon = GetTaxon(source.Rank, source.Taxon)
         };
 
         private Taxon GetTaxon(string rank, string name)
         {
+            if (name.Contains(' '))
+            {
+                name = name.Split(' ').Last();
+            }
+
             switch (rank)
             {
                 case "Kingdom":
@@ -43,6 +50,8 @@ namespace Emergence.Transform
                     return new Taxon { Class = name };
                 case "Subclass":
                     return new Taxon { Subclass = name };
+                case "Superorder":
+                    return new Taxon { Superorder = name };
                 case "Order":
                     return new Taxon { Order = name };
                 case "Family":

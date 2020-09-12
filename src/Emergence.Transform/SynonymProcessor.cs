@@ -50,11 +50,13 @@ namespace Emergence.Transform
                                                 && t.Subphylum == synonym.Taxon.Subphylum
                                                 && t.Class == synonym.Taxon.Class
                                                 && t.Subclass == synonym.Taxon.Subclass
+                                                && t.Superorder == synonym.Taxon.Superorder
                                                 && t.Order == synonym.Taxon.Order
                                                 && t.Family == synonym.Taxon.Family
                                                 && t.Genus == synonym.Taxon.Genus
                                                 && t.Species == synonym.Taxon.Species
-                                                && t.Subspecies == synonym.Taxon.Variety
+                                                && t.Subspecies == synonym.Taxon.Subspecies
+                                                && t.Variety == synonym.Taxon.Variety
                                                 && t.Subvariety == synonym.Taxon.Subvariety
                                                 && t.Form == synonym.Taxon.Form);
 
@@ -110,11 +112,13 @@ namespace Emergence.Transform
                                                 && t.Subphylum == synonym.Taxon.Subphylum
                                                 && t.Class == synonym.Taxon.Class
                                                 && t.Subclass == synonym.Taxon.Subclass
+                                                && t.Superorder == synonym.Taxon.Superorder
                                                 && t.Order == synonym.Taxon.Order
                                                 && t.Family == synonym.Taxon.Family
                                                 && t.Genus == synonym.Taxon.Genus
                                                 && t.Species == synonym.Taxon.Species
-                                                && t.Subspecies == synonym.Taxon.Variety
+                                                && t.Subspecies == synonym.Taxon.Subspecies
+                                                && t.Variety == synonym.Taxon.Variety
                                                 && t.Subvariety == synonym.Taxon.Subvariety
                                                 && t.Form == synonym.Taxon.Form);
 

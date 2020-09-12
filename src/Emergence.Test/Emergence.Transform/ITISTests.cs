@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.External.ITIS;
+using Emergence.Data.External.USDA;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service;
@@ -17,11 +19,11 @@ namespace Emergence.Test.Emergence.Transform
     public class ITISTests
     {
         [Fact]
-        public void TestITISTransformer()
+        public void TestITISPlantInfoTransformer()
         {
             var transformer = new ITISPlantInfoTransformer();
 
-            var itisData = ITISData();
+            var itisData = ITISPlantInfoData();
             var result = new List<PlantInfo>();
             itisData.ForEach(i => result.AddRange(transformer.Transform(new List<TaxonomicUnit> { i })));
 
@@ -37,10 +39,10 @@ namespace Emergence.Test.Emergence.Transform
         }
 
         [Fact]
-        public async Task TestITISProcessor()
+        public async Task TestITISPlantInfoProcessor()
         {
             var transformer = new ITISPlantInfoTransformer();
-            var itisData = ITISData();
+            var itisData = ITISPlantInfoData();
             var plantInfos = new List<PlantInfo>();
             itisData.ForEach(i => plantInfos.AddRange(transformer.Transform(new List<TaxonomicUnit> { i })));
 
@@ -76,7 +78,26 @@ namespace Emergence.Test.Emergence.Transform
             result.Select(p => p.Origin).DistinctBy(o => o.OriginId).Count().Should().Be(5);
         }
 
-        private static List<TaxonomicUnit> ITISData() => new List<TaxonomicUnit>
+        [Fact]
+        public void TestITISSynonymTransformer()
+        {
+            var transformer = new ITISSynonymTransformer();
+
+            var itisData = ITISSynonymData();
+            var result = new List<Synonym>();
+            itisData.ForEach(i => result.Add(transformer.Transform(i)));
+
+            result.Count().Should().Be(16);
+            result.Count(s => s.Taxon.Kingdom == "Plantae").Should().Be(1);
+            result.Count(s => s.Language == "English").Should().Be(10);
+            result.Count(s => s.DateUpdated.Year == 2003).Should().Be(3);
+            result.Count(s => s.Rank == "Variety").Should().Be(2);
+            result.Count(s => s.Taxon.Variety != null).Should().Be(2);
+            result.Count(s => s.Taxon.Variety == "paludicola").Should().Be(1);
+            result.Select(s => s.Origin).Count().Should().Be(16);
+        }
+
+        private static List<TaxonomicUnit> ITISPlantInfoData() => new List<TaxonomicUnit>
         {
             // Variety
             new TaxonomicUnit
@@ -268,6 +289,154 @@ namespace Emergence.Test.Emergence.Transform
                 Country = "",
                 Region = "",
                 LocationStatus = "",
+            }
+        };
+
+        private static List<Vernacular> ITISSynonymData() => new List<Vernacular>
+        {
+            new Vernacular
+            {
+                Tsn = "202422",
+                Rank = "Kingdom",
+                Name = "plantes",
+                DateUpdated = DateTime.Parse("2003-05-21 00:00:00"),
+                Language = "French",
+                Taxon = "Plantae"
+            },
+            new Vernacular
+            {
+                Tsn = "846492",
+                Rank = "Subkingdom",
+                Name = "green plants",
+                DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
+                Language = "English",
+                Taxon = "Viridaeplantae"
+            },
+            new Vernacular
+            {
+                Tsn = "846494",
+                Rank = "Infrakingdom",
+                Name = "land plants",
+                DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
+                Language = "English",
+                Taxon = "Streptophyta"
+            },
+            new Vernacular
+            {
+                Tsn = "14189",
+                Rank = "Phylum",
+                Name = "hépatiques",
+                DateUpdated = DateTime.Parse("2003-05-21 00:00:00"),
+                Language = "French",
+                Taxon = "Bryophyta"
+            },
+            new Vernacular
+            {
+                Tsn = "846503",
+                Rank = "Subphylum",
+                Name = "pteridófita",
+                DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
+                Language = "Portuguese",
+                Taxon = "Pteridophytina"
+            },
+            new Vernacular
+            {
+                Tsn = "954908",
+                Rank = "Class",
+                Name = "conjugating green algae",
+                DateUpdated = DateTime.Parse("2014-12-22 00:00:00"),
+                Language = "English",
+                Taxon = "Conjugatophyceae"
+            },
+            new Vernacular
+            {
+                Tsn = "14198",
+                Rank = "Subclass",
+                Name = "leafy hepatics",
+                DateUpdated = DateTime.Parse("2012-03-11 00:00:00"),
+                Language = "English",
+                Taxon = "Jungermanniidae"
+            },
+            new Vernacular
+            {
+                Tsn = "18057",
+                Rank = "Order",
+                Name = "welwitschia",
+                DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
+                Language = "English",
+                Taxon = "Welwitschiales"
+            },
+            new Vernacular
+            {
+                Tsn = "846542",
+                Rank = "Superorder",
+                Name = "monocotylédones",
+                DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
+                Language = "French",
+                Taxon = "Lilianae"
+            },
+            new Vernacular
+            {
+                Tsn = "17169",
+                Rank = "Family",
+                Name = "adder's-tongue",
+                DateUpdated = DateTime.Parse("2012-11-29 00:00:00"),
+                Language = "English",
+                Taxon = "Ophioglossaceae"
+            },
+            new Vernacular
+            {
+                Tsn = "21049",
+                Rank = "Genus",
+                Name = "Mary's grass",
+                DateUpdated = DateTime.Parse("2011-08-30 00:00:00"),
+                Language = "unspecified",
+                Taxon = "Dedeckera"
+            },
+            new Vernacular
+            {
+                Tsn = "14387",
+                Rank = "Species",
+                Name = "Müller's calypogeja",
+                DateUpdated = DateTime.Parse("2008-01-15 00:00:00"),
+                Language = "English",
+                Taxon = "Calypogeja muelleriana"
+            },
+            new Vernacular
+            {
+                Tsn = "15194",
+                Rank = "Subspecies",
+                Name = "Alaskan ascidiota",
+                DateUpdated = DateTime.Parse("2019-09-28 00:00:00"),
+                Language = "English",
+                Taxon = "Ascidiota blepharophylla ssp. alaskana"
+            },
+            new Vernacular
+            {
+                Tsn = "14731",
+                Rank = "Variety",
+                Name = "fourlobe barbilophozia",
+                DateUpdated = DateTime.Parse("2019-09-28 00:00:00"),
+                Language = "English",
+                Taxon = "Barbilophozia quadriloba var. collenchymatica"
+            },
+            new Vernacular
+            {
+                Tsn = "566322",
+                Rank = "Variety",
+                Name = "leafless beaked ladies'-tresses",
+                DateUpdated = DateTime.Parse("2003-05-09 00:00:00"),
+                Language = "unspecified",
+                Taxon = "Stenorrhynchos lanceolatum var. paludicola"
+            },
+            new Vernacular
+            {
+                Tsn = "837747",
+                Rank = "Form",
+                Name = "roundleaf serviceberry",
+                DateUpdated = DateTime.Parse("2011-12-08 00:00:00"),
+                Language = "English",
+                Taxon = "Amelanchier sanguinea f. grandiflora"
             }
         };
     }
