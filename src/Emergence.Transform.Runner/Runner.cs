@@ -14,14 +14,14 @@ namespace Emergence.Transform.Runner
     public class Runner
     {
         private readonly ILogger<Runner> _logger;
-        private readonly IPlantInfoProcessor _processor;
         private readonly IConfiguration Configuration;
+        private readonly IImportTransformOrchestrator _importTransformOrchestrator;
 
-        public Runner(ILogger<Runner> logger, IConfiguration configuration, IPlantInfoProcessor processor)
+        public Runner(ILogger<Runner> logger, IConfiguration configuration, IImportTransformOrchestrator importTransformOrchestrator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _processor = processor;
             Configuration = configuration;
+            _importTransformOrchestrator = importTransformOrchestrator;
         }
 
         public async Task Run(string[] args)
@@ -39,15 +39,16 @@ namespace Emergence.Transform.Runner
 
             foreach (var importer in importers.Where(i => i.IsActive))
             {
-                if (importer.Type == ImporterType.TextImporter)
+                if (importer.Type == ImporterType.TextImporter && importer.ImportModel == "TaxonomicUnit")
                 {
+                    var processor = _importTransformOrchestrator.PlantInfoProcessor;
                     var transformer = new USDATransformer();
                     var startRow = 1;
                     var batchSize = 100;
 
-                    await _processor.InitializeOrigin(transformer.Origin);
-                    await _processor.InitializeLifeforms();
-                    await _processor.InitializeTaxons();
+                    await processor.InitializeOrigin(transformer.Origin);
+                    await processor.InitializeLifeforms();
+                    await processor.InitializeTaxons();
 
                     var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
                     var textImporter = new TextImporter<Checklist>(dataFile, importer.HasHeaders);
@@ -85,7 +86,7 @@ namespace Emergence.Transform.Runner
                                     }
                                 }
 
-                                var plantInfosResult = await _processor.Process(plantInfos);
+                                var plantInfosResult = await processor.Process(plantInfos);
                                 foreach (var plantInfoResult in plantInfosResult)
                                 {
                                     _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
@@ -97,18 +98,19 @@ namespace Emergence.Transform.Runner
                         }
                     }
                 }
-                else if (importer.Type == ImporterType.SqlImporter)
+                else if (importer.Type == ImporterType.SqlImporter && importer.ImportModel == "TaxonomicUnit")
                 {
+                    var processor = _importTransformOrchestrator.PlantInfoProcessor;
                     var sqlImporter = new SqlImporter<TaxonomicUnit>(importer.ConnectionString, importer.SqlQuery);
-                    var transformer = new ITISTransformer();
+                    var transformer = new ITISPlantInfoTransformer();
                     var startRow = 178498;
                     var batchSize = 500;
                     var row = 0;
                     var taxonomicUnits = new List<TaxonomicUnit>();
 
-                    await _processor.InitializeOrigin(transformer.Origin);
-                    await _processor.InitializeLifeforms();
-                    await _processor.InitializeTaxons();
+                    await processor.InitializeOrigin(transformer.Origin);
+                    await processor.InitializeLifeforms();
+                    await processor.InitializeTaxons();
 
                     await foreach (var result in sqlImporter.Import())
                     {
@@ -143,7 +145,7 @@ namespace Emergence.Transform.Runner
                                     }
                                 }
 
-                                var plantInfosResult = await _processor.Process(plantInfos);
+                                var plantInfosResult = await processor.Process(plantInfos);
                                 foreach (var plantInfoResult in plantInfosResult)
                                 {
                                     _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
@@ -151,6 +153,60 @@ namespace Emergence.Transform.Runner
                                 }
 
                                 taxonomicUnits.Clear();
+                            }
+                        }
+                    }
+                }
+                else if (importer.Type == ImporterType.SqlImporter && importer.ImportModel == "Vernacular")
+                {
+                    var processor = _importTransformOrchestrator.SynonymProcessor;
+                    var sqlImporter = new SqlImporter<Vernacular>(importer.ConnectionString, importer.SqlQuery);
+                    var transformer = new ITISSynonymTransformer();
+                    var startRow = 1;
+                    var batchSize = 500;
+                    var row = 0;
+                    var vernaculars = new List<Vernacular>();
+
+                    await processor.InitializeOrigin(transformer.Origin);
+                    await processor.InitializeTaxons();
+
+                    await foreach (var result in sqlImporter.Import())
+                    {
+                        row++;
+                        if (row < startRow)
+                        {
+                            continue;
+                        }
+                        else if (row % batchSize != 0)
+                        {
+                            vernaculars.Add(result);
+                        }
+                        else
+                        {
+                            if (vernaculars.Any())
+                            {
+                                var synonyms = new List<Synonym>();
+                                foreach (var vernacular in vernaculars)
+                                {
+                                    try
+                                    {
+                                        var synonym = transformer.Transform(vernacular);
+                                        synonyms.Add(synonym);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.LogError($"Unable to process {vernacular.Taxon} {vernacular.Name} {vernacular.Rank} {ex.Message}", ex);
+                                    }
+                                }
+
+                                var synonymsResult = await processor.Process(synonyms);
+                                foreach (var synonymResult in synonymsResult)
+                                {
+                                    _logger.LogInformation("TaxonId" + ": " + synonymResult.Taxon.TaxonId + " Synonym" + ": " + synonymResult.Name +
+                                                           " Rank" + ": " + synonymResult.Rank);
+                                }
+
+                                vernaculars.Clear();
                             }
                         }
                     }

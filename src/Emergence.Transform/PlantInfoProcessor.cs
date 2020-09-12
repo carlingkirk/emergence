@@ -76,8 +76,9 @@ namespace Emergence.Transform
                 Taxons.Add(taxon);
             }
 
-            var originResult = Origins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId &&
-                                                           o.AltExternalId == plantInfo.Origin.AltExternalId);
+            var originResult = Origins.FirstOrDefault(o => o.ParentOrigin.OriginId == Origin.OriginId
+                                                        && o.ExternalId == plantInfo.Origin.ExternalId
+                                                        && o.AltExternalId == plantInfo.Origin.AltExternalId);
             if (originResult == null)
             {
                 originResult = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
@@ -134,7 +135,8 @@ namespace Emergence.Transform
                 plantInfo.Taxon = taxon;
 
                 // Do we already have the same origin in our insert list?
-                var originResult = newOrigins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId
+                var originResult = newOrigins.FirstOrDefault(o => o.ParentOrigin.OriginId == Origin.OriginId
+                                                               && o.ExternalId == plantInfo.Origin.ExternalId
                                                                && o.AltExternalId == plantInfo.Origin.AltExternalId);
                 if (originResult == null)
                 {

@@ -8,7 +8,7 @@ using Emergence.Data.Shared.Models;
 
 namespace Emergence.Transform
 {
-    public class ITISTransformer : ITransformer<IEnumerable<PlantInfo>, IEnumerable<TaxonomicUnit>>
+    public class ITISPlantInfoTransformer : ITransformer<IEnumerable<PlantInfo>, IEnumerable<TaxonomicUnit>>
     {
         public Origin Origin => new Origin
         {

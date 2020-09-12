@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Extensions
@@ -9,6 +11,8 @@ namespace Emergence.Data.Shared.Extensions
         {
             TaxonId = source.Id,
             Kingdom = source.Kingdom,
+            Infrakingdom = source.Infrakingdom,
+            Subkingdom = source.Subkingdom,
             Phylum = source.Phylum,
             Subphylum = source.Subphylum,
             Superclass = source.Superclass,
@@ -78,5 +82,21 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Models.Taxon GetTaxon(this IEnumerable<Models.Taxon> source, Taxon taxon) =>
+            source.FirstOrDefault(t => t.Kingdom == taxon.Kingdom
+                                    && t.Subkingdom == taxon.Subkingdom
+                                    && t.Infrakingdom == taxon.Infrakingdom
+                                    && t.Phylum == taxon.Phylum
+                                    && t.Subphylum == taxon.Subphylum
+                                    && t.Class == taxon.Class
+                                    && t.Subclass == taxon.Subclass
+                                    && t.Order == taxon.Order
+                                    && t.Family == taxon.Family
+                                    && t.Genus == taxon.Genus
+                                    && t.Species == taxon.Species
+                                    && t.Subspecies == taxon.Variety
+                                    && t.Subvariety == taxon.Subvariety
+                                    && t.Form == taxon.Form);
     }
 }

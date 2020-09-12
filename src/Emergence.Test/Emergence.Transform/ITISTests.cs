@@ -19,7 +19,7 @@ namespace Emergence.Test.Emergence.Transform
         [Fact]
         public void TestITISTransformer()
         {
-            var transformer = new ITISTransformer();
+            var transformer = new ITISPlantInfoTransformer();
 
             var itisData = ITISData();
             var result = new List<PlantInfo>();
@@ -39,7 +39,7 @@ namespace Emergence.Test.Emergence.Transform
         [Fact]
         public async Task TestITISProcessor()
         {
-            var transformer = new ITISTransformer();
+            var transformer = new ITISPlantInfoTransformer();
             var itisData = ITISData();
             var plantInfos = new List<PlantInfo>();
             itisData.ForEach(i => plantInfos.AddRange(transformer.Transform(new List<TaxonomicUnit> { i })));

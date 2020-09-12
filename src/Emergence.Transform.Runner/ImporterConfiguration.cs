@@ -4,6 +4,7 @@ namespace Emergence.Transform.Runner
     {
         public string Name { get; set; }
         public ImporterType Type { get; set; }
+        public string ImportModel { get; set; }
         public string Filename { get; set; }
         public string ConnectionString { get; set; }
         public string SqlQuery { get; set; }
