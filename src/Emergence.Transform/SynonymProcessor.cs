@@ -28,11 +28,8 @@ namespace Emergence.Transform
 
         public async Task InitializeOrigin(Origin origin)
         {
-            Origin = await _originService.GetOriginAsync(origin.OriginId);
-            if (Origin == null)
-            {
-                Origin = await _originService.AddOrUpdateOriginAsync(origin, null);
-            }
+            Origin = origin;
+            await Task.CompletedTask;
         }
 
         public async Task InitializeTaxons()
@@ -180,6 +177,15 @@ namespace Emergence.Transform
             if (newSynonyms.Any())
             {
                 newSynonyms = (await _synonymService.AddSynonymsAsync(newSynonyms)).ToList();
+            }
+
+            foreach (var newSynonym in newSynonyms)
+            {
+                var synonym = synonyms.First(s => s.Origin.OriginId == newSynonym.Origin.OriginId
+                                               && s.Taxon.TaxonId == newSynonym.Taxon.TaxonId);
+
+                newSynonym.Origin = Origins.FirstOrDefault(o => o.OriginId == newSynonym.Origin.OriginId);
+                newSynonym.Taxon = Taxons.FirstOrDefault(t => t.TaxonId == newSynonym.Taxon.TaxonId);
             }
 
             return newSynonyms;

@@ -148,6 +148,45 @@ namespace Emergence.Test.Mocks
             return mockLocationRepo;
         }
 
+        public static Mock<IRepository<Synonym>> GetStandardMockSynonymRepository(IEnumerable<Synonym> synonyms = null)
+        {
+            var random = new Random();
+            if (synonyms == null)
+            {
+                synonyms = Data.Fakes.Stores.FakeSynonyms.Get();
+            }
+
+            var mockSynonymRepo = new Mock<IRepository<Synonym>>();
+            var mockSynonyms = synonyms.AsQueryable().BuildMockDbSet().Object;
+
+            mockSynonymRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<Synonym, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(mockSynonyms.FirstOrDefault());
+
+            mockSynonymRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Synonym, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(mockSynonyms.ToAsyncEnumerable());
+
+            mockSynonymRepo.Setup(p => p.AddSomeAsync(It.IsAny<IEnumerable<Synonym>>()))
+                .ReturnsAsync((IEnumerable<Synonym> synonyms) =>
+                {
+                    synonyms = synonyms.ToList();
+                    foreach (var synonym in synonyms)
+                    {
+                        synonym.Id = random.Next(1, int.MaxValue);
+                    }
+                    return synonyms;
+                });
+
+            mockSynonymRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<Synonym, bool>>>(), It.IsAny<Synonym>()))
+                .ReturnsAsync((Expression<Func<Synonym, bool>> expr, Synonym synonym) =>
+                {
+                    synonym.Id = random.Next(1, int.MaxValue);
+
+                    return synonym;
+                });
+
+            return mockSynonymRepo;
+        }
+
         public static Mock<IRepository<InventoryItem>> GetStandardMockInventoryItemRepository(IEnumerable<InventoryItem> inventoryItems = null)
         {
             if (inventoryItems == null)

@@ -97,6 +97,42 @@ namespace Emergence.Test.Emergence.Transform
             result.Select(s => s.Origin).Count().Should().Be(16);
         }
 
+        [Fact]
+        public async Task TestITISSynonymProcessor()
+        {
+            var transformer = new ITISSynonymTransformer();
+
+            var itisData = ITISSynonymData();
+            var synonyms = new List<Synonym>();
+            itisData.ForEach(i => synonyms.Add(transformer.Transform(i)));
+
+            var originRepository = RepositoryMocks.GetStandardMockOriginRepository(new List<Stores.Origin>());
+            var locationRepository = RepositoryMocks.GetStandardMockLocationRepository(new List<Stores.Location>());
+            var synonymRepository = RepositoryMocks.GetStandardMockSynonymRepository(new List<Stores.Synonym>());
+            var taxonRepository = RepositoryMocks.GetStandardMockTaxonRepository(new List<Stores.Taxon>());
+
+            var locationService = new LocationService(locationRepository.Object);
+            var originService = new OriginService(originRepository.Object, locationService);
+            var synonymService = new SynonymService(synonymRepository.Object);
+            var taxonService = new TaxonService(taxonRepository.Object);
+
+            var processor = new SynonymProcessor(synonymService, originService, taxonService);
+
+            await processor.InitializeOrigin(transformer.Origin);
+            await processor.InitializeTaxons();
+
+            var result = await processor.Process(synonyms);
+
+            result.Count().Should().Be(16);
+            result.Count(s => s.Taxon.Kingdom == "Plantae").Should().Be(1);
+            result.Count(s => s.Language == "English").Should().Be(10);
+            result.Count(s => s.DateUpdated.Year == 2003).Should().Be(3);
+            result.Count(s => s.Rank == "Variety").Should().Be(2);
+            result.Count(s => s.Taxon.Variety != null).Should().Be(2);
+            result.Count(s => s.Taxon.Variety == "paludicola").Should().Be(1);
+            result.Select(s => s.Origin).Count().Should().Be(16);
+        }
+
         private static List<TaxonomicUnit> ITISPlantInfoData() => new List<TaxonomicUnit>
         {
             // Variety
