@@ -21,8 +21,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Id", id);
+            modalParams.Add("IsModal", true);
 
-            var specimenModal = _modalService.Show<EditSpecimen>("Add Specimen", modalParams);
+            var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams);
             return await specimenModal.Result;
         }
 
@@ -30,8 +31,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Specimen", specimen);
+            modalParams.Add("IsModal", true);
 
-            var specimenModal = _modalService.Show<EditSpecimen>("Edit Specimen", modalParams);
+            var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams);
             return await specimenModal.Result;
         }
 
@@ -39,8 +41,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Id", id);
+            modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<EditOrigin>("Add Origin", modalParams);
+            var modal = _modalService.Show<OriginViewer>("Origin", modalParams);
             return await modal.Result;
         }
 
@@ -48,8 +51,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Origin", origin);
+            modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<EditOrigin>("Edit Origin", modalParams);
+            var modal = _modalService.Show<OriginViewer>("Origin", modalParams);
             return await modal.Result;
         }
 
@@ -57,8 +61,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Id", id);
+            modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<EditPlantInfo>("Add Plant Info", modalParams);
+            var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams);
             return await modal.Result;
         }
 
@@ -66,8 +71,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("PlantInfo", plantInfo);
+            modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<EditPlantInfo>("Edit Plant Info", modalParams);
+            var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams);
             return await modal.Result;
         }
 
@@ -75,8 +81,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Id", id);
+            modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<EditActivity>("Add Activity", modalParams);
+            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams);
             return await modal.Result;
         }
 
@@ -84,8 +91,9 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Activity", activity);
+            modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<EditActivity>("Edit Activity", modalParams);
+            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams);
             return await modal.Result;
         }
 
@@ -93,8 +101,10 @@ namespace Emergence.Client.Common
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Id", 0);
+            modalParams.Add("IsModal", true);
             modalParams.Add("SelectedSpecimen", specimen);
-            var modal = _modalService.Show<EditActivity>("Add Activity", modalParams);
+
+            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams);
             return await modal.Result;
         }
     }

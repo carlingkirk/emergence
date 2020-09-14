@@ -192,6 +192,12 @@ label {
   margin: .5rem .25rem 0 0;
 }
 
+.blazored-modal-header {
+  padding: 0 !important;
+}
+  .blazored-modal-header > h3 {
+    font-size: 1.25rem;
+  }
 /* Forms */
 ul.checklist {
   list-style-type: none;

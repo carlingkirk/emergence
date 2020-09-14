@@ -8,6 +8,8 @@ namespace Emergence.Client.Components
         [Parameter]
         public int Id { get; set; }
         [Parameter]
+        public bool IsModal { get; set; }
+        [Parameter]
         public EventCallback<int> IdChanged { get; set; }
         [Parameter]
         public bool IsItemLoaded { get; set; }
