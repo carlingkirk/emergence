@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,7 +51,8 @@ namespace Emergence.Transform
 
         public async Task InitializeTaxons()
         {
-            var taxonResult = await _taxonService.GetTaxonsAsync();
+            var itisDate = new DateTime(2020, 08, 25);
+            var taxonResult = await _taxonService.GetTaxonsAsync(t => t.DateCreated >= itisDate);
             Taxons = taxonResult.ToList();
         }
 
@@ -64,11 +66,22 @@ namespace Emergence.Transform
                 Lifeforms.Add(lifeform);
             }
 
-            var taxon = Taxons.FirstOrDefault(t => t.Genus == plantInfo.Taxon.Genus && t.Species == plantInfo.Taxon.Species &&
-                                                                (plantInfo.Taxon.Subspecies == null || t.Subspecies == plantInfo.Taxon.Subspecies) &&
-                                                                (plantInfo.Taxon.Variety == null || t.Variety == plantInfo.Taxon.Variety) &&
-                                                                (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety) &&
-                                                                (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
+            var taxon = Taxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
+                                                && t.Subkingdom == plantInfo.Taxon.Subkingdom
+                                                && t.Infrakingdom == plantInfo.Taxon.Infrakingdom
+                                                && t.Phylum == plantInfo.Taxon.Phylum
+                                                && t.Subphylum == plantInfo.Taxon.Subphylum
+                                                && t.Class == plantInfo.Taxon.Class
+                                                && t.Subclass == plantInfo.Taxon.Subclass
+                                                && t.Superorder == plantInfo.Taxon.Superorder
+                                                && t.Order == plantInfo.Taxon.Order
+                                                && t.Family == plantInfo.Taxon.Family
+                                                && t.Genus == plantInfo.Taxon.Genus
+                                                && t.Species == plantInfo.Taxon.Species
+                                                && t.Subspecies == plantInfo.Taxon.Subspecies
+                                                && t.Variety == plantInfo.Taxon.Variety
+                                                && t.Subvariety == plantInfo.Taxon.Subvariety
+                                                && t.Form == plantInfo.Taxon.Form);
 
             if (taxon == null)
             {
@@ -120,12 +133,22 @@ namespace Emergence.Transform
                 }
                 plantInfo.Lifeform = lifeform;
 
-                var taxon = Taxons.FirstOrDefault(t => t.Genus == plantInfo.Taxon.Genus
-                                                    && t.Species == plantInfo.Taxon.Species
-                                                    && (plantInfo.Taxon.Subspecies == null || t.Subspecies == plantInfo.Taxon.Subspecies)
-                                                    && (plantInfo.Taxon.Variety == null || t.Variety == plantInfo.Taxon.Variety)
-                                                    && (plantInfo.Taxon.Subvariety == null || t.Subvariety == plantInfo.Taxon.Subvariety)
-                                                    && (plantInfo.Taxon.Form == null || t.Form == plantInfo.Taxon.Form));
+                var taxon = Taxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
+                                                && t.Subkingdom == plantInfo.Taxon.Subkingdom
+                                                && t.Infrakingdom == plantInfo.Taxon.Infrakingdom
+                                                && t.Phylum == plantInfo.Taxon.Phylum
+                                                && t.Subphylum == plantInfo.Taxon.Subphylum
+                                                && t.Class == plantInfo.Taxon.Class
+                                                && t.Subclass == plantInfo.Taxon.Subclass
+                                                && t.Superorder == plantInfo.Taxon.Superorder
+                                                && t.Order == plantInfo.Taxon.Order
+                                                && t.Family == plantInfo.Taxon.Family
+                                                && t.Genus == plantInfo.Taxon.Genus
+                                                && t.Species == plantInfo.Taxon.Species
+                                                && t.Subspecies == plantInfo.Taxon.Subspecies
+                                                && t.Variety == plantInfo.Taxon.Variety
+                                                && t.Subvariety == plantInfo.Taxon.Subvariety
+                                                && t.Form == plantInfo.Taxon.Form);
 
                 if (taxon == null || taxon.Kingdom != plantInfo.Taxon.Kingdom || taxon.Family != plantInfo.Taxon.Family)
                 {

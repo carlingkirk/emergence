@@ -334,6 +334,7 @@ namespace Emergence.Test.Emergence.Transform
             {
                 Tsn = "202422",
                 Rank = "Kingdom",
+                Kingdom = "Plantae",
                 Name = "plantes",
                 DateUpdated = DateTime.Parse("2003-05-21 00:00:00"),
                 Language = "French",
@@ -346,6 +347,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "green plants",
                 DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
                 Language = "English",
+                Subkingdom = "Viridaeplantae",
                 Taxon = "Viridaeplantae"
             },
             new Vernacular
@@ -355,6 +357,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "land plants",
                 DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
                 Language = "English",
+                Infrakingdom = "Streptophyta",
                 Taxon = "Streptophyta"
             },
             new Vernacular
@@ -364,6 +367,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "hépatiques",
                 DateUpdated = DateTime.Parse("2003-05-21 00:00:00"),
                 Language = "French",
+                Division = "Bryophyta",
                 Taxon = "Bryophyta"
             },
             new Vernacular
@@ -373,6 +377,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "pteridófita",
                 DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
                 Language = "Portuguese",
+                Subdivision = "Pteridophytina",
                 Taxon = "Pteridophytina"
             },
             new Vernacular
@@ -382,6 +387,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "conjugating green algae",
                 DateUpdated = DateTime.Parse("2014-12-22 00:00:00"),
                 Language = "English",
+                Class = "Conjugatophyceae",
                 Taxon = "Conjugatophyceae"
             },
             new Vernacular
@@ -391,6 +397,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "leafy hepatics",
                 DateUpdated = DateTime.Parse("2012-03-11 00:00:00"),
                 Language = "English",
+                Subclass = "Jungermanniidae",
                 Taxon = "Jungermanniidae"
             },
             new Vernacular
@@ -400,6 +407,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "welwitschia",
                 DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
                 Language = "English",
+                Order = "Welwitschiales",
                 Taxon = "Welwitschiales"
             },
             new Vernacular
@@ -409,6 +417,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "monocotylédones",
                 DateUpdated = DateTime.Parse("2012-03-29 00:00:00"),
                 Language = "French",
+                Superorder = "Lilianae",
                 Taxon = "Lilianae"
             },
             new Vernacular
@@ -418,6 +427,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "adder's-tongue",
                 DateUpdated = DateTime.Parse("2012-11-29 00:00:00"),
                 Language = "English",
+                Family = "Ophioglossaceae",
                 Taxon = "Ophioglossaceae"
             },
             new Vernacular
@@ -427,6 +437,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "Mary's grass",
                 DateUpdated = DateTime.Parse("2011-08-30 00:00:00"),
                 Language = "unspecified",
+                Genus = "Dedeckera",
                 Taxon = "Dedeckera"
             },
             new Vernacular
@@ -436,6 +447,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "Müller's calypogeja",
                 DateUpdated = DateTime.Parse("2008-01-15 00:00:00"),
                 Language = "English",
+                Species = "Calypogeja muelleriana",
                 Taxon = "Calypogeja muelleriana"
             },
             new Vernacular
@@ -445,6 +457,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "Alaskan ascidiota",
                 DateUpdated = DateTime.Parse("2019-09-28 00:00:00"),
                 Language = "English",
+                Subspecies = "Ascidiota blepharophylla ssp. alaskana",
                 Taxon = "Ascidiota blepharophylla ssp. alaskana"
             },
             new Vernacular
@@ -454,6 +467,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "fourlobe barbilophozia",
                 DateUpdated = DateTime.Parse("2019-09-28 00:00:00"),
                 Language = "English",
+                Variety = "Barbilophozia quadriloba var. collenchymatica",
                 Taxon = "Barbilophozia quadriloba var. collenchymatica"
             },
             new Vernacular
@@ -463,6 +477,8 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "leafless beaked ladies'-tresses",
                 DateUpdated = DateTime.Parse("2003-05-09 00:00:00"),
                 Language = "unspecified",
+                Species = "Stenorrhynchos lanceolatum",
+                Variety = "Stenorrhynchos lanceolatum var. paludicola",
                 Taxon = "Stenorrhynchos lanceolatum var. paludicola"
             },
             new Vernacular
@@ -472,6 +488,7 @@ namespace Emergence.Test.Emergence.Transform
                 Name = "roundleaf serviceberry",
                 DateUpdated = DateTime.Parse("2011-12-08 00:00:00"),
                 Language = "English",
+                Form = "Amelanchier sanguinea f. grandiflora",
                 Taxon = "Amelanchier sanguinea f. grandiflora"
             }
         };

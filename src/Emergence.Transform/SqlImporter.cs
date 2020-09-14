@@ -47,7 +47,8 @@ namespace Emergence.Transform
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
         protected DbCommand GetCommand(DbConnection connection, string commandText, CommandType commandType) => new SqlCommand(commandText, connection as SqlConnection)
         {
-            CommandType = commandType
+            CommandType = commandType,
+            CommandTimeout = 180
         };
 #pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
 

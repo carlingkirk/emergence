@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared.Extensions;
@@ -33,9 +34,24 @@ namespace Emergence.Service
             return taxons;
         }
 
+        public async Task<IEnumerable<Data.Shared.Models.Taxon>> GetTaxonsAsync(Expression<Func<Taxon, bool>> predicate)
+        {
+            var taxonResult = _taxonRepository.GetSomeAsync(predicate);
+            var taxons = new List<Data.Shared.Models.Taxon>();
+            await foreach (var taxon in taxonResult)
+            {
+                taxons.Add(taxon.AsModel());
+            }
+            return taxons;
+        }
+
         public async Task<Data.Shared.Models.Taxon> AddOrUpdateTaxonAsync(Data.Shared.Models.Taxon taxon)
         {
-            taxon.DateModified = DateTime.UtcNow;
+            if (taxon.TaxonId > 0)
+            {
+                taxon.DateModified = DateTime.UtcNow;
+            }
+
             var taxonResult = await _taxonRepository.AddOrUpdateAsync(t => t.Id == taxon.TaxonId, taxon.AsStore());
             return taxonResult.AsModel();
         }

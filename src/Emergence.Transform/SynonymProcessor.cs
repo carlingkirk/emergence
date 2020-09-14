@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +35,8 @@ namespace Emergence.Transform
 
         public async Task InitializeTaxons()
         {
-            var taxonResult = await _taxonService.GetTaxonsAsync();
+            var itisDate = new DateTime(2020, 08, 25);
+            var taxonResult = await _taxonService.GetTaxonsAsync(t => t.DateCreated >= itisDate);
             Taxons = taxonResult.ToList();
         }
 

@@ -57,12 +57,14 @@ namespace Emergence.Transform.Runner
 
             // Application Services
             services.AddTransient<IActivityService, ActivityService>();
+            services.AddTransient<IImportTransformOrchestrator, ImportTransformOrchestrator>();
             services.AddTransient<IInventoryService, InventoryService>();
             services.AddTransient<ILifeformService, LifeformService>();
             services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<IOriginService, OriginService>();
             services.AddTransient<IPlantInfoService, PlantInfoService>();
             services.AddTransient<ISpecimenService, SpecimenService>();
+            services.AddTransient<ISynonymService, SynonymService>();
             services.AddTransient<ITaxonService, TaxonService>();
             services.AddTransient<IBlobService, BlobService>();
             services.AddTransient<IPhotoService, PhotoService>();
@@ -79,6 +81,7 @@ namespace Emergence.Transform.Runner
             services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
             services.AddScoped(typeof(IRepository<PlantLocation>), typeof(Repository<PlantLocation>));
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
+            services.AddScoped(typeof(IRepository<Synonym>), typeof(Repository<Synonym>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
 
             // add app

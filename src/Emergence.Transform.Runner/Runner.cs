@@ -41,7 +41,7 @@ namespace Emergence.Transform.Runner
             {
                 if (importer.Type == ImporterType.TextImporter && importer.ImportModel == "TaxonomicUnit")
                 {
-                    var processor = _importTransformOrchestrator.PlantInfoProcessor;
+                    var processor = _importTransformOrchestrator.GetPlantInfoProcessor;
                     var transformer = new USDATransformer();
                     var startRow = 1;
                     var batchSize = 100;
@@ -100,11 +100,11 @@ namespace Emergence.Transform.Runner
                 }
                 else if (importer.Type == ImporterType.SqlImporter && importer.ImportModel == "TaxonomicUnit")
                 {
-                    var processor = _importTransformOrchestrator.PlantInfoProcessor;
+                    var processor = _importTransformOrchestrator.GetPlantInfoProcessor;
                     var sqlImporter = new SqlImporter<TaxonomicUnit>(importer.ConnectionString, importer.SqlQuery);
                     var transformer = new ITISPlantInfoTransformer();
-                    var startRow = 178498;
-                    var batchSize = 500;
+                    var startRow = 0;
+                    var batchSize = 100;
                     var row = 0;
                     var taxonomicUnits = new List<TaxonomicUnit>();
 
@@ -159,11 +159,11 @@ namespace Emergence.Transform.Runner
                 }
                 else if (importer.Type == ImporterType.SqlImporter && importer.ImportModel == "Vernacular")
                 {
-                    var processor = _importTransformOrchestrator.SynonymProcessor;
+                    var processor = _importTransformOrchestrator.GetSynonymProcessor;
                     var sqlImporter = new SqlImporter<Vernacular>(importer.ConnectionString, importer.SqlQuery);
                     var transformer = new ITISSynonymTransformer();
-                    var startRow = 1;
-                    var batchSize = 500;
+                    var startRow = 0;
+                    var batchSize = 100;
                     var row = 0;
                     var vernaculars = new List<Vernacular>();
 
@@ -223,7 +223,8 @@ namespace Emergence.Transform.Runner
                 {
                     Name = importer["name"],
                     Type = Enum.Parse<ImporterType>(importer["type"]),
-                    IsActive = bool.Parse(importer["isActive"])
+                    IsActive = bool.Parse(importer["isActive"]),
+                    ImportModel = importer["importModel"]
                 };
 
                 if (config.Type == ImporterType.TextImporter)

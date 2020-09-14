@@ -2,7 +2,7 @@ using Emergence.Service.Interfaces;
 
 namespace Emergence.Transform
 {
-    public class ImportTransformOrchestrator
+    public class ImportTransformOrchestrator : IImportTransformOrchestrator
     {
         private readonly ILifeformService _lifeformService;
         private readonly IOriginService _originService;
