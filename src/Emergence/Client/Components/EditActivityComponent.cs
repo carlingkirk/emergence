@@ -13,8 +13,14 @@ namespace Emergence.Client.Components
 {
     public class EditActivityComponent : ActivityComponent
     {
+        public bool EnableQuantityUpdate { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
+
+        public EditActivityComponent()
+        {
+            EnableQuantityUpdate = true;
+        }
 
         protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
 
@@ -37,6 +43,12 @@ namespace Emergence.Client.Components
             if (SelectedSpecimen != null)
             {
                 Activity.Specimen = SelectedSpecimen;
+            }
+
+            if (EnableQuantityUpdate && Activity.Quantity.HasValue)
+            {
+                // TODO create new specimen and update quantity
+                //SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;
             }
 
             Activity = await ApiClient.PutActivityAsync(Activity);
@@ -77,7 +89,7 @@ namespace Emergence.Client.Components
 
             foreach (var lifeform in lifeforms)
             {
-                specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
+                specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem { Inventory = new Inventory { CreatedBy = UserId } } });
             }
 
             return specimens;
