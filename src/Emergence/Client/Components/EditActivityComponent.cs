@@ -13,13 +13,13 @@ namespace Emergence.Client.Components
 {
     public class EditActivityComponent : ActivityComponent
     {
-        public bool EnableQuantityUpdate { get; set; }
+        public bool CreateNewSpecimen { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
 
         public EditActivityComponent()
         {
-            EnableQuantityUpdate = true;
+            CreateNewSpecimen = true;
         }
 
         protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
@@ -45,7 +45,7 @@ namespace Emergence.Client.Components
                 Activity.Specimen = SelectedSpecimen;
             }
 
-            if (EnableQuantityUpdate && Activity.Quantity.HasValue)
+            if (CreateNewSpecimen && Activity.Quantity.HasValue)
             {
                 // TODO create new specimen and update quantity
                 //SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;

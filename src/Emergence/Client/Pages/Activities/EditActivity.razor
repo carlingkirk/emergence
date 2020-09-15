@@ -32,8 +32,10 @@
                                        MinimumLength="3"
                                        Debounce="500" Context="specimen">
                         <SelectedTemplate>
-                            <span>@(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
-                                  (@(specimen.InventoryItem?.Status.ToFriendlyName()))</span>
+                            <span>
+                                @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
+                                (@(specimen.InventoryItem?.Status.ToFriendlyName()))
+                            </span>
                         </SelectedTemplate>
                         <ResultTemplate>
                             @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
@@ -46,11 +48,13 @@
                                 }
                                 else if (specimen.InventoryItem != null)
                                 {
-                                <span>@(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
-                                      (@(specimen.InventoryItem?.Status.ToFriendlyName()))</span>
+                                <span>
+                                    @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
+                                    (@(specimen.InventoryItem?.Status.ToFriendlyName()))
+                                </span>
                                 }
                                 else // this won't happen?
-                                {
+                            {
                                 <span>@specimen.SpecimenId.ToString();</span>
                                 }
                         </ResultTemplate>
@@ -58,34 +62,40 @@
                             No results found
                         </NotFoundTemplate>
                     </BlazoredTypeahead>
+                    
                 </div>
             </div>
             @if (SelectedSpecimen != null)
             {
-            <div class="row">
-                <div class="col-lg-3 col-xs">
-                    <label for="quantity">Quantity</label>
-                    <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
-                </div>
-                @if (Activity.ActivityType == ActivityType.PlantInGround || Activity.ActivityType == ActivityType.Germination || Activity.ActivityType == ActivityType.Stratification)
-                {
-                <div class="col-lg-6 col-xs">
-                        @if (EnableQuantityUpdate && Activity.Quantity.HasValue && Activity.Quantity.Value > 0 && SelectedSpecimen?.InventoryItem?.Quantity > 0)
-                        {
-                            <label for="enable-quantity-update">*Specimen quantity will be reduced to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity) and a new specimen will be created.</label>
-                        }
-                        else if (!EnableQuantityUpdate && Activity.Quantity.HasValue)
-                        {
-                            <label for="enable-quantity-update">*Specimen quantity will not be updated.</label>
-                        }
-                        @if (Activity.Quantity.HasValue)
-                        {
-
-                        }
-                    <input type="checkbox" @bind="EnableQuantityUpdate" tabindex="-1" class="form-check" id="enable-quantity-update" />
-                </div>
-                }
+        <div class="row">
+            <div class="col-lg-3 col-xs">
+                <label for="quantity">Quantity</label>
+                <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
             </div>
+            @if (Activity.ActivityType == ActivityType.PlantInGround || Activity.ActivityType == ActivityType.Germination || Activity.ActivityType == ActivityType.Stratification)
+            {
+                <div class="col-lg-9 col-xs">
+                    <label for="create-new-specimen">Create new specimen</label>
+                    <div style="display: block;">
+                        <input type="checkbox" @bind="CreateNewSpecimen" id="create-new-specimen" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
+                        @if (CreateNewSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
+                        {
+                    <label for="enable-quantity-update">
+                        Original specimen quantity will be reduced
+                        @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
+                        {
+                            <span>to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity)</span>
+                        }
+                    </label>
+                        }
+                        else if (!CreateNewSpecimen && Activity.Quantity.HasValue)
+                        {
+                        <label for="enable-quantity-update">Original specimen quantity will not be updated</label>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
             }
             <div class="row">
                 <div class="col">
