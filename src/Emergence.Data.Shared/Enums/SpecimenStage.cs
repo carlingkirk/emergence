@@ -4,6 +4,8 @@ namespace Emergence.Data.Shared
 {
     public enum SpecimenStage
     {
+        [Description("")]
+        Unknown,
         Seed,
         Ordered,
         Stratification,

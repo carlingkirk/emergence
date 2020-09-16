@@ -85,5 +85,22 @@ namespace Emergence.API.Controllers
             var result = await _specimenService.FindSpecimens(findParams, UserId);
             return result;
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var specimen = await _specimenService.GetSpecimenAsync(id);
+            if (specimen.CreatedBy != UserId)
+            {
+                return Unauthorized();
+            }
+
+            var photos = await _photoService.GetPhotosAsync(PhotoType.Specimen, specimen.SpecimenId);
+            await _photoService.RemovePhotosAsync(photos);
+            await _specimenService.RemoveSpecimenAsync(specimen);
+
+            return Ok();
+        }
     }
 }

@@ -83,7 +83,7 @@
 }
 else if (Id > 0 || IsItemLoaded)
 {
-    <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></SpecimenViewer>
+    <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></SpecimenViewer>
 }
 
 @code {

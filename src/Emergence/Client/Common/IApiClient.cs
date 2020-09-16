@@ -16,6 +16,7 @@ namespace Emergence.Client.Common
         Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);
+        Task<bool> RemoveSpecimenAsync(Specimen specimen);
         Task<PlantInfo> GetPlantInfoAsync(int id);
         Task<PlantInfo> PutPlantInfoAsync(PlantInfo plantInfo);
         Task<Activity> GetActivityAsync(int id);

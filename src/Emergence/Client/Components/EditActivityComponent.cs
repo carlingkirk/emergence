@@ -47,8 +47,44 @@ namespace Emergence.Client.Components
 
             if (CreateNewSpecimen && Activity.Quantity.HasValue)
             {
-                // TODO create new specimen and update quantity
-                //SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;
+                var stage = SpecimenStage.Unknown;
+                if (Activity.ActivityType == ActivityType.Stratification)
+                {
+                    stage = SpecimenStage.Stratification;
+                }
+                else if (Activity.ActivityType == ActivityType.PlantInGround)
+                {
+                    stage = SpecimenStage.InGround;
+                }
+                else if (Activity.ActivityType == ActivityType.Germination)
+                {
+                    stage = SpecimenStage.Germination;
+                }
+
+                var newSpecimen = new Specimen
+                {
+                    SpecimenStage = stage,
+                    Lifeform = SelectedSpecimen.Lifeform,
+                    InventoryItem = new InventoryItem
+                    {
+                        Name = SelectedSpecimen.InventoryItem.Name,
+                        ItemType = ItemType.Specimen,
+                        Quantity = Activity.Quantity.Value,
+                        Status = SelectedSpecimen.InventoryItem.Status,
+                        Inventory = SelectedSpecimen.InventoryItem.Inventory,
+                        Origin = SelectedSpecimen.InventoryItem.Origin,
+                        DateAcquired = Activity.DateOccured,
+                        DateCreated = DateTime.UtcNow,
+                        CreatedBy = UserId
+                    },
+                    CreatedBy = UserId,
+                    DateCreated = DateTime.UtcNow
+                };
+                newSpecimen = await ApiClient.PutSpecimenAsync(newSpecimen);
+                Activity.Specimen = newSpecimen;
+
+                SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;
+                await ApiClient.PutSpecimenAsync(SelectedSpecimen);
             }
 
             Activity = await ApiClient.PutActivityAsync(Activity);

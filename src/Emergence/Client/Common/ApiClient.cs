@@ -75,6 +75,15 @@ namespace Emergence.Client.Common
             return await ReadResult<Specimen>(result);
         }
 
+        public async Task<bool> RemoveSpecimenAsync(Specimen specimen)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/specimen/{specimen.SpecimenId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
         public async Task<PlantInfo> GetPlantInfoAsync(int id)
         {
             var result = await _httpClient.GetAsync($"/api/plantinfo/{id}");
@@ -185,6 +194,19 @@ namespace Emergence.Client.Common
             if (result.IsSuccessStatusCode)
             {
                 return await result.Content.ReadFromJsonAsync<T>();
+            }
+            else
+            {
+                var message = await result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        private async Task<string> ReadResult(HttpResponseMessage result)
+        {
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadAsStringAsync();
             }
             else
             {

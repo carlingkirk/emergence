@@ -20,5 +20,6 @@ namespace Emergence.Data
         Task<IEnumerable<T>> UpdateSomeAsync(IEnumerable<T> source);
         Task UpdateAsync(T entity);
         Task<bool> RemoveAsync(T entity);
+        Task<bool> RemoveManyAsync(IEnumerable<T> source);
     }
 }

@@ -49,7 +49,18 @@ namespace Emergence.Client.Components
                 Specimen = new Specimen
                 {
                     Lifeform = new Lifeform(),
-                    InventoryItem = new InventoryItem { Inventory = new Inventory { CreatedBy = UserId, OwnerId = UserId, DateCreated = DateTime.UtcNow } }
+                    InventoryItem = new InventoryItem
+                    {
+                        ItemType = ItemType.Specimen,
+                        Inventory = new Inventory
+                        {
+                            CreatedBy = UserId,
+                            OwnerId = UserId,
+                            DateCreated = DateTime.UtcNow
+                        },
+                        DateCreated = DateTime.UtcNow,
+                        CreatedBy = UserId
+                    }
                 };
                 UploadedPhotos = new List<Photo>();
             }
@@ -57,6 +68,18 @@ namespace Emergence.Client.Components
             if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.CreatedBy == UserId)
             {
                 IsEditable = true;
+            }
+        }
+
+        protected async Task RemoveSpecimen()
+        {
+            var result = await ApiClient.RemoveSpecimenAsync(Specimen);
+            if (result)
+            {
+                Specimen = null;
+                await IsEditingChanged.InvokeAsync(false);
+                await IsItemLoadedChanged.InvokeAsync(false);
+                await ItemLoadedChanged.InvokeAsync(false);
             }
         }
     }

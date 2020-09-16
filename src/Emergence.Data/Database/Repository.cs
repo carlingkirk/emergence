@@ -147,5 +147,12 @@ namespace Emergence.Data.Repository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> RemoveManyAsync(IEnumerable<T> source)
+        {
+            _context.Set<T>().RemoveRange(source);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

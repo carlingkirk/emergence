@@ -10,6 +10,7 @@
 @if (IsEditable && Specimen.SpecimenId > 0)
 {
     <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+    <button class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
 }
 @if (IsEditing && Specimen != null)
 {
