@@ -41,7 +41,7 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
                     </td>
                     <td>
                         <span>@plantInfo.CommonName</span>
@@ -95,7 +95,7 @@
             }
             @if (!string.IsNullOrEmpty(UserId))
             {
-                <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Plant Info</button>
+                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.PlantInfo, 0))"><span class="oi oi-plus btn-oi"></span>Plant Info</button>
             }
         </div>
     }

@@ -37,7 +37,7 @@
         {
             <tr>
                 <td>
-                    <a href="" @onclick="() => LoadInfo(activity.ActivityId)" @onclick:preventDefault><span class="link">@activity.Name</span></a>
+                    <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@activity.Name</span></a>
                 </td>
                 <td>
                     <span @onclick="@(async () => await UpdateSpecimenAsync(activity.Specimen))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
@@ -67,7 +67,7 @@
         }
         @if (!string.IsNullOrEmpty(UserId))
         { 
-            <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+            <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0))"><span class="oi oi-plus btn-oi"></span>Activity</button>
         }
     </div>
     }

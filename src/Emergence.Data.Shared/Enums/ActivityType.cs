@@ -4,10 +4,10 @@ namespace Emergence.Data.Shared
 {
     public enum ActivityType
     {
-        [Description("Stratify")]
-        Stratification,
         [Description("Germinate")]
         Germination,
+        [Description("Stratify")]
+        Stratification,
         [Description("Divide")]
         Division,
         [Description("Take cutting")]

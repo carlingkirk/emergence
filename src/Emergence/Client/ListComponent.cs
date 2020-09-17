@@ -21,6 +21,8 @@ namespace Emergence.Client
         public int Count { get; set; }
         public bool IsItemLoaded { get; set; }
         public int Id { get; set; }
+        public T Parent { get; set; }
+        public ViewItemType ViewItemType { get; set; }
 
         public ListComponent()
         {
@@ -76,10 +78,19 @@ namespace Emergence.Client
             return List;
         }
 
-        protected void LoadInfo(int id)
+        protected void LoadInfo(ViewItemType type, int id)
         {
             Id = id;
             IsItemLoaded = true;
+            ViewItemType = type;
+        }
+
+        protected void LoadInfo(ViewItemType type, int id, T parent)
+        {
+            Id = id;
+            IsItemLoaded = true;
+            ViewItemType = type;
+            Parent = parent;
         }
     }
 }

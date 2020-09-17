@@ -42,7 +42,8 @@ namespace Emergence.Client.Components
                 {
                     CreatedBy = UserId,
                     AssignedTo = UserId,
-                    DateCreated = DateTime.Now
+                    DateCreated = DateTime.Now,
+                    Specimen = SelectedSpecimen
                 };
                 UploadedPhotos = new List<Photo>();
             }
