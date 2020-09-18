@@ -1,6 +1,8 @@
 @page "/specimen/list"
 @using Emergence.Client.Components
 @using Emergence.Client.Pages.Activities
+@using Emergence.Client.Pages.Origins
+@using Emergence.Client.Pages.Specimens
 @using Emergence.Data.Shared.Extensions
 @inherits ListSpecimensComponent
 
@@ -62,7 +64,14 @@
                         </span>
                     </td>
                     <td>
-                        <span @onclick="@(async () => await UpdateOriginAsync(specimen.InventoryItem.Origin))" class="link">@specimen.InventoryItem?.Origin?.Name</span>
+                        @if (specimen.InventoryItem?.Origin != null)
+                        {
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, specimen.InventoryItem.Origin.OriginId))" class="link">@specimen.InventoryItem?.Origin?.Name</span>
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
                     </td>
                     <td>
                         <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
@@ -91,6 +100,9 @@ else if (Id > 0 || IsItemLoaded)
             break;
         case (ViewItemType.Specimen):
             <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></SpecimenViewer>
+            break;
+        case (ViewItemType.Origin):
+            <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />
             break;
         default:
             break;

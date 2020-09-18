@@ -1,5 +1,7 @@
 @page "/plantinfo/list"
 @using Emergence.Client.Components
+@using Emergence.Client.Pages.PlantInfos
+@using Emergence.Client.Pages.Origins
 
 @inherits ListPlantInfosComponent
 
@@ -15,25 +17,25 @@
     {
         <table>
             <SortableHeaders HeaderNames="@(
-                    new Dictionary<string, string>
-                    {
-                        { "ScientificName", "Scientific Name" },
-                        { "CommonName", "Common Name" },
-                        { "Origin", "Origin" },
-                        { "Zone", "Zone" },
-                        { "Light", "Light" },
-                        { "Water", "Water" },
-                        { "BloomTime", "Bloom Time" },
-                        { "Height", "Height" },
-                        { "Spread", "Spread" }
-                    })"
+                                new Dictionary<string, string>
+                                {
+                                    { "ScientificName", "Scientific Name" },
+                                    { "CommonName", "Common Name" },
+                                    { "Origin", "Origin" },
+                                    { "Zone", "Zone" },
+                                    { "Light", "Light" },
+                                    { "Water", "Water" },
+                                    { "BloomTime", "Bloom Time" },
+                                    { "Height", "Height" },
+                                    { "Spread", "Spread" }
+                                })"
                              Sort="SortAsync"
                              @bind-Values="List" />
             @if (!List.Any())
             {
                 <tr>
                     <td>
-                        <span>No plant infos found</span>
+                        <span>No plant profiles found</span>
                     </td>
                 </tr>
             }
@@ -47,7 +49,14 @@
                         <span>@plantInfo.CommonName</span>
                     </td>
                     <td>
-                        <span @onclick="@(async () => await UpdateOriginAsync(plantInfo.Origin))" class="link">@plantInfo.Origin?.Name</span>
+                        @if (plantInfo.Origin != null)
+                        {
+                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@plantInfo.Origin?.Name</span>
+                        }
+                        else
+                        {
+                        <span></span>
+                        }
                     </td>
                     <td>
                         @if (plantInfo.Requirements?.ZoneRequirements != null)
@@ -95,12 +104,22 @@
             }
             @if (!string.IsNullOrEmpty(UserId))
             {
-                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.PlantInfo, 0))"><span class="oi oi-plus btn-oi"></span>Plant Info</button>
+                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.PlantInfo, 0))"><span class="oi oi-plus btn-oi"></span>Plant Profile</button>
             }
         </div>
     }
 }
 else if (Id > 0 || IsItemLoaded)
 {
-<PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></PlantInfoViewer>
+    switch (ViewItemType)
+    {
+        case (ViewItemType.PlantInfo):
+            <PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></PlantInfoViewer>
+            break;
+        case (ViewItemType.Origin):
+            <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />
+            break;
+        default:
+            break;
+    }
 }

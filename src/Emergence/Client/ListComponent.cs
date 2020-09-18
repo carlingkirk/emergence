@@ -12,6 +12,8 @@ namespace Emergence.Client
         protected IModalServiceClient ModalServiceClient { get; set; }
         [Parameter]
         public bool ShowSearch { get; set; }
+        [Parameter]
+        public bool LinkRelations { get; set; }
         public IEnumerable<T> List { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
@@ -27,6 +29,7 @@ namespace Emergence.Client
         public ListComponent()
         {
             ShowSearch = true;
+            LinkRelations = true;
         }
 
         public abstract Task<FindResult<T>> GetListAsync(FindParams findParams);

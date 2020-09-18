@@ -1,5 +1,7 @@
 @page "/activity/list"
 @using Emergence.Client.Components
+@using Emergence.Client.Pages.Activities
+@using Emergence.Client.Pages.Specimens
 @using Emergence.Data.Shared.Extensions
 @inherits ListActivitiesComponent
 
@@ -13,66 +15,83 @@
 
     @if (List != null)
     {
-    <table>
-        <SortableHeaders HeaderNames="@(
-            new Dictionary<string, string>
+        <table>
+            <SortableHeaders HeaderNames="@(
+                                new Dictionary<string, string>
+                                {
+                                    { "Name", "Name" },
+                                    { "ScientificName", "Scientific Name" },
+                                    { "ActivityType", "Activity Type" },
+                                    { "DateOccured", "Date Occured" },
+                                    { "DateScheduled", "Date Scheduled" }
+                                })"
+                             Sort="SortAsync"
+                             @bind-Values="List" />
+            @if (!List.Any())
             {
-                { "Name", "Name" },
-                { "ScientificName", "Scientific Name" },
-                { "ActivityType", "Activity Type" },
-                { "DateOccured", "Date Occured" },
-                { "DateScheduled", "Date Scheduled" }
-            })"
-                            Sort="SortAsync"
-                            @bind-Values="List" />
-        @if (!List.Any())
-        {
-            <tr>
-                <td>
-                    <span>No activities found</span>
-                </td>
-            </tr>
-        }
-        @foreach (var activity in List)
-        {
-            <tr>
-                <td>
-                    <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@activity.Name</span></a>
-                </td>
-                <td>
-                    <span @onclick="@(async () => await UpdateSpecimenAsync(activity.Specimen))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
-                </td>
-                <td>
-                    <span>@activity.ActivityType.ToFriendlyName()</span>
-                </td>
-                <td>
-                    <span>
-                        @(activity.DateOccured.HasValue ?
+                <tr>
+                    <td>
+                        <span>No activities found</span>
+                    </td>
+                </tr>
+            }
+            @foreach (var activity in List)
+            {
+                <tr>
+                    <td>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@activity.Name</span></a>
+                    </td>
+                    <td>
+                        @if (LinkRelations)
+                        {
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
+                        }
+                        else
+                        {
+                            <span>@activity.Specimen.Lifeform.ScientificName</span>
+                        }
+                    </td>
+                    <td>
+                        <span>@activity.ActivityType.ToFriendlyName()</span>
+                    </td>
+                    <td>
+                        <span>
+                            @(activity.DateOccured.HasValue ?
                         activity.DateOccured.Value.ToLocalTime().ToShortDateString() : "")
-                    </span>
-                </td>
-                <td>
-                    <span>
-                        @(activity.DateScheduled.HasValue ?
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @(activity.DateScheduled.HasValue ?
                         activity.DateScheduled.Value.ToLocalTime().ToShortDateString() : "")
-                    </span>
-                </td>
-            </tr>
-        }
-    </table>
-    <div>
-        @if (List.Any())
-        {
-            <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
-        }
-        @if (!string.IsNullOrEmpty(UserId))
-        { 
-            <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0))"><span class="oi oi-plus btn-oi"></span>Activity</button>
-        }
-    </div>
+                        </span>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div>
+            @if (List.Any())
+            {
+                <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+            }
+            @if (!string.IsNullOrEmpty(UserId))
+            {
+                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+            }
+        </div>
     }
 }
 else if (Id > 0 || IsItemLoaded)
 {
-    <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></ActivityViewer>
+    switch (ViewItemType)
+    {
+        case (ViewItemType.Activity):
+            <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></ActivityViewer>
+            break;
+        case (ViewItemType.Specimen):
+            <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />
+            break;
+        default:
+            break;
+    }
 }
