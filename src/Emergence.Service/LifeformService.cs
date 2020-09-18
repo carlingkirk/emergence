@@ -49,7 +49,7 @@ namespace Emergence.Service
             return lifeforms;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
+        public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
         {
             if (findParams.SearchText != null)
             {
@@ -69,7 +69,12 @@ namespace Emergence.Service
             {
                 lifeforms.Add(lifeform.AsModel());
             }
-            return lifeforms;
+
+            return new FindResult<Data.Shared.Models.Lifeform>
+            {
+                Results = lifeforms,
+                Count = count
+            };
         }
 
         private IQueryable<Lifeform> OrderBy(IQueryable<Lifeform> lifeformQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)

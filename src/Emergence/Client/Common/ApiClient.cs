@@ -26,11 +26,11 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Origin>>(result);
         }
 
-        public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(FindParams findParams)
+        public async Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
 
-            return await ReadResult<IEnumerable<Lifeform>>(result);
+            return await ReadResult<FindResult<Lifeform>>(result);
         }
 
         public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)

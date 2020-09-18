@@ -64,8 +64,9 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) =>
-            await ApiClient.FindLifeformsAsync(new FindParams
+        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText)
+        {
+            var result = await ApiClient.FindLifeformsAsync(new FindParams
             {
                 SearchText = searchText,
                 Skip = 0,
@@ -73,5 +74,8 @@ namespace Emergence.Client.Components
                 SortBy = "ScientificName",
                 SortDirection = SortDirection.Ascending
             });
+
+            return result.Results;
+        }
     }
 }

@@ -114,7 +114,7 @@ namespace Emergence.Client.Components
 
             var specimens = specimenResult.Results.ToList();
 
-            var lifeforms = await ApiClient.FindLifeformsAsync(new FindParams
+            var result = await ApiClient.FindLifeformsAsync(new FindParams
             {
                 SearchText = searchText,
                 Skip = 0,
@@ -123,7 +123,7 @@ namespace Emergence.Client.Components
                 SortDirection = SortDirection.Ascending
             });
 
-            foreach (var lifeform in lifeforms)
+            foreach (var lifeform in result.Results)
             {
                 specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem { Inventory = new Inventory { CreatedBy = UserId } } });
             }

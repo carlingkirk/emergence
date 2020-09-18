@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
@@ -27,10 +26,10 @@ namespace Emergence.API.Controllers
 
         [HttpPost]
         [Route("Find")]
-        public async Task<IEnumerable<Lifeform>> FindLifeforms(FindParams findParams)
+        public async Task<FindResult<Lifeform>> FindLifeforms(FindParams findParams)
         {
-            var results = await _lifeformService.FindLifeforms(findParams);
-            return results;
+            var result = await _lifeformService.FindLifeforms(findParams);
+            return result;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Emergence.Client.Common
     public interface IApiClient
     {
         Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
-        Task<IEnumerable<Lifeform>> FindLifeformsAsync(FindParams findParams);
+        Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams);
         Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams);
