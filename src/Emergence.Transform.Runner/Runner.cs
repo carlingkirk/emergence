@@ -247,7 +247,7 @@ namespace Emergence.Transform.Runner
             }
         }
 
-        public static IEnumerable<ImporterConfiguration> LoadImporters(IConfiguration configuration)
+        private static IEnumerable<ImporterConfiguration> LoadImporters(IConfiguration configuration)
         {
             var importers = configuration.GetSection("importers").GetChildren();
             foreach (var importer in importers)
