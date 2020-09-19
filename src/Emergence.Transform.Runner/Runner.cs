@@ -69,32 +69,17 @@ namespace Emergence.Transform.Runner
                         {
                             if (checklists.Any())
                             {
-                                var plantInfos = new List<PlantInfo>();
-                                foreach (var checklist in checklists)
-                                {
-                                    if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
-                                    {
-                                        try
-                                        {
-                                            var plantInfo = transformer.Transform(checklist);
-                                            plantInfos.Add(plantInfo);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            _logger.LogError($"Unable to process {checklist.Symbol} {checklist.CommonName} {checklist.ScientificNameWithAuthor} {ex.Message}", ex);
-                                        }
-                                    }
-                                }
-
-                                var plantInfosResult = await processor.Process(plantInfos);
-                                foreach (var plantInfoResult in plantInfosResult)
-                                {
-                                    _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
-                                                           " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
-                                }
+                                await ProcessChecklists(transformer, processor, checklists);
 
                                 checklists.Clear();
                             }
+                        }
+
+                        if (checklists.Any())
+                        {
+                            await ProcessChecklists(transformer, processor, checklists);
+
+                            checklists.Clear();
                         }
                     }
                 }
@@ -127,34 +112,18 @@ namespace Emergence.Transform.Runner
                         {
                             if (taxonomicUnits.Any())
                             {
-                                var plantInfos = new List<PlantInfo>();
-                                foreach (var taxonomicUnit in taxonomicUnits.GroupBy(t => t.Tsn))
-                                {
-                                    var species = taxonomicUnit.First();
-                                    if (species != null)
-                                    {
-                                        try
-                                        {
-                                            var plantInfoResults = transformer.Transform(taxonomicUnit);
-                                            plantInfos.AddRange(plantInfoResults);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            _logger.LogError($"Unable to process {taxonomicUnit.Key} {species} {ex.Message}", ex);
-                                        }
-                                    }
-                                }
-
-                                var plantInfosResult = await processor.Process(plantInfos);
-                                foreach (var plantInfoResult in plantInfosResult)
-                                {
-                                    _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
-                                                           " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
-                                }
+                                await ProcessTaxonomicUnits(transformer, processor, taxonomicUnits);
 
                                 taxonomicUnits.Clear();
                             }
                         }
+                    }
+
+                    if (taxonomicUnits.Any())
+                    {
+                        await ProcessTaxonomicUnits(transformer, processor, taxonomicUnits);
+
+                        taxonomicUnits.Clear();
                     }
                 }
                 else if (importer.Type == ImporterType.SqlImporter && importer.ImportModel == "Vernacular")
@@ -163,7 +132,7 @@ namespace Emergence.Transform.Runner
                     var sqlImporter = new SqlImporter<Vernacular>(importer.ConnectionString, importer.SqlQuery);
                     var transformer = new ITISSynonymTransformer();
                     var startRow = 0;
-                    var batchSize = 100;
+                    var batchSize = 500;
                     var row = 0;
                     var vernaculars = new List<Vernacular>();
 
@@ -183,33 +152,97 @@ namespace Emergence.Transform.Runner
                         }
                         else
                         {
-                            if (vernaculars.Any())
-                            {
-                                var synonyms = new List<Synonym>();
-                                foreach (var vernacular in vernaculars)
-                                {
-                                    try
-                                    {
-                                        var synonym = transformer.Transform(vernacular);
-                                        synonyms.Add(synonym);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _logger.LogError($"Unable to process {vernacular.Taxon} {vernacular.Name} {vernacular.Rank} {ex.Message}", ex);
-                                    }
-                                }
-
-                                var synonymsResult = await processor.Process(synonyms);
-                                foreach (var synonymResult in synonymsResult)
-                                {
-                                    _logger.LogInformation("TaxonId" + ": " + synonymResult.Taxon.TaxonId + " Synonym" + ": " + synonymResult.Name +
-                                                           " Rank" + ": " + synonymResult.Rank);
-                                }
-
-                                vernaculars.Clear();
-                            }
+                            //await ProcessSynonyms(transformer, processor, vernaculars);
+                            vernaculars.Clear();
                         }
                     }
+                    if (vernaculars.Any())
+                    {
+                        await ProcessSynonyms(transformer, processor, vernaculars);
+                        vernaculars.Clear();
+                    }
+                }
+            }
+        }
+
+        private async Task ProcessChecklists(USDATransformer transformer, PlantInfoProcessor processor, List<Checklist> checklists)
+        {
+            var plantInfos = new List<PlantInfo>();
+            foreach (var checklist in checklists)
+            {
+                if (!string.IsNullOrEmpty(checklist.ScientificNameWithAuthor))
+                {
+                    try
+                    {
+                        var plantInfo = transformer.Transform(checklist);
+                        plantInfos.Add(plantInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Unable to process {checklist.Symbol} {checklist.CommonName} {checklist.ScientificNameWithAuthor} {ex.Message}", ex);
+                    }
+                }
+            }
+
+            var plantInfosResult = await processor.Process(plantInfos);
+            foreach (var plantInfoResult in plantInfosResult)
+            {
+                _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
+                                       " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+            }
+        }
+
+        private async Task ProcessTaxonomicUnits(ITISPlantInfoTransformer transformer, PlantInfoProcessor processor, List<TaxonomicUnit> taxonomicUnits)
+        {
+            var plantInfos = new List<PlantInfo>();
+            foreach (var taxonomicUnit in taxonomicUnits.GroupBy(t => t.Tsn))
+            {
+                var species = taxonomicUnit.First();
+                if (species != null)
+                {
+                    try
+                    {
+                        var plantInfoResults = transformer.Transform(taxonomicUnit);
+                        plantInfos.AddRange(plantInfoResults);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Unable to process {taxonomicUnit.Key} {species} {ex.Message}", ex);
+                    }
+                }
+            }
+
+            var plantInfosResult = await processor.Process(plantInfos);
+            foreach (var plantInfoResult in plantInfosResult)
+            {
+                _logger.LogInformation("CommonName" + ": " + plantInfoResult.CommonName + " ScientificName" + ": " + plantInfoResult.ScientificName +
+                                       " PlantInfoId" + ": " + plantInfoResult.PlantInfoId);
+            }
+        }
+
+        private async Task ProcessSynonyms(ITISSynonymTransformer transformer, SynonymProcessor processor, List<Vernacular> vernaculars)
+        {
+            if (vernaculars.Any())
+            {
+                var synonyms = new List<Synonym>();
+                foreach (var vernacular in vernaculars)
+                {
+                    try
+                    {
+                        var synonym = transformer.Transform(vernacular);
+                        synonyms.Add(synonym);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Unable to process {vernacular.Taxon} {vernacular.Name} {vernacular.Rank} {ex.Message}", ex);
+                    }
+                }
+
+                var synonymsResult = await processor.Process(synonyms);
+                foreach (var synonymResult in synonymsResult)
+                {
+                    _logger.LogInformation("TaxonId" + ": " + synonymResult.Taxon.TaxonId + " Synonym" + ": " + synonymResult.Name +
+                                           " Rank" + ": " + synonymResult.Rank);
                 }
             }
         }
