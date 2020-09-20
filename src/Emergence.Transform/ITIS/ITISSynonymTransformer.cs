@@ -53,7 +53,7 @@ namespace Emergence.Transform
                 },
                 Taxon = new Taxon
                 {
-                    Kingdom = source.Kingdom,
+                    Kingdom = source.Kingdom.NullIfEmpty(),
                     Subkingdom = source.Subkingdom.NullIfEmpty(),
                     Infrakingdom = source.Infrakingdom.NullIfEmpty(),
                     Superphylum = source.Superdivision.NullIfEmpty(),

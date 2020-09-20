@@ -42,9 +42,9 @@ namespace Emergence.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(Startup).Assembly.FullName));
+                options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(ApplicationDbContext).Assembly.FullName));
             services.AddDbContext<EmergenceDbContext>(options =>
-                options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(Startup).Assembly.FullName));
+                options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(EmergenceDbContext).Assembly.FullName));
 
             // Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
