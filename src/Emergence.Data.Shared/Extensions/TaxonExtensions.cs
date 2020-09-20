@@ -50,6 +50,8 @@ namespace Emergence.Data.Shared.Extensions
         {
             Id = source.TaxonId,
             Kingdom = source.Kingdom,
+            Infrakingdom = source.Infrakingdom,
+            Subkingdom = source.Subkingdom,
             Phylum = source.Phylum,
             Subphylum = source.Subphylum,
             Superclass = source.Superclass,
