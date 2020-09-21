@@ -1,4 +1,26 @@
-<h3>Plant Browser</h3>
+@page "/lifeform/list"
+@using Emergence.Client.Components
+@using Emergence.Client.Pages.PlantInfos
+@using Emergence.Client.Pages.Origins
+
+@inherits ListLifeformsComponent
+
+@if (!IsItemLoaded)
+{
+    @if (ShowSearch)
+    {
+        <input type="text" @bind="SearchText" id="search" />
+        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+    }
+
+    @if (List != null)
+    {
+
+    }
+}
+else if (Id > 0 || IsItemLoaded)
+{
+}
 
 @code {
 

@@ -19,27 +19,6 @@ namespace Emergence.Client.Common
             _httpClient = httpClient;
         }
 
-        public async Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/origin/find", findParams);
-
-            return await ReadResult<FindResult<Origin>>(result);
-        }
-
-        public async Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
-
-            return await ReadResult<FindResult<Lifeform>>(result);
-        }
-
-        public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
-
-            return await ReadResult<FindResult<Specimen>>(result);
-        }
-
         public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/activity/find", findParams);
@@ -54,11 +33,39 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Activity>>(result);
         }
 
+        public async Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
+
+            return await ReadResult<FindResult<Lifeform>>(result);
+        }
+
+        public async Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/origin/find", findParams);
+
+            return await ReadResult<FindResult<Origin>>(result);
+        }
+
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
+        }
+
+        public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
+
+            return await ReadResult<FindResult<Specimen>>(result);
+        }
+
+        public async Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/taxons/find", findParams);
+
+            return await ReadResult<FindResult<Taxon>>(result);
         }
 
         public async Task<Specimen> GetSpecimenAsync(int id)
