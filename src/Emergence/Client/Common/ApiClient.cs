@@ -84,6 +84,13 @@ namespace Emergence.Client.Common
             return true;
         }
 
+        public async Task<Lifeform> GetLifeformAsync(int id)
+        {
+            var result = await _httpClient.GetAsync($"/api/lifeform/{id}");
+
+            return await ReadResult<Lifeform>(result);
+        }
+
         public async Task<PlantInfo> GetPlantInfoAsync(int id)
         {
             var result = await _httpClient.GetAsync($"/api/plantinfo/{id}");

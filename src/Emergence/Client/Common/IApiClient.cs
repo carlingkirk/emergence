@@ -12,8 +12,10 @@ namespace Emergence.Client.Common
         Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams);
         Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
+
         Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams);
         Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
+        Task<Lifeform> GetLifeformAsync(int id);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);
         Task<bool> RemoveSpecimenAsync(Specimen specimen);
