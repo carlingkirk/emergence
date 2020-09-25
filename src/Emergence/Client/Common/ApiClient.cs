@@ -63,7 +63,7 @@ namespace Emergence.Client.Common
 
         public async Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/taxons/find", findParams);
+            var result = await _httpClient.PostAsJsonAsync($"/api/taxon/find", findParams);
 
             return await ReadResult<FindResult<Taxon>>(result);
         }

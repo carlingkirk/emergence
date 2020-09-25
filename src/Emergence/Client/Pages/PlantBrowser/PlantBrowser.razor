@@ -1,9 +1,8 @@
-@page "/lifeform/list"
+@page "/plantbrowser"
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.PlantInfos
-@using Emergence.Client.Pages.Origins
+@using Emergence.Data.Shared.Enums
 
-@inherits ListLifeformsComponent
+@inherits PlantBrowserComponent
 
 @if (!IsItemLoaded)
 {
@@ -15,7 +14,119 @@
 
     @if (List != null)
     {
-
+        <table>
+            @if (!List.Any())
+            {
+                <tr>
+                    <td>
+                        <span>No plants found</span>
+                    </td>
+                </tr>
+            }
+            else
+            {
+            <thead>
+                <tr>
+                    <td>@Rank</td>
+                </tr>
+            </thead>
+            }
+            @foreach (var taxon in List)
+            {
+            <tr>
+            @if (Rank == TaxonRank.Kingdom)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Kingdom, taxon.Kingdom)" @onclick:preventDefault><span class="link">@(taxon.Kingdom ?? "None")</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Subkingdom)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subkingdom, taxon.Subkingdom)" @onclick:preventDefault><span class="link">@(taxon.Subkingdom ?? "None")</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Infrakingdom)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Infrakingdom, taxon.Infrakingdom)" @onclick:preventDefault><span class="link">@(taxon.Infrakingdom ?? "None")</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Phylum)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Phylum, taxon.Phylum)" @onclick:preventDefault><span class="link">@taxon.Phylum</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Subphylum)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subphylum, taxon.Subphylum)" @onclick:preventDefault><span class="link">@taxon.Subphylum</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Class)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Class, taxon.Class)" @onclick:preventDefault><span class="link">@taxon.Class</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Subclass)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subclass, taxon.Subclass)" @onclick:preventDefault><span class="link">@taxon.Subclass</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Superorder)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Superorder, taxon.Superorder)" @onclick:preventDefault><span class="link">@taxon.Superorder</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Order)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Order, taxon.Order)" @onclick:preventDefault><span class="link">@taxon.Order</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Suborder)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Suborder, taxon.Suborder)" @onclick:preventDefault><span class="link">@taxon.Suborder</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Family)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Family, taxon.Family)" @onclick:preventDefault><span class="link">@taxon.Family</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Subfamily)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subfamily, taxon.Subfamily)" @onclick:preventDefault><span class="link">@taxon.Subfamily</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Genus)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Genus, taxon.Genus)" @onclick:preventDefault><span class="link">@taxon.Genus</span></a>
+                </td>
+            }
+            else if (Rank == TaxonRank.Species)
+            {
+                <td>
+                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Species, taxon.Species)" @onclick:preventDefault><span class="link">@taxon.Species</span></a>
+                </td>
+            }
+            </tr>
+            }
+        </table>
+        <div>
+            @if (List.Any())
+            {
+                <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+            }
+        </div>
     }
 }
 else if (Id > 0 || IsItemLoaded)

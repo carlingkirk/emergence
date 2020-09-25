@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Extensions;
@@ -78,7 +79,9 @@ namespace Emergence.Service
             }
             var taxonShape = findParams.Shape;
 
-            var taxonQuery = _taxonRepository.Where(t => (taxonShape.Subkingdom == null || t.Subkingdom == taxonShape.Subkingdom) &&
+            var taxonQuery = _taxonRepository.Where(t => t.Kingdom != null && (taxonShape == null ||
+                                                        ((taxonShape.Kingdom == null || t.Kingdom == taxonShape.Kingdom) &&
+                                                         (taxonShape.Subkingdom == null || t.Subkingdom == taxonShape.Subkingdom) &&
                                                          (taxonShape.Infrakingdom == null || t.Infrakingdom == taxonShape.Infrakingdom) &&
                                                          (taxonShape.Phylum == null || t.Phylum == taxonShape.Phylum) &&
                                                          (taxonShape.Subphylum == null || t.Subphylum == taxonShape.Subphylum) &&
@@ -88,66 +91,75 @@ namespace Emergence.Service
                                                          (taxonShape.Suborder == null || t.Suborder == taxonShape.Suborder) &&
                                                          (taxonShape.Family == null || t.Family == taxonShape.Family) &&
                                                          (taxonShape.Genus == null || t.Genus == taxonShape.Genus) &&
-                                                         (taxonShape.Species == null || t.Species == taxonShape.Species));
+                                                         (taxonShape.Species == null || t.Species == taxonShape.Species))));
 
-            if (string.IsNullOrEmpty(taxonShape.Subkingdom))
+            if (taxonShape == null)
             {
-                taxonQuery.DistinctBy(t => t.Infrakingdom);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Kingdom);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Infrakingdom))
+            else if (!string.IsNullOrEmpty(taxonShape.Kingdom))
             {
-                taxonQuery.DistinctBy(t => t.Phylum);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Subkingdom);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Phylum))
+            else if (!string.IsNullOrEmpty(taxonShape.Subkingdom))
             {
-                taxonQuery.DistinctBy(t => t.Subphylum);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Infrakingdom);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Subphylum))
+            else if (!string.IsNullOrEmpty(taxonShape.Infrakingdom))
             {
-                taxonQuery.DistinctBy(t => t.Class);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Phylum);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Class))
+            else if (!string.IsNullOrEmpty(taxonShape.Phylum))
             {
-                taxonQuery.DistinctBy(t => t.Superorder);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Subphylum);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Superorder))
+            else if (!string.IsNullOrEmpty(taxonShape.Subphylum))
             {
-                taxonQuery.DistinctBy(t => t.Order);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Class);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Order))
+            else if (!string.IsNullOrEmpty(taxonShape.Class))
             {
-                taxonQuery.DistinctBy(t => t.Suborder);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Superorder);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Suborder))
+            else if (!string.IsNullOrEmpty(taxonShape.Superorder))
             {
-                taxonQuery.DistinctBy(t => t.Family);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Order);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Family))
+            else if (!string.IsNullOrEmpty(taxonShape.Order))
             {
-                taxonQuery.DistinctBy(t => t.Genus);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Suborder);
             }
-            else if (string.IsNullOrEmpty(taxonShape.Genus))
+            else if (!string.IsNullOrEmpty(taxonShape.Suborder))
             {
-                taxonQuery.DistinctBy(t => t.Species);
+                taxonQuery = taxonQuery.DistinctBy(t => t.Family);
+            }
+            else if (!string.IsNullOrEmpty(taxonShape.Family))
+            {
+                taxonQuery = taxonQuery.DistinctBy(t => t.Genus);
+            }
+            else if (!string.IsNullOrEmpty(taxonShape.Genus))
+            {
+                taxonQuery = taxonQuery.DistinctBy(t => t.Species);
             }
 
             taxonQuery = OrderBy(taxonQuery, findParams.SortBy, findParams.SortDirection);
 
-            var count = taxonQuery.Count();
+            var result = taxonQuery.GetSome().ToList();
+            var count = result.Count();
 
-            var taxonResult = taxonQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+            var taxonResult = result.Skip(findParams.Skip).Take(findParams.Take);
 
             var taxons = new List<Data.Shared.Models.Taxon>();
-            await foreach (var taxon in taxonResult)
+            foreach (var taxon in taxonResult)
             {
                 taxons.Add(taxon.AsModel());
             }
 
-            return new FindResult<Data.Shared.Models.Taxon>
+            return await Task.FromResult(new FindResult<Data.Shared.Models.Taxon>
             {
                 Count = count,
                 Results = taxons
-            };
+            });
         }
 
         private IQueryable<Taxon> OrderBy(IQueryable<Taxon> taxonQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
@@ -188,6 +200,37 @@ namespace Emergence.Service
             }
 
             return taxonQuery;
+        }
+
+    }
+
+    internal class TaxonComparer : IEqualityComparer<Taxon>
+    {
+        private TaxonRank Rank { get; set; }
+        public TaxonComparer(TaxonRank rank)
+        {
+            Rank = rank;
+        }
+        public bool Equals(Taxon x, Taxon y)
+        {
+            switch (Rank)
+            {
+                case TaxonRank.Kingdom:
+                    return string.Equals(x.Kingdom, y.Kingdom, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+
+        public int GetHashCode(Taxon taxon)
+        {
+            switch (Rank)
+            {
+                case TaxonRank.Kingdom:
+                    return taxon.Kingdom.GetHashCode();
+            }
+
+            return taxon.GetHashCode();
         }
     }
 }

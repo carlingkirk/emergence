@@ -95,6 +95,29 @@ namespace Emergence.Data.Repository
             }
         }
 
+        public IQueryable<T> GetSome(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null, bool track = false)
+        {
+            var entities = _context.Set<T>().Where(predicate);
+
+            if (skip.HasValue)
+            {
+                entities = entities.Skip(skip.Value);
+            }
+
+            if (take.HasValue)
+            {
+                entities = entities.Take(take.Value);
+            }
+
+            if (!track)
+            {
+                entities = entities.AsNoTracking();
+            };
+
+            return entities;
+        }
+
+
         public async Task<T> AddOrUpdateAsync(Expression<Func<T, bool>> key, T entity)
         {
             T dbEntity;
