@@ -100,5 +100,43 @@ namespace Emergence.Data.Shared.Extensions
                                     && t.Subspecies == taxon.Variety
                                     && t.Subvariety == taxon.Subvariety
                                     && t.Form == taxon.Form);
+
+        public static Models.Taxon Copy(this Models.Taxon source) => new Models.Taxon
+        {
+            Kingdom = !string.IsNullOrEmpty(source.Kingdom) ? string.Copy(source.Kingdom) : null,
+            Infrakingdom = !string.IsNullOrEmpty(source.Infrakingdom) ? string.Copy(source.Infrakingdom) : null,
+            Subkingdom = !string.IsNullOrEmpty(source.Subkingdom) ? string.Copy(source.Subkingdom) : null,
+            Phylum = !string.IsNullOrEmpty(source.Phylum) ? string.Copy(source.Phylum) : null,
+            Subphylum = !string.IsNullOrEmpty(source.Subphylum) ? string.Copy(source.Subphylum) : null,
+            Superclass = !string.IsNullOrEmpty(source.Superclass) ? string.Copy(source.Superclass) : null,
+            Class = !string.IsNullOrEmpty(source.Class) ? string.Copy(source.Class) : null,
+            Subclass = !string.IsNullOrEmpty(source.Subclass) ? string.Copy(source.Subclass) : null,
+            Infraclass = !string.IsNullOrEmpty(source.Infraclass) ? string.Copy(source.Infraclass) : null,
+            Superorder = !string.IsNullOrEmpty(source.Superorder) ? string.Copy(source.Superorder) : null,
+            Order = !string.IsNullOrEmpty(source.Order) ? string.Copy(source.Order) : null,
+            Suborder = !string.IsNullOrEmpty(source.Suborder) ? string.Copy(source.Suborder) : null,
+            Infraorder = !string.IsNullOrEmpty(source.Infraorder) ? string.Copy(source.Infraorder) : null,
+            Epifamily = !string.IsNullOrEmpty(source.Epifamily) ? string.Copy(source.Epifamily) : null,
+            Superfamily = !string.IsNullOrEmpty(source.Superfamily) ? string.Copy(source.Superfamily) : null,
+            Family = !string.IsNullOrEmpty(source.Family) ? string.Copy(source.Family) : null,
+            Subfamily = !string.IsNullOrEmpty(source.Subfamily) ? string.Copy(source.Subfamily) : null,
+            Supertribe = !string.IsNullOrEmpty(source.Supertribe) ? string.Copy(source.Supertribe) : null,
+            Tribe = !string.IsNullOrEmpty(source.Tribe) ? string.Copy(source.Tribe) : null,
+            Subtribe = !string.IsNullOrEmpty(source.Subtribe) ? string.Copy(source.Subtribe) : null,
+            GenusHybrid = !string.IsNullOrEmpty(source.GenusHybrid) ? string.Copy(source.GenusHybrid) : null,
+            Genus = !string.IsNullOrEmpty(source.Genus) ? string.Copy(source.Genus) : null,
+            Subgenus = !string.IsNullOrEmpty(source.Subgenus) ? string.Copy(source.Subgenus) : null,
+            Section = !string.IsNullOrEmpty(source.Section) ? string.Copy(source.Section) : null,
+            Hybrid = !string.IsNullOrEmpty(source.Hybrid) ? string.Copy(source.Hybrid) : null,
+            Species = !string.IsNullOrEmpty(source.Species) ? string.Copy(source.Species) : null,
+            Subspecies = !string.IsNullOrEmpty(source.Subspecies) ? string.Copy(source.Subspecies) : null,
+            Variety = !string.IsNullOrEmpty(source.Variety) ? string.Copy(source.Variety) : null,
+            Subvariety = !string.IsNullOrEmpty(source.Subvariety) ? string.Copy(source.Subvariety) : null,
+            Form = !string.IsNullOrEmpty(source.Form) ? string.Copy(source.Form) : null,
+            CreatedBy = !string.IsNullOrEmpty(source.CreatedBy) ? string.Copy(source.CreatedBy) : null,
+            ModifiedBy = !string.IsNullOrEmpty(source.ModifiedBy) ? string.Copy(source.ModifiedBy) : null,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }

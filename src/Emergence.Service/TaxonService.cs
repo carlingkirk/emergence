@@ -9,7 +9,6 @@ using Emergence.Data.Shared;
 using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
-using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
 
 namespace Emergence.Service
@@ -71,7 +70,7 @@ namespace Emergence.Service
             return taxon?.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Taxon>> FindTaxons(FindParams<Data.Shared.Models.Taxon> findParams)
+        public async Task<FindResult<Data.Shared.Models.Taxon>> FindTaxons(FindParams<Data.Shared.Models.Taxon> findParams, TaxonRank rank)
         {
             if (findParams.SearchText != null)
             {
@@ -93,59 +92,61 @@ namespace Emergence.Service
                                                          (taxonShape.Genus == null || t.Genus == taxonShape.Genus) &&
                                                          (taxonShape.Species == null || t.Species == taxonShape.Species))));
 
-            if (taxonShape == null)
+            if (taxonShape == null || rank == TaxonRank.Kingdom)
             {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Kingdom);
+                taxonQuery = taxonQuery.Where(t => taxonShape == null || taxonShape.Kingdom == null || t.Kingdom == taxonShape.Kingdom)
+                                       .Select(t => new Taxon { Kingdom = t.Kingdom }).Distinct();
             }
-            else if (!string.IsNullOrEmpty(taxonShape.Kingdom))
+            else
             {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Subkingdom);
+                switch (rank)
+                {
+                    case TaxonRank.Species:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Species = t.Species }).Distinct();
+                        break;
+                    case TaxonRank.Genus:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Genus = t.Genus }).Distinct();
+                        break;
+                    case TaxonRank.Subfamily:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subfamily = t.Subfamily }).Distinct();
+                        break;
+                    case TaxonRank.Family:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Family = t.Family }).Distinct();
+                        break;
+                    case TaxonRank.Suborder:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Suborder = t.Suborder }).Distinct();
+                        break;
+                    case TaxonRank.Order:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Order = t.Order }).Distinct();
+                        break;
+                    case TaxonRank.Superorder:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Superorder = t.Superorder }).Distinct();
+                        break;
+                    case TaxonRank.Subclass:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subclass = t.Subclass }).Distinct();
+                        break;
+                    case TaxonRank.Class:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Class = t.Class }).Distinct();
+                        break;
+                    case TaxonRank.Subphylum:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subphylum = t.Subphylum }).Distinct();
+                        break;
+                    case TaxonRank.Phylum:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Phylum = t.Phylum }).Distinct();
+                        break;
+                    case TaxonRank.Infrakingdom:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Infrakingdom = t.Infrakingdom }).Distinct();
+                        break;
+                    case TaxonRank.Subkingdom:
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subkingdom = t.Subkingdom }).Distinct();
+                        break;
+                }
             }
-            else if (!string.IsNullOrEmpty(taxonShape.Subkingdom))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Infrakingdom);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Infrakingdom))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Phylum);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Phylum))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Subphylum);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Subphylum))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Class);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Class))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Superorder);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Superorder))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Order);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Order))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Suborder);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Suborder))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Family);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Family))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Genus);
-            }
-            else if (!string.IsNullOrEmpty(taxonShape.Genus))
-            {
-                taxonQuery = taxonQuery.DistinctBy(t => t.Species);
-            }
-
-            taxonQuery = OrderBy(taxonQuery, findParams.SortBy, findParams.SortDirection);
 
             var result = taxonQuery.GetSome().ToList();
             var count = result.Count();
+
+            // var taxonResult = OrderBy(taxonQuery, findParams.SortBy, findParams.SortDirection).Skip(findParams.Skip).Take(findParams.Take);
 
             var taxonResult = result.Skip(findParams.Skip).Take(findParams.Take);
 

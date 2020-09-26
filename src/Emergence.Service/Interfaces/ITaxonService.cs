@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Service.Interfaces
@@ -14,6 +15,6 @@ namespace Emergence.Service.Interfaces
         Task<IEnumerable<Taxon>> GetTaxonsAsync();
         Task<Taxon> AddOrUpdateTaxonAsync(Taxon taxon);
         Task<Taxon> GetTaxonAsync(string genus, string species, string subspecies, string variety, string subvariety, string form);
-        Task<FindResult<Taxon>> FindTaxons(FindParams<Taxon> findParams);
+        Task<FindResult<Taxon>> FindTaxons(FindParams<Taxon> findParams, TaxonRank rank);
     }
 }

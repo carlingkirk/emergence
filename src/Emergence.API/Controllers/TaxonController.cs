@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +26,10 @@ namespace Emergence.API.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<Taxon>> FindTaxons(FindParams<Taxon> findParams)
+        public async Task<FindResult<Taxon>> FindTaxons(FindParams<Taxon> findParams, TaxonRank rank)
         {
-            var result = await _taxonService.FindTaxons(findParams);
+            var result = await _taxonService.FindTaxons(findParams, rank);
+
             return result;
         }
     }

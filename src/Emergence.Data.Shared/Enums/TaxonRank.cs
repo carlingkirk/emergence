@@ -2,6 +2,7 @@ namespace Emergence.Data.Shared.Enums
 {
     public enum TaxonRank
     {
+        Root = 0,
         Kingdom = 10,
         Subkingdom = 20,
         Infrakingdom = 25,

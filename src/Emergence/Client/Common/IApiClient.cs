@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
@@ -14,7 +15,7 @@ namespace Emergence.Client.Common
         Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
         Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
         Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
-        Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams);
+        Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank);
         Task<Lifeform> GetLifeformAsync(int id);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);

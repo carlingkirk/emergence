@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
@@ -61,9 +62,9 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Specimen>>(result);
         }
 
-        public async Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams)
+        public async Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/taxon/find", findParams);
+            var result = await _httpClient.PostAsJsonAsync($"/api/taxon/find?rank={rank}", findParams);
 
             return await ReadResult<FindResult<Taxon>>(result);
         }
