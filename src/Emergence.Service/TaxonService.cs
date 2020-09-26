@@ -102,51 +102,49 @@ namespace Emergence.Service
                 switch (rank)
                 {
                     case TaxonRank.Species:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Species = t.Species }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Species = t.Species }).Distinct().OrderBy(t => t.Species);
                         break;
                     case TaxonRank.Genus:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Genus = t.Genus }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Genus = t.Genus }).Distinct().OrderBy(t => t.Genus);
                         break;
                     case TaxonRank.Subfamily:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subfamily = t.Subfamily }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subfamily = t.Subfamily }).Distinct().OrderBy(t => t.Subfamily);
                         break;
                     case TaxonRank.Family:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Family = t.Family }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Family = t.Family }).Distinct().OrderBy(t => t.Family);
                         break;
                     case TaxonRank.Suborder:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Suborder = t.Suborder }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Suborder = t.Suborder }).Distinct().OrderBy(t => t.Suborder);
                         break;
                     case TaxonRank.Order:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Order = t.Order }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Order = t.Order }).Distinct().OrderBy(t => t.Order);
                         break;
                     case TaxonRank.Superorder:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Superorder = t.Superorder }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Superorder = t.Superorder }).Distinct().OrderBy(t => t.Superorder);
                         break;
                     case TaxonRank.Subclass:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subclass = t.Subclass }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subclass = t.Subclass }).Distinct().OrderBy(t => t.Subclass);
                         break;
                     case TaxonRank.Class:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Class = t.Class }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Class = t.Class }).Distinct().OrderBy(t => t.Class);
                         break;
                     case TaxonRank.Subphylum:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subphylum = t.Subphylum }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subphylum = t.Subphylum }).Distinct().OrderBy(t => t.Subphylum);
                         break;
                     case TaxonRank.Phylum:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Phylum = t.Phylum }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Phylum = t.Phylum }).Distinct().OrderBy(t => t.Phylum);
                         break;
                     case TaxonRank.Infrakingdom:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Infrakingdom = t.Infrakingdom }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Infrakingdom = t.Infrakingdom }).Distinct().OrderBy(t => t.Infrakingdom);
                         break;
                     case TaxonRank.Subkingdom:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subkingdom = t.Subkingdom }).Distinct();
+                        taxonQuery = taxonQuery.Select(t => new Taxon { Subkingdom = t.Subkingdom }).Distinct().OrderBy(t => t.Subkingdom);
                         break;
                 }
             }
 
             var result = taxonQuery.GetSome().ToList();
             var count = result.Count();
-
-            // var taxonResult = OrderBy(taxonQuery, findParams.SortBy, findParams.SortDirection).Skip(findParams.Skip).Take(findParams.Take);
 
             var taxonResult = result.Skip(findParams.Skip).Take(findParams.Take);
 
