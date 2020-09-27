@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
@@ -13,6 +14,8 @@ namespace Emergence.Client.Components
 {
     public class EditActivityComponent : ActivityComponent
     {
+        [Inject]
+        protected IModalServiceClient ModalServiceClient { get; set; }
         public bool CreateNewSpecimen { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
@@ -136,6 +139,16 @@ namespace Emergence.Client.Components
             if (Activity.ActivityType != ActivityType.Custom && SelectedSpecimen != null)
             {
                 Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + SelectedSpecimen.Lifeform.ScientificName;
+            }
+        }
+
+        protected async Task AddSpecimenAsync(Specimen specimen)
+        {
+            var result = await ModalServiceClient.ShowSpecimenModal(specimen, true);
+
+            if (!result.Cancelled)
+            {
+                SelectedSpecimen = result.Data as Specimen;
             }
         }
     }

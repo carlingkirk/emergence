@@ -7,7 +7,6 @@
 @using Emergence.Data.Shared.Extensions
 @using Blazored.Typeahead
 
-@inject IModalServiceClient ModalServiceClient
 @attribute [Authorize]
 @inherits EditActivityComponent
 
@@ -40,7 +39,7 @@
                         <ResultTemplate>
                             @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
                                 {
-                                <a href="" @onclick="@(async () => { await ModalServiceClient.ShowSpecimenModal((Specimen)specimen); })" @onclick:preventDefault>
+                                <a href="" @onclick="@(async () => { await AddSpecimenAsync((Specimen)specimen); })" @onclick:preventDefault>
                                     <span>Add new </span>
                                     <span class="text-body">@(specimen.Lifeform.CommonName) </span>
                                     <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>

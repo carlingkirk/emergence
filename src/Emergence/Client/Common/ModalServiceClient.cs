@@ -48,11 +48,12 @@ namespace Emergence.Client.Common
             return await modal.Result;
         }
 
-        public async Task<ModalResult> ShowOriginModal(Origin origin)
+        public async Task<ModalResult> ShowOriginModal(Origin origin, bool isEditing = false)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Origin", origin);
             modalParams.Add("IsModal", true);
+            modalParams.Add("IsEditing", isEditing);
 
             var modal = _modalService.Show<OriginViewer>("Origin", modalParams);
             return await modal.Result;
