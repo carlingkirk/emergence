@@ -16,9 +16,12 @@ namespace Emergence.Service
     public class TaxonService : ITaxonService
     {
         private readonly IRepository<Taxon> _taxonRepository;
-        public TaxonService(IRepository<Taxon> taxonRepository)
+        private readonly ISynonymService _synonymService;
+
+        public TaxonService(IRepository<Taxon> taxonRepository, ISynonymService synonymService)
         {
             _taxonRepository = taxonRepository;
+            _synonymService = synonymService;
         }
 
         public async Task<Data.Shared.Models.Taxon> GetTaxonAsync(int id)
@@ -79,18 +82,18 @@ namespace Emergence.Service
             var taxonShape = findParams.Shape;
 
             var taxonQuery = _taxonRepository.WhereWithIncludes(t => t.Kingdom != null && (taxonShape == null ||
-                                                        ((taxonShape.Kingdom == null || t.Kingdom == taxonShape.Kingdom) &&
-                                                         (taxonShape.Subkingdom == null || t.Subkingdom == taxonShape.Subkingdom) &&
-                                                         (taxonShape.Infrakingdom == null || t.Infrakingdom == taxonShape.Infrakingdom) &&
-                                                         (taxonShape.Phylum == null || t.Phylum == taxonShape.Phylum) &&
-                                                         (taxonShape.Subphylum == null || t.Subphylum == taxonShape.Subphylum) &&
-                                                         (taxonShape.Class == null || t.Class == taxonShape.Class) &&
-                                                         (taxonShape.Superorder == null || t.Superorder == taxonShape.Superorder) &&
-                                                         (taxonShape.Order == null || t.Order == taxonShape.Order) &&
-                                                         (taxonShape.Suborder == null || t.Suborder == taxonShape.Suborder) &&
-                                                         (taxonShape.Family == null || t.Family == taxonShape.Family) &&
-                                                         (taxonShape.Genus == null || t.Genus == taxonShape.Genus) &&
-                                                         (taxonShape.Species == null || t.Species == taxonShape.Species))));
+                                                                   ((taxonShape.Kingdom == null || t.Kingdom == taxonShape.Kingdom) &&
+                                                                    (taxonShape.Subkingdom == null || t.Subkingdom == taxonShape.Subkingdom) &&
+                                                                    (taxonShape.Infrakingdom == null || t.Infrakingdom == taxonShape.Infrakingdom) &&
+                                                                    (taxonShape.Phylum == null || t.Phylum == taxonShape.Phylum) &&
+                                                                    (taxonShape.Subphylum == null || t.Subphylum == taxonShape.Subphylum) &&
+                                                                    (taxonShape.Class == null || t.Class == taxonShape.Class) &&
+                                                                    (taxonShape.Superorder == null || t.Superorder == taxonShape.Superorder) &&
+                                                                    (taxonShape.Order == null || t.Order == taxonShape.Order) &&
+                                                                    (taxonShape.Suborder == null || t.Suborder == taxonShape.Suborder) &&
+                                                                    (taxonShape.Family == null || t.Family == taxonShape.Family) &&
+                                                                    (taxonShape.Genus == null || t.Genus == taxonShape.Genus) &&
+                                                                    (taxonShape.Species == null || t.Species == taxonShape.Species))));
 
             if (taxonShape == null || rank == TaxonRank.Kingdom)
             {
@@ -146,12 +149,19 @@ namespace Emergence.Service
             var result = taxonQuery.GetSome().ToList();
             var count = result.Count();
 
-            var taxonResult = result.Skip(findParams.Skip).Take(findParams.Take);
+            var taxonsResult = result.Skip(findParams.Skip).Take(findParams.Take);
+
+            var parentRank = rank.GetParentRank();
+            var parentName = taxonShape.GetTaxonName(parentRank);
+
+            var synonyms = await _synonymService.GetSynonymsByParentAsync(parentRank, parentName);
 
             var taxons = new List<Data.Shared.Models.Taxon>();
-            foreach (var taxon in taxonResult)
+            foreach (var taxon in taxonsResult)
             {
-                taxons.Add(taxon.AsModel());
+                var taxonResult = taxon.AsModel();
+                taxonResult.Synonyms = synonyms.Where(s => s.Taxon.GetTaxonName(rank) == taxonResult.GetTaxonName(rank));
+                taxons.Add(taxonResult);
             }
 
             return await Task.FromResult(new FindResult<Data.Shared.Models.Taxon>

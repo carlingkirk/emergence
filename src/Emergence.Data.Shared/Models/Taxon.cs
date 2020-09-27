@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Models
@@ -42,5 +43,7 @@ namespace Emergence.Data.Shared.Models
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
+
+        public IEnumerable<Synonym> Synonyms { get; set; }
     }
 }

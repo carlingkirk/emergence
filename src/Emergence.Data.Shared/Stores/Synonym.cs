@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class Synonym
+    public class Synonym : IIncludable<Synonym>, IIncludable<Synonym, Origin>, IIncludable<Synonym, Taxon>
     {
         public int Id { get; set; }
         public int TaxonId { get; set; }
