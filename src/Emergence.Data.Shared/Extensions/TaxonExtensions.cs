@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Extensions
@@ -138,5 +139,114 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
+
+        public static string GetTaxonName(this Models.Taxon taxon, TaxonRank rank)
+        {
+            switch (rank)
+            {
+                case TaxonRank.Kingdom:
+                    return taxon.Kingdom;
+                case TaxonRank.Subkingdom:
+                    return taxon.Subkingdom ?? "None";
+                case TaxonRank.Infrakingdom:
+                    return taxon.Infrakingdom ?? "None";
+                case TaxonRank.Phylum:
+                    return taxon.Phylum ?? "None";
+                case TaxonRank.Subphylum:
+                    return taxon.Subphylum ?? "None";
+                case TaxonRank.Class:
+                    return taxon.Class ?? "None";
+                case TaxonRank.Subclass:
+                    return taxon.Subclass ?? "None";
+                case TaxonRank.Superorder:
+                    return taxon.Superorder ?? "None";
+                case TaxonRank.Order:
+                    return taxon.Order ?? "None";
+                case TaxonRank.Suborder:
+                    return taxon.Suborder ?? "None";
+                case TaxonRank.Family:
+                    return taxon.Family ?? "None";
+                case TaxonRank.Subfamily:
+                    return taxon.Subfamily ?? "None";
+                case TaxonRank.Genus:
+                    return taxon.Genus ?? "None";
+                case TaxonRank.Species:
+                    return taxon.Species ?? "None";
+                default:
+                    return "None";
+            }
+        }
+
+        public static TaxonRank GetParentRank(this TaxonRank rank)
+        {
+            switch (rank)
+            {
+                case TaxonRank.Subkingdom:
+                    return TaxonRank.Kingdom;
+                case TaxonRank.Infrakingdom:
+                    return TaxonRank.Subkingdom;
+                case TaxonRank.Phylum:
+                    return TaxonRank.Infrakingdom;
+                case TaxonRank.Subphylum:
+                    return TaxonRank.Phylum;
+                case TaxonRank.Class:
+                    return TaxonRank.Subphylum;
+                case TaxonRank.Subclass:
+                    return TaxonRank.Class;
+                case TaxonRank.Superorder:
+                    return TaxonRank.Subclass;
+                case TaxonRank.Order:
+                    return TaxonRank.Superorder;
+                case TaxonRank.Suborder:
+                    return TaxonRank.Order;
+                case TaxonRank.Family:
+                    return TaxonRank.Suborder;
+                case TaxonRank.Subfamily:
+                    return TaxonRank.Family;
+                case TaxonRank.Genus:
+                    return TaxonRank.Subfamily;
+                case TaxonRank.Species:
+                    return TaxonRank.Genus;
+                default:
+                    return TaxonRank.Root;
+            }
+        }
+
+        public static TaxonRank GetChildRank(this TaxonRank rank)
+        {
+            switch (rank)
+            {
+                case TaxonRank.Kingdom:
+                    return TaxonRank.Subkingdom;
+                case TaxonRank.Subkingdom:
+                    return TaxonRank.Infrakingdom;
+                case TaxonRank.Infrakingdom:
+                    return TaxonRank.Phylum;
+                case TaxonRank.Phylum:
+                    return TaxonRank.Subphylum;
+                case TaxonRank.Subphylum:
+                    return TaxonRank.Class;
+                case TaxonRank.Class:
+                    return TaxonRank.Subclass;
+                case TaxonRank.Subclass:
+                    return TaxonRank.Superorder;
+                case TaxonRank.Superorder:
+                    return TaxonRank.Order;
+                case TaxonRank.Order:
+                    return TaxonRank.Suborder;
+                case TaxonRank.Suborder:
+                    return TaxonRank.Family;
+                case TaxonRank.Family:
+                    return TaxonRank.Subfamily;
+                case TaxonRank.Subfamily:
+                    return TaxonRank.Genus;
+                case TaxonRank.Genus:
+                    return TaxonRank.Species;
+                case TaxonRank.Species:
+                    return TaxonRank.Subspecies;
+                default:
+                    return TaxonRank.Root;
+            }
+        }
     }
 }

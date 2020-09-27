@@ -1,6 +1,7 @@
 @page "/plantbrowser"
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Enums
+@using Emergence.Data.Shared.Extensions
 
 @inherits PlantBrowserComponent
 
@@ -34,7 +35,7 @@
                         <label for="">@crumb.Key</label>
                     </div>
                     <div>
-                        <span class="link" @onclick="async () => await NavigateAsync(crumb.Key)">@(GetTaxonName(crumb.Key, crumb.Value) + (crumb.Key < Rank ? " >" : ""))</span>
+                        <span class="link" @onclick="async () => await NavigateAsync(crumb.Key)">@(crumb.Value.GetTaxonName(crumb.Key) + (crumb.Key < Rank ? " >" : ""))</span>
                     </div>
                 </td>
                 }
