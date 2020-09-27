@@ -1,0 +1,17 @@
+@page "/lifeform/{Id:int}"
+@using Emergence.Client.Components
+
+@inherits LifeformComponent
+
+@if (Lifeform != null)
+{
+    <ViewLifeform Lifeform="Lifeform" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+}
+else
+{
+    <span>Loading...</span>
+}
+
+@code {
+
+}

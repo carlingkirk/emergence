@@ -1,6 +1,9 @@
 @page "/specimen/list"
 @using Emergence.Client.Components
-@using Emergence.Data.Shared.Extensions;
+@using Emergence.Client.Pages.Activities
+@using Emergence.Client.Pages.Origins
+@using Emergence.Client.Pages.Specimens
+@using Emergence.Data.Shared.Extensions
 @inherits ListSpecimensComponent
 
 @if (!IsItemLoaded)
@@ -40,7 +43,7 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(specimen.SpecimenId)" @onclick:preventDefault><span class="link">@specimen.Lifeform.ScientificName</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault><span class="link">@specimen.Lifeform.ScientificName</span></a>
                     </td>
                     <td>
                         <span>@specimen.Lifeform.CommonName</span>
@@ -61,10 +64,17 @@
                         </span>
                     </td>
                     <td>
-                        <span @onclick="@(async () => await UpdateOriginAsync(specimen.InventoryItem.Origin))" class="link">@specimen.InventoryItem?.Origin?.Name</span>
+                        @if (specimen.InventoryItem?.Origin != null)
+                        {
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, specimen.InventoryItem.Origin.OriginId))" class="link">@specimen.InventoryItem?.Origin?.Name</span>
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
                     </td>
                     <td>
-                        <button class="btn btn-primary" @onclick="@(() => ModalServiceClient.ShowActivityModal(specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+                        <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
                     </td>
                 </tr>
             }
@@ -76,14 +86,27 @@
             }
             @if (!string.IsNullOrEmpty(UserId))
             {
-                <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Specimen</button>
+                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Specimen, 0))"><span class="oi oi-plus btn-oi"></span>Specimen</button>
             }
         </div>
     }
 }
 else if (Id > 0 || IsItemLoaded)
 {
-    <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></SpecimenViewer>
+    switch (ViewItemType)
+    {
+        case (ViewItemType.Activity):
+            <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="Parent"></ActivityViewer>
+            break;
+        case (ViewItemType.Specimen):
+            <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></SpecimenViewer>
+            break;
+        case (ViewItemType.Origin):
+            <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />
+            break;
+        default:
+            break;
+    }
 }
 
 @code {

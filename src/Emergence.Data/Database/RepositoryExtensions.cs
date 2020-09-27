@@ -136,5 +136,31 @@ namespace Emergence.Data.Extensions
                 yield return entity;
             }
         }
+
+        public static IEnumerable<T> GetSome<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate = null,
+            int? skip = null, int? take = null, bool track = false) where T : class
+        {
+            if (predicate != null)
+            {
+                source = source.Where(predicate);
+            }
+
+            if (skip.HasValue)
+            {
+                source = source.Skip(skip.Value);
+            }
+
+            if (take.HasValue)
+            {
+                source = source.Take(take.Value);
+            }
+
+            if (!track)
+            {
+                source = source.AsNoTracking();
+            };
+
+            return source;
+        }
     }
 }

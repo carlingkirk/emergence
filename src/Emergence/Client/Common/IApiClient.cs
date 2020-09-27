@@ -2,20 +2,24 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
 {
     public interface IApiClient
     {
-        Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
-        Task<IEnumerable<Lifeform>> FindLifeformsAsync(FindParams findParams);
-        Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
-        Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams);
+        Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
+        Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams);
+        Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
         Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
+        Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
+        Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank);
+        Task<Lifeform> GetLifeformAsync(int id);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);
+        Task<bool> RemoveSpecimenAsync(Specimen specimen);
         Task<PlantInfo> GetPlantInfoAsync(int id);
         Task<PlantInfo> PutPlantInfoAsync(PlantInfo plantInfo);
         Task<Activity> GetActivityAsync(int id);

@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
@@ -17,27 +18,6 @@ namespace Emergence.Client.Common
         public ApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-        }
-
-        public async Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/origin/find", findParams);
-
-            return await ReadResult<FindResult<Origin>>(result);
-        }
-
-        public async Task<IEnumerable<Lifeform>> FindLifeformsAsync(FindParams findParams)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
-
-            return await ReadResult<IEnumerable<Lifeform>>(result);
-        }
-
-        public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
-
-            return await ReadResult<FindResult<Specimen>>(result);
         }
 
         public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams)
@@ -54,11 +34,39 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Activity>>(result);
         }
 
+        public async Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
+
+            return await ReadResult<FindResult<Lifeform>>(result);
+        }
+
+        public async Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/origin/find", findParams);
+
+            return await ReadResult<FindResult<Origin>>(result);
+        }
+
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
+        }
+
+        public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
+
+            return await ReadResult<FindResult<Specimen>>(result);
+        }
+
+        public async Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/taxon/find?rank={rank}", findParams);
+
+            return await ReadResult<FindResult<Taxon>>(result);
         }
 
         public async Task<Specimen> GetSpecimenAsync(int id)
@@ -73,6 +81,22 @@ namespace Emergence.Client.Common
             var result = await _httpClient.PutAsJsonAsync("/api/specimen", specimen);
 
             return await ReadResult<Specimen>(result);
+        }
+
+        public async Task<bool> RemoveSpecimenAsync(Specimen specimen)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/specimen/{specimen.SpecimenId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
+        public async Task<Lifeform> GetLifeformAsync(int id)
+        {
+            var result = await _httpClient.GetAsync($"/api/lifeform/{id}");
+
+            return await ReadResult<Lifeform>(result);
         }
 
         public async Task<PlantInfo> GetPlantInfoAsync(int id)
@@ -185,6 +209,19 @@ namespace Emergence.Client.Common
             if (result.IsSuccessStatusCode)
             {
                 return await result.Content.ReadFromJsonAsync<T>();
+            }
+            else
+            {
+                var message = await result.Content.ReadAsStringAsync();
+                throw new Exception(result.StatusCode + ": " + message);
+            }
+        }
+
+        private async Task<string> ReadResult(HttpResponseMessage result)
+        {
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadAsStringAsync();
             }
             else
             {

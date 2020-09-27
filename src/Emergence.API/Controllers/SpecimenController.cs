@@ -41,9 +41,11 @@ namespace Emergence.API.Controllers
 
         public async Task<Specimen> Put(Specimen specimen)
         {
+            specimen.CreatedBy = UserId;
+
             if (specimen.InventoryItem == null)
             {
-                specimen.InventoryItem = new InventoryItem();
+                specimen.InventoryItem = new InventoryItem { CreatedBy = UserId };
             }
 
             if (specimen.InventoryItem.Origin != null && specimen.InventoryItem.Origin.OriginId == 0 && !string.IsNullOrEmpty(specimen.InventoryItem.Origin.Name))
@@ -84,6 +86,23 @@ namespace Emergence.API.Controllers
         {
             var result = await _specimenService.FindSpecimens(findParams, UserId);
             return result;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var specimen = await _specimenService.GetSpecimenAsync(id);
+            if (specimen.CreatedBy != UserId)
+            {
+                return Unauthorized();
+            }
+
+            var photos = await _photoService.GetPhotosAsync(PhotoType.Specimen, specimen.SpecimenId);
+            await _photoService.RemovePhotosAsync(photos);
+            await _specimenService.RemoveSpecimenAsync(specimen);
+
+            return Ok();
         }
     }
 }

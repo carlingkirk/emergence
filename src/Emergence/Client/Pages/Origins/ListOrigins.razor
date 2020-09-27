@@ -14,15 +14,16 @@
     @if (List != null)
     {
         <table>
-            <SortableHeaders HeaderNames="@(new Dictionary<string, string>
-                {
-                        { "Name", "Name" },
-                        { "Type", "Type" },
-                        { "Description", "Description" },
-                        { "ParentOrigin", "Parent Origin" },
-                        { "City", "City" },
-                        { "Link", "Link" }
-                })"
+            <SortableHeaders HeaderNames="@(
+                                new Dictionary<string, string>
+                                    {
+                                            { "Name", "Name" },
+                                            { "Type", "Type" },
+                                            { "Description", "Description" },
+                                            { "ParentOrigin", "Parent Origin" },
+                                            { "City", "City" },
+                                            { "Link", "Link" }
+                                    })"
                              Sort="SortAsync"
                              @bind-Values="List" />
             @if (!List.Any())
@@ -37,7 +38,7 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(origin.OriginId)" @onclick:preventDefault><span class="link">@origin.Name</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@origin.Name</span></a>
                     </td>
                     <td>
                         <span>@origin.Type.ToFriendlyName()</span>
@@ -48,7 +49,11 @@
                     <td>
                         @if (@origin.ParentOrigin != null)
                         {
-                            <span @onclick="@(async () => await UpdateParentOriginAsync(origin.ParentOrigin))" class="link">@origin.ParentOrigin.Name</span>
+                            <span @onclick="() => LoadInfo(ViewItemType.Origin, origin.ParentOrigin.OriginId)" class="link">@origin.ParentOrigin.Name</span>
+                        }
+                        else
+                        {
+                            <span></span>
                         }
                     </td>
                     <td>
@@ -72,12 +77,12 @@
             }
             @if (!string.IsNullOrEmpty(UserId))
             {
-                <button class="btn btn-primary" @onclick="@(() => LoadInfo(0))"><span class="oi oi-plus btn-oi"></span>Origin</button>
+                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Origin, 0))"><span class="oi oi-plus btn-oi"></span>Origin</button>
             }
         </div>
     }
 }
 else if (Id > 0 || IsItemLoaded && !string.IsNullOrEmpty(UserId))
 {
-<OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></OriginViewer>
+    <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></OriginViewer>
 }

@@ -15,6 +15,8 @@ namespace Emergence.Client.Components
         public bool IsItemLoaded { get; set; }
         [Parameter]
         public EventCallback<bool> IsItemLoadedChanged { get; set; }
+        [Parameter]
+        public EventCallback ItemLoadedChanged { get; set; }
         public bool IsEditable { get; set; }
         [Parameter]
         public bool IsEditing { get; set; }

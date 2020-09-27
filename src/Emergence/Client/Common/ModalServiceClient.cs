@@ -27,11 +27,12 @@ namespace Emergence.Client.Common
             return await specimenModal.Result;
         }
 
-        public async Task<ModalResult> ShowSpecimenModal(Specimen specimen)
+        public async Task<ModalResult> ShowSpecimenModal(Specimen specimen, bool isEditing = false)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Specimen", specimen);
             modalParams.Add("IsModal", true);
+            modalParams.Add("IsEditing", isEditing);
 
             var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams);
             return await specimenModal.Result;
@@ -47,11 +48,12 @@ namespace Emergence.Client.Common
             return await modal.Result;
         }
 
-        public async Task<ModalResult> ShowOriginModal(Origin origin)
+        public async Task<ModalResult> ShowOriginModal(Origin origin, bool isEditing = false)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Origin", origin);
             modalParams.Add("IsModal", true);
+            modalParams.Add("IsEditing", isEditing);
 
             var modal = _modalService.Show<OriginViewer>("Origin", modalParams);
             return await modal.Result;

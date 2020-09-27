@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
@@ -12,7 +13,9 @@ namespace Emergence.Data.Shared.Stores
         public Lifeform Lifeform { get; set; }
         public InventoryItem InventoryItem { get; set; }
         public PlantInfo PlantInfo { get; set; }
+        [StringLength(36)]
         public string CreatedBy { get; set; }
+        [StringLength(36)]
         public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }

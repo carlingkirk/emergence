@@ -77,14 +77,19 @@ namespace Emergence.Client.Components
 
         protected bool IsSoilTypeChosen(SoilType soilType) => ChosenSoilTypes.Any(s => s == soilType);
 
-        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText) => await ApiClient.FindLifeformsAsync(new FindParams
+        protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText)
         {
-            SearchText = searchText,
-            Skip = 0,
-            Take = 10,
-            SortBy = "ScientificName",
-            SortDirection = SortDirection.Ascending
-        });
+            var result = await ApiClient.FindLifeformsAsync(new FindParams
+            {
+                SearchText = searchText,
+                Skip = 0,
+                Take = 10,
+                SortBy = "ScientificName",
+                SortDirection = SortDirection.Ascending
+            });
+
+            return result.Results;
+        }
 
         protected string GetElementId(string element, string id) => element + "-" + id;
     }

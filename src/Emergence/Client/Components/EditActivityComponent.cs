@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
@@ -13,8 +14,16 @@ namespace Emergence.Client.Components
 {
     public class EditActivityComponent : ActivityComponent
     {
+        [Inject]
+        protected IModalServiceClient ModalServiceClient { get; set; }
+        public bool CreateNewSpecimen { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
+
+        public EditActivityComponent()
+        {
+            CreateNewSpecimen = true;
+        }
 
         protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
 
@@ -37,6 +46,48 @@ namespace Emergence.Client.Components
             if (SelectedSpecimen != null)
             {
                 Activity.Specimen = SelectedSpecimen;
+            }
+
+            if (CreateNewSpecimen && Activity.Quantity.HasValue)
+            {
+                var stage = SpecimenStage.Unknown;
+                if (Activity.ActivityType == ActivityType.Stratification)
+                {
+                    stage = SpecimenStage.Stratification;
+                }
+                else if (Activity.ActivityType == ActivityType.PlantInGround)
+                {
+                    stage = SpecimenStage.InGround;
+                }
+                else if (Activity.ActivityType == ActivityType.Germination)
+                {
+                    stage = SpecimenStage.Germination;
+                }
+
+                var newSpecimen = new Specimen
+                {
+                    SpecimenStage = stage,
+                    Lifeform = SelectedSpecimen.Lifeform,
+                    InventoryItem = new InventoryItem
+                    {
+                        Name = SelectedSpecimen.InventoryItem.Name,
+                        ItemType = ItemType.Specimen,
+                        Quantity = Activity.Quantity.Value,
+                        Status = SelectedSpecimen.InventoryItem.Status,
+                        Inventory = SelectedSpecimen.InventoryItem.Inventory,
+                        Origin = SelectedSpecimen.InventoryItem.Origin,
+                        DateAcquired = Activity.DateOccured,
+                        DateCreated = DateTime.UtcNow,
+                        CreatedBy = UserId
+                    },
+                    CreatedBy = UserId,
+                    DateCreated = DateTime.UtcNow
+                };
+                newSpecimen = await ApiClient.PutSpecimenAsync(newSpecimen);
+                Activity.Specimen = newSpecimen;
+
+                SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;
+                await ApiClient.PutSpecimenAsync(SelectedSpecimen);
             }
 
             Activity = await ApiClient.PutActivityAsync(Activity);
@@ -66,7 +117,7 @@ namespace Emergence.Client.Components
 
             var specimens = specimenResult.Results.ToList();
 
-            var lifeforms = await ApiClient.FindLifeformsAsync(new FindParams
+            var result = await ApiClient.FindLifeformsAsync(new FindParams
             {
                 SearchText = searchText,
                 Skip = 0,
@@ -75,9 +126,9 @@ namespace Emergence.Client.Components
                 SortDirection = SortDirection.Ascending
             });
 
-            foreach (var lifeform in lifeforms)
+            foreach (var lifeform in result.Results)
             {
-                specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem() });
+                specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem { Inventory = new Inventory { CreatedBy = UserId } } });
             }
 
             return specimens;
@@ -88,6 +139,16 @@ namespace Emergence.Client.Components
             if (Activity.ActivityType != ActivityType.Custom && SelectedSpecimen != null)
             {
                 Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + SelectedSpecimen.Lifeform.ScientificName;
+            }
+        }
+
+        protected async Task AddSpecimenAsync(Specimen specimen)
+        {
+            var result = await ModalServiceClient.ShowSpecimenModal(specimen, true);
+
+            if (!result.Cancelled)
+            {
+                SelectedSpecimen = result.Data as Specimen;
             }
         }
     }

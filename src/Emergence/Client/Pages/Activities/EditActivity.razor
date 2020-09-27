@@ -7,7 +7,6 @@
 @using Emergence.Data.Shared.Extensions
 @using Blazored.Typeahead
 
-@inject IModalServiceClient ModalServiceClient
 @attribute [Authorize]
 @inherits EditActivityComponent
 
@@ -16,7 +15,7 @@
     <EditForm Model="@Activity">
         <div class="form-group container">
             <div class="row">
-                <div class="col-3">
+                <div class="col-lg-3 col-xs">
                     <label for="type">Type</label>
                     <select @bind="@Activity.ActivityType" type="text" class="form-control" id="type">
                         @foreach (var type in ActivityTypes)
@@ -25,19 +24,22 @@
                         }
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-lg-9 col-xs">
                     <label for="specimen">Specimen</label>
                     <BlazoredTypeahead SearchMethod="FindSpecimensAsync"
                                        @bind-Value="SelectedSpecimen"
                                        MinimumLength="3"
                                        Debounce="500" Context="specimen">
                         <SelectedTemplate>
-                            @(specimen.InventoryItem?.Name ?? specimen.Lifeform?.ScientificName ?? specimen.SpecimenId.ToString())
+                            <span>
+                                @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
+                                (@(specimen.InventoryItem?.Status.ToFriendlyName()))
+                            </span>
                         </SelectedTemplate>
                         <ResultTemplate>
                             @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
                                 {
-                                <a href="" @onclick="@(async () => { await ModalServiceClient.ShowSpecimenModal((Specimen)specimen); })" @onclick:preventDefault>
+                                <a href="" @onclick="@(async () => { await AddSpecimenAsync((Specimen)specimen); })" @onclick:preventDefault>
                                     <span>Add new </span>
                                     <span class="text-body">@(specimen.Lifeform.CommonName) </span>
                                     <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>
@@ -45,7 +47,10 @@
                                 }
                                 else if (specimen.InventoryItem != null)
                                 {
-                                <span>@(specimen.InventoryItem?.Name)</span> <span>@(specimen.SpecimenStage.ToFriendlyName())</span> <span>@(specimen.InventoryItem?.Status.ToFriendlyName())</span>
+                                <span>
+                                    @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
+                                    (@(specimen.InventoryItem?.Status.ToFriendlyName()))
+                                </span>
                                 }
                                 else // this won't happen?
                             {
@@ -56,9 +61,44 @@
                             No results found
                         </NotFoundTemplate>
                     </BlazoredTypeahead>
+
                 </div>
-                <div class="col-3">
-                    <label for="name">Name</label>
+            </div>
+            @if (SelectedSpecimen != null)
+            {
+                <div class="row">
+                    <div class="col-lg-3 col-xs">
+                        <label for="quantity">Quantity</label>
+                        <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
+                    </div>
+                    @if (Activity.ActivityType == ActivityType.PlantInGround || Activity.ActivityType == ActivityType.Germination || Activity.ActivityType == ActivityType.Stratification)
+                    {
+                        <div class="col-lg-9 col-xs">
+                            <label for="create-new-specimen">Create new specimen</label>
+                            <div style="display: block;">
+                                <input type="checkbox" @bind="CreateNewSpecimen" id="create-new-specimen" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
+                                @if (CreateNewSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
+                                {
+                                    <label for="enable-quantity-update">
+                                        Original specimen quantity will be reduced
+                                        @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
+                                        {
+                                            <span>to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity)</span>
+                                        }
+                                    </label>
+                                }
+                                else if (!CreateNewSpecimen && Activity.Quantity.HasValue)
+                                {
+                                    <label for="enable-quantity-update">Original specimen quantity will not be updated</label>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            <div class="row">
+                <div class="col">
+                    <label for="name">Activity Title</label>
                     <input @bind="@Activity.Name" type="text" class="form-control" id="name" @onfocus="PopulateActivityName" />
                 </div>
             </div>

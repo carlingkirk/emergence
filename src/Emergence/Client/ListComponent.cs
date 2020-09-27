@@ -12,6 +12,8 @@ namespace Emergence.Client
         protected IModalServiceClient ModalServiceClient { get; set; }
         [Parameter]
         public bool ShowSearch { get; set; }
+        [Parameter]
+        public bool LinkRelations { get; set; }
         public IEnumerable<T> List { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
@@ -21,10 +23,13 @@ namespace Emergence.Client
         public int Count { get; set; }
         public bool IsItemLoaded { get; set; }
         public int Id { get; set; }
+        public T Parent { get; set; }
+        public ViewItemType ViewItemType { get; set; }
 
         public ListComponent()
         {
             ShowSearch = true;
+            LinkRelations = true;
         }
 
         public abstract Task<FindResult<T>> GetListAsync(FindParams findParams);
@@ -76,10 +81,19 @@ namespace Emergence.Client
             return List;
         }
 
-        protected void LoadInfo(int id)
+        protected void LoadInfo(ViewItemType type, int id)
         {
             Id = id;
             IsItemLoaded = true;
+            ViewItemType = type;
+        }
+
+        protected void LoadInfo(ViewItemType type, int id, T parent)
+        {
+            Id = id;
+            IsItemLoaded = true;
+            ViewItemType = type;
+            Parent = parent;
         }
     }
 }

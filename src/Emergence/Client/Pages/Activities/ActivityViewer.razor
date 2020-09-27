@@ -13,7 +13,7 @@
 }
 @if (IsEditing && Activity != null)
 {
-    <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+     <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
 }
 else if (Activity != null)
 {

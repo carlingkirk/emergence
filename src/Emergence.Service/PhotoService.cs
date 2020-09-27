@@ -76,7 +76,8 @@ namespace Emergence.Service
                         Height = height,
                         Width = width,
                         DateTaken = dateTaken,
-                        DateCreated = DateTime.UtcNow
+                        DateCreated = DateTime.UtcNow,
+                        CreatedBy = userId
                     });
                 }
             }
@@ -113,14 +114,12 @@ namespace Emergence.Service
             }
             return photos;
         }
-
         public async Task<Data.Shared.Models.Photo> GetPhotoAsync(int id)
         {
             var photoResult = await _photoRepository.GetAsync(p => p.Id == id);
             var photo = photoResult.AsModel(_blobStorageRoot);
             return photo;
         }
-
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(PhotoType type, int typeId)
         {
             var photoResult = _photoRepository.GetSomeAsync(p => p.Type == type.ToString() && p.TypeId == typeId);
@@ -131,7 +130,6 @@ namespace Emergence.Service
             }
             return photos;
         }
-
         public async Task<bool> RemovePhotoAsync(int id, string userId)
         {
             var photo = await GetPhotoAsync(id);
@@ -147,6 +145,15 @@ namespace Emergence.Service
             image = await SaveAsPngAsync(stream, image);
 
             return image;
+        }
+
+        public async Task RemovePhotosAsync(IEnumerable<Data.Shared.Models.Photo> photos)
+        {
+            foreach (var photo in photos)
+            {
+                await _blobService.RemovePhotoAsync(photo.BlobPath);
+            }
+            await _photoRepository.RemoveManyAsync(photos.Select(p => p.AsStore()));
         }
 
         private Image ResizePhoto(Image image, int maxDimension)

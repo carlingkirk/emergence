@@ -1,0 +1,69 @@
+@page "/lifeform/list"
+@using Emergence.Client.Components
+@using Emergence.Client.Pages.PlantInfos
+@using Emergence.Client.Pages.Origins
+
+@inherits ListLifeformsComponent
+
+@if (!IsItemLoaded)
+{
+    @if (ShowSearch)
+    {
+        <input type="text" @bind="SearchText" id="search" />
+        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+    }
+
+    @if (List != null)
+    {
+        <table>
+            <SortableHeaders HeaderNames="@(
+                            new Dictionary<string, string>
+                            {
+                                        { "ScientificName", "Scientific Name" },
+                                        { "CommonName", "Common Name" }
+                            })"
+                             Sort="SortAsync"
+                             @bind-Values="List" />
+            @if (!List.Any())
+            {
+                <tr>
+                    <td>
+                        <span>No lifeforms found</span>
+                    </td>
+                </tr>
+            }
+            @foreach (var lifeform in List)
+            {
+                <tr>
+                    <td>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Lifeform, lifeform.LifeformId)" @onclick:preventDefault><span class="link">@lifeform.ScientificName</span></a>
+                    </td>
+                    <td>
+                        <span>@lifeform.CommonName</span>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div>
+            @if (List.Any())
+            {
+                <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+            }
+        </div>
+    }
+}
+else if (Id > 0 || IsItemLoaded)
+{
+    switch (ViewItemType)
+    {
+        case (ViewItemType.Lifeform):
+            <LifeformViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></LifeformViewer>
+            break;
+        default:
+            break;
+    }
+}
+
+@code {
+
+}

@@ -12,5 +12,6 @@ namespace Emergence.Service.Interfaces
         Task<Specimen> AddOrUpdateAsync(Specimen specimen, string userId);
         Task<IEnumerable<Specimen>> GetSpecimensByIdsAsync(IEnumerable<int> specimenIds);
         Task<FindResult<Specimen>> FindSpecimens(FindParams findParams, string userId);
+        Task RemoveSpecimenAsync(Specimen specimen);
     }
 }

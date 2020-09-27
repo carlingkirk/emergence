@@ -15,9 +15,9 @@ namespace Emergence.Service
 {
     public class SpecimenService : ISpecimenService
     {
-        private readonly IRepository<Data.Shared.Stores.Specimen> _specimenRepository;
+        private readonly IRepository<Specimen> _specimenRepository;
 
-        public SpecimenService(IRepository<Data.Shared.Stores.Specimen> specimenRepository)
+        public SpecimenService(IRepository<Specimen> specimenRepository)
         {
             _specimenRepository = specimenRepository;
         }
@@ -93,6 +93,8 @@ namespace Emergence.Service
                 Count = count
             };
         }
+
+        public async Task RemoveSpecimenAsync(Data.Shared.Models.Specimen specimen) => await _specimenRepository.RemoveAsync(specimen.AsStore());
 
         private IQueryable<Specimen> OrderBy(IQueryable<Specimen> specimenQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {
