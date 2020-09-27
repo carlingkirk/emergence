@@ -51,13 +51,15 @@ namespace Emergence.Test.Emergence.Transform
             var lifeformRepository = RepositoryMocks.GetStandardMockLifeformRepository(new List<Stores.Lifeform>());
             var plantInfoRepository = RepositoryMocks.GetStandardMockPlantInfoRepository(new List<Stores.PlantInfo>());
             var plantLocationRepository = RepositoryMocks.GetStandardMockPlantLocationRepository(new List<Stores.PlantLocation>());
+            var synonymRepository = RepositoryMocks.GetStandardMockSynonymRepository();
             var taxonRepository = RepositoryMocks.GetStandardMockTaxonRepository(new List<Stores.Taxon>());
 
             var locationService = new LocationService(locationRepository.Object);
             var originService = new OriginService(originRepository.Object, locationService);
             var lifeformService = new LifeformService(lifeformRepository.Object);
             var plantInfoService = new PlantInfoService(plantInfoRepository.Object, plantLocationRepository.Object);
-            var taxonService = new TaxonService(taxonRepository.Object);
+            var synonymService = new SynonymService(synonymRepository.Object);
+            var taxonService = new TaxonService(taxonRepository.Object, synonymService);
 
             var processor = new PlantInfoProcessor(lifeformService, originService, plantInfoService, taxonService, locationService);
 
@@ -114,7 +116,7 @@ namespace Emergence.Test.Emergence.Transform
             var locationService = new LocationService(locationRepository.Object);
             var originService = new OriginService(originRepository.Object, locationService);
             var synonymService = new SynonymService(synonymRepository.Object);
-            var taxonService = new TaxonService(taxonRepository.Object);
+            var taxonService = new TaxonService(taxonRepository.Object, synonymService);
 
             var processor = new SynonymProcessor(synonymService, originService, taxonService);
 
