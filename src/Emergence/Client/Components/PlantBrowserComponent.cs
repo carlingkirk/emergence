@@ -30,6 +30,7 @@ namespace Emergence.Client.Components
                     Shape.Copy()
                 }
             };
+            ShowSearch = false;
 
             await base.OnInitializedAsync();
         }

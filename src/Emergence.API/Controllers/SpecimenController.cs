@@ -41,9 +41,11 @@ namespace Emergence.API.Controllers
 
         public async Task<Specimen> Put(Specimen specimen)
         {
+            specimen.CreatedBy = UserId;
+
             if (specimen.InventoryItem == null)
             {
-                specimen.InventoryItem = new InventoryItem();
+                specimen.InventoryItem = new InventoryItem { CreatedBy = UserId };
             }
 
             if (specimen.InventoryItem.Origin != null && specimen.InventoryItem.Origin.OriginId == 0 && !string.IsNullOrEmpty(specimen.InventoryItem.Origin.Name))

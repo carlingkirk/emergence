@@ -76,7 +76,8 @@ namespace Emergence.Service
                         Height = height,
                         Width = width,
                         DateTaken = dateTaken,
-                        DateCreated = DateTime.UtcNow
+                        DateCreated = DateTime.UtcNow,
+                        CreatedBy = userId
                     });
                 }
             }
