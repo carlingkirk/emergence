@@ -140,6 +140,43 @@ namespace Emergence.Data.Shared.Extensions
             DateModified = source.DateModified
         };
 
+        public static string GetTaxonValue(this Models.Taxon taxon, TaxonRank rank)
+        {
+            switch (rank)
+            {
+                case TaxonRank.Kingdom:
+                    return taxon.Kingdom;
+                case TaxonRank.Subkingdom:
+                    return taxon.Subkingdom;
+                case TaxonRank.Infrakingdom:
+                    return taxon.Infrakingdom;
+                case TaxonRank.Phylum:
+                    return taxon.Phylum;
+                case TaxonRank.Subphylum:
+                    return taxon.Subphylum;
+                case TaxonRank.Class:
+                    return taxon.Class;
+                case TaxonRank.Subclass:
+                    return taxon.Subclass;
+                case TaxonRank.Superorder:
+                    return taxon.Superorder;
+                case TaxonRank.Order:
+                    return taxon.Order;
+                case TaxonRank.Suborder:
+                    return taxon.Suborder;
+                case TaxonRank.Family:
+                    return taxon.Family;
+                case TaxonRank.Subfamily:
+                    return taxon.Subfamily;
+                case TaxonRank.Genus:
+                    return taxon.Genus;
+                case TaxonRank.Species:
+                    return taxon.Species;
+                default:
+                    return null;
+            }
+        }
+
         public static string GetTaxonName(this Models.Taxon taxon, TaxonRank rank)
         {
             switch (rank)
@@ -171,7 +208,7 @@ namespace Emergence.Data.Shared.Extensions
                 case TaxonRank.Genus:
                     return taxon.Genus ?? "None";
                 case TaxonRank.Species:
-                    return taxon.Species ?? "None";
+                    return taxon.SpeciesName ?? "None";
                 default:
                     return "None";
             }

@@ -28,7 +28,7 @@
     {
         <thead>
             <tr>
-                @foreach (var crumb in Breadcrumbs)
+                @foreach (var crumb in Breadcrumbs.TakeLast(5))
                 {
                 <td>
                     <div>
@@ -50,90 +50,14 @@
     @foreach (var taxon in List)
     {
         <tr>
-            @if (Rank == TaxonRank.Kingdom)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Kingdom, taxon.Kingdom)" @onclick:preventDefault><span class="link">@(taxon.Kingdom ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Subkingdom)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subkingdom, taxon.Subkingdom)" @onclick:preventDefault><span class="link">@(taxon.Subkingdom ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Infrakingdom)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Infrakingdom, taxon.Infrakingdom)" @onclick:preventDefault><span class="link">@(taxon.Infrakingdom ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Phylum)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Phylum, taxon.Phylum)" @onclick:preventDefault><span class="link">@(taxon.Phylum ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Subphylum)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subphylum, taxon.Subphylum)" @onclick:preventDefault><span class="link">@(taxon.Subphylum ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Class)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Class, taxon.Class)" @onclick:preventDefault><span class="link">@(taxon.Class ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Subclass)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subclass, taxon.Subclass)" @onclick:preventDefault><span class="link">@(taxon.Subclass ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Superorder)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Superorder, taxon.Superorder)" @onclick:preventDefault><span class="link">@(taxon.Superorder ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Order)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Order, taxon.Order)" @onclick:preventDefault><span class="link">@(taxon.Order ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Suborder)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Suborder, taxon.Suborder)" @onclick:preventDefault><span class="link">@(taxon.Suborder ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Family)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Family, taxon.Family)" @onclick:preventDefault><span class="link">@(taxon.Family ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Subfamily)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Subfamily, taxon.Subfamily)" @onclick:preventDefault><span class="link">@(taxon.Subfamily ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Genus)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Genus, taxon.Genus)" @onclick:preventDefault><span class="link">@(taxon.Genus ?? "None")</span></a>
-                </td>
-            }
-            else if (Rank == TaxonRank.Species)
-            {
-                <td>
-                    <a href="" @onclick="async () => await SearchAsync(TaxonRank.Species, taxon.Species)" @onclick:preventDefault><span class="link">@(taxon.Species ?? "None")</span></a>
-                </td>
-            }
+            <td colspan="5">
+                <a href="" @onclick="async () => await SearchAsync(Rank, taxon.GetTaxonValue(Rank))" @onclick:preventDefault><span class="link">@(taxon.GetTaxonName(Rank))</span></a>
+
+                @if (taxon.Synonyms != null && taxon.Synonyms.Any())
+                {
+                    <span>(@string.Join(',', taxon.Synonyms.Where(s => s.Language == "English" || s.Language == "unspecified").Select(s => s.Name)).Replace(",", ", "))</span>
+                }
+            </td>
         </tr>
     }
 </table>

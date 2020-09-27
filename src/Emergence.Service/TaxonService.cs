@@ -102,48 +102,7 @@ namespace Emergence.Service
             }
             else
             {
-                switch (rank)
-                {
-                    case TaxonRank.Species:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Species = t.Species }).Distinct().OrderBy(t => t.Species);
-                        break;
-                    case TaxonRank.Genus:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Genus = t.Genus }).Distinct().OrderBy(t => t.Genus);
-                        break;
-                    case TaxonRank.Subfamily:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subfamily = t.Subfamily }).Distinct().OrderBy(t => t.Subfamily);
-                        break;
-                    case TaxonRank.Family:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Family = t.Family }).Distinct().OrderBy(t => t.Family);
-                        break;
-                    case TaxonRank.Suborder:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Suborder = t.Suborder }).Distinct().OrderBy(t => t.Suborder);
-                        break;
-                    case TaxonRank.Order:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Order = t.Order }).Distinct().OrderBy(t => t.Order);
-                        break;
-                    case TaxonRank.Superorder:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Superorder = t.Superorder }).Distinct().OrderBy(t => t.Superorder);
-                        break;
-                    case TaxonRank.Subclass:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subclass = t.Subclass }).Distinct().OrderBy(t => t.Subclass);
-                        break;
-                    case TaxonRank.Class:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Class = t.Class }).Distinct().OrderBy(t => t.Class);
-                        break;
-                    case TaxonRank.Subphylum:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subphylum = t.Subphylum }).Distinct().OrderBy(t => t.Subphylum);
-                        break;
-                    case TaxonRank.Phylum:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Phylum = t.Phylum }).Distinct().OrderBy(t => t.Phylum);
-                        break;
-                    case TaxonRank.Infrakingdom:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Infrakingdom = t.Infrakingdom }).Distinct().OrderBy(t => t.Infrakingdom);
-                        break;
-                    case TaxonRank.Subkingdom:
-                        taxonQuery = taxonQuery.Select(t => new Taxon { Subkingdom = t.Subkingdom }).Distinct().OrderBy(t => t.Subkingdom);
-                        break;
-                }
+                taxonQuery = OrderByDistinct(rank, taxonQuery);
             }
 
             var result = taxonQuery.GetSome().ToList();
@@ -170,35 +129,40 @@ namespace Emergence.Service
                 Results = taxons
             });
         }
-    }
 
-    internal class TaxonComparer : IEqualityComparer<Taxon>
-    {
-        private TaxonRank Rank { get; set; }
-        public TaxonComparer(TaxonRank rank)
+        private IQueryable<Taxon> OrderByDistinct(TaxonRank rank, IQueryable<Taxon> source)
         {
-            Rank = rank;
-        }
-        public bool Equals(Taxon x, Taxon y)
-        {
-            switch (Rank)
+            switch (rank)
             {
-                case TaxonRank.Kingdom:
-                    return string.Equals(x.Kingdom, y.Kingdom, StringComparison.OrdinalIgnoreCase);
+                case TaxonRank.Species:
+                    return source.Select(t => new Taxon { Genus = t.Genus, Species = t.Species }).Distinct().OrderBy(t => t.Species);
+                case TaxonRank.Genus:
+                    return source.Select(t => new Taxon { Genus = t.Genus }).Distinct().OrderBy(t => t.Genus);
+                case TaxonRank.Subfamily:
+                    return source.Select(t => new Taxon { Subfamily = t.Subfamily }).Distinct().OrderBy(t => t.Subfamily);
+                case TaxonRank.Family:
+                    return source.Select(t => new Taxon { Family = t.Family }).Distinct().OrderBy(t => t.Family);
+                case TaxonRank.Suborder:
+                    return source.Select(t => new Taxon { Suborder = t.Suborder }).Distinct().OrderBy(t => t.Suborder);
+                case TaxonRank.Order:
+                    return source.Select(t => new Taxon { Order = t.Order }).Distinct().OrderBy(t => t.Order);
+                case TaxonRank.Superorder:
+                    return source.Select(t => new Taxon { Superorder = t.Superorder }).Distinct().OrderBy(t => t.Superorder);
+                case TaxonRank.Subclass:
+                    return source.Select(t => new Taxon { Subclass = t.Subclass }).Distinct().OrderBy(t => t.Subclass);
+                case TaxonRank.Class:
+                    return source.Select(t => new Taxon { Class = t.Class }).Distinct().OrderBy(t => t.Class);
+                case TaxonRank.Subphylum:
+                    return source.Select(t => new Taxon { Subphylum = t.Subphylum }).Distinct().OrderBy(t => t.Subphylum);
+                case TaxonRank.Phylum:
+                    return source.Select(t => new Taxon { Phylum = t.Phylum }).Distinct().OrderBy(t => t.Phylum);
+                case TaxonRank.Infrakingdom:
+                    return source.Select(t => new Taxon { Infrakingdom = t.Infrakingdom }).Distinct().OrderBy(t => t.Infrakingdom);
+                case TaxonRank.Subkingdom:
+                    return source.Select(t => new Taxon { Subkingdom = t.Subkingdom }).Distinct().OrderBy(t => t.Subkingdom);
+                default:
+                    return source;
             }
-
-            return false;
-        }
-
-        public int GetHashCode(Taxon taxon)
-        {
-            switch (Rank)
-            {
-                case TaxonRank.Kingdom:
-                    return taxon.Kingdom.GetHashCode();
-            }
-
-            return taxon.GetHashCode();
         }
     }
 }
