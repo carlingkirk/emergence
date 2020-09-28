@@ -35,6 +35,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<Taxon> Taxons { get; set; }
         public virtual DbSet<PlantLocation> PlantLocations { get; set; }
         public virtual DbSet<Synonym> Synonyms { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -59,6 +60,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Taxon>().HasKey(i => i.Id);
             modelBuilder.Entity<PlantLocation>().HasKey(i => i.Id);
             modelBuilder.Entity<Synonym>().HasKey(i => i.Id);
+            modelBuilder.Entity<User>().HasKey(i => i.Id);
             modelBuilder.Entity<PlantLocation>()
                 .HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
         }

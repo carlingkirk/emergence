@@ -98,6 +98,7 @@ namespace Emergence.Server
             services.AddTransient<ISpecimenService, SpecimenService>();
             services.AddTransient<ISynonymService, SynonymService>();
             services.AddTransient<ITaxonService, TaxonService>();
+            services.AddTransient<IUserService, UserService>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
@@ -112,6 +113,7 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Synonym>), typeof(Repository<Synonym>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
+            services.AddScoped(typeof(IRepository<User>), typeof(Repository<User>));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
