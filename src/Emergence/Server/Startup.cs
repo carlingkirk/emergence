@@ -88,6 +88,7 @@ namespace Emergence.Server
             // Application Services
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IBlobService, BlobService>();
+            services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IExifService, ExifService>();
             services.AddTransient<IInventoryService, InventoryService>();
             services.AddTransient<ILifeformService, LifeformService>();
