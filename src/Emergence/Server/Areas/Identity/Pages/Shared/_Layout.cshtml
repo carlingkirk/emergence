@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emergence</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">Emergence</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="sidebar">
+        <div class="top-row pl-4 navbar navbar-dark">
+            <a class="navbar-brand" href="">Emergence</a>
+            <button class="navbar-toggler">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <div class="collapse">
+            <ul class="nav flex-column">
+                <li class="nav-item px-3">
+                    <a href="" class="nav-link active">
+                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                    </a>
+                </li>
+                <li class="nav-item px-3">
+                    <a href="dashboard" class="nav-link">
+                        <span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
+                    </a>
+                    <a href="activity/list" class="nav-link">
+                        <span class="oi oi-pulse" aria-hidden="true"></span> Activities
+                    </a>
+                    <a href="specimen/list" class="nav-link">
+                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Specimens
+                    </a>
+                    <a href="plantbrowser" class="nav-link">
+                        <span class="oi oi-signpost" aria-hidden="true"></span> Plant Browser
+                    </a>
+                    <a href="plantinfo/list" class="nav-link">
+                        <span class="oi oi-info" aria-hidden="true"></span> Plant Profiles
+                    </a>
+                    <a href="origin/list" class="nav-link">
+                        <span class="oi oi-globe" aria-hidden="true"></span> Origins
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Emergence App - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
