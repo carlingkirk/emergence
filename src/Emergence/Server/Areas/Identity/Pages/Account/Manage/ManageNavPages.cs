@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
+namespace Emergence.Client.Server.Areas.Identity
 {
     public static class ManageNavPages
     {

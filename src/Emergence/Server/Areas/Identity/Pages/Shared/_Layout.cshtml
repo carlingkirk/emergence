@@ -30,44 +30,7 @@
             </div>
         </nav>
     </header>
-    <div class="sidebar">
-        <div class="top-row pl-4 navbar navbar-dark">
-            <a class="navbar-brand" href="">Emergence</a>
-            <button class="navbar-toggler">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-
-        <div class="collapse">
-            <ul class="nav flex-column">
-                <li class="nav-item px-3">
-                    <a href="" class="nav-link active">
-                        <span class="oi oi-home" aria-hidden="true"></span> Home
-                    </a>
-                </li>
-                <li class="nav-item px-3">
-                    <a href="dashboard" class="nav-link">
-                        <span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
-                    </a>
-                    <a href="activity/list" class="nav-link">
-                        <span class="oi oi-pulse" aria-hidden="true"></span> Activities
-                    </a>
-                    <a href="specimen/list" class="nav-link">
-                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Specimens
-                    </a>
-                    <a href="plantbrowser" class="nav-link">
-                        <span class="oi oi-signpost" aria-hidden="true"></span> Plant Browser
-                    </a>
-                    <a href="plantinfo/list" class="nav-link">
-                        <span class="oi oi-info" aria-hidden="true"></span> Plant Profiles
-                    </a>
-                    <a href="origin/list" class="nav-link">
-                        <span class="oi oi-globe" aria-hidden="true"></span> Origins
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -76,7 +39,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - Emergence App - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2020 - Emergence App - <a asp-area="" asp-page="/privacy">Privacy</a> | <a asp-area="" asp-page="/terms">Terms</a>
         </div>
     </footer>
 
