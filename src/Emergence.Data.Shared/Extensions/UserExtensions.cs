@@ -6,7 +6,8 @@ namespace Emergence.Data.Shared.Extensions
     {
         public static Models.User AsModel(this User source) => new Models.User
         {
-            UserId = source.Id,
+            Id = source.Id,
+            UserId = source.UserId,
             FirstName = source.FirstName,
             LastName = source.LastName,
             Location = source.Location != null ? source.Location.AsModel() : source.LocationId.HasValue ? new Models.Location { LocationId = source.LocationId.Value } : null,
@@ -17,7 +18,8 @@ namespace Emergence.Data.Shared.Extensions
 
         public static User AsStore(this Models.User source) => new User
         {
-            Id = source.UserId,
+            Id = source.Id,
+            UserId = source.UserId,
             FirstName = source.FirstName,
             LastName = source.LastName,
             LocationId = source.Location?.LocationId,

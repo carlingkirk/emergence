@@ -158,10 +158,11 @@ namespace Emergence.Data.Repository
             return entities;
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity)
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task<bool> RemoveAsync(T entity)

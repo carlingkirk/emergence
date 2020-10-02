@@ -8,6 +8,7 @@ using Emergence.Service.Interfaces;
 using ExifLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Emergence.Service
 {
@@ -15,11 +16,13 @@ namespace Emergence.Service
     {
         private readonly string _connectionString;
         private readonly IExifService _exifService;
+        private readonly ILogger<BlobService> _logger;
 
-        public BlobService(IConfiguration configuration, IExifService exifService)
+        public BlobService(IConfiguration configuration, IExifService exifService, ILogger<BlobService> logger)
         {
             _connectionString = configuration["AzureStorageConnectionString"];
             _exifService = exifService;
+            _logger = logger;
         }
 
         public async Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string userId, string blobPath)
@@ -119,9 +122,17 @@ namespace Emergence.Service
 
         private async Task<IBlobResult> ReadAndSetBlobPropertiesAsync(BlobClient client, Stream stream, string userId, string contentType)
         {
-            var reader = new ExifReader(stream);
-            var metadata = _exifService.GetMetadata(reader);
-            return await SetBlobPropertiesAsync(client, metadata, userId, contentType);
+            try
+            {
+                var reader = new ExifReader(stream);
+                var metadata = _exifService.GetMetadata(reader);
+                return await SetBlobPropertiesAsync(client, metadata, userId, contentType);
+            }
+            catch
+            {
+                _logger.LogInformation($"No Exif data available for photo {client.Uri}");
+                return await SetBlobPropertiesAsync(client, new Dictionary<string, string>(), userId, contentType);
+            }
         }
 
         private async Task<IBlobResult> SetBlobPropertiesAsync(BlobClient client, IDictionary<string, string> metadata, string userId, string contentType)

@@ -5,6 +5,8 @@ namespace Emergence.Service.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetUser(string id);
+        Task<User> GetUserAsync(int id);
+        Task<User> GetUserAsync(string userId);
+        Task<User> UpdateUserAsync(User user);
     }
 }

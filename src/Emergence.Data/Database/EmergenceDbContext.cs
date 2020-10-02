@@ -60,7 +60,9 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Taxon>().HasKey(i => i.Id);
             modelBuilder.Entity<PlantLocation>().HasKey(i => i.Id);
             modelBuilder.Entity<Synonym>().HasKey(i => i.Id);
-            modelBuilder.Entity<User>().HasKey(i => i.Id);
+            modelBuilder.Entity<User>().HasKey(u => u.Id);
+
+            modelBuilder.Entity<User>().HasIndex(u => u.UserId).IsUnique();
             modelBuilder.Entity<PlantLocation>()
                 .HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
         }

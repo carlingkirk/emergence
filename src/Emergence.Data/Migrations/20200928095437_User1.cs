@@ -11,7 +11,9 @@ namespace Emergence.Data.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(nullable: false, defaultValue: new Guid("00000000-0000-0000-0000-000000000000")),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     PhotoId = table.Column<int>(nullable: true),
@@ -37,6 +39,12 @@ namespace Emergence.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_UserId",
+                table: "Users",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_LocationId",
                 table: "Users",
                 column: "LocationId");
@@ -47,10 +55,6 @@ namespace Emergence.Data.Migrations
                 column: "PhotoId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Users");
-        }
+        protected override void Down(MigrationBuilder migrationBuilder) => migrationBuilder.DropTable(name: "Users");
     }
 }

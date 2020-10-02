@@ -16,11 +16,23 @@ namespace Emergence.Service
             _userRepository = userRepository;
         }
 
-        public async Task<Data.Shared.Models.User> GetUser(string id)
+        public async Task<Data.Shared.Models.User> GetUserAsync(int id)
         {
-            var userId = new Guid(id);
-            var user = await _userRepository.GetAsync(u => u.Id == userId);
+            var user = await _userRepository.GetAsync(u => u.Id == id);
             return user.AsModel();
+        }
+
+        public async Task<Data.Shared.Models.User> GetUserAsync(string userId)
+        {
+            var userGuid = new Guid(userId);
+            var user = await _userRepository.GetAsync(u => u.UserId == userGuid);
+            return user.AsModel();
+        }
+
+        public async Task<Data.Shared.Models.User> UpdateUserAsync(Data.Shared.Models.User user)
+        {
+            var userResult = await _userRepository.UpdateAsync(user.AsStore());
+            return userResult.AsModel();
         }
     }
 }
