@@ -8,6 +8,8 @@ namespace Emergence.Data.Shared.Models
         public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool EmailUpdates { get; set; }
+        public bool SocialUpdates { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }

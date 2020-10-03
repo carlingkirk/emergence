@@ -45,6 +45,22 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
             [Display(Name = "Profile photo")]
             public IFormFile ProfilePhotoFile { get; set; }
+            [Display(Name = "Address Line 1")]
+            public string AddressLine1 { get; set; }
+            [Display(Name = "Address Line 2")]
+            public string AddressLine2 { get; set; }
+            [Display(Name = "City")]
+            public string City { get; set; }
+            [Display(Name = "State/Province")]
+            public string StateOrProvince { get; set; }
+            [Display(Name = "Postal Code")]
+            public string PostalCode { get; set; }
+            [Display(Name = "Country")]
+            public string Country { get; set; }
+            [Display(Name = "Send me occasional email updates")]
+            public bool EmailUpdates { get; set; }
+            [Display(Name = "Send me social notifications")]
+            public bool SocialUpdates { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -68,7 +84,15 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             {
                 FirstName = userProfile.FirstName,
                 LastName = userProfile.LastName,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                AddressLine1 = userProfile.Location?.AddressLine1,
+                AddressLine2 = userProfile.Location?.AddressLine2,
+                City = userProfile.Location?.City,
+                StateOrProvince = userProfile.Location?.StateOrProvince,
+                Country = userProfile.Location?.City,
+                PostalCode = userProfile.Location?.PostalCode,
+                EmailUpdates = userProfile.EmailUpdates,
+                SocialUpdates = userProfile.SocialUpdates
             };
         }
 
@@ -97,12 +121,27 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             {
                 userProfile = new User
                 {
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
+                    Location = new Location
+                    {
+                        DateCreated = DateTime.UtcNow
+                    },
                     UserId = new Guid(user.Id),
                     DateCreated = DateTime.UtcNow
                 };
             }
+
+            userProfile.FirstName = Input.FirstName;
+            userProfile.LastName = Input.LastName;
+            userProfile.Location.AddressLine1 = Input.AddressLine1;
+            userProfile.Location.AddressLine2 = Input.AddressLine2;
+            userProfile.Location.City = Input.City;
+            userProfile.Location.StateOrProvince = Input.StateOrProvince;
+            userProfile.Location.PostalCode = Input.PostalCode;
+            userProfile.Location.Country = Input.Country;
+            userProfile.EmailUpdates = Input.EmailUpdates;
+            userProfile.SocialUpdates = Input.SocialUpdates;
+            userProfile.DateModified = DateTime.UtcNow;
+            userProfile.Location.DateModified = DateTime.UtcNow;
 
             if (!ModelState.IsValid)
             {

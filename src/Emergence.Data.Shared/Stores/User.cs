@@ -10,6 +10,8 @@ namespace Emergence.Data.Shared.Stores
         public string LastName { get; set; }
         public int? PhotoId { get; set; }
         public int? LocationId { get; set; }
+        public bool EmailUpdates { get; set; }
+        public bool SocialUpdates { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }
