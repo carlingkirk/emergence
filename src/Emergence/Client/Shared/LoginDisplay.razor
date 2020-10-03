@@ -1,12 +1,26 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Emergence.Data.Shared.Models
+@inherits EmergenceComponent
 
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 
 <AuthorizeView>
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
+        @if (UserProfile != null && UserProfile.Photo != null)
+        {
+            <a href="authentication/profile">
+                <img srcset="@(UserProfile.Photo.LargeUri) 3x, @(UserProfile.Photo.MediumUri) 2x, @(UserProfile.Photo.ThumbnailUri) 1x" src="@(UserProfile.Photo.OriginalUri)"
+                     onerror="this.onerror=null;this.srcset='';this.src='@(UserProfile.Photo.OriginalUri)'" alt="Profile photo of @(UserProfile?.FirstName ?? context.User.Identity.Name)"
+                     style="max-width:45px;border-radius:50%" class="shadow-sm align-center" />
+            </a>
+        }
+        else
+        {
+            <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
+        }
+        
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
     </Authorized>
     <NotAuthorized>
@@ -16,6 +30,18 @@
 </AuthorizeView>
 
 @code{
+    private User UserProfile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            UserProfile = await ApiClient.GetUserAsync(UserId);
+        }
+    }
+
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();

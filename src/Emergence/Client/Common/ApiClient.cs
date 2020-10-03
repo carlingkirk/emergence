@@ -204,6 +204,13 @@ namespace Emergence.Client.Common
             }
         }
 
+        public async Task<User> GetUserAsync(string userId)
+        {
+            var result = await _httpClient.GetAsync($"/api/user/{userId}");
+
+            return await ReadResult<User>(result);
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)
