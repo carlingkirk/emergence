@@ -27,8 +27,8 @@
     {
         <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
             <img srcset="@(userProfile.Photo.LargeUri) 3x, @(userProfile.Photo.MediumUri) 2x, @(userProfile.Photo.ThumbnailUri) 1x" src="@(userProfile.Photo.OriginalUri)"
-                 onerror="this.onerror=null;this.srcset='';this.src='@(Model.ProfilePhoto.OriginalUri)'" alt="Profile photo of @(userProfile?.FirstName ?? User.Identity.Name)"
-                 style="max-width:45px;border-radius:50%" class="shadow-sm align-center" />
+                 onerror="this.onerror=null;this.srcset='';this.src='@(userProfile.Photo.OriginalUri)'" alt="Profile photo of @(userProfile?.FirstName ?? User.Identity.Name)"
+                 class="shadow-sm align-center avatar" />
         </a>
     }
     else

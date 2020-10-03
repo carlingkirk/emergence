@@ -38,9 +38,9 @@
                 <label asp-for="Input.ProfilePhotoFile"></label><br />
                 @if (Model.ProfilePhoto != null)
                 {
-                    <img srcset="@(Model.ProfilePhoto.LargeUri) 3x, @(Model.ProfilePhoto.MediumUri) 2x, @(Model.ProfilePhoto.ThumbnailUri) 1x" src="@(Model.ProfilePhoto.OriginalUri)"
+                    <img srcset="@(Model.ProfilePhoto.LargeUri) 2x, @(Model.ProfilePhoto.MediumUri) 1x" src="@(Model.ProfilePhoto.OriginalUri)"
                          onerror="this.onerror=null;this.srcset='';this.src='@(Model.ProfilePhoto.OriginalUri)'" alt="Uploaded photo of @(Model.ProfilePhoto.Type)"
-                         style="max-width:275px;" class="shadow-sm align-center" />
+                         style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
                 }
                 else
                 {

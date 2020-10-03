@@ -30,22 +30,22 @@ namespace Emergence.Service
             _blobStorageRoot = configurationService.Settings.BlobStorageRoot + "photos/";
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId, bool storeLocation = true)
         {
             var photosResult = new List<Data.Shared.Models.Photo>();
 
             foreach (var photo in photos)
             {
-                var photoResult = await UploadPhoto(photo, type, userId);
+                var photoResult = await UploadPhoto(photo, type, userId, storeLocation);
                 photosResult.Add(photoResult);
             }
 
             return photosResult;
         }
 
-        public async Task<Data.Shared.Models.Photo> UploadOriginalAsync(IFormFile photo, PhotoType type, string userId)
+        public async Task<Data.Shared.Models.Photo> UploadOriginalAsync(IFormFile photo, PhotoType type, string userId, bool storeLocation = true)
         {
-            var photoResult = await UploadPhoto(photo, type, userId);
+            var photoResult = await UploadPhoto(photo, type, userId, storeLocation);
             return photoResult;
         }
 
@@ -123,7 +123,7 @@ namespace Emergence.Service
             await _photoRepository.RemoveManyAsync(photos.Select(p => p.AsStore()));
         }
 
-        private async Task<Data.Shared.Models.Photo> UploadPhoto(IFormFile photo, PhotoType type, string userId)
+        private async Task<Data.Shared.Models.Photo> UploadPhoto(IFormFile photo, PhotoType type, string userId, bool storeLocation)
         {
             var blobpath = Guid.NewGuid().ToString();
             var fileInfo = new FileInfo(photo.FileName);
@@ -161,7 +161,7 @@ namespace Emergence.Service
                     Type = type,
                     UserId = userId,
                     ContentType = result.ContentType,
-                    Location = location,
+                    Location = storeLocation ? location : null,
                     Height = height,
                     Width = width,
                     DateTaken = dateTaken,

@@ -13,12 +13,12 @@
             <a href="authentication/profile">
                 <img srcset="@(UserProfile.Photo.LargeUri) 3x, @(UserProfile.Photo.MediumUri) 2x, @(UserProfile.Photo.ThumbnailUri) 1x" src="@(UserProfile.Photo.OriginalUri)"
                      onerror="this.onerror=null;this.srcset='';this.src='@(UserProfile.Photo.OriginalUri)'" alt="Profile photo of @(UserProfile?.FirstName ?? context.User.Identity.Name)"
-                     style="max-width:45px;border-radius:50%" class="shadow-sm align-center" />
+                     class="shadow-sm align-center avatar" />
             </a>
         }
         else
         {
-            <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
+    <a href="authentication/profile">Hello, @(UserProfile?.FirstName ?? context.User.Identity.Name)!</a>
         }
         
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>

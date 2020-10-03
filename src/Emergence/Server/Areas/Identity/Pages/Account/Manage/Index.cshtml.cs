@@ -71,7 +71,12 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
             if (userProfile == null)
             {
-                userProfile = new User();
+                userProfile = new User
+                {
+                    UserId = new Guid(user.Id),
+                    DateCreated = DateTime.UtcNow
+                };
+                userProfile = await _userService.UpdateUserAsync(userProfile);
             }
             else
             {
@@ -121,11 +126,15 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             {
                 userProfile = new User
                 {
-                    Location = new Location
-                    {
-                        DateCreated = DateTime.UtcNow
-                    },
                     UserId = new Guid(user.Id),
+                    DateCreated = DateTime.UtcNow
+                };
+            }
+
+            if (userProfile.Location == null)
+            {
+                userProfile.Location = new Location
+                {
                     DateCreated = DateTime.UtcNow
                 };
             }
@@ -162,13 +171,18 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
             if (Input.ProfilePhotoFile != null)
             {
-                var photoResult = await _photoService.UploadOriginalAsync(Input.ProfilePhotoFile, Data.Shared.PhotoType.User, user.Id);
+                var photoResult = await _photoService.UploadOriginalAsync(Input.ProfilePhotoFile, Data.Shared.PhotoType.User, user.Id, storeLocation: false);
+                photoResult.TypeId = userProfile.Id;
                 photoResult = await _photoService.AddOrUpdatePhotoAsync(photoResult);
 
                 userProfile.Photo = photoResult;
                 userProfile = await _userService.UpdateUserAsync(userProfile);
 
                 ProfilePhoto = userProfile.Photo;
+            }
+            else
+            {
+                await _userService.UpdateUserAsync(userProfile);
             }
 
             await _signInManager.RefreshSignInAsync(user);

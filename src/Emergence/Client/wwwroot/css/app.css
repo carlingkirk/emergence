@@ -287,3 +287,11 @@ span.link {
 .danger {
   color: #f44336;
 }
+
+/* Profile */
+
+.avatar {
+  max-height: 45px;
+  max-width: 45px;
+  border-radius: 50%
+}
