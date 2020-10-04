@@ -42,6 +42,36 @@ namespace Emergence.Test.Mocks
             return mockSpecimenRepo;
         }
 
+        public static Mock<IRepository<User>> GetStandardMockUserRepository(IEnumerable<User> users = null)
+        {
+            if (users == null)
+            {
+                users = Data.Fakes.Stores.FakeUsers.Get();
+            }
+
+            var mockUsers = users.AsQueryable().BuildMockDbSet().Object;
+            var mockUsersRepo = new Mock<IRepository<User>>();
+
+            mockUsersRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(mockUsers.FirstOrDefault());
+
+            mockUsersRepo.Setup(p => p.GetWithIncludesAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<User>, IIncludable>[]>()))
+                .ReturnsAsync(mockUsers.FirstOrDefault());
+
+            mockUsersRepo.Setup(p => p.Where(It.IsAny<Expression<Func<User, bool>>>()))
+                .Returns(mockUsers);
+
+            mockUsersRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IIncludable<User>, IIncludable>[]>()))
+                .Returns(mockUsers);
+
+            mockUsersRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(mockUsers);
+
+            return mockUsersRepo;
+        }
+
         public static Mock<IRepository<Origin>> GetStandardMockOriginRepository(IEnumerable<Origin> origins = null)
         {
             var random = new Random();

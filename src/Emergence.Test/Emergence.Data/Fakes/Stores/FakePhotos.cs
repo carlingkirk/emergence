@@ -21,6 +21,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ContentType = "image/png",
                     Height = 1200,
                     Width = 1600,
+                    BlobPath = Guid.NewGuid().ToString(),
                     DateTaken = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc),
                     DateCreated = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc),
                     DateModified = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc)
@@ -36,6 +37,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ContentType = "image/png",
                     Height = 1200,
                     Width = 1600,
+                    BlobPath = Guid.NewGuid().ToString(),
                     DateTaken = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc),
                     DateCreated = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc),
                     DateModified = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc)
@@ -51,6 +53,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ContentType = "image/png",
                     Height = 1200,
                     Width = 1600,
+                    BlobPath = Guid.NewGuid().ToString(),
                     DateTaken = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc),
                     DateCreated = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc),
                     DateModified = new DateTime(2020, 07, 24, 15, 45, 12, DateTimeKind.Utc)
