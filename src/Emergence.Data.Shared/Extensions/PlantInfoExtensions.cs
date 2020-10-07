@@ -21,30 +21,33 @@ namespace Emergence.Data.Shared.Extensions
             if (!string.IsNullOrEmpty(source.MinimumZone))
             {
                 int.TryParse(source.MinimumZone.First().ToString(), out var minimumZoneNumber);
-
+                string minimumZoneLetter = null;
                 if (source.MinimumZone.Length == 2)
                 {
-                    var minimumZoneLetter = source.MinimumZone.Last().ToString();
-                    minimumZone = new Models.Zone
-                    {
-                        Number = minimumZoneNumber,
-                        Letter = minimumZoneLetter
-                    };
+                    minimumZoneLetter = source.MinimumZone.Last().ToString();
                 }
+
+                minimumZone = new Models.Zone
+                {
+                    Number = minimumZoneNumber,
+                    Letter = minimumZoneLetter
+                };
             }
 
             if (!string.IsNullOrEmpty(source.MaximumZone))
             {
                 int.TryParse(source.MaximumZone.First().ToString(), out var maximumZoneNumber);
+                string maximumZoneLetter = null;
                 if (source.MaximumZone.Length == 2)
                 {
-                    var maximumZoneLetter = source.MaximumZone.Last().ToString();
-                    maximumZone = new Models.Zone
-                    {
-                        Number = maximumZoneNumber,
-                        Letter = maximumZoneLetter
-                    };
+                    maximumZoneLetter = source.MaximumZone.Last().ToString();
                 }
+
+                maximumZone = new Models.Zone
+                {
+                    Number = maximumZoneNumber,
+                    Letter = maximumZoneLetter
+                };
             }
 
             return new Models.PlantInfo
@@ -121,10 +124,10 @@ namespace Emergence.Data.Shared.Extensions
             MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater.ToString() : null,
             MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
             MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone != null
-                ? source.Requirements?.ZoneRequirements?.MinimumZone?.Letter + source.Requirements?.ZoneRequirements?.MinimumZone?.Number ?? ""
+                ? source.Requirements?.ZoneRequirements?.MinimumZone?.Number + source.Requirements?.ZoneRequirements?.MinimumZone?.Letter ?? ""
                 : null,
             MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone != null
-                ? source.Requirements?.ZoneRequirements?.MaximumZone?.Letter + source.Requirements?.ZoneRequirements?.MaximumZone?.Number ?? ""
+                ? source.Requirements?.ZoneRequirements?.MaximumZone?.Number + source.Requirements?.ZoneRequirements?.MaximumZone?.Letter ?? ""
                 : null,
             StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
             Preferred = source.Preferred,

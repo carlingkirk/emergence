@@ -13,8 +13,6 @@ namespace Emergence.Client.Components
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
-        public string MinZone { get; set; }
-        public string MaxZone { get; set; }
 
         protected async Task SavePlantInfoAsync()
         {
@@ -36,8 +34,8 @@ namespace Emergence.Client.Components
 
             if (!string.IsNullOrEmpty(MinZone))
             {
-                var minZoneLetter = MinZone.Substring(0, 1);
-                var minZoneNumber = MinZone.Length > 1 ? MinZone.Substring(1, 1) : null;
+                var minZoneNumber = MinZone.Substring(0, 1);
+                var minZoneLetter = MinZone.Length > 1 ? MinZone.Substring(1, 1) : null;
                 int.TryParse(minZoneNumber, out var minZoneInt);
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter = minZoneLetter;
@@ -46,11 +44,11 @@ namespace Emergence.Client.Components
 
             if (!string.IsNullOrEmpty(MaxZone))
             {
-                var maxZoneLetter = MaxZone.Substring(0, 1);
-                var maxZoneNumber = MaxZone.Length > 1 ? MinZone.Substring(1, 1) : null;
+                var maxZoneNumber = MaxZone.Substring(0, 1);
+                var maxZoneLetter = MaxZone.Length > 1 ? MaxZone.Substring(1, 1) : null;
                 int.TryParse(maxZoneNumber, out var maxZoneInt);
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter = maxZoneLetter;
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone.Number = maxZoneInt;
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter = maxZoneLetter;
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone.Number = maxZoneInt;
             }
 
             PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.ToList();

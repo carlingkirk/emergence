@@ -15,6 +15,8 @@ namespace Emergence.Client.Components
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
         public string OriginSearch { get; set; }
+        public string MinZone { get; set; }
+        public string MaxZone { get; set; }
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
@@ -38,6 +40,10 @@ namespace Emergence.Client.Components
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone ??= new Zone();
+
+                MinZone = PlantInfo.Requirements.ZoneRequirements.MinimumZone.ToFriendlyString();
+                MaxZone = PlantInfo.Requirements.ZoneRequirements.MaximumZone.ToFriendlyString();
+
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {
                     PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>

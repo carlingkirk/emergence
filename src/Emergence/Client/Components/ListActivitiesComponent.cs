@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
@@ -24,30 +23,6 @@ namespace Emergence.Client.Components
             }
 
             return result;
-        }
-
-        protected async Task UpdateActivityAsync(Activity activity)
-        {
-            var result = await ModalServiceClient.ShowActivityModal(activity);
-
-            if (!result.Cancelled)
-            {
-                activity = List.Where(a => a.ActivityId == activity.ActivityId).First();
-                activity = result.Data as Activity;
-            }
-        }
-
-        protected async Task UpdateSpecimenAsync(Specimen specimen)
-        {
-            var result = await ModalServiceClient.ShowSpecimenModal(specimen.SpecimenId);
-
-            if (!result.Cancelled)
-            {
-                List.Where(a => a.Specimen.SpecimenId == specimen.SpecimenId).ToList().ForEach(a =>
-                {
-                    a.Specimen = result.Data as Specimen;
-                });
-            }
         }
     }
 }
