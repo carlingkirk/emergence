@@ -5,7 +5,7 @@
 
 @if (Lifeform != null)
 {
-    <ViewLifeform Lifeform="Lifeform" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <ViewLifeform RefreshList="RefreshList" Lifeform="Lifeform" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else
 {

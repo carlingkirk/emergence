@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class ActivityComponent : ViewerComponent
+    public class ActivityComponent : ViewerComponent<Activity>
     {
         [Parameter]
         public Activity Activity { get; set; }
@@ -60,9 +60,8 @@ namespace Emergence.Client.Components
             if (result)
             {
                 Activity = null;
-                await IsEditingChanged.InvokeAsync(false);
-                await IsItemLoadedChanged.InvokeAsync(false);
-                await ItemLoadedChanged.InvokeAsync(false);
+
+                await UnloadItem();
             }
         }
     }

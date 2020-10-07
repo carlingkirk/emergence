@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class OriginComponent : ViewerComponent
+    public class OriginComponent : ViewerComponent<Origin>
     {
         [Parameter]
         public Origin Origin { get; set; }

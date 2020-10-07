@@ -34,7 +34,6 @@ namespace Emergence.Client
 
             // Client services
             builder.Services.AddTransient<IModalServiceClient, ModalServiceClient>();
-            builder.Services.AddScoped<ListState, ListState>();
 
             await builder.Build().RunAsync();
         }

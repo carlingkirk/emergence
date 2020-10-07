@@ -5,7 +5,7 @@
 
 @if (!IsModal)
 {
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+    <button class="btn btn-primary" @onclick="Back">Back</button>
 }
 @if (IsEditable && Origin.OriginId > 0)
 {
@@ -13,11 +13,11 @@
 }
 @if (IsEditing && Origin != null)
 {
-    <EditOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <EditOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else if (Origin != null)
 {
-    <ViewOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <ViewOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else
 {

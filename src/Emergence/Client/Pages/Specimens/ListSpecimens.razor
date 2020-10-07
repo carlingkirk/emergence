@@ -99,7 +99,7 @@ else if (Id > 0 || IsItemLoaded)
             <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="Parent"></ActivityViewer>
             break;
         case (ViewItemType.Specimen):
-            <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></SpecimenViewer>
+            <SpecimenViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></SpecimenViewer>
             break;
         case (ViewItemType.Origin):
             <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />

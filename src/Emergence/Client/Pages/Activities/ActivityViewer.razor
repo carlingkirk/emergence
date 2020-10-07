@@ -5,20 +5,20 @@
 
 @if (!IsModal)
 {
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+    <button class="btn btn-primary" @onclick="Back">Back</button>
 }
-@if (IsEditable && Activity.ActivityId > 0)
+@if (IsEditable && Activity != null && Activity.ActivityId > 0)
 {
     <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
     <button class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
 }
 @if (IsEditing && Activity != null)
 {
-    <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
+    <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
 }
 else if (Activity != null)
 {
-    <ViewActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <ViewActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else
 {

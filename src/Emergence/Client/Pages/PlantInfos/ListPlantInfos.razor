@@ -114,7 +114,7 @@ else if (Id > 0 || IsItemLoaded)
     switch (ViewItemType)
     {
         case (ViewItemType.PlantInfo):
-            <PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></PlantInfoViewer>
+            <PlantInfoViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></PlantInfoViewer>
             break;
         case (ViewItemType.Origin):
             <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />

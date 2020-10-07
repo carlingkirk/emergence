@@ -84,5 +84,5 @@
 }
 else if (Id > 0 || IsItemLoaded && !string.IsNullOrEmpty(UserId))
 {
-    <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></OriginViewer>
+    <OriginViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></OriginViewer>
 }

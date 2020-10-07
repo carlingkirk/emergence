@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class PlantInfoComponent : ViewerComponent
+    public class PlantInfoComponent : ViewerComponent<PlantInfo>
     {
         [Parameter]
         public PlantInfo PlantInfo { get; set; }

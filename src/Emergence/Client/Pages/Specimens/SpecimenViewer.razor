@@ -5,20 +5,20 @@
 
 @if (!IsModal)
 {
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+    <button class="btn btn-primary" @onclick="Back">Back</button>
 }
-@if (IsEditable && Specimen.SpecimenId > 0)
+@if (IsEditable && Specimen != null && Specimen.SpecimenId > 0)
 {
     <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
     <button class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
 }
 @if (IsEditing && Specimen != null)
 {
-    <EditSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <EditSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else if (Specimen != null)
 {
-    <ViewSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <ViewSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"/>
 }
 else
 {

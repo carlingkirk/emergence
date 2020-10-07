@@ -10,8 +10,6 @@ namespace Emergence.Client
     {
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
-        [Inject]
-        protected ListState ListState { get; set; }
         [Parameter]
         public bool ShowSearch { get; set; }
         [Parameter]
@@ -28,7 +26,7 @@ namespace Emergence.Client
         public T Parent { get; set; }
         public ViewItemType ViewItemType { get; set; }
 
-        public ListComponent()
+        protected ListComponent()
         {
             ShowSearch = true;
             LinkRelations = true;
@@ -38,8 +36,6 @@ namespace Emergence.Client
 
         protected override async Task OnInitializedAsync()
         {
-            ListState.OnChange += RefreshList;
-
             await base.OnInitializedAsync();
 
             CurrentPage = 1;
@@ -50,6 +46,8 @@ namespace Emergence.Client
         public async Task FindAsync()
         {
             var skip = (CurrentPage - 1) * Take;
+            List = null;
+
             var result = await GetListAsync(new FindParams
             {
                 SearchText = SearchText,
@@ -58,6 +56,7 @@ namespace Emergence.Client
                 SortBy = SortBy,
                 SortDirection = SortDirection
             });
+
             List = result.Results;
             Count = result.Count;
         }
@@ -85,6 +84,12 @@ namespace Emergence.Client
             return List;
         }
 
+        protected async Task<IEnumerable<T>> RefreshAsync()
+        {
+            await FindAsync();
+            return List;
+        }
+
         protected void LoadInfo(ViewItemType type, int id)
         {
             Id = id;
@@ -99,9 +104,5 @@ namespace Emergence.Client
             ViewItemType = type;
             Parent = parent;
         }
-
-        protected void Dispose() => ListState.OnChange -= RefreshList;
-
-        private async void RefreshList() => await FindAsync();
     }
 }

@@ -57,7 +57,7 @@ else if (Id > 0 || IsItemLoaded)
     switch (ViewItemType)
     {
         case (ViewItemType.Lifeform):
-            <LifeformViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></LifeformViewer>
+            <LifeformViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></LifeformViewer>
             break;
         default:
             break;

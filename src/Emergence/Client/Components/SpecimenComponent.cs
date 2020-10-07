@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class SpecimenComponent : ViewerComponent
+    public class SpecimenComponent : ViewerComponent<Specimen>
     {
         [Parameter]
         public Specimen Specimen { get; set; }
@@ -78,10 +78,7 @@ namespace Emergence.Client.Components
             {
                 Specimen = null;
 
-
-                await IsEditingChanged.InvokeAsync(false);
-                await IsItemLoadedChanged.InvokeAsync(false);
-                await ItemLoadedChanged.InvokeAsync(false);
+                await UnloadItem();
             }
         }
     }

@@ -63,8 +63,9 @@ namespace Emergence.Client.Components
             }
             else
             {
-                await IsEditingChanged.InvokeAsync(false);
-                await IsItemLoadedChanged.InvokeAsync(false);
+                PlantInfo = null;
+
+                await UnloadItem();
             }
         }
 

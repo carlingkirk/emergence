@@ -5,7 +5,7 @@
 
 @if (!IsModal)
 {
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
+    <button class="btn btn-primary" @onclick="Back">Back</button>
 }
 @if (IsEditable && PlantInfo.PlantInfoId > 0)
 {
@@ -13,11 +13,11 @@
 }
 @if (IsEditing && PlantInfo != null)
 {
-    <EditPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <EditPlantInfo RefreshList="RefreshList" PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else if (PlantInfo != null)
 {
-    <ViewPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    <ViewPlantInfo RefreshList="RefreshList" PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
 }
 else
 {

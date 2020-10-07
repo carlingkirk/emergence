@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class LifeformComponent : ViewerComponent
+    public class LifeformComponent : ViewerComponent<Lifeform>
     {
         [Parameter]
         public Lifeform Lifeform { get; set; }
