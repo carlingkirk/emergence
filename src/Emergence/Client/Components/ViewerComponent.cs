@@ -5,6 +5,8 @@ namespace Emergence.Client.Components
 {
     public class ViewerComponent : EmergenceComponent
     {
+        [Inject]
+        public ListState ListState { get; set; }
         [Parameter]
         public int Id { get; set; }
         [Parameter]

@@ -50,6 +50,9 @@ namespace Emergence.Client.Components
             else
             {
                 Specimen = null;
+
+                ListState.NotifyStateChanged();
+
                 await IsEditingChanged.InvokeAsync(false);
                 await ItemLoadedChanged.InvokeAsync(false);
                 await IsItemLoadedChanged.InvokeAsync(false);

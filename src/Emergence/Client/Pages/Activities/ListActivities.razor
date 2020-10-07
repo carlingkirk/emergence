@@ -86,7 +86,7 @@ else if (Id > 0 || IsItemLoaded)
     switch (ViewItemType)
     {
         case (ViewItemType.Activity):
-            <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></ActivityViewer>
+            <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync" SelectedSpecimen="Specimen"></ActivityViewer>
             break;
         case (ViewItemType.Specimen):
             <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />

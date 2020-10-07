@@ -11,5 +11,6 @@ namespace Emergence.Service.Interfaces
         Task<IEnumerable<Activity>> GetActivitiesAsync();
         Task<Activity> AddOrUpdateActivityAsync(Activity activity, string userId);
         Task<FindResult<Activity>> FindActivities(FindParams findParams, string userId, int? specimenId = 0);
+        Task RemoveActivityAsync(Activity activity);
     }
 }

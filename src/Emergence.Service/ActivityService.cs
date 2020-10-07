@@ -109,6 +109,8 @@ namespace Emergence.Service
             };
         }
 
+        public async Task RemoveActivityAsync(Data.Shared.Models.Activity activity) => await _activityRepository.RemoveAsync(activity.AsStore());
+
         private IQueryable<Activity> OrderBy(IQueryable<Activity> activityQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {
             if (sortDirection == SortDirection.None)

@@ -10,10 +10,11 @@
 @if (IsEditable && Activity.ActivityId > 0)
 {
     <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+    <button class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
 }
 @if (IsEditing && Activity != null)
 {
-     <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
+    <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
 }
 else if (Activity != null)
 {

@@ -16,13 +16,20 @@ namespace Emergence.Client.Components
     {
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
-        public bool CreateNewSpecimen { get; set; }
+        public bool UpdateSpecimen { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
+        protected bool ShowAutoSpecimen => Activity.ActivityId == 0 &&
+            (Activity.ActivityType == ActivityType.PlantInGround ||
+             Activity.ActivityType == ActivityType.Germination ||
+             Activity.ActivityType == ActivityType.Stratification);
 
         public EditActivityComponent()
         {
-            CreateNewSpecimen = true;
+            if (Id == 0)
+            {
+                UpdateSpecimen = true;
+            }
         }
 
         protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
@@ -48,45 +55,42 @@ namespace Emergence.Client.Components
                 Activity.Specimen = SelectedSpecimen;
             }
 
-            if (CreateNewSpecimen && Activity.Quantity.HasValue)
+            if (UpdateSpecimen && Activity.Quantity.HasValue)
             {
-                var stage = SpecimenStage.Unknown;
-                if (Activity.ActivityType == ActivityType.Stratification)
-                {
-                    stage = SpecimenStage.Stratification;
-                }
-                else if (Activity.ActivityType == ActivityType.PlantInGround)
-                {
-                    stage = SpecimenStage.InGround;
-                }
-                else if (Activity.ActivityType == ActivityType.Germination)
-                {
-                    stage = SpecimenStage.Germination;
-                }
+                var stage = GetSpecimenStage(Activity.ActivityType);
 
-                var newSpecimen = new Specimen
+                if (Activity.Quantity == SelectedSpecimen.InventoryItem.Quantity)
                 {
-                    SpecimenStage = stage,
-                    Lifeform = SelectedSpecimen.Lifeform,
-                    InventoryItem = new InventoryItem
+                    SelectedSpecimen.SpecimenStage = stage;
+                }
+                else
+                {
+                    var newSpecimen = new Specimen
                     {
-                        Name = SelectedSpecimen.InventoryItem.Name,
-                        ItemType = ItemType.Specimen,
-                        Quantity = Activity.Quantity.Value,
-                        Status = SelectedSpecimen.InventoryItem.Status,
-                        Inventory = SelectedSpecimen.InventoryItem.Inventory,
-                        Origin = SelectedSpecimen.InventoryItem.Origin,
-                        DateAcquired = Activity.DateOccured,
-                        DateCreated = DateTime.UtcNow,
-                        CreatedBy = UserId
-                    },
-                    CreatedBy = UserId,
-                    DateCreated = DateTime.UtcNow
-                };
-                newSpecimen = await ApiClient.PutSpecimenAsync(newSpecimen);
-                Activity.Specimen = newSpecimen;
+                        SpecimenStage = stage,
+                        Lifeform = SelectedSpecimen.Lifeform,
+                        InventoryItem = new InventoryItem
+                        {
+                            Name = SelectedSpecimen.InventoryItem.Name,
+                            ItemType = ItemType.Specimen,
+                            Quantity = Activity.Quantity.Value,
+                            Status = SelectedSpecimen.InventoryItem.Status,
+                            Inventory = SelectedSpecimen.InventoryItem.Inventory,
+                            Origin = SelectedSpecimen.InventoryItem.Origin,
+                            DateAcquired = Activity.DateOccured,
+                            DateCreated = DateTime.UtcNow,
+                            CreatedBy = UserId
+                        },
+                        CreatedBy = UserId,
+                        DateCreated = DateTime.UtcNow
+                    };
 
-                SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;
+                    newSpecimen = await ApiClient.PutSpecimenAsync(newSpecimen);
+
+                    Activity.Specimen = newSpecimen;
+                    SelectedSpecimen.InventoryItem.Quantity -= Activity.Quantity.Value;
+                }
+
                 await ApiClient.PutSpecimenAsync(SelectedSpecimen);
             }
 
@@ -149,6 +153,21 @@ namespace Emergence.Client.Components
             if (!result.Cancelled)
             {
                 SelectedSpecimen = result.Data as Specimen;
+            }
+        }
+
+        protected SpecimenStage GetSpecimenStage(ActivityType activityType)
+        {
+            switch (activityType)
+            {
+                case ActivityType.Germination:
+                    return SpecimenStage.Germination;
+                case ActivityType.Stratification:
+                    return SpecimenStage.Stratification;
+                case ActivityType.PlantInGround:
+                    return SpecimenStage.InGround;
+                default:
+                    return SpecimenStage.Unknown;
             }
         }
     }

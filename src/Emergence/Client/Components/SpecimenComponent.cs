@@ -77,6 +77,8 @@ namespace Emergence.Client.Components
             if (result)
             {
                 Specimen = null;
+
+
                 await IsEditingChanged.InvokeAsync(false);
                 await IsItemLoadedChanged.InvokeAsync(false);
                 await ItemLoadedChanged.InvokeAsync(false);

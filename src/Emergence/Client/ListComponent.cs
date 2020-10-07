@@ -10,6 +10,8 @@ namespace Emergence.Client
     {
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
+        [Inject]
+        protected ListState ListState { get; set; }
         [Parameter]
         public bool ShowSearch { get; set; }
         [Parameter]
@@ -36,6 +38,8 @@ namespace Emergence.Client
 
         protected override async Task OnInitializedAsync()
         {
+            ListState.OnChange += RefreshList;
+
             await base.OnInitializedAsync();
 
             CurrentPage = 1;
@@ -95,5 +99,9 @@ namespace Emergence.Client
             ViewItemType = type;
             Parent = parent;
         }
+
+        protected void Dispose() => ListState.OnChange -= RefreshList;
+
+        private async void RefreshList() => await FindAsync();
     }
 }

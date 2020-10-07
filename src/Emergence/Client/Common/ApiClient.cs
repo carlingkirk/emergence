@@ -211,6 +211,15 @@ namespace Emergence.Client.Common
             return await ReadResult<User>(result);
         }
 
+        public async Task<bool> RemoveActivityAsync(Activity activity)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/activity/{activity.ActivityId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)

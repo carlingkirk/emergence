@@ -53,5 +53,17 @@ namespace Emergence.Client.Components
                 IsEditable = true;
             }
         }
+
+        protected async Task RemoveActivity()
+        {
+            var result = await ApiClient.RemoveActivityAsync(Activity);
+            if (result)
+            {
+                Activity = null;
+                await IsEditingChanged.InvokeAsync(false);
+                await IsItemLoadedChanged.InvokeAsync(false);
+                await ItemLoadedChanged.InvokeAsync(false);
+            }
+        }
     }
 }
