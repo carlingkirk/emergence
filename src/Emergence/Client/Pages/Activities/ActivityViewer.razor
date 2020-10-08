@@ -3,28 +3,36 @@
 
 @inherits ActivityComponent
 
-@if (!IsModal)
-{
-    <button class="btn btn-primary" @onclick="Back">Back</button>
-}
-@if (IsEditable && Activity != null && Activity.ActivityId > 0)
-{
-    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
-    <button class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
-}
-@if (IsEditing && Activity != null)
-{
-    <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
-}
-else if (Activity != null)
-{
-    <ViewActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
-}
-else
-{
-    <span>Loading...</span>
-}
-
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Activity: </span>
+    @if (Activity != null)
+    {
+        <span class="font-italic">@(Activity?.Name ?? "New")</span>
+    }
+</div>
+<div class="group">
+    @if (IsEditing && Activity != null)
+    {
+        <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
+    }
+    else if (Activity != null)
+    {
+        <ViewActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+    @if (IsEditable && Activity != null && Activity.ActivityId > 0)
+    {
+        <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+        <button class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
+    }
+</div>
 @code {
 
 }

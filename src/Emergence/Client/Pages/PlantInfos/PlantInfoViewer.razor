@@ -8,10 +8,14 @@
     {
         <button class="btn btn-primary" @onclick="Back">Back</button>
     }
-    <span class="title">Plant Profile</span>
+    <span class="title">Plant Profile: </span>
     @if (PlantInfo != null && (!string.IsNullOrEmpty(ScientificName) || !string.IsNullOrEmpty(CommonName)))
     {
-        <span>for </span><span class="font-italic">@ScientificName </span><span>@CommonName</span>
+    <span>@CommonName</span><span class="font-italic"> (@ScientificName)</span>
+    }
+    else
+    {
+        <span class="font-italic">New</span>
     }
 </div>
 <div class="group">
