@@ -26,6 +26,8 @@ namespace Emergence.Client.Components
         public List<SoilType> ChosenSoilTypes;
         public LinkedList<StratificationStage> ChosenStratificationStages = new LinkedList<StratificationStage>();
         public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages != null && (PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any());
+        public string CommonName => PlantInfo.CommonName ?? PlantInfo.Lifeform.CommonName ?? "";
+        public string ScientificName => PlantInfo.ScientificName ?? PlantInfo.Lifeform.ScientificName ?? "";
 
         protected override async Task OnInitializedAsync()
         {

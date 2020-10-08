@@ -288,10 +288,25 @@ span.link {
   color: #f44336;
 }
 
+/* Cards */
+
+.title {
+  padding-left: .5em;
+}
+
 /* Profile */
 
 .avatar {
   max-height: 45px;
   max-width: 45px;
   border-radius: 50%
+}
+
+/* Containers */
+
+.group {
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 5px;
 }
