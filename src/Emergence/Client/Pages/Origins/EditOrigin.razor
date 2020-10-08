@@ -11,13 +11,13 @@
 @if (Origin != null)
 {
     <EditForm Model="@Origin">
-        <div class="form-group container">
+        <div class="form-group">
             <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-xs">
                     <label for="name">Name</label>
                     <input @bind="@Origin.Name" type="text" class="form-control" id="name" />
                 </div>
-                <div class="col-2">
+                <div class="col-lg-2 col-xs">
                     <label for="type">Type</label>
                     <select @bind="@Origin.Type" type="text" class="form-control" id="type">
                         @foreach (var type in OriginTypes)
@@ -26,13 +26,13 @@
                         }
                     </select>
                 </div>
-                <div class="col-3 col-xs-1">
+                <div class="col-lg-4 col-xs">
                     <label for="origin">Origin</label>
                     <OriginTypeahead @bind-SelectedOrigin="SelectedParentOrigin" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-8">
+                <div class="col-lg-8 col-xs">
                     <label for="uri">Link</label>
                     <input @bind="@OriginUri" type="text" class="form-control" id="uri" />
                 </div>
@@ -45,25 +45,25 @@
             </div>
 
         </div>
-        <div class="form-group container">
+        <div class="form-group">
             <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-xs">
                     <label for="authors">Authors</label>
                     <input @bind="@Origin.Authors" type="text" class="form-control" id="authors" />
                 </div>
-                <div class="col-3">
+                <div class="col-lg-3 col-xs">
                     <label for="external-id">External Identifier</label>
                     <input @bind="@Origin.ExternalId" type="text" class="form-control" id="external-id" />
                 </div>
-                <div class="col-3">
-                    <label for="alt-external-id">Alternate External Identifier</label>
+                <div class="col-lg-3 col-xs">
+                    <label for="alt-external-id">Alt External Identifier</label>
                     <input @bind="@Origin.AltExternalId" type="text" class="form-control" id="alt-external-id" />
                 </div>
             </div>
         </div>
-        <div class="form-group container">
+        <div class="form-group">
             <div class="row">
-                <div class="col-9">
+                <div class="col-lg-9 col-xs">
                     <div class="row">
                         <div class="col">
                             <label for="address-line-1">Address Line 1</label>
@@ -113,18 +113,12 @@
                 </div>
             </div>
         </div>
-        <div class="form-group container">
-            <div class="row">
-                <div class="col">
-                    <button @onclick="(async () => await SaveOriginAsync())" class="btn btn-primary">Save</button>
-                    @if (BlazoredModal != null)
-                    {
-                        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
-                    }
-                </div>
-            </div>
-        </div>
     </EditForm>
+    <button @onclick="(async () => await SaveOriginAsync())" class="btn btn-primary">Save</button>
+    @if (BlazoredModal != null)
+    {
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+    }
 }
 else
 {
