@@ -1,30 +1,56 @@
 @page "/specimen/{Id:int}"
 @using Emergence.Client.Components
+@using Emergence.Client.Pages.Activities
 
 @inherits SpecimenComponent
 
-@if (!IsModal)
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Specimen: </span>
+    @if (SelectedLifeform != null && (!string.IsNullOrEmpty(SelectedLifeform.ScientificName) || !string.IsNullOrEmpty(SelectedLifeform.CommonName)))
+    {
+        <span>@SelectedLifeform.CommonName</span><span class="font-italic"> (@SelectedLifeform.ScientificName)</span>
+    }
+    else
+    {
+        <span class="font-italic">New</span>
+    }
+</div>
+<div class="group">
+    @if (IsEditing && Specimen != null)
+    {
+        <EditSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+    }
+    else if (Specimen != null)
+    {
+        <ViewSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+    @if (IsEditable && Specimen != null && Specimen.SpecimenId > 0)
+    {
+        <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+        <button class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
+    }
+</div>
+@if (!IsEditing && Specimen != null)
 {
-    <button class="btn btn-primary" @onclick="Back">Back</button>
+<div class="group">
+    <div class="form-group">
+        <div class="row">
+            <div class="col">
+                <label for="activities">Activities</label>
+                <ListActivities Specimen="Specimen" ShowSearch="false" LinkRelations="false" />
+            </div>
+        </div>
+    </div>
+</div>
 }
-@if (IsEditable && Specimen != null && Specimen.SpecimenId > 0)
-{
-    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
-    <button class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
-}
-@if (IsEditing && Specimen != null)
-{
-    <EditSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
-}
-else if (Specimen != null)
-{
-    <ViewSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"/>
-}
-else
-{
-    <span>Loading...</span>
-}
-
 @code {
 
 }

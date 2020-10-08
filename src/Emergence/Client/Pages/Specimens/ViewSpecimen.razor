@@ -1,16 +1,15 @@
 @page "/specimen/view/{Id:int}"
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.Activities
 @using Emergence.Data.Shared.Extensions
 
 @inherits SpecimenComponent
 
 @if (Specimen != null)
 {
-    <div class="form-group container">
+    <div class="form-group">
         <div class="row">
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-6 col-xs">
                 <div>
                     <label for="specimen-name">Specimen Name </label>
                 </div>
@@ -18,7 +17,7 @@
                     <span class="text-body">@(Specimen.InventoryItem.Name)</span>
                 </div>
             </div>
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-6 col-xs">
                 <div>
                     <label for="quantity">Quantity</label>
                 </div>
@@ -26,7 +25,7 @@
                     <span class="text-body">@Specimen.InventoryItem.Quantity</span>
                 </div>
             </div>
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-6 col-xs">
                 <div>
                     <label for="status">Status</label>
                 </div>
@@ -34,7 +33,7 @@
                     <span class="text-body">@Specimen.InventoryItem.Status.ToFriendlyName()</span>
                 </div>
             </div>
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-6 col-xs">
                 <div>
                     <label for="stage">Stage</label>
                 </div>
@@ -44,7 +43,7 @@
             </div>
             @if (@Specimen.InventoryItem.DateAcquired.HasValue)
             {
-                <div class="col-6 col-xs-1">
+                <div class="col-lg-6 col-xs">
                     <div>
                         <label for="date-acquired">Date Acquired</label>
                     </div>
@@ -53,7 +52,7 @@
                     </div>
                 </div>
             }
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-6 col-xs">
                 <div>
                     <label for="type">Type</label>
                 </div>
@@ -61,7 +60,7 @@
                     <span class="text-body">@Specimen.InventoryItem.ItemType.ToFriendlyName()</span>
                 </div>
             </div>
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-6 col-xs">
                 <div>
                     <label for="origin">Origin</label>
                 </div>
@@ -73,18 +72,10 @@
     </div>
     @if (UploadedPhotos != null && UploadedPhotos.Any())
     {
-        <div class="form-group container">
+        <div class="form-group">
             <ViewPhotos UploadedPhotos="UploadedPhotos" />
         </div>
     }
-    <div class="form-group container">
-        <div class="row">
-            <div class="col">
-                <label for="activities">Activities</label>
-                <ListActivities Specimen="Specimen" ShowSearch="false" LinkRelations="false" />
-            </div>
-        </div>
-    </div>
 }
 
 @code {
