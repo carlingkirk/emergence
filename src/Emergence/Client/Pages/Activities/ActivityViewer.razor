@@ -17,11 +17,18 @@
 <div class="group">
     @if (IsEditing && Activity != null)
     {
-        <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
+        if (RefreshList != null)
+        {
+            <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
+        }
+        else
+        {
+            <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
+        }
     }
     else if (Activity != null)
     {
-        <ViewActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        <ViewActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
     }
     else
     {

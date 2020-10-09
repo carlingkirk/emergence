@@ -12,9 +12,14 @@ namespace Emergence.Client.Common
     public class ModalServiceClient : IModalServiceClient
     {
         private readonly IModalService _modalService;
+        private readonly ModalOptions DefaultModalOptions;
         public ModalServiceClient(IModalService modalService)
         {
             _modalService = modalService;
+            DefaultModalOptions = new ModalOptions
+            {
+                ContentScrollable = true
+            };
         }
 
         public async Task<ModalResult> ShowSpecimenModal(int id)
@@ -23,7 +28,7 @@ namespace Emergence.Client.Common
             modalParams.Add("Id", id);
             modalParams.Add("IsModal", true);
 
-            var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams);
+            var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams, DefaultModalOptions);
             return await specimenModal.Result;
         }
 
@@ -34,7 +39,7 @@ namespace Emergence.Client.Common
             modalParams.Add("IsModal", true);
             modalParams.Add("IsEditing", isEditing);
 
-            var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams);
+            var specimenModal = _modalService.Show<SpecimenViewer>("Specimen", modalParams, DefaultModalOptions);
             return await specimenModal.Result;
         }
 
@@ -44,7 +49,7 @@ namespace Emergence.Client.Common
             modalParams.Add("Id", id);
             modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<OriginViewer>("Origin", modalParams);
+            var modal = _modalService.Show<OriginViewer>("Origin", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
@@ -55,7 +60,7 @@ namespace Emergence.Client.Common
             modalParams.Add("IsModal", true);
             modalParams.Add("IsEditing", isEditing);
 
-            var modal = _modalService.Show<OriginViewer>("Origin", modalParams);
+            var modal = _modalService.Show<OriginViewer>("Origin", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
@@ -65,7 +70,7 @@ namespace Emergence.Client.Common
             modalParams.Add("Id", id);
             modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams);
+            var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
@@ -75,7 +80,7 @@ namespace Emergence.Client.Common
             modalParams.Add("PlantInfo", plantInfo);
             modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams);
+            var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
@@ -85,7 +90,7 @@ namespace Emergence.Client.Common
             modalParams.Add("Id", id);
             modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams);
+            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
@@ -95,7 +100,7 @@ namespace Emergence.Client.Common
             modalParams.Add("Activity", activity);
             modalParams.Add("IsModal", true);
 
-            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams);
+            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
@@ -106,7 +111,7 @@ namespace Emergence.Client.Common
             modalParams.Add("IsModal", true);
             modalParams.Add("SelectedSpecimen", specimen);
 
-            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams);
+            var modal = _modalService.Show<ActivityViewer>("Activity", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
     }

@@ -39,16 +39,16 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@activity.Name</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@(activity.Name ?? "(No name)")</span></a>
                     </td>
                     <td>
                         @if (LinkRelations)
                         {
-                            <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen?.Lifeform?.ScientificName</span>
                         }
                         else
                         {
-                            <span>@activity.Specimen.Lifeform.ScientificName</span>
+                            <span>@activity.Specimen?.Lifeform?.ScientificName</span>
                         }
                     </td>
                     <td>

@@ -41,6 +41,10 @@ namespace Emergence.Client.Components
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter = minZoneLetter;
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone.Number = minZoneInt;
             }
+            else
+            {
+                PlantInfo.Requirements.ZoneRequirements.MinimumZone = null;
+            }
 
             if (!string.IsNullOrEmpty(MaxZone))
             {
@@ -49,6 +53,10 @@ namespace Emergence.Client.Components
                 int.TryParse(maxZoneNumber, out var maxZoneInt);
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter = maxZoneLetter;
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone.Number = maxZoneInt;
+            }
+            else
+            {
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone = null;
             }
 
             PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.ToList();

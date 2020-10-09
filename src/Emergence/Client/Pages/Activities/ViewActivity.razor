@@ -24,11 +24,11 @@
                 <label for="specimen">Specimen</label>
             </div>
             <div>
-                @if (!string.IsNullOrEmpty(Activity.Specimen.InventoryItem?.Name))
+                @if (!string.IsNullOrEmpty(Activity.Specimen?.InventoryItem?.Name))
                 {
                     <span class="text-body">@(Activity.Specimen.InventoryItem.Name)</span>
                 }
-                else if (Activity.Specimen.SpecimenId == 0 && Activity.Specimen.Lifeform != null)
+                else if (Activity.Specimen?.SpecimenId == 0 && Activity.Specimen?.Lifeform != null)
                 {
                     <span class="text-body">@(Activity.Specimen.Lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
                 }

@@ -22,11 +22,18 @@
 <div class="group">
     @if (IsEditing && Specimen != null)
     {
-        <EditSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        @if (RefreshList != null)
+        {
+            <EditSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        }
+        else
+        {
+            <EditSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        }
     }
     else if (Specimen != null)
     {
-        <ViewSpecimen RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        <ViewSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
     }
     else
     {

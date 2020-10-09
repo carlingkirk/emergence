@@ -45,6 +45,11 @@ namespace Emergence.Client.Components
                 Activity.DateModified = DateTime.UtcNow;
             }
 
+            if (string.IsNullOrEmpty(Activity.Name))
+            {
+                PopulateActivityName();
+            }
+
             if (UploadedPhotos.Any())
             {
                 Activity.Photos = UploadedPhotos;
@@ -141,9 +146,13 @@ namespace Emergence.Client.Components
 
         protected void PopulateActivityName()
         {
-            if (Activity.ActivityType != ActivityType.Custom && SelectedSpecimen != null)
+            if (Activity.ActivityType != ActivityType.Custom)
             {
-                Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + SelectedSpecimen.Lifeform.ScientificName;
+                Activity.Name = Activity.ActivityType.ToFriendlyName() + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
+            }
+            else
+            {
+                Activity.Name = Activity.CustomActivityType + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
             }
         }
 

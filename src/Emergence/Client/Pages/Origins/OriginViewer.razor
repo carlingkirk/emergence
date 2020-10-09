@@ -17,11 +17,18 @@
 <div class="group">
     @if (IsEditing && Origin != null)
     {
-        <EditOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        if (RefreshList != null)
+        {
+            <EditOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        }
+        else
+        {
+            <EditOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        }
     }
     else if (Origin != null)
     {
-        <ViewOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        <ViewOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
     }
     else
     {

@@ -61,8 +61,14 @@
                             No results found
                         </NotFoundTemplate>
                     </BlazoredTypeahead>
-
                 </div>
+                @if (Activity.ActivityType == ActivityType.Custom)
+                {
+                    <div class="col-lg-3 col-xs">
+                        <label for="custom-type">Custom Type</label>
+                        <input @bind="@Activity.CustomActivityType" type="text" class="form-control" id="custom-type"/>
+                    </div>
+                }
             </div>
             @if (SelectedSpecimen != null)
             {
