@@ -65,7 +65,7 @@ namespace Emergence.Client.Components
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone = null;
             }
 
-            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.ToList();
+            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
 
             PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
 

@@ -11,7 +11,7 @@
     <span class="title">Activity: </span>
     @if (Activity != null)
     {
-        <span class="font-italic">@(Activity?.Name ?? "New")</span>
+        <span class="font-italic">@(Activity.ActivityId != 0 ? Activity?.Name ?? "(No name)" : "New")</span>
     }
 </div>
 <div class="group">

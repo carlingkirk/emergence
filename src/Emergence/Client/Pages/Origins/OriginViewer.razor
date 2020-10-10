@@ -11,7 +11,7 @@
     <span class="title">Origin: </span>
     @if (Origin != null)
     {
-        <span class="font-italic">@(Origin?.Name ?? "New")</span>
+        <span class="font-italic">@(Origin.OriginId != 0 ? Origin?.Name ?? "(No name)" : "New")</span>
     }
 </div>
 <div class="group">

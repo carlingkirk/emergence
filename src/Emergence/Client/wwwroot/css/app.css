@@ -294,6 +294,13 @@ span.link {
   padding-left: .5em;
 }
 
+.check-lg {
+  width: 1.25em;
+  height: 1.25em;
+  position: relative;
+  top: 5px;
+}
+
 /* Profile */
 
 .avatar {

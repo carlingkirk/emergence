@@ -1,16 +1,18 @@
 @page "/activity/list"
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.Activities
 @using Emergence.Client.Pages.Specimens
 @using Emergence.Data.Shared.Extensions
 @inherits ListActivitiesComponent
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
+        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" disabled />
+        <label for="only-mine">Only Mine</label>
     }
 
     @if (List != null)
@@ -80,6 +82,7 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded)
 {

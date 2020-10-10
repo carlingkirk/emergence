@@ -1,6 +1,5 @@
 @page "/plantinfo/list"
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.PlantInfos
 @using Emergence.Client.Pages.Origins
 
 @inherits ListPlantInfosComponent
@@ -11,8 +10,8 @@
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-primary" @onclick="SearchAsync" type="submit">Search</button>
-        <input type="checkbox" @bind="OnlyMine" id="only-mine" />
+        <button class="btn btn-primary" type="submit">Search</button>
+        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" />
         <label for="only-mine">Only Mine</label>
     }
 
@@ -54,7 +53,7 @@
                     <td>
                         @if (plantInfo.Origin != null)
                         {
-                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@plantInfo.Origin?.Name</span>
+                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@(plantInfo.Origin != null ? plantInfo.Origin?.Name ?? "(No name)" : null)</span>
                         }
                         else
                         {

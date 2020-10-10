@@ -23,7 +23,7 @@
                     <label for="origin">Origin</label>
                 </div>
                 <div>
-                    <span class="text-body">@PlantInfo.Origin?.Name</span>
+                    <span class="text-body">@(PlantInfo.Origin != null ? PlantInfo.Origin?.Name ?? "(No name)" : null)</span>
                 </div>
                 <div>
                     <a href="@PlantInfo.Origin?.Uri" target="_blank"><span class="link">@PlantInfo.Origin?.Uri</span></a>
