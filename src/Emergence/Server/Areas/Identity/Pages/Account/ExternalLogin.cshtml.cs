@@ -86,6 +86,12 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("./Lockout");
             }
+            else if (result.IsNotAllowed && info.Principal.HasClaim(c => c.Type == ClaimTypes.Email) && _userManager.Options.SignIn.RequireConfirmedAccount)
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                return RedirectToPage("./RegisterConfirmation", new { email });
+            }
             else
             {
                 // If the user does not have an account, then ask the user to create an account.
@@ -140,7 +146,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            return RedirectToPage("./RegisterConfirmation", new { Input.Email });
+                            return RedirectToPage("./RegisterConfirmation", new { email = Input.Email });
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);

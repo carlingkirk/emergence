@@ -6,8 +6,12 @@
 
 <h1>@ViewData["Title"]</h1>
 @{
-<p>
-    Please check your email to confirm your account.
-</p>
-    
+    <form id="confirmation" method="post">
+        <p>
+            Please check your email to confirm your account, then <a asp-page="./Login" asp-route-returnUrl="@Url.Content("~")">login</a>
+        </p>
+        <input asp-for="Email" type="hidden" />
+        <button type="submit" class="btn btn-primary">Resend confirmation email</button>
+        <span>@TempData["Message"]</span>
+    </form>
 }

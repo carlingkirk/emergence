@@ -3,6 +3,7 @@
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions
+@inject IModalServiceClient ModalServiceClient
 
 @inherits PlantInfoComponent
 
@@ -23,10 +24,10 @@
                     <label for="origin">Origin</label>
                 </div>
                 <div>
-                    <span class="text-body">@(PlantInfo.Origin != null ? PlantInfo.Origin?.Name ?? "(No name)" : null)</span>
+                    <span class="link" @onclick="async () => await ModalServiceClient.ShowOriginModal(PlantInfo.Origin)">@(PlantInfo.Origin != null ? PlantInfo.Origin?.Name ?? "(No name)" : null)</span>
                 </div>
                 <div>
-                    <a href="@PlantInfo.Origin?.Uri" target="_blank"><span class="link">@PlantInfo.Origin?.Uri</span></a>
+                    <a href="@PlantInfo.Origin?.Uri" target="_blank" alt="@PlantInfo.Origin?.Uri"><span class="link">@PlantInfo.Origin?.ShortUri</span></a>
                 </div>
             </div>
         </div>
