@@ -25,6 +25,9 @@
                 <div>
                     <span class="text-body">@PlantInfo.Origin?.Name</span>
                 </div>
+                <div>
+                    <a href="@PlantInfo.Origin?.Uri" target="_blank"><span class="link">@PlantInfo.Origin?.Uri</span></a>
+                </div>
             </div>
         </div>
     </div>
@@ -163,6 +166,12 @@
             </div>
         </div>
     </div>
+    @if (UploadedPhotos != null && UploadedPhotos.Any())
+    {
+        <div class="form-group">
+            <ViewPhotos UploadedPhotos="UploadedPhotos" />
+        </div>
+    }
 }
 @code {
     private string DisplayRange(string start, string end, string unit = null)

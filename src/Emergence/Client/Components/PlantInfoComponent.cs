@@ -17,6 +17,7 @@ namespace Emergence.Client.Components
         public string OriginSearch { get; set; }
         public string MinZone { get; set; }
         public string MaxZone { get; set; }
+        public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
@@ -37,6 +38,16 @@ namespace Emergence.Client.Components
             if (Id > 0 || PlantInfo != null)
             {
                 PlantInfo ??= await ApiClient.GetPlantInfoAsync(Id);
+
+                if (PlantInfo.Photos != null && PlantInfo.Photos.Any())
+                {
+                    UploadedPhotos = PlantInfo.Photos.ToList();
+                }
+                else
+                {
+                    UploadedPhotos = new List<Photo>();
+                }
+
                 SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
 
@@ -73,7 +84,8 @@ namespace Emergence.Client.Components
                     },
                     BloomTime = new BloomTime(),
                     Spread = new Spread(),
-                    Height = new Height()
+                    Height = new Height(),
+                    Photos = new List<Photo>()
                 };
             }
 

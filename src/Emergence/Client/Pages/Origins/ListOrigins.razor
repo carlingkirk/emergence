@@ -38,7 +38,7 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@origin.Name</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@(origin.Name ?? "(No name)")</span></a>
                     </td>
                     <td>
                         <span>@origin.Type.ToFriendlyName()</span>

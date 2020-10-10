@@ -29,6 +29,12 @@ namespace Emergence.Client.Components
             {
                 PlantInfo.Origin = SelectedOrigin;
             }
+
+            if (UploadedPhotos.Any())
+            {
+                PlantInfo.Photos = UploadedPhotos;
+            }
+
             PlantInfo.Lifeform = SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
 

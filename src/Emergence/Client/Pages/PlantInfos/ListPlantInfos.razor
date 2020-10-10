@@ -7,10 +7,13 @@
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" @onclick="SearchAsync" type="submit">Search</button>
+        <input type="checkbox" @bind="OnlyMine" id="only-mine" />
+        <label for="only-mine">Only Mine</label>
     }
 
     @if (List != null)
@@ -51,11 +54,11 @@
                     <td>
                         @if (plantInfo.Origin != null)
                         {
-                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@plantInfo.Origin?.Name</span>
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@plantInfo.Origin?.Name</span>
                         }
                         else
                         {
-                        <span></span>
+                            <span></span>
                         }
                     </td>
                     <td>
@@ -108,6 +111,7 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded)
 {

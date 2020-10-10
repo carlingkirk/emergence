@@ -1,7 +1,7 @@
 @page "/plantinfo/edit/{Id:int}"
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Emergence.Data.Shared.Models
+@using Emergence.Data.Shared
 @using Emergence.Client.Components
 @using Emergence.Data.Shared.Extensions
 @using Blazored.Typeahead
@@ -227,6 +227,13 @@
                             </li>
                         }
                     </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.PlantInfo" />
                 </div>
             </div>
         </div>

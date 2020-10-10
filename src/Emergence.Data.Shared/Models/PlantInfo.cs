@@ -25,6 +25,7 @@ namespace Emergence.Data.Shared.Models
         public Origin Origin { get; set; }
         public Lifeform Lifeform { get; set; }
         public IEnumerable<PlantLocation> Locations { get; set; }
+        public IEnumerable<Photo> Photos { get; set; }
     }
 
     public class BloomTime

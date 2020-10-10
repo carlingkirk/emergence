@@ -27,7 +27,7 @@ namespace Emergence.API.Controllers
         public async Task<IEnumerable<Photo>> UploadMany(IEnumerable<IFormFile> photos, PhotoType type)
         {
             var photoResult = await _photoService.UploadOriginalsAsync(photos, type, UserId);
-            var locations = photoResult.Select(p => p.Location).ToList();
+            var locations = photoResult.Where(p => p.Location != null).Select(p => p.Location).ToList();
 
             var locationResult = await _locationService.AddLocationsAsync(locations);
 
