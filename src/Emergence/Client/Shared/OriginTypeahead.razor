@@ -14,9 +14,13 @@
         {
             <span class="text-body">@(origin.Name)</span>
         }
-        else if (origin.Uri != null)
+        else if (origin.OriginId == 0 && origin.Uri != null)
         {
             <span class="text-body">@(origin.Uri.ToString())</span>
+        }
+        else if (origin.OriginId > 0)
+        {
+            <span class="text-body">(No name)</span>
         }
     </SelectedTemplate>
     <ResultTemplate>

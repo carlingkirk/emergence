@@ -7,60 +7,61 @@
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
     }
 
     @if (List != null)
     {
-<table>
-    @if (!List.Any())
-    {
-        <tr>
-            <td>
-                <span>No plants found</span>
-            </td>
-        </tr>
-    }
-    else
-    {
-        <thead>
-            <tr>
-                @foreach (var crumb in Breadcrumbs.TakeLast(5))
-                {
-                <td>
-                    <div>
-                        <label for="">@crumb.Key</label>
-                    </div>
-                    <div>
-                        <span class="link" @onclick="async () => await NavigateAsync(crumb.Key)">@(crumb.Value.GetTaxonName(crumb.Key) + (crumb.Key < Rank ? " >" : ""))</span>
-                    </div>
-                </td>
-                }
-            </tr>
-        </thead>
-        <tr>
-            <td>
-                <span>@Rank</span>
-            </td>
-        </tr>
-    }
-    @foreach (var taxon in List)
-    {
-        <tr>
-            <td colspan="5">
-                <a href="" @onclick="async () => await SearchAsync(Rank, taxon.GetTaxonValue(Rank))" @onclick:preventDefault><span class="link">@(taxon.GetTaxonName(Rank))</span></a>
+        <table>
+            @if (!List.Any())
+            {
+                <tr>
+                    <td>
+                        <span>No plants found</span>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <thead>
+                    <tr>
+                        @foreach (var crumb in Breadcrumbs.TakeLast(5))
+                        {
+                            <td>
+                                <div>
+                                    <label for="">@crumb.Key</label>
+                                </div>
+                                <div>
+                                    <span class="link" @onclick="async () => await NavigateAsync(crumb.Key)">@(crumb.Value.GetTaxonName(crumb.Key) + (crumb.Key < Rank ? " >" : ""))</span>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        <span>@Rank</span>
+                    </td>
+                </tr>
+            }
+            @foreach (var taxon in List)
+            {
+                <tr>
+                    <td colspan="5">
+                        <a href="" @onclick="async () => await SearchAsync(Rank, taxon.GetTaxonValue(Rank))" @onclick:preventDefault><span class="link">@(taxon.GetTaxonName(Rank))</span></a>
 
-                @if (taxon.Synonyms != null && taxon.Synonyms.Any())
-                {
-                    <span>(@string.Join(',', taxon.Synonyms.Where(s => s.Language == "English" || s.Language == "unspecified").Select(s => s.Name)).Replace(",", ", "))</span>
-                }
-            </td>
-        </tr>
-    }
-</table>
+                        @if (taxon.Synonyms != null && taxon.Synonyms.Any())
+                        {
+                            <span>(@string.Join(',', taxon.Synonyms.Where(s => s.Language == "English" || s.Language == "unspecified").Select(s => s.Name)).Replace(",", ", "))</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
         <div>
             @if (List.Any())
             {
@@ -68,6 +69,7 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded)
 {

@@ -56,5 +56,20 @@ namespace Emergence.API.Controllers
             var result = await _activityService.FindActivities(findParams, UserId, specimenId);
             return result;
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var activity = await _activityService.GetActivityAsync(id);
+            if (activity.CreatedBy != UserId)
+            {
+                return Unauthorized();
+            }
+
+            await _activityService.RemoveActivityAsync(activity);
+
+            return Ok();
+        }
     }
 }

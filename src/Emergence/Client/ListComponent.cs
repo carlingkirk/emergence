@@ -21,14 +21,16 @@ namespace Emergence.Client
         public int CurrentPage { get; set; }
         public int Take { get; set; }
         public int Count { get; set; }
+        public bool OnlyMine { get; set; }
         public bool IsItemLoaded { get; set; }
         public int Id { get; set; }
         public T Parent { get; set; }
         public ViewItemType ViewItemType { get; set; }
 
-        public ListComponent()
+        protected ListComponent()
         {
             ShowSearch = true;
+            OnlyMine = true;
             LinkRelations = true;
         }
 
@@ -46,14 +48,18 @@ namespace Emergence.Client
         public async Task FindAsync()
         {
             var skip = (CurrentPage - 1) * Take;
+            List = null;
+
             var result = await GetListAsync(new FindParams
             {
                 SearchText = SearchText,
                 Skip = skip,
                 Take = Take,
                 SortBy = SortBy,
-                SortDirection = SortDirection
+                SortDirection = SortDirection,
+                CreatedBy = OnlyMine ? UserId : null
             });
+
             List = result.Results;
             Count = result.Count;
         }
@@ -77,6 +83,12 @@ namespace Emergence.Client
         protected async Task<IEnumerable<T>> PageAsync(int page)
         {
             CurrentPage = page;
+            await FindAsync();
+            return List;
+        }
+
+        protected async Task<IEnumerable<T>> RefreshAsync()
+        {
             await FindAsync();
             return List;
         }

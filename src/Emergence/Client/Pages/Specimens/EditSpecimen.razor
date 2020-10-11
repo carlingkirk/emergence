@@ -12,7 +12,7 @@
 @if (Specimen != null)
 {
     <EditForm Model="@Specimen">
-        <div class="form-group container">
+        <div class="form-group">
             <div class="row">
                 <div class="col">
                     <label for="lifeform">Plant Name </label>
@@ -83,18 +83,12 @@
             </div>
             <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen" />
         </div>
-        <div class="form-group container">
-            <div class="row">
-                <div class="col">
-                    <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Save</button>
-                    @if (BlazoredModal != null)
-                    {
-                        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
-                    }
-                </div>
-            </div>
-        </div>
     </EditForm>
+    <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Save</button>
+    @if (BlazoredModal != null)
+    {
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+    }
 }
 else
 {

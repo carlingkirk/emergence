@@ -13,8 +13,6 @@ namespace Emergence.Client.Components
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
-        public string MinZone { get; set; }
-        public string MaxZone { get; set; }
 
         protected async Task SavePlantInfoAsync()
         {
@@ -31,29 +29,40 @@ namespace Emergence.Client.Components
             {
                 PlantInfo.Origin = SelectedOrigin;
             }
+
+            PlantInfo.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
+
             PlantInfo.Lifeform = SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
 
             if (!string.IsNullOrEmpty(MinZone))
             {
-                var minZoneLetter = MinZone.Substring(0, 1);
-                var minZoneNumber = MinZone.Length > 1 ? MinZone.Substring(1, 1) : null;
+                var minZoneNumber = MinZone.Substring(0, 1);
+                var minZoneLetter = MinZone.Length > 1 ? MinZone.Substring(1, 1) : null;
                 int.TryParse(minZoneNumber, out var minZoneInt);
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter = minZoneLetter;
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone.Number = minZoneInt;
             }
+            else
+            {
+                PlantInfo.Requirements.ZoneRequirements.MinimumZone = null;
+            }
 
             if (!string.IsNullOrEmpty(MaxZone))
             {
-                var maxZoneLetter = MaxZone.Substring(0, 1);
-                var maxZoneNumber = MaxZone.Length > 1 ? MinZone.Substring(1, 1) : null;
+                var maxZoneNumber = MaxZone.Substring(0, 1);
+                var maxZoneLetter = MaxZone.Length > 1 ? MaxZone.Substring(1, 1) : null;
                 int.TryParse(maxZoneNumber, out var maxZoneInt);
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter = maxZoneLetter;
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone.Number = maxZoneInt;
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter = maxZoneLetter;
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone.Number = maxZoneInt;
+            }
+            else
+            {
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone = null;
             }
 
-            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.ToList();
+            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
 
             PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
 
@@ -63,8 +72,9 @@ namespace Emergence.Client.Components
             }
             else
             {
-                await IsEditingChanged.InvokeAsync(false);
-                await IsItemLoadedChanged.InvokeAsync(false);
+                PlantInfo = null;
+
+                await UnloadItem();
             }
         }
 

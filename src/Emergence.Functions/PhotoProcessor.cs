@@ -29,17 +29,20 @@ namespace Emergence.Functions
                 // Remove EXIF data and save
                 var exifProfile = image.Metadata.ExifProfile;
 
-                RemoveTag(ExifTag.GPSLatitude, exifProfile);
-                RemoveTag(ExifTag.GPSLatitude, exifProfile);
-                RemoveTag(ExifTag.GPSLatitudeRef, exifProfile);
-                RemoveTag(ExifTag.GPSDestLatitude, exifProfile);
-                RemoveTag(ExifTag.GPSDestLatitudeRef, exifProfile);
-                RemoveTag(ExifTag.GPSLongitude, exifProfile);
-                RemoveTag(ExifTag.GPSLongitudeRef, exifProfile);
-                RemoveTag(ExifTag.GPSDestLongitude, exifProfile);
-                RemoveTag(ExifTag.GPSDestLongitudeRef, exifProfile);
-                RemoveTag(ExifTag.GPSAltitude, exifProfile);
-                RemoveTag(ExifTag.GPSAltitudeRef, exifProfile);
+                if (exifProfile != null)
+                {
+                    RemoveTag(ExifTag.GPSLatitude, exifProfile);
+                    RemoveTag(ExifTag.GPSLatitude, exifProfile);
+                    RemoveTag(ExifTag.GPSLatitudeRef, exifProfile);
+                    RemoveTag(ExifTag.GPSDestLatitude, exifProfile);
+                    RemoveTag(ExifTag.GPSDestLatitudeRef, exifProfile);
+                    RemoveTag(ExifTag.GPSLongitude, exifProfile);
+                    RemoveTag(ExifTag.GPSLongitudeRef, exifProfile);
+                    RemoveTag(ExifTag.GPSDestLongitude, exifProfile);
+                    RemoveTag(ExifTag.GPSDestLongitudeRef, exifProfile);
+                    RemoveTag(ExifTag.GPSAltitude, exifProfile);
+                    RemoveTag(ExifTag.GPSAltitudeRef, exifProfile);
+                }
 
                 var originalName = "original" + fileExt;
                 // Large

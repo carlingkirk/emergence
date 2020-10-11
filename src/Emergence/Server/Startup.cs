@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.KeyVault;
@@ -51,6 +52,13 @@ namespace Emergence.Server
                 .AddCookie();
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+            });
 
             var certName = Configuration["CertificateName"];
             if (string.IsNullOrEmpty(certName))
@@ -88,6 +96,7 @@ namespace Emergence.Server
             // Application Services
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IBlobService, BlobService>();
+            services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IExifService, ExifService>();
             services.AddTransient<IInventoryService, InventoryService>();
             services.AddTransient<ILifeformService, LifeformService>();
@@ -98,6 +107,7 @@ namespace Emergence.Server
             services.AddTransient<ISpecimenService, SpecimenService>();
             services.AddTransient<ISynonymService, SynonymService>();
             services.AddTransient<ITaxonService, TaxonService>();
+            services.AddTransient<IUserService, UserService>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
@@ -112,6 +122,7 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Synonym>), typeof(Repository<Synonym>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
+            services.AddScoped(typeof(IRepository<User>), typeof(Repository<User>));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();

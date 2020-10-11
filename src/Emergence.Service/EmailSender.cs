@@ -24,7 +24,7 @@ namespace Emergence.Service
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("carlingkirk@gmail.com", Options.SendGridUser),
+                From = new EmailAddress(Options.SendGridEmail, Options.SendGridUser),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message

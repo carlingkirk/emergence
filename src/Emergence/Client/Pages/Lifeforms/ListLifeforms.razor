@@ -1,16 +1,15 @@
 @page "/lifeform/list"
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.PlantInfos
-@using Emergence.Client.Pages.Origins
 
 @inherits ListLifeformsComponent
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
     }
 
     @if (List != null)
@@ -51,13 +50,14 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded)
 {
     switch (ViewItemType)
     {
         case (ViewItemType.Lifeform):
-            <LifeformViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></LifeformViewer>
+            <LifeformViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></LifeformViewer>
             break;
         default:
             break;

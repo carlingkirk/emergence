@@ -3,15 +3,27 @@
 
 @inherits LifeformComponent
 
-@if (Lifeform != null)
-{
-    <ViewLifeform Lifeform="Lifeform" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-}
-else
-{
-    <span>Loading...</span>
-}
-
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Lifeform: </span>
+    @if (Lifeform != null && (!string.IsNullOrEmpty(Lifeform.ScientificName) || !string.IsNullOrEmpty(Lifeform.CommonName)))
+    {
+        <span>@Lifeform.CommonName</span><span class="font-italic"> (@Lifeform.ScientificName)</span>
+    }
+</div>
+<div class="group">
+    @if (Lifeform != null)
+    {
+        <ViewLifeform Lifeform="Lifeform" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+</div>
 @code {
 
 }

@@ -3,27 +3,43 @@
 
 @inherits ActivityComponent
 
-@if (!IsModal)
-{
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
-}
-@if (IsEditable && Activity.ActivityId > 0)
-{
-    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
-}
-@if (IsEditing && Activity != null)
-{
-     <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
-}
-else if (Activity != null)
-{
-    <ViewActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-}
-else
-{
-    <span>Loading...</span>
-}
-
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Activity: </span>
+    @if (Activity != null)
+    {
+        <span class="font-italic">@(Activity.ActivityId != 0 ? Activity?.Name ?? "(No name)" : "New")</span>
+    }
+</div>
+<div class="group">
+    @if (IsEditing && Activity != null)
+    {
+        if (RefreshList != null)
+        {
+            <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
+        }
+        else
+        {
+            <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
+        }
+    }
+    else if (Activity != null)
+    {
+        <ViewActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+    @if (IsEditable && Activity != null && Activity.ActivityId > 0)
+    {
+        <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+        <button class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
+    }
+</div>
 @code {
-
+    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && (Activity?.CreatedBy == UserId);
 }

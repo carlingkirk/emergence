@@ -1,0 +1,66 @@
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<div class="sidebar">
+    <div class="top-row pl-4 navbar navbar-dark">
+        <a class="navbar-brand" href="">Emergence</a>
+        <button class="navbar-toggler">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+
+    <div class="collapse">
+        <ul class="nav flex-column">
+            <li class="nav-item px-3">
+                <a href="/home" class="nav-link">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                </a>
+            </li>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <li class="nav-item px-3">
+                    <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="Index">
+                        <span class="oi oi-person" aria-hidden="true"></span> Profile
+                    </a>
+                </li>
+                <li class="nav-item px-3">
+                    <a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="Email">
+                        <span class="oi oi-person" aria-hidden="true"></span> Email
+                    </a>
+                </li>
+                <li class="nav-item px-3">
+                    <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="ChangePassword">
+                        <span class="oi oi-person" aria-hidden="true"></span> Password
+                    </a>
+                </li>
+                @if (hasExternalLogins)
+                {
+                    <li class="nav-item px-3">
+                        <a class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" id="external-login" asp-page="ExternalLogins">
+                            <span class="oi oi-person" aria-hidden="true"></span> External logins
+                        </a>
+                    </li>
+                }
+                <li class="nav-item px-3">
+                    <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="TwoFactorAuthentication">
+                        <span class="oi oi-person" aria-hidden="true"></span> Two-factor auth
+                    </a>
+                </li>
+                <li class="nav-item px-3">
+                    <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="ExternalLogins">
+                        <span class="oi oi-person" aria-hidden="true"></span> Personal data
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item px-3">
+                    <a href="authentication/login" class="nav-link active">
+                        <span class="oi oi-person" aria-hidden="true"></span> Login
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

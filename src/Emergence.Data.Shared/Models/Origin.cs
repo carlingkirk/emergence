@@ -18,6 +18,7 @@ namespace Emergence.Data.Shared.Models
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
+        public string ShortUri => Uri != null ? Uri.ToString().Length > 40 ? Uri.ToString().Substring(0, 40) + "..." : Uri.ToString() : null;
 
         public Location Location { get; set; }
         public Origin ParentOrigin { get; set; }

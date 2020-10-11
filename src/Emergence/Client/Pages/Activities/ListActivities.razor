@@ -1,16 +1,18 @@
 @page "/activity/list"
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.Activities
 @using Emergence.Client.Pages.Specimens
 @using Emergence.Data.Shared.Extensions
 @inherits ListActivitiesComponent
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
+        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" disabled />
+        <label for="only-mine">Only Mine</label>
     }
 
     @if (List != null)
@@ -39,16 +41,16 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@activity.Name</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@(activity.Name ?? "(No name)")</span></a>
                     </td>
                     <td>
                         @if (LinkRelations)
                         {
-                            <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen.Lifeform.ScientificName</span>
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen?.Lifeform?.ScientificName</span>
                         }
                         else
                         {
-                            <span>@activity.Specimen.Lifeform.ScientificName</span>
+                            <span>@activity.Specimen?.Lifeform?.ScientificName</span>
                         }
                     </td>
                     <td>
@@ -80,13 +82,14 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded)
 {
     switch (ViewItemType)
     {
         case (ViewItemType.Activity):
-            <ActivityViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></ActivityViewer>
+            <ActivityViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="Specimen" @bind-List="List"></ActivityViewer>
             break;
         case (ViewItemType.Specimen):
             <SpecimenViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />

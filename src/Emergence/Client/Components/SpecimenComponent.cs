@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class SpecimenComponent : ViewerComponent
+    public class SpecimenComponent : ViewerComponent<Specimen>
     {
         [Parameter]
         public Specimen Specimen { get; set; }
@@ -64,11 +64,6 @@ namespace Emergence.Client.Components
                 };
                 UploadedPhotos = new List<Photo>();
             }
-
-            if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.CreatedBy == UserId)
-            {
-                IsEditable = true;
-            }
         }
 
         protected async Task RemoveSpecimen()
@@ -77,9 +72,8 @@ namespace Emergence.Client.Components
             if (result)
             {
                 Specimen = null;
-                await IsEditingChanged.InvokeAsync(false);
-                await IsItemLoadedChanged.InvokeAsync(false);
-                await ItemLoadedChanged.InvokeAsync(false);
+
+                await UnloadItem();
             }
         }
     }

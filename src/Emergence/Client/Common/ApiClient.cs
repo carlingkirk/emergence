@@ -204,6 +204,31 @@ namespace Emergence.Client.Common
             }
         }
 
+        public async Task<User> GetUserAsync(string userId)
+        {
+            var result = await _httpClient.GetAsync($"/api/user/{userId}");
+
+            return await ReadResult<User>(result);
+        }
+
+        public async Task<bool> RemoveActivityAsync(Activity activity)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/activity/{activity.ActivityId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
+        public async Task<bool> RemovePlantInfoAsync(PlantInfo plantInfo)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/plantinfo/{plantInfo.PlantInfoId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)

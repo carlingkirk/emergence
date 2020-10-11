@@ -30,5 +30,8 @@ namespace Emergence.Client.Common
         Task<IEnumerable<Photo>> UploadPhotosAsync(IFileListEntry[] photos, PhotoType type);
         Task<Photo> UploadPhotoAsync(IFileListEntry photo, PhotoType type);
         Task<bool> RemovePhotoAsync(int id);
+        Task<User> GetUserAsync(string userId);
+        Task<bool> RemoveActivityAsync(Activity activity);
+        Task<bool> RemovePlantInfoAsync(PlantInfo plantInfo);
     }
 }

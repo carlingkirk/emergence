@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Emergence</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+</head>
+<body>
+    <app>
+        <partial name="_AccountNav" />
+        <div class="main">
+            <div class="top-row px-4 auth">
+                <partial name="_LoginPartial" />
+            </div>
+            <div class="content px-4">
+                <div class="container">
+                    <main role="main" class="pb-3">
+                        @RenderBody()
+                    </main>
+                </div>
+            </div>
+            <footer class="border-top footer text-muted">
+                <div class="container" style="padding-top:5px;">
+                    &copy; 2020 - Emergence App - <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a>
+                </div>
+            </footer>
+        </div>
+    </app>
+    <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

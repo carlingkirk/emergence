@@ -13,7 +13,7 @@
 @if (Activity != null)
 {
     <EditForm Model="@Activity">
-        <div class="form-group container">
+        <div class="form-group">
             <div class="row">
                 <div class="col-lg-3 col-xs">
                     <label for="type">Type</label>
@@ -61,8 +61,14 @@
                             No results found
                         </NotFoundTemplate>
                     </BlazoredTypeahead>
-
                 </div>
+                @if (Activity.ActivityType == ActivityType.Custom)
+                {
+                    <div class="col-lg-3 col-xs">
+                        <label for="custom-type">Custom Type</label>
+                        <input @bind="@Activity.CustomActivityType" type="text" class="form-control" id="custom-type"/>
+                    </div>
+                }
             </div>
             @if (SelectedSpecimen != null)
             {
@@ -71,15 +77,21 @@
                         <label for="quantity">Quantity</label>
                         <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
                     </div>
-                    @if (Activity.ActivityType == ActivityType.PlantInGround || Activity.ActivityType == ActivityType.Germination || Activity.ActivityType == ActivityType.Stratification)
+                    @if (ShowAutoSpecimen)
                     {
                         <div class="col-lg-9 col-xs">
-                            <label for="create-new-specimen">Create new specimen</label>
+                            <label for="update-specimen">Create or update specimen</label>
                             <div style="display: block;">
-                                <input type="checkbox" @bind="CreateNewSpecimen" id="create-new-specimen" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
-                                @if (CreateNewSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
+                                <input type="checkbox" @bind="UpdateSpecimen" id="update-specimen" class="check-lg" />
+                                @if (UpdateSpecimen && Activity.Quantity.HasValue && SelectedSpecimen?.InventoryItem?.Quantity == Activity.Quantity.Value)
                                 {
-                                    <label for="enable-quantity-update">
+                                    <label for="enable-specimen-update">
+                                        Original specimen stage will be updated to @GetSpecimenStage(Activity.ActivityType).ToFriendlyName()
+                                    </label>
+                                }
+                                else if (UpdateSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
+                                {
+                                    <label for="enable-specimen-update">
                                         Original specimen quantity will be reduced
                                         @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
                                         {
@@ -87,9 +99,9 @@
                                         }
                                     </label>
                                 }
-                                else if (!CreateNewSpecimen && Activity.Quantity.HasValue)
+                                else if (!UpdateSpecimen && Activity.Quantity.HasValue)
                                 {
-                                    <label for="enable-quantity-update">Original specimen quantity will not be updated</label>
+                                    <label for="enable-specimen-update">Original specimen quantity will not be updated</label>
                                 }
                             </div>
                         </div>
@@ -124,18 +136,13 @@
                 </div>
             </div>
         </div>
-        <div class="form-group container">
-            <div class="row">
-                <div class="col">
-                    <button @onclick="(async () => await SaveActivityAsync())" class="btn btn-primary">Save</button>
-                    @if (BlazoredModal != null)
-                    {
-                        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
-                    }
-                </div>
-            </div>
-        </div>
     </EditForm>
+
+    <button @onclick="(async () => await SaveActivityAsync())" class="btn btn-primary">Save</button>
+    @if (BlazoredModal != null)
+    {
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+    }
 }
 else
 {

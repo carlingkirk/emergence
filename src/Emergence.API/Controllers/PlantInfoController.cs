@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
@@ -13,26 +14,52 @@ namespace Emergence.API.Controllers
     {
         private readonly IPlantInfoService _plantInfoService;
         private readonly IOriginService _originService;
-        public PlantInfoController(IPlantInfoService plantInfoService, IOriginService originService)
+        private readonly IPhotoService _photoService;
+
+        public PlantInfoController(IPlantInfoService plantInfoService, IOriginService originService, IPhotoService photoService)
         {
             _plantInfoService = plantInfoService;
             _originService = originService;
+            _photoService = photoService;
         }
 
         [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
-        public async Task<PlantInfo> Get(int id) => await _plantInfoService.GetPlantInfoAsync(id);
+        public async Task<PlantInfo> Get(int id)
+        {
+            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id);
+            var photos = await _photoService.GetPhotosAsync(PhotoType.PlantInfo, plantInfo.PlantInfoId);
+            plantInfo.Photos = photos;
+
+            return plantInfo;
+        }
 
         [HttpPut]
         public async Task<PlantInfo> Put(PlantInfo plantInfo)
         {
-            if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0 && !string.IsNullOrEmpty(plantInfo.Origin.Name))
+            if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0 && (!string.IsNullOrEmpty(plantInfo.Origin.Name) || plantInfo.Origin.Uri != null))
             {
                 plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, UserId);
             }
+            else
+            {
+                plantInfo.Origin = null;
+            }
 
-            return await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
+            var plantInfoResult = await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
+
+            if (plantInfo.Photos != null && plantInfo.Photos.Any())
+            {
+                foreach (var photo in plantInfo.Photos)
+                {
+                    photo.TypeId = plantInfoResult.PlantInfoId;
+                }
+
+                plantInfoResult.Photos = await _photoService.AddOrUpdatePhotosAsync(plantInfo.Photos);
+            }
+
+            return plantInfoResult;
         }
 
         [AllowAnonymous]
@@ -42,6 +69,23 @@ namespace Emergence.API.Controllers
         {
             var result = await _plantInfoService.FindPlantInfos(findParams);
             return result;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id);
+            if (plantInfo.CreatedBy != UserId)
+            {
+                return Unauthorized();
+            }
+
+            var photos = await _photoService.GetPhotosAsync(PhotoType.PlantInfo, plantInfo.PlantInfoId);
+            await _photoService.RemovePhotosAsync(photos);
+            await _plantInfoService.RemovePlantInfoAsync(plantInfo);
+
+            return Ok();
         }
     }
 }

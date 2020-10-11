@@ -3,27 +3,49 @@
 
 @inherits PlantInfoComponent
 
-@if (!IsModal)
-{
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
-}
-@if (IsEditable && PlantInfo.PlantInfoId > 0)
-{
-    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
-}
-@if (IsEditing && PlantInfo != null)
-{
-    <EditPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-}
-else if (PlantInfo != null)
-{
-    <ViewPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-}
-else
-{
-    <span>Loading...</span>
-}
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Plant Profile: </span>
+    @if (PlantInfo != null && (!string.IsNullOrEmpty(ScientificName) || !string.IsNullOrEmpty(CommonName)))
+    {
+        <span>@CommonName</span><span class="font-italic"> (@ScientificName)</span>
+    }
+    else
+    {
+        <span class="font-italic">New</span>
+    }
+</div>
+<div class="group">
+    @if (IsEditing && PlantInfo != null)
+    {
+        @if (RefreshList != null)
+        {
+            <EditPlantInfo RefreshList="RefreshList" PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        }
+        else
+        {
+            <EditPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        }
+    }
+    else if (PlantInfo != null)
+    {
+        <ViewPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+
+    @if (IsEditable && PlantInfo != null && PlantInfo.PlantInfoId > 0)
+    {
+        <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+        <button class="btn btn-primary" @onclick="async () => await RemovePlantInfo()">Delete</button>
+    }
+</div>
 
 @code {
-
+    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && PlantInfo?.CreatedBy == UserId;
 }

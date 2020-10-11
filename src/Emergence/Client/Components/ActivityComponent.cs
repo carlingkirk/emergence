@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class ActivityComponent : ViewerComponent
+    public class ActivityComponent : ViewerComponent<Activity>
     {
         [Parameter]
         public Activity Activity { get; set; }
@@ -47,10 +47,16 @@ namespace Emergence.Client.Components
                 };
                 UploadedPhotos = new List<Photo>();
             }
+        }
 
-            if (!string.IsNullOrEmpty(UserId) && Activity.CreatedBy == UserId)
+        protected async Task RemoveActivity()
+        {
+            var result = await ApiClient.RemoveActivityAsync(Activity);
+            if (result)
             {
-                IsEditable = true;
+                Activity = null;
+
+                await UnloadItem();
             }
         }
     }

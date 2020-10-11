@@ -9,68 +9,70 @@
 
 @if (Activity != null)
 {
-<div class="form-group container">
-    <div class="col-6 col-xs-1">
-        <div>
-            <label for="type">Type</label>
+<div class="form-group">
+    <div class="row">
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="type">Type</label>
+            </div>
+            <div>
+                <span class="text-body">@Activity.ActivityType.ToFriendlyName()</span>
+            </div>
         </div>
-        <div>
-            <span class="text-body">@Activity.ActivityType.ToFriendlyName()</span>
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="specimen">Specimen</label>
+            </div>
+            <div>
+                @if (!string.IsNullOrEmpty(Activity.Specimen?.InventoryItem?.Name))
+                {
+                    <span class="text-body">@(Activity.Specimen.InventoryItem.Name)</span>
+                }
+                else if (Activity.Specimen?.SpecimenId == 0 && Activity.Specimen?.Lifeform != null)
+                {
+                    <span class="text-body">@(Activity.Specimen.Lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
+                }
+            </div>
         </div>
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="name">Name</label>
+            </div>
+            <div>
+                <span class="text-body">@Activity.Name</span>
+            </div>
+        </div>
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="description">Description</label>
+            </div>
+            <div>
+                <span class="text-body">@Activity.Description</span>
+            </div>
+        </div>
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="date-occured">Date Occured</label>
+            </div>
+            <div>
+                <span class="text-body">@Activity.DateOccured</span>
+            </div>
+        </div>
+        <div class="col-6 col-xs-1">
+            <div>
+                <label for="date-scheduled">Date Scheduled</label>
+            </div>
+            <div>
+                <span class="text-body">@Activity.DateScheduled</span>
+            </div>
+        </div>
+        @if (UploadedPhotos != null && UploadedPhotos.Any())
+        {
+            <div class="form-group">
+                <ViewPhotos UploadedPhotos="UploadedPhotos" />
+            </div>
+        }
     </div>
-    <div class="col-6 col-xs-1">
-        <div>
-            <label for="specimen">Specimen</label>
-        </div>
-        <div>
-            @if (!string.IsNullOrEmpty(Activity.Specimen.InventoryItem?.Name))
-            {
-                <span class="text-body">@(Activity.Specimen.InventoryItem.Name)</span>
-            }
-            else if (Activity.Specimen.SpecimenId == 0 && Activity.Specimen.Lifeform != null)
-            {
-                <span class="text-body">@(Activity.Specimen.Lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
-            }
-        </div>
-    </div>
-    <div class="col-6 col-xs-1">
-        <div>
-            <label for="name">Name</label>
-        </div>
-        <div>
-            <span class="text-body">@Activity.Name</span>
-        </div>
-    </div>
-    <div class="col-6 col-xs-1">
-        <div>
-            <label for="description">Description</label>
-        </div>
-        <div>
-            <span class="text-body">@Activity.Description</span>
-        </div>
-    </div>
-    <div class="col-6 col-xs-1">
-        <div>
-            <label for="date-occured">Date Occured</label>
-        </div>
-        <div>
-            <span class="text-body">@Activity.DateOccured</span>
-        </div>
-    </div>
-    <div class="col-6 col-xs-1">
-        <div>
-            <label for="date-scheduled">Date Scheduled</label>
-        </div>
-        <div>
-            <span class="text-body">@Activity.DateScheduled</span>
-        </div>
-    </div>
-    @if (UploadedPhotos != null && UploadedPhotos.Any())
-    {
-    <div class="form-group container">
-        <ViewPhotos UploadedPhotos="UploadedPhotos" />
-    </div>
-    }
 </div>
 }
 else

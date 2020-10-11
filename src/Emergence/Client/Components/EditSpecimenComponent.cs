@@ -36,10 +36,7 @@ namespace Emergence.Client.Components
                 Specimen.Lifeform = SelectedLifeform;
             }
 
-            if (UploadedPhotos.Any())
-            {
-                Specimen.Photos = UploadedPhotos;
-            }
+            Specimen.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
 
             Specimen = await ApiClient.PutSpecimenAsync(Specimen);
 
@@ -50,9 +47,8 @@ namespace Emergence.Client.Components
             else
             {
                 Specimen = null;
-                await IsEditingChanged.InvokeAsync(false);
-                await ItemLoadedChanged.InvokeAsync(false);
-                await IsItemLoadedChanged.InvokeAsync(false);
+
+                await UnloadItem();
             }
         }
 

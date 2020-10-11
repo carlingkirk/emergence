@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class OriginComponent : ViewerComponent
+    public class OriginComponent : ViewerComponent<Origin>
     {
         [Parameter]
         public Origin Origin { get; set; }
@@ -41,11 +41,6 @@ namespace Emergence.Client.Components
                     ParentOrigin = null,
                     Location = new Location()
                 };
-            }
-
-            if (!string.IsNullOrEmpty(UserId) && Origin.CreatedBy == UserId)
-            {
-                IsEditable = true;
             }
         }
     }

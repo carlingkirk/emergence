@@ -5,10 +5,13 @@
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
+        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" disabled />
+        <label for="only-mine">Only Mine</label>
     }
 
     @if (List != null)
@@ -38,7 +41,7 @@
             {
                 <tr>
                     <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@origin.Name</span></a>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@(origin.Name ?? "(No name)")</span></a>
                     </td>
                     <td>
                         <span>@origin.Type.ToFriendlyName()</span>
@@ -63,7 +66,7 @@
                         <span>
                             @if (@origin.Uri != null)
                             {
-                                <a href="@origin.Uri" target="_blank"><span>@origin.Uri.ToString()</span></a>
+                            <a href="@origin?.Uri" target="_blank" alt="@origin?.Uri"><span class="link">@origin?.ShortUri</span></a>
                             }
                         </span>
                     </td>
@@ -81,8 +84,9 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded && !string.IsNullOrEmpty(UserId))
 {
-    <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded"></OriginViewer>
+    <OriginViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></OriginViewer>
 }

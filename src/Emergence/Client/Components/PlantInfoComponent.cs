@@ -8,13 +8,16 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
-    public class PlantInfoComponent : ViewerComponent
+    public class PlantInfoComponent : ViewerComponent<PlantInfo>
     {
         [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
         public string OriginSearch { get; set; }
+        public string MinZone { get; set; }
+        public string MaxZone { get; set; }
+        public IList<Photo> UploadedPhotos { get; set; }
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
@@ -24,6 +27,8 @@ namespace Emergence.Client.Components
         public List<SoilType> ChosenSoilTypes;
         public LinkedList<StratificationStage> ChosenStratificationStages = new LinkedList<StratificationStage>();
         public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages != null && (PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any());
+        public string CommonName => PlantInfo?.CommonName ?? PlantInfo.Lifeform?.CommonName ?? "";
+        public string ScientificName => PlantInfo?.ScientificName ?? PlantInfo.Lifeform?.ScientificName ?? "";
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,11 +38,25 @@ namespace Emergence.Client.Components
             if (Id > 0 || PlantInfo != null)
             {
                 PlantInfo ??= await ApiClient.GetPlantInfoAsync(Id);
+
+                if (PlantInfo.Photos != null && PlantInfo.Photos.Any())
+                {
+                    UploadedPhotos = PlantInfo.Photos.ToList();
+                }
+                else
+                {
+                    UploadedPhotos = new List<Photo>();
+                }
+
                 SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();
                 PlantInfo.Requirements.ZoneRequirements.MaximumZone ??= new Zone();
+
+                MinZone = PlantInfo.Requirements.ZoneRequirements.MinimumZone.ToFriendlyString();
+                MaxZone = PlantInfo.Requirements.ZoneRequirements.MaximumZone.ToFriendlyString();
+
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {
                     PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>
@@ -65,13 +84,9 @@ namespace Emergence.Client.Components
                     },
                     BloomTime = new BloomTime(),
                     Spread = new Spread(),
-                    Height = new Height()
+                    Height = new Height(),
+                    Photos = new List<Photo>()
                 };
-            }
-
-            if (!string.IsNullOrEmpty(UserId) && PlantInfo.CreatedBy == UserId)
-            {
-                IsEditable = true;
             }
         }
 
@@ -92,5 +107,16 @@ namespace Emergence.Client.Components
         }
 
         protected string GetElementId(string element, string id) => element + "-" + id;
+
+        protected async Task RemovePlantInfo()
+        {
+            var result = await ApiClient.RemovePlantInfoAsync(PlantInfo);
+            if (result)
+            {
+                PlantInfo = null;
+
+                await UnloadItem();
+            }
+        }
     }
 }

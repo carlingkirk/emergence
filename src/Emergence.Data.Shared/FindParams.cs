@@ -17,6 +17,7 @@ namespace Emergence.Data.Shared
         public int Take { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
+        public string CreatedBy { get; set; }
     }
 
     public class FindParams<T> : IFindParams

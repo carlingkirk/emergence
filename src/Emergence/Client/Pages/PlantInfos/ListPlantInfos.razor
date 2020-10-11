@@ -1,16 +1,18 @@
 @page "/plantinfo/list"
 @using Emergence.Client.Components
-@using Emergence.Client.Pages.PlantInfos
 @using Emergence.Client.Pages.Origins
 
 @inherits ListPlantInfosComponent
 
 @if (!IsItemLoaded)
 {
+<form @onsubmit="SearchAsync">
     @if (ShowSearch)
     {
         <input type="text" @bind="SearchText" id="search" />
-        <button class="btn btn-secondary" @onclick="SearchAsync">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
+        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" />
+        <label for="only-mine">Only Mine</label>
     }
 
     @if (List != null)
@@ -51,11 +53,11 @@
                     <td>
                         @if (plantInfo.Origin != null)
                         {
-                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@plantInfo.Origin?.Name</span>
+                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@(plantInfo.Origin != null ? plantInfo.Origin?.Name ?? "(No name)" : null)</span>
                         }
                         else
                         {
-                        <span></span>
+                            <span></span>
                         }
                     </td>
                     <td>
@@ -108,13 +110,14 @@
             }
         </div>
     }
+</form>
 }
 else if (Id > 0 || IsItemLoaded)
 {
     switch (ViewItemType)
     {
         case (ViewItemType.PlantInfo):
-            <PlantInfoViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" ItemLoadedChanged="FindAsync"></PlantInfoViewer>
+            <PlantInfoViewer RefreshList="RefreshAsync" @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List"></PlantInfoViewer>
             break;
         case (ViewItemType.Origin):
             <OriginViewer @bind-Id="Id" @bind-IsItemLoaded="IsItemLoaded" />

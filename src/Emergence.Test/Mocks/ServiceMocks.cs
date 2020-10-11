@@ -19,6 +19,20 @@ namespace Emergence.Test.Mocks
             return mockLifeformService;
         }
 
+        public static Mock<IPhotoService> GetStandardMockPhotoService(IEnumerable<Photo> result = null)
+        {
+            var mockPhotoService = new Mock<IPhotoService>();
+            if (result == null)
+            {
+                result = FakePhotos.Get();
+            }
+
+            mockPhotoService.Setup(s => s.GetPhotoAsync(It.IsAny<int>()))
+                .ReturnsAsync(result.FirstOrDefault());
+
+            return mockPhotoService;
+        }
+
         public static Mock<ISpecimenService> GetStandardMockSpecimenService(IEnumerable<Specimen> result = null)
         {
             var mockSpecimenService = new Mock<ISpecimenService>();

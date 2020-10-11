@@ -30,58 +30,22 @@ namespace Emergence.Service
             _blobStorageRoot = configurationService.Settings.BlobStorageRoot + "photos/";
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId)
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId, bool storeLocation = true)
         {
-            var photoResult = new List<Data.Shared.Models.Photo>();
+            var photosResult = new List<Data.Shared.Models.Photo>();
 
             foreach (var photo in photos)
             {
-                var blobpath = Guid.NewGuid().ToString();
-                var fileInfo = new FileInfo(photo.FileName);
-                var name = "original" + fileInfo.Extension;
-
-                var result = await _blobService.UploadPhotoAsync(photo, userId, Path.Combine(blobpath, name));
-                if (result != null)
-                {
-                    var location = GetLocationFromMetadata(result.Metadata);
-                    var (height, width) = GetDimensionsFromMetadata(result.Metadata);
-                    var timezone = TimeZoneInfo.Local;
-                    if (location != null && location.Latitude.HasValue && location.Longitude.HasValue)
-                    {
-                        var zone = TimeZoneLookup.GetTimeZone(location.Latitude.Value, location.Longitude.Value);
-                        timezone = TZConvert.GetTimeZoneInfo(zone.Result);
-                    }
-
-                    DateTime? dateTaken = null;
-                    if (result.Metadata.TryGetValue(Constants.DateTaken, out var dateTakenEntry))
-                    {
-                        if (!string.IsNullOrEmpty(dateTakenEntry))
-                        {
-                            if (DateTime.TryParse(dateTakenEntry, out var dateTakenValue))
-                            {
-                                dateTaken = TimeZoneInfo.ConvertTimeToUtc(dateTakenValue, timezone);
-                            }
-                        }
-                    }
-
-                    photoResult.Add(new Data.Shared.Models.Photo
-                    {
-                        Filename = name,
-                        BlobPath = blobpath,
-                        BlobPathRoot = _blobStorageRoot,
-                        Type = type,
-                        UserId = userId,
-                        ContentType = result.ContentType,
-                        Location = location,
-                        Height = height,
-                        Width = width,
-                        DateTaken = dateTaken,
-                        DateCreated = DateTime.UtcNow,
-                        CreatedBy = userId
-                    });
-                }
+                var photoResult = await UploadPhoto(photo, type, userId, storeLocation);
+                photosResult.Add(photoResult);
             }
 
+            return photosResult;
+        }
+
+        public async Task<Data.Shared.Models.Photo> UploadOriginalAsync(IFormFile photo, PhotoType type, string userId, bool storeLocation = true)
+        {
+            var photoResult = await UploadPhoto(photo, type, userId, storeLocation);
             return photoResult;
         }
 
@@ -114,12 +78,14 @@ namespace Emergence.Service
             }
             return photos;
         }
+
         public async Task<Data.Shared.Models.Photo> GetPhotoAsync(int id)
         {
             var photoResult = await _photoRepository.GetAsync(p => p.Id == id);
             var photo = photoResult.AsModel(_blobStorageRoot);
             return photo;
         }
+
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(PhotoType type, int typeId)
         {
             var photoResult = _photoRepository.GetSomeAsync(p => p.Type == type.ToString() && p.TypeId == typeId);
@@ -130,6 +96,7 @@ namespace Emergence.Service
             }
             return photos;
         }
+
         public async Task<bool> RemovePhotoAsync(int id, string userId)
         {
             var photo = await GetPhotoAsync(id);
@@ -156,13 +123,63 @@ namespace Emergence.Service
             await _photoRepository.RemoveManyAsync(photos.Select(p => p.AsStore()));
         }
 
+        private async Task<Data.Shared.Models.Photo> UploadPhoto(IFormFile photo, PhotoType type, string userId, bool storeLocation)
+        {
+            var blobpath = Guid.NewGuid().ToString();
+            var fileInfo = new FileInfo(photo.FileName);
+            var name = "original" + fileInfo.Extension;
+
+            var result = await _blobService.UploadPhotoAsync(photo, userId, Path.Combine(blobpath, name));
+            if (result != null)
+            {
+                var location = GetLocationFromMetadata(result.Metadata);
+                var (height, width) = GetDimensionsFromMetadata(result.Metadata);
+                var timezone = TimeZoneInfo.Local;
+                if (location != null && location.Latitude.HasValue && location.Longitude.HasValue)
+                {
+                    var zone = TimeZoneLookup.GetTimeZone(location.Latitude.Value, location.Longitude.Value);
+                    timezone = TZConvert.GetTimeZoneInfo(zone.Result);
+                }
+
+                DateTime? dateTaken = null;
+                if (result.Metadata.TryGetValue(Constants.DateTaken, out var dateTakenEntry))
+                {
+                    if (!string.IsNullOrEmpty(dateTakenEntry))
+                    {
+                        if (DateTime.TryParse(dateTakenEntry, out var dateTakenValue))
+                        {
+                            dateTaken = TimeZoneInfo.ConvertTimeToUtc(dateTakenValue, timezone);
+                        }
+                    }
+                }
+
+                return new Data.Shared.Models.Photo
+                {
+                    Filename = name,
+                    BlobPath = blobpath,
+                    BlobPathRoot = _blobStorageRoot,
+                    Type = type,
+                    UserId = userId,
+                    ContentType = result.ContentType,
+                    Location = storeLocation ? location : null,
+                    Height = height,
+                    Width = width,
+                    DateTaken = dateTaken,
+                    DateCreated = DateTime.UtcNow,
+                    CreatedBy = userId
+                };
+            }
+
+            return null;
+        }
+
         private Image ResizePhoto(Image image, int maxDimension)
         {
             if (image.Width > maxDimension || image.Height > maxDimension)
             {
                 var aspectRatio = image.Width / (double)image.Height;
-                var newWidth = (int)Math.Floor(aspectRatio > 1 ? maxDimension : maxDimension * aspectRatio);
-                var newHeight = (int)Math.Floor(aspectRatio < 1 ? maxDimension : maxDimension * aspectRatio);
+                var newWidth = (int)Math.Floor(aspectRatio > 1 ? maxDimension : maxDimension / aspectRatio);
+                var newHeight = (int)Math.Floor(aspectRatio < 1 ? maxDimension : maxDimension / aspectRatio);
                 return image.Clone(i => i.Resize(newWidth, newHeight));
             }
             return image;

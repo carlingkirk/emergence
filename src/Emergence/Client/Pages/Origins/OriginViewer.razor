@@ -3,27 +3,42 @@
 
 @inherits OriginComponent
 
-@if (!IsModal)
-{
-    <button class="btn btn-primary" @onclick="async () => await IsItemLoadedChanged.InvokeAsync(false)">Back</button>
-}
-@if (IsEditable && Origin.OriginId > 0)
-{
-    <button class="btn btn-primary" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
-}
-@if (IsEditing && Origin != null)
-{
-    <EditOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-}
-else if (Origin != null)
-{
-    <ViewOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-}
-else
-{
-    <span>Loading...</span>
-}
-
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Origin: </span>
+    @if (Origin != null)
+    {
+        <span class="font-italic">@(Origin.OriginId != 0 ? Origin?.Name ?? "(No name)" : "New")</span>
+    }
+</div>
+<div class="group">
+    @if (IsEditing && Origin != null)
+    {
+        if (RefreshList != null)
+        {
+            <EditOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+        }
+        else
+        {
+            <EditOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        }
+    }
+    else if (Origin != null)
+    {
+        <ViewOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+    @if (IsEditable && Origin != null && Origin.OriginId > 0)
+    {
+        <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+    }
+</div>
 @code {
-
+    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && Origin?.CreatedBy == UserId;
 }
