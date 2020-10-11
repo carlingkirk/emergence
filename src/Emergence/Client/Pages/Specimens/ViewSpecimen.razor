@@ -65,7 +65,7 @@
                     <label for="origin">Origin</label>
                 </div>
                 <div>
-                    <span class="text-body">@(Specimen.InventoryItem.Origin != null ? Specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
+                    <span class="text-body">@(Specimen.InventoryItem.Origin != null && Specimen.InventoryItem.Origin.OriginId > 0 ? Specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
                 </div>
             </div>
         </div>

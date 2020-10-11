@@ -24,7 +24,7 @@
                     <label for="origin">Origin</label>
                 </div>
                 <div>
-                    <span class="link" @onclick="async () => await ModalServiceClient.ShowOriginModal(PlantInfo.Origin)">@(PlantInfo.Origin != null ? PlantInfo.Origin?.Name ?? "(No name)" : null)</span>
+                    <span class="link" @onclick="async () => await ModalServiceClient.ShowOriginModal(PlantInfo.Origin)">@(PlantInfo.Origin != null && PlantInfo.Origin.OriginId > 0 ? PlantInfo.Origin?.Name ?? "(No name)" : null)</span>
                 </div>
                 <div>
                     <a href="@PlantInfo.Origin?.Uri" target="_blank" alt="@PlantInfo.Origin?.Uri"><span class="link">@PlantInfo.Origin?.ShortUri</span></a>
