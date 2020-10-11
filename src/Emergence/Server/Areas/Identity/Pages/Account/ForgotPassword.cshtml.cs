@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using Emergence.Client.Server.Extensions;
 using Emergence.Data.Identity;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -52,7 +53,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                var contentPath = Url.Content("~/");
+                var contentPath = Request.GetContentUrl(Url.Content("~/"));
 
                 await _emailService.SendResetPasswordEmail(Input.Email, callbackUrl, contentPath);
 

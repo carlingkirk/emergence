@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using Emergence.Client.Server.Extensions;
 using Emergence.Data.Identity;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -87,7 +88,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 var callbackUrl = Url.Page("/Account/ConfirmEmailChange", pageHandler: null, values: new { userId, email = Input.NewEmail, code }, protocol: Request.Scheme);
-                var contentPath = Url.Content("~/");
+                var contentPath = Request.GetContentUrl(Url.Content("~/"));
 
                 await _emailService.SendVerificationEmail(Input.NewEmail, callbackUrl, contentPath);
 
@@ -118,7 +119,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page("/Account/ConfirmEmail", pageHandler: null, values: new { area = "Identity", userId, code }, protocol: Request.Scheme);
-            var contentPath = Url.Content("~/");
+            var contentPath = Request.GetContentUrl(Url.Content("~/"));
 
             await _emailService.SendVerificationEmail(email, callbackUrl, contentPath);
 

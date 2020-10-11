@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Emergence.Client.Server.Extensions;
 using Emergence.Data.Identity;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
@@ -65,7 +66,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
@@ -83,7 +84,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code, returnUrl },
                         protocol: Request.Scheme);
 
-                    var contentPath = Url.Content("~/");
+                    var contentPath = Request.GetContentUrl(Url.Content("~/"));
                     await _emailService.SendVerificationEmail(Input.Email, callbackUrl, contentPath);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)

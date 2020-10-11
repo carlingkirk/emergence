@@ -1,5 +1,6 @@
 using System.Text;
 using System.Threading.Tasks;
+using Emergence.Client.Server.Extensions;
 using Emergence.Data.Identity;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -54,7 +55,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string email, string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~");
+            returnUrl ??= Url.Content("~/");
 
             if (ModelState.IsValid)
             {
@@ -73,7 +74,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                     values: new { area = "Identity", userId = user.Id, code },
                     protocol: Request.Scheme);
 
-                var contentPath = Url.Content("~/");
+                var contentPath = Request.GetContentUrl(Url.Content("~/"));
                 await _emailService.SendVerificationEmail(user.Email, callbackUrl, contentPath);
                 Message = "We've resent your confirmation email. Please confirm your email and login.";
 

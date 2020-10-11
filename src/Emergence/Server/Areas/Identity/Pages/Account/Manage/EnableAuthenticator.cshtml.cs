@@ -128,7 +128,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
         private string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
-            int currentPosition = 0;
+            var currentPosition = 0;
             while (currentPosition + 4 < unformattedKey.Length)
             {
                 result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
@@ -144,7 +144,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
         private string GenerateQrCodeUri(string email, string unformattedKey) => string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode(Url.Content("/~")),
+                _urlEncoder.Encode(Url.Content("~/")),
                 _urlEncoder.Encode(email),
                 unformattedKey);
     }

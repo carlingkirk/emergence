@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Emergence.Client.Server.Extensions;
 using Emergence.Data.Identity;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -139,8 +140,8 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                             pageHandler: null,
                             values: new { area = "Identity", userId, code },
                             protocol: Request.Scheme);
+                        var contentPath = Request.GetContentUrl(Url.Content("~/"));
 
-                        var contentPath = Url.Content("~/");
                         await _emailService.SendVerificationEmail(Input.Email, callbackUrl, contentPath);
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
