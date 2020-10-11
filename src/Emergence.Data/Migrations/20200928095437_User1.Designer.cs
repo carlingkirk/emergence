@@ -768,10 +768,14 @@ namespace Emergence.Data.Migrations
 
             modelBuilder.Entity("Emergence.Data.Shared.Stores.User", b =>
                 {
-                    b.Property<Guid>("Id")
+					b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+					b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+						
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -795,6 +799,9 @@ namespace Emergence.Data.Migrations
                     b.HasIndex("LocationId");
 
                     b.HasIndex("PhotoId");
+					
+					b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
