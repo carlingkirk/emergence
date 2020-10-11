@@ -64,11 +64,6 @@ namespace Emergence.Client.Components
                 };
                 UploadedPhotos = new List<Photo>();
             }
-
-            if (!string.IsNullOrEmpty(UserId) && Specimen.InventoryItem.Inventory.CreatedBy == UserId)
-            {
-                IsEditable = true;
-            }
         }
 
         protected async Task RemoveSpecimen()

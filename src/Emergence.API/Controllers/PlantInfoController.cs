@@ -42,6 +42,10 @@ namespace Emergence.API.Controllers
             {
                 plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, UserId);
             }
+            else
+            {
+                plantInfo.Origin = null;
+            }
 
             var plantInfoResult = await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
 
@@ -65,6 +69,23 @@ namespace Emergence.API.Controllers
         {
             var result = await _plantInfoService.FindPlantInfos(findParams);
             return result;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id);
+            if (plantInfo.CreatedBy != UserId)
+            {
+                return Unauthorized();
+            }
+
+            var photos = await _photoService.GetPhotosAsync(PhotoType.PlantInfo, plantInfo.PlantInfoId);
+            await _photoService.RemovePhotosAsync(photos);
+            await _plantInfoService.RemovePlantInfoAsync(plantInfo);
+
+            return Ok();
         }
     }
 }

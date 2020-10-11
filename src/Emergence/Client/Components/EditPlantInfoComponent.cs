@@ -30,10 +30,7 @@ namespace Emergence.Client.Components
                 PlantInfo.Origin = SelectedOrigin;
             }
 
-            if (UploadedPhotos.Any())
-            {
-                PlantInfo.Photos = UploadedPhotos;
-            }
+            PlantInfo.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
 
             PlantInfo.Lifeform = SelectedLifeform;
             PlantInfo.CreatedBy = UserId;

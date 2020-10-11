@@ -41,5 +41,5 @@
     }
 </div>
 @code {
-
+    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && (Activity?.CreatedBy == UserId);
 }

@@ -147,5 +147,7 @@ namespace Emergence.Service
             var plantLocationsResult = await _plantLocationRepository.AddSomeAsync(plantLocations.Select(o => o.AsStore()));
             return plantLocationsResult.Select(o => o.AsModel());
         }
+
+        public async Task<bool> RemovePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo) => await _plantInfoRepository.RemoveAsync(plantInfo.AsStore());
     }
 }

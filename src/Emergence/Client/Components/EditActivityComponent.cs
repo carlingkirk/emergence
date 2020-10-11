@@ -50,10 +50,7 @@ namespace Emergence.Client.Components
                 PopulateActivityName();
             }
 
-            if (UploadedPhotos.Any())
-            {
-                Activity.Photos = UploadedPhotos;
-            }
+            Activity.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
 
             if (SelectedSpecimen != null)
             {

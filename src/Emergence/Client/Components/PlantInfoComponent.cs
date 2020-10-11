@@ -88,11 +88,6 @@ namespace Emergence.Client.Components
                     Photos = new List<Photo>()
                 };
             }
-
-            if (!string.IsNullOrEmpty(UserId) && PlantInfo.CreatedBy == UserId)
-            {
-                IsEditable = true;
-            }
         }
 
         protected bool IsSoilTypeChosen(SoilType soilType) => ChosenSoilTypes.Any(s => s == soilType);
@@ -112,5 +107,16 @@ namespace Emergence.Client.Components
         }
 
         protected string GetElementId(string element, string id) => element + "-" + id;
+
+        protected async Task RemovePlantInfo()
+        {
+            var result = await ApiClient.RemovePlantInfoAsync(PlantInfo);
+            if (result)
+            {
+                PlantInfo = null;
+
+                await UnloadItem();
+            }
+        }
     }
 }

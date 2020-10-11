@@ -47,11 +47,6 @@ namespace Emergence.Client.Components
                 };
                 UploadedPhotos = new List<Photo>();
             }
-
-            if (!string.IsNullOrEmpty(UserId) && Activity.CreatedBy == UserId)
-            {
-                IsEditable = true;
-            }
         }
 
         protected async Task RemoveActivity()

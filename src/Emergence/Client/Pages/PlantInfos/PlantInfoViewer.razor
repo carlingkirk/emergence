@@ -11,7 +11,7 @@
     <span class="title">Plant Profile: </span>
     @if (PlantInfo != null && (!string.IsNullOrEmpty(ScientificName) || !string.IsNullOrEmpty(CommonName)))
     {
-    <span>@CommonName</span><span class="font-italic"> (@ScientificName)</span>
+        <span>@CommonName</span><span class="font-italic"> (@ScientificName)</span>
     }
     else
     {
@@ -42,9 +42,10 @@
     @if (IsEditable && PlantInfo != null && PlantInfo.PlantInfoId > 0)
     {
         <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
+        <button class="btn btn-primary" @onclick="async () => await RemovePlantInfo()">Delete</button>
     }
 </div>
 
 @code {
-
+    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && PlantInfo?.CreatedBy == UserId;
 }

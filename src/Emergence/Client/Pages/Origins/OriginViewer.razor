@@ -40,5 +40,5 @@
     }
 </div>
 @code {
-
+    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && Origin?.CreatedBy == UserId;
 }

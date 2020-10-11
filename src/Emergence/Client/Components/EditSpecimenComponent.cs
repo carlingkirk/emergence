@@ -36,10 +36,7 @@ namespace Emergence.Client.Components
                 Specimen.Lifeform = SelectedLifeform;
             }
 
-            if (UploadedPhotos.Any())
-            {
-                Specimen.Photos = UploadedPhotos;
-            }
+            Specimen.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
 
             Specimen = await ApiClient.PutSpecimenAsync(Specimen);
 

@@ -42,11 +42,6 @@ namespace Emergence.Client.Components
                     Location = new Location()
                 };
             }
-
-            if (!string.IsNullOrEmpty(UserId) && Origin.CreatedBy == UserId)
-            {
-                IsEditable = true;
-            }
         }
     }
 }

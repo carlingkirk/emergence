@@ -32,5 +32,6 @@ namespace Emergence.Client.Common
         Task<bool> RemovePhotoAsync(int id);
         Task<User> GetUserAsync(string userId);
         Task<bool> RemoveActivityAsync(Activity activity);
+        Task<bool> RemovePlantInfoAsync(PlantInfo plantInfo);
     }
 }

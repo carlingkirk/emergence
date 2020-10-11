@@ -220,6 +220,15 @@ namespace Emergence.Client.Common
             return true;
         }
 
+        public async Task<bool> RemovePlantInfoAsync(PlantInfo plantInfo)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/plantinfo/{plantInfo.PlantInfoId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)
