@@ -55,14 +55,24 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
+            _logger.LogDebug($"ExternalLogin.OnPost called: {returnUrl} - {provider}");
+
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+
+            _logger.LogDebug($"ExternalLogin.OnPost redirectUrl: {redirectUrl}");
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            _logger.LogDebug($"ExternalLogin.OnPost properties: {properties.ExpiresUtc} {properties.RedirectUri} {properties.IsPersistent} {string.Join(',', properties.Parameters.Values)}");
+
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+            _logger.LogDebug($"OnGetCallbackAsync called: {returnUrl} - {remoteError}");
+
             returnUrl ??= Url.Content("~/");
             if (remoteError != null)
             {
@@ -77,7 +87,10 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
+
+            _logger.LogDebug($"ExternalLoginSignInAsync result - Succeeded: {result.Succeeded}");
+
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
