@@ -16,13 +16,13 @@ namespace Emergence.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
+            // Supply HttpClient instances that include access tokens when making requests to the server project
+            builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Emergence.BaseAPI"));
+
             builder.Services.AddHttpClient("Emergence.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
             builder.Services.AddHttpClient("Emergence.AnonymousAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
-
-            // Supply HttpClient instances that include access tokens when making requests to the server project
-            builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Emergence.ServerAPI"));
 
             builder.Services.AddApiAuthorization(options =>
             {
