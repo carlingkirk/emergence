@@ -1,8 +1,10 @@
 using System;
 using System.Configuration;
 using System.Reflection;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Emergence.Client.Server;
+using Emergence.Client.Server.Areas.Identity;
 using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
@@ -11,8 +13,8 @@ using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -21,6 +23,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,20 +45,24 @@ namespace Emergence.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(ApplicationDbContext).Assembly.FullName));
-            services.AddDbContext<EmergenceDbContext>(options =>
-                options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(EmergenceDbContext).Assembly.FullName));
+            var connectionString = Configuration["EmergenceDbConnection"];
+            void DbContextOptionsBuilder(DbContextOptionsBuilder builder) =>
+                builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly.GetName().Name));
+
+            services.AddDbContext<ApplicationDbContext>(DbContextOptionsBuilder);
+            services.AddDbContext<EmergenceDbContext>(DbContextOptionsBuilder);
 
             // Authentication
-            services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedAccount = true;
             });
 
             var certName = Configuration["CertificateName"];
@@ -69,6 +76,10 @@ namespace Emergence.Server
             {
                 // There's gotta be some bug around this, we shouldn't have to set this
                 opt.IssuerUri = Configuration["IssuerUri"];
+                opt.Events.RaiseErrorEvents = true;
+                opt.Events.RaiseInformationEvents = true;
+                opt.Events.RaiseFailureEvents = true;
+                opt.Events.RaiseSuccessEvents = true;
             })
             .AddSigningCredential(cert)
             .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
@@ -76,12 +87,19 @@ namespace Emergence.Server
                 options.SigningCredential = new SigningCredentials(new X509SecurityKey(cert), "RS256");
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddGoogle(options =>
-                {
-                    options.ClientId = Configuration["GoogleOAuthClientId"];
-                    options.ClientSecret = Configuration["GoogleOAuthClientSecret"];
-                })
-                .AddIdentityServerJwt().AddCookie();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Bearer";
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = Configuration["GoogleOAuthClientId"];
+                options.ClientSecret = Configuration["GoogleOAuthClientSecret"];
+                options.SaveTokens = true;
+            })
+            .AddIdentityServerJwt().AddCookie();
+
+            services.Configure<IdentityOptions>(options => options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
@@ -121,6 +139,7 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<Synonym>), typeof(Repository<Synonym>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
             services.AddScoped(typeof(IRepository<User>), typeof(Repository<User>));
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
