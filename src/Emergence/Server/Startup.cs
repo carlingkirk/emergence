@@ -48,8 +48,6 @@ namespace Emergence.Server
                 options.AddSqlConnection(Configuration["EmergenceDbConnection"], typeof(EmergenceDbContext).Assembly.FullName));
 
             // Authentication
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
             services.AddDefaultIdentity<ApplicationUser>(o => o.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -78,12 +76,12 @@ namespace Emergence.Server
                 options.SigningCredential = new SigningCredentials(new X509SecurityKey(cert), "RS256");
             });
 
-            services.AddAuthentication().AddGoogle(options =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddGoogle(options =>
                 {
                     options.ClientId = Configuration["GoogleOAuthClientId"];
                     options.ClientSecret = Configuration["GoogleOAuthClientSecret"];
                 })
-                .AddIdentityServerJwt();
+                .AddIdentityServerJwt().AddCookie();
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
