@@ -12,137 +12,141 @@
 
 @if (Activity != null)
 {
-    <EditForm Model="@Activity">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-3 col-xs">
-                    <label for="type">Type</label>
-                    <select @bind="@Activity.ActivityType" type="text" class="form-control" id="type">
-                        @foreach (var type in ActivityTypes)
-                        {
-                            <option value="@type">@type.ToFriendlyName()</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-lg-9 col-xs">
-                    <label for="specimen">Specimen</label>
-                    <BlazoredTypeahead SearchMethod="FindSpecimensAsync"
-                                       @bind-Value="SelectedSpecimen"
-                                       MinimumLength="3"
-                                       Debounce="500" Context="specimen">
-                        <SelectedTemplate>
+<EditForm Model="@Activity" OnValidSubmit="SaveActivityAsync">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-12">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+            </div>
+            <div class="col-lg-3 col-xs">
+                <label for="type">Type</label>
+                <InputSelect @bind-Value="@Activity.ActivityType" class="form-control" id="type">
+                    @foreach (var type in ActivityTypes)
+                    {
+                        <option value="@type">@type.ToFriendlyName()</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-lg-9 col-xs">
+                <label for="specimen">Specimen</label>
+                <BlazoredTypeahead SearchMethod="FindSpecimensAsync"
+                                   @bind-Value="SelectedSpecimen"
+                                   MinimumLength="3"
+                                   Debounce="500" Context="specimen">
+                    <SelectedTemplate>
+                        <span>
+                            @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
+                            (@(specimen.InventoryItem?.Status.ToFriendlyName()))
+                        </span>
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
+                            {
+                            <a href="" @onclick="@(async () => { await AddSpecimenAsync((Specimen)specimen); })" @onclick:preventDefault>
+                                <span>Add new </span>
+                                <span class="text-body">@(specimen.Lifeform.CommonName) </span>
+                                <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>
+                            </a>
+                            }
+                            else if (specimen.InventoryItem != null)
+                            {
                             <span>
                                 @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
                                 (@(specimen.InventoryItem?.Status.ToFriendlyName()))
                             </span>
-                        </SelectedTemplate>
-                        <ResultTemplate>
-                            @if (specimen.SpecimenId == 0 && specimen.Lifeform != null)
-                                {
-                                <a href="" @onclick="@(async () => { await AddSpecimenAsync((Specimen)specimen); })" @onclick:preventDefault>
-                                    <span>Add new </span>
-                                    <span class="text-body">@(specimen.Lifeform.CommonName) </span>
-                                    <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>
-                                </a>
-                                }
-                                else if (specimen.InventoryItem != null)
-                                {
-                                <span>
-                                    @(specimen.InventoryItem?.Name) - @(specimen.InventoryItem?.Quantity) @(specimen.SpecimenStage.ToFriendlyName())
-                                    (@(specimen.InventoryItem?.Status.ToFriendlyName()))
-                                </span>
-                                }
-                                else // this won't happen?
-                            {
-                                <span>@specimen.SpecimenId.ToString();</span>
-                                }
-                        </ResultTemplate>
-                        <NotFoundTemplate>
-                            No results found
-                        </NotFoundTemplate>
-                    </BlazoredTypeahead>
+                            }
+                            else // this won't happen?
+                        {
+                            <span>@specimen.SpecimenId.ToString();</span>
+                            }
+                    </ResultTemplate>
+                    <NotFoundTemplate>
+                        No results found
+                    </NotFoundTemplate>
+                </BlazoredTypeahead>
+            </div>
+            @if (Activity.ActivityType == ActivityType.Custom)
+            {
+                <div class="col-lg-3 col-xs">
+                    <label for="custom-type">Custom Type</label>
+                    <InputText @bind-Value="@Activity.CustomActivityType" class="form-control" id="custom-type" />
                 </div>
-                @if (Activity.ActivityType == ActivityType.Custom)
+            }
+        </div>
+        @if (SelectedSpecimen != null)
+        {
+            <div class="row">
+                <div class="col-lg-3 col-xs">
+                    <label for="quantity">Quantity</label>
+                    <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
+                </div>
+                @if (ShowAutoSpecimen)
                 {
-                    <div class="col-lg-3 col-xs">
-                        <label for="custom-type">Custom Type</label>
-                        <input @bind="@Activity.CustomActivityType" type="text" class="form-control" id="custom-type"/>
+                    <div class="col-lg-9 col-xs">
+                        <label for="update-specimen">Create or update specimen</label>
+                        <div style="display: block;">
+                            <input type="checkbox" @bind="UpdateSpecimen" id="update-specimen" class="check-lg" />
+                            @if (UpdateSpecimen && Activity.Quantity.HasValue && SelectedSpecimen?.InventoryItem?.Quantity == Activity.Quantity.Value)
+                            {
+                                <label for="enable-specimen-update">
+                                    Original specimen stage will be updated to @GetSpecimenStage(Activity.ActivityType).ToFriendlyName()
+                                </label>
+                            }
+                            else if (UpdateSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
+                            {
+                                <label for="enable-specimen-update">
+                                    Original specimen quantity will be reduced
+                                    @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
+                                    {
+                                        <span>to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity)</span>
+                                    }
+                                </label>
+                            }
+                            else if (!UpdateSpecimen && Activity.Quantity.HasValue)
+                            {
+                                <label for="enable-specimen-update">Original specimen quantity will not be updated</label>
+                            }
+                        </div>
                     </div>
                 }
             </div>
-            @if (SelectedSpecimen != null)
-            {
-                <div class="row">
-                    <div class="col-lg-3 col-xs">
-                        <label for="quantity">Quantity</label>
-                        <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
-                    </div>
-                    @if (ShowAutoSpecimen)
-                    {
-                        <div class="col-lg-9 col-xs">
-                            <label for="update-specimen">Create or update specimen</label>
-                            <div style="display: block;">
-                                <input type="checkbox" @bind="UpdateSpecimen" id="update-specimen" class="check-lg" />
-                                @if (UpdateSpecimen && Activity.Quantity.HasValue && SelectedSpecimen?.InventoryItem?.Quantity == Activity.Quantity.Value)
-                                {
-                                    <label for="enable-specimen-update">
-                                        Original specimen stage will be updated to @GetSpecimenStage(Activity.ActivityType).ToFriendlyName()
-                                    </label>
-                                }
-                                else if (UpdateSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
-                                {
-                                    <label for="enable-specimen-update">
-                                        Original specimen quantity will be reduced
-                                        @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
-                                        {
-                                            <span>to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity)</span>
-                                        }
-                                    </label>
-                                }
-                                else if (!UpdateSpecimen && Activity.Quantity.HasValue)
-                                {
-                                    <label for="enable-specimen-update">Original specimen quantity will not be updated</label>
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            <div class="row">
-                <div class="col">
-                    <label for="name">Activity Title</label>
-                    <input @bind="@Activity.Name" type="text" class="form-control" id="name" @onfocus="PopulateActivityName" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label for="description">Description</label>
-                    <textarea @bind="@Activity.Description" type="text" class="form-control" id="description" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label for="date-occured">Date Occured</label>
-                    <input @bind="@Activity.DateOccured" type="date" class="form-control" id="date-occured" />
-                </div>
-                <div class="col">
-                    <label for="date-scheduled">Date Scheduled</label>
-                    <input @bind="@Activity.DateScheduled" type="date" class="form-control" id="date-scheduled" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Activity" />
-                </div>
+        }
+        <div class="row">
+            <div class="col">
+                <label for="name">Activity Title</label>
+                <InputText @bind-Value="@Activity.Name" class="form-control" id="name" @onfocus="PopulateActivityName" />
             </div>
         </div>
-    </EditForm>
+        <div class="row">
+            <div class="col">
+                <label for="description">Description</label>
+                <textarea @bind="@Activity.Description" type="text" class="form-control" id="description" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="date-occured">Date Occured</label>
+                <InputDate @bind-Value="@Activity.DateOccured" class="form-control" id="date-occured" />
+            </div>
+            <div class="col">
+                <label for="date-scheduled">Date Scheduled</label>
+                <InputDate @bind-Value="@Activity.DateScheduled" class="form-control" id="date-scheduled" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Activity" />
+            </div>
+        </div>
+    </div>
 
-    <button @onclick="(async () => await SaveActivityAsync())" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
     @if (BlazoredModal != null)
     {
         <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
     }
+</EditForm>
 }
 else
 {

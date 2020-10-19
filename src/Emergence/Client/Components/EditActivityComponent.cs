@@ -143,13 +143,16 @@ namespace Emergence.Client.Components
 
         protected void PopulateActivityName()
         {
-            if (Activity.ActivityType != ActivityType.Custom)
+            if (string.IsNullOrEmpty(Activity.Name))
             {
-                Activity.Name = Activity.ActivityType.ToFriendlyName() + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
-            }
-            else
-            {
-                Activity.Name = Activity.CustomActivityType + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
+                if (Activity.ActivityType != ActivityType.Custom)
+                {
+                    Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
+                }
+                else
+                {
+                    Activity.Name = Activity.CustomActivityType + ": " + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
+                }
             }
         }
 
