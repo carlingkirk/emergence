@@ -56,6 +56,7 @@ namespace Emergence.Client.Components
             {
                 Activity = null;
 
+                await RefreshListAsync();
                 await UnloadItem();
             }
         }

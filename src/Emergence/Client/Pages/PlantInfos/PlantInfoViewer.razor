@@ -23,11 +23,11 @@
     {
         @if (RefreshList != null)
         {
-            <EditPlantInfo RefreshList="RefreshList" PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+            <EditPlantInfo Cancel="GoBack" RefreshList="RefreshList" PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
         }
         else
         {
-            <EditPlantInfo PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+            <EditPlantInfo Cancel="GoBack" PlantInfo="PlantInfo" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
         }
     }
     else if (PlantInfo != null)
@@ -47,5 +47,14 @@
 </div>
 
 @code {
+
+    protected async Task GoBack()
+    {
+        if (PlantInfo.PlantInfoId == 0)
+        {
+            await IsItemLoadedChanged.InvokeAsync(false);
+        }
+    }
+
     protected bool IsEditable => !string.IsNullOrEmpty(UserId) && PlantInfo?.CreatedBy == UserId;
 }

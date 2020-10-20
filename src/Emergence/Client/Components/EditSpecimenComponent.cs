@@ -14,10 +14,13 @@ namespace Emergence.Client.Components
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
+        [Parameter]
+        public Func<Task> Cancel { get; set; }
 
         protected async Task SaveSpecimenAsync()
         {
-            if (Specimen.SpecimenId == 0)
+            var isNewSpecimen = Specimen.SpecimenId == 0;
+            if (isNewSpecimen)
             {
                 Specimen.DateCreated = DateTime.UtcNow;
             }
@@ -46,10 +49,22 @@ namespace Emergence.Client.Components
             }
             else
             {
-                Specimen = null;
-
-                await UnloadItem();
+                await CancelAsync(isNewSpecimen);
             }
+        }
+
+        protected async Task CancelAsync(bool isNewSpecimen = false)
+        {
+            if (Specimen.SpecimenId == 0 || isNewSpecimen)
+            {
+                await Cancel.Invoke();
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+            }
+
+            await RefreshListAsync();
         }
 
         protected void PopulateInventoryItemName()

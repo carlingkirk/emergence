@@ -115,6 +115,7 @@ namespace Emergence.Client.Components
             {
                 PlantInfo = null;
 
+                await RefreshListAsync();
                 await UnloadItem();
             }
         }

@@ -33,14 +33,17 @@ namespace Emergence.Client.Components
 
         protected async Task UnloadItem()
         {
+            await IsEditingChanged.InvokeAsync(false);
+            await IsItemLoadedChanged.InvokeAsync(false);
+        }
+
+        protected async Task RefreshListAsync()
+        {
             if (RefreshList != null)
             {
                 List = await RefreshList.Invoke();
                 await ListChanged.InvokeAsync(List);
             }
-
-            await IsEditingChanged.InvokeAsync(false);
-            await IsItemLoadedChanged.InvokeAsync(false);
         }
     }
 }

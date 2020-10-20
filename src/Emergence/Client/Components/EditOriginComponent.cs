@@ -11,10 +11,13 @@ namespace Emergence.Client.Components
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
+        [Parameter]
+        public Func<Task> Cancel { get; set; }
 
         protected async Task SaveOriginAsync()
         {
-            if (Origin.OriginId == 0)
+            var isNewOrigin = Origin.OriginId == 0;
+            if (isNewOrigin)
             {
                 Origin.DateCreated = DateTime.UtcNow;
             }
@@ -57,10 +60,22 @@ namespace Emergence.Client.Components
             }
             else
             {
-                Origin = null;
-
-                await UnloadItem();
+                await CancelAsync(isNewOrigin);
             }
+        }
+
+        protected async Task CancelAsync(bool isNewOrigin = false)
+        {
+            if (Origin.OriginId == 0 || isNewOrigin)
+            {
+                await Cancel.Invoke();
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+            }
+
+            await RefreshListAsync();
         }
     }
 }

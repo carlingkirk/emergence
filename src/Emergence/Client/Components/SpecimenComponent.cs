@@ -73,6 +73,7 @@ namespace Emergence.Client.Components
             {
                 Specimen = null;
 
+                await RefreshListAsync();
                 await UnloadItem();
             }
         }

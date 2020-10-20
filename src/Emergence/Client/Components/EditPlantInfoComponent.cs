@@ -13,10 +13,13 @@ namespace Emergence.Client.Components
     {
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
+        [Parameter]
+        public Func<Task> Cancel { get; set; }
 
         protected async Task SavePlantInfoAsync()
         {
-            if (PlantInfo.PlantInfoId == 0)
+            var isNewPlantInfo = PlantInfo.PlantInfoId == 0;
+            if (isNewPlantInfo)
             {
                 PlantInfo.DateCreated = DateTime.UtcNow;
             }
@@ -72,10 +75,22 @@ namespace Emergence.Client.Components
             }
             else
             {
-                PlantInfo = null;
-
-                await UnloadItem();
+                await CancelAsync(isNewPlantInfo);
             }
+        }
+
+        protected async Task CancelAsync(bool isNewPlantInfo = false)
+        {
+            if (PlantInfo.PlantInfoId == 0 || isNewPlantInfo)
+            {
+                await Cancel.Invoke();
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+            }
+
+            await RefreshListAsync();
         }
 
         protected void AddSoilType(SoilType soilType) => ChosenSoilTypes.Add(soilType);

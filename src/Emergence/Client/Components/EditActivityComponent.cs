@@ -113,6 +113,20 @@ namespace Emergence.Client.Components
             }
         }
 
+        protected async Task CancelAsync(bool isNewActivity = false)
+        {
+            if (Activity.ActivityId == 0 || isNewActivity)
+            {
+                await Cancel.Invoke();
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
+            }
+
+            await RefreshListAsync();
+        }
+
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
         {
             var specimenResult = await ApiClient.FindSpecimensAsync(new FindParams
@@ -182,18 +196,6 @@ namespace Emergence.Client.Components
                     return SpecimenStage.InGround;
                 default:
                     return SpecimenStage.Unknown;
-            }
-        }
-
-        protected async Task CancelAsync(bool isNewActivity = false)
-        {
-            if (Activity.ActivityId == 0 || isNewActivity)
-            {
-                await Cancel.Invoke();
-            }
-            else
-            {
-                await IsEditingChanged.InvokeAsync(false);
             }
         }
     }

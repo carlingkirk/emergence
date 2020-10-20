@@ -19,11 +19,11 @@
     {
         if (RefreshList != null)
         {
-            <EditOrigin RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+            <EditOrigin Cancel="GoBack" RefreshList="RefreshList" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
         }
         else
         {
-            <EditOrigin Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+            <EditOrigin Cancel="GoBack" Origin="Origin" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
         }
     }
     else if (Origin != null)
@@ -40,5 +40,14 @@
     }
 </div>
 @code {
+
+    protected async Task GoBack()
+    {
+        if (Origin.OriginId == 0)
+        {
+            await IsItemLoadedChanged.InvokeAsync(false);
+        }
+    }
+
     protected bool IsEditable => !string.IsNullOrEmpty(UserId) && Origin?.CreatedBy == UserId;
 }
