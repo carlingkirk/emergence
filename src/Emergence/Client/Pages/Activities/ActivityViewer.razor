@@ -19,11 +19,11 @@
     {
         if (RefreshList != null)
         {
-            <EditActivity RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
+            <EditActivity Cancel="GoBack" RefreshList="RefreshList" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" @bind-List="List" />
         }
         else
         {
-            <EditActivity Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
+            <EditActivity Cancel="GoBack" Activity="Activity" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" SelectedSpecimen="SelectedSpecimen" />
         }
     }
     else if (Activity != null)
@@ -34,12 +34,22 @@
     {
         <span>Loading...</span>
     }
-    @if (IsEditable && Activity != null && Activity.ActivityId > 0)
+    @if (IsEditable && !IsEditing && Activity != null && Activity.ActivityId > 0)
     {
-        <button class="btn @(IsEditing ? "btn-secondary" : "btn-primary")" @onclick="() => IsEditing = !IsEditing">@(IsEditing ? "Cancel" : "Edit")</button>
-        <button class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
+        <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
+        <button type="button" class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
     }
 </div>
+
 @code {
+
+    protected async Task GoBack()
+    {
+        if (Activity.ActivityId == 0)
+        {
+            await IsItemLoadedChanged.InvokeAsync(false);
+        }
+    }
+
     protected bool IsEditable => !string.IsNullOrEmpty(UserId) && (Activity?.CreatedBy == UserId);
 }

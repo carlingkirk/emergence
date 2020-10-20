@@ -16,10 +16,13 @@ namespace Emergence.Client.Components
     {
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
-        public bool UpdateSpecimen { get; set; }
         [CascadingParameter]
         protected BlazoredModalInstance BlazoredModal { get; set; }
-        protected bool ShowAutoSpecimen => Activity.ActivityId == 0 &&
+        [Parameter]
+        public Func<Task> Cancel { get; set; }
+        public bool UpdateSpecimen { get; set; }
+        public bool IsNewSpecimen { get; set; }
+        protected bool ShowAutoSpecimen => Activity.ActivityId == 0 && !IsNewSpecimen &&
             (Activity.ActivityType == ActivityType.PlantInGround ||
              Activity.ActivityType == ActivityType.Germination ||
              Activity.ActivityType == ActivityType.Stratification);
@@ -36,7 +39,8 @@ namespace Emergence.Client.Components
 
         protected async Task SaveActivityAsync()
         {
-            if (Activity.ActivityId == 0)
+            var isNewActivity = Activity.ActivityId == 0;
+            if (isNewActivity)
             {
                 Activity.DateCreated = DateTime.UtcNow;
             }
@@ -105,9 +109,7 @@ namespace Emergence.Client.Components
             }
             else
             {
-                Activity = null;
-
-                await UnloadItem();
+                await CancelAsync(isNewActivity);
             }
         }
 
@@ -128,7 +130,7 @@ namespace Emergence.Client.Components
             {
                 SearchText = searchText,
                 Skip = 0,
-                Take = 3,
+                Take = 3 + (10 - specimens.Count),
                 SortBy = "ScientificName",
                 SortDirection = SortDirection.Ascending
             });
@@ -162,7 +164,9 @@ namespace Emergence.Client.Components
 
             if (!result.Cancelled)
             {
-                SelectedSpecimen = result.Data as Specimen;
+                SelectedSpecimen = specimen;
+                SelectedSpecimen.SpecimenId = ((Specimen)result.Data).SpecimenId;
+                IsNewSpecimen = true;
             }
         }
 
@@ -178,6 +182,18 @@ namespace Emergence.Client.Components
                     return SpecimenStage.InGround;
                 default:
                     return SpecimenStage.Unknown;
+            }
+        }
+
+        protected async Task CancelAsync(bool isNewActivity = false)
+        {
+            if (Activity.ActivityId == 0 || isNewActivity)
+            {
+                await Cancel.Invoke();
+            }
+            else
+            {
+                await IsEditingChanged.InvokeAsync(false);
             }
         }
     }
