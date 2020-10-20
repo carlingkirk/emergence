@@ -84,13 +84,17 @@ namespace Emergence.Client.Components
             if (PlantInfo.PlantInfoId == 0 || isNewPlantInfo)
             {
                 await Cancel.Invoke();
+
+                if (isNewPlantInfo)
+                {
+                    await RefreshListAsync();
+                }
             }
             else
             {
                 await IsEditingChanged.InvokeAsync(false);
+                await RefreshListAsync();
             }
-
-            await RefreshListAsync();
         }
 
         protected void AddSoilType(SoilType soilType) => ChosenSoilTypes.Add(soilType);

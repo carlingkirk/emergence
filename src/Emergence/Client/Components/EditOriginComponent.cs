@@ -69,13 +69,18 @@ namespace Emergence.Client.Components
             if (Origin.OriginId == 0 || isNewOrigin)
             {
                 await Cancel.Invoke();
+
+                if (isNewOrigin)
+                {
+                    await RefreshListAsync();
+                }
             }
             else
             {
                 await IsEditingChanged.InvokeAsync(false);
-            }
 
-            await RefreshListAsync();
+                await RefreshListAsync();
+            }
         }
     }
 }

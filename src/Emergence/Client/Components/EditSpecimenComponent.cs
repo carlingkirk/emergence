@@ -58,13 +58,17 @@ namespace Emergence.Client.Components
             if (Specimen.SpecimenId == 0 || isNewSpecimen)
             {
                 await Cancel.Invoke();
+
+                if (isNewSpecimen)
+                {
+                    await RefreshListAsync();
+                }
             }
             else
             {
                 await IsEditingChanged.InvokeAsync(false);
+                await RefreshListAsync();
             }
-
-            await RefreshListAsync();
         }
 
         protected void PopulateInventoryItemName()
