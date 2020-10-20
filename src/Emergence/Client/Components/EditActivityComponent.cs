@@ -118,13 +118,18 @@ namespace Emergence.Client.Components
             if (Activity.ActivityId == 0 || isNewActivity)
             {
                 await Cancel.Invoke();
+
+                if (isNewActivity)
+                {
+                    await RefreshListAsync();
+                }
             }
             else
             {
                 await IsEditingChanged.InvokeAsync(false);
-            }
 
-            await RefreshListAsync();
+                await RefreshListAsync();
+            }
         }
 
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
@@ -151,7 +156,17 @@ namespace Emergence.Client.Components
 
             foreach (var lifeform in result.Results)
             {
-                specimens.Add(new Specimen { Lifeform = lifeform, InventoryItem = new InventoryItem { Inventory = new Inventory { CreatedBy = UserId } } });
+                specimens.Add(new Specimen
+                {
+                    Lifeform = lifeform,
+                    InventoryItem = new InventoryItem
+                    {
+                        Inventory = new Inventory
+                        {
+                            CreatedBy = UserId
+                        }
+                    }
+                });
             }
 
             return specimens;
