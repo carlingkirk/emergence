@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Interfaces;
 
@@ -26,6 +27,9 @@ namespace Emergence.Data.Shared.Models
         public Lifeform Lifeform { get; set; }
         public IEnumerable<PlantLocation> Locations { get; set; }
         public IEnumerable<Photo> Photos { get; set; }
+
+        [Required(ErrorMessage = "Please find a plant by searching in the Plant Name field by scientific name or common name.")]
+        public Lifeform SelectedLifeform { get; set; }
     }
 
     public class BloomTime

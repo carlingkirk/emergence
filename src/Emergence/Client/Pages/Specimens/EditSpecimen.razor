@@ -11,80 +11,83 @@
 
 @if (Specimen != null)
 {
-    <EditForm Model="@Specimen">
-        <div class="form-group">
-            <div class="row">
-                <div class="col">
-                    <label for="lifeform">Plant Name </label>
-                    <BlazoredTypeahead SearchMethod="FindLifeformsAsync"
-                                       @bind-Value="SelectedLifeform"
-                                       MinimumLength="3"
-                                       Debounce="500" Context="lifeform">
-                        <SelectedTemplate>
-                            <span class="text-body">@(lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(lifeform.ScientificName)</span>
-                        </SelectedTemplate>
-                        <ResultTemplate>
-                            <span class="text-body">@(lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(lifeform.ScientificName)</span>
-                        </ResultTemplate>
-                        <NotFoundTemplate>
-                            No results found
-                        </NotFoundTemplate>
-                    </BlazoredTypeahead>
-                </div>
+<EditForm Model="@Specimen" OnValidSubmit="SaveSpecimenAsync">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-12">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
             </div>
-            <div class="row">
-                <div class="col-lg-7 col-xs">
-                    <label for="specimen-name">Specimen Name</label>
-                    <input @bind="@Specimen.InventoryItem.Name" type="text" class="form-control" id="specimen-name" @onfocus="PopulateInventoryItemName" />
-                </div>
-                <div class="col-lg-2 col-xs">
-                    <label for="quantity">Quantity</label>
-                    <input @bind="@Specimen.InventoryItem.Quantity" type="text" class="form-control" id="quantity" />
-                </div>
-                <div class="col-lg-3 col-xs">
-                    <label for="quantity">Status</label>
-                    <select @bind="@Specimen.InventoryItem.Status" type="text" class="form-control" id="status">
-                        @foreach (var status in Statuses)
-                        {
-                            <option value="@status">@status.ToFriendlyName()</option>
-                        }
-                    </select>
-                </div>
+            <div class="col">
+                <label for="lifeform">Plant Name </label>
+                <BlazoredTypeahead SearchMethod="FindLifeformsAsync"
+                                   @bind-Value="SelectedLifeform"
+                                   MinimumLength="3"
+                                   Debounce="500" Context="lifeform">
+                    <SelectedTemplate>
+                        <span class="text-body">@(lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(lifeform.ScientificName)</span>
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        <span class="text-body">@(lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(lifeform.ScientificName)</span>
+                    </ResultTemplate>
+                    <NotFoundTemplate>
+                        No results found
+                    </NotFoundTemplate>
+                </BlazoredTypeahead>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-xs">
-                    <label for="stage">Stage</label>
-                    <select @bind="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
-                        @foreach (var stage in SpecimenStages)
-                        {
-                            <option value="@stage">@stage.ToFriendlyName()</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-lg-4 col-xs">
-                    <label for="date-acquired">Date Acquired</label>
-                    <input type="date" @bind="Specimen.InventoryItem.DateAcquired" class="form-control" />
-                </div>
-                <div class="col-lg-4 col-xs">
-                    <label for="type">Type</label>
-                    <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="type">
-                        @foreach (var itemType in ItemTypes)
-                        {
-                            <option value="@itemType">@itemType.ToFriendlyName()</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label for="origin">Origin</label>
-                    <OriginTypeahead @bind-SelectedOrigin="SelectedOrigin" />
-                </div>
-            </div>
-            <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen" />
         </div>
-    </EditForm>
-    <button @onclick="(async () => await SaveSpecimenAsync())" class="btn btn-primary">Save</button>
+        <div class="row">
+            <div class="col-lg-7 col-xs">
+                <label for="specimen-name">Specimen Name</label>
+                <InputText @bind-Value="@Specimen.Name" class="form-control" id="specimen-name" @onfocus="PopulateInventoryItemName" />
+            </div>
+            <div class="col-lg-2 col-xs">
+                <label for="quantity">Quantity</label>
+                <InputNumber @bind-Value="@Specimen.Quantity" class="form-control" id="quantity" />
+            </div>
+            <div class="col-lg-3 col-xs">
+                <label for="quantity">Status</label>
+                <select @bind="@Specimen.InventoryItem.Status" type="text" class="form-control" id="status">
+                    @foreach (var status in Statuses)
+                    {
+                        <option value="@status">@status.ToFriendlyName()</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-xs">
+                <label for="stage">Stage</label>
+                <InputSelect @bind-Value="@Specimen.SpecimenStage" class="form-control" id="specimen-stage">
+                    @foreach (var stage in SpecimenStages)
+                        {
+                        <option value="@stage">@stage.ToFriendlyName()</option>
+                        }
+                </InputSelect>
+            </div>
+            <div class="col-lg-4 col-xs">
+                <label for="date-acquired">Date Acquired</label>
+                <input type="date" @bind="Specimen.InventoryItem.DateAcquired" class="form-control" />
+            </div>
+            <div class="col-lg-4 col-xs">
+                <label for="type">Type</label>
+                <select @bind="@Specimen.InventoryItem.ItemType" type="text" class="form-control" id="type">
+                    @foreach (var itemType in ItemTypes)
+                    {
+                        <option value="@itemType">@itemType.ToFriendlyName()</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="origin">Origin</label>
+                <OriginTypeahead @bind-SelectedOrigin="SelectedOrigin" />
+            </div>
+        </div>
+        <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
     @if (BlazoredModal != null)
     {
         <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
@@ -93,6 +96,9 @@
     {
         <button type="button" class="btn btn-secondary" @onclick="async () => await CancelAsync()">Cancel</button>
     }
+</EditForm>
+    
+    
 }
 else
 {

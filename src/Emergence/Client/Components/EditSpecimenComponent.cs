@@ -39,6 +39,8 @@ namespace Emergence.Client.Components
                 Specimen.Lifeform = SelectedLifeform;
             }
 
+            Specimen.InventoryItem.Name = Specimen.Name;
+            Specimen.InventoryItem.Quantity = Specimen.Quantity;
             Specimen.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
 
             Specimen = await ApiClient.PutSpecimenAsync(Specimen);

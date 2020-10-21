@@ -13,7 +13,6 @@ namespace Emergence.Client.Components
         [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
-        public Lifeform SelectedLifeform { get; set; }
         public string OriginSearch { get; set; }
         public string MinZone { get; set; }
         public string MaxZone { get; set; }
@@ -48,7 +47,7 @@ namespace Emergence.Client.Components
                     UploadedPhotos = new List<Photo>();
                 }
 
-                SelectedLifeform = PlantInfo.Lifeform;
+                PlantInfo.SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
 
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();

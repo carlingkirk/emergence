@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Models
 {
-    public class Specimen
+    public class Specimen : IValidatableObject
     {
         public int SpecimenId { get; set; }
         public SpecimenStage SpecimenStage { get; set; }
@@ -16,5 +17,32 @@ namespace Emergence.Data.Shared.Models
         public IEnumerable<Photo> Photos { get; set; }
         public Lifeform Lifeform { get; set; }
         public PlantInfo PlantInfo { get; set; }
+
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrEmpty(Name))
+            {
+                yield return new ValidationResult(
+                    $"Please enter a name.",
+                    new[] { nameof(Name) });
+            }
+
+            if (Quantity == 0)
+            {
+                yield return new ValidationResult(
+                    $"Please enter a quantity.",
+                    new[] { nameof(Quantity) });
+            }
+
+            if (SpecimenStage == SpecimenStage.Unknown)
+            {
+                yield return new ValidationResult(
+                    $"Please choose a stage.",
+                    new[] { nameof(SpecimenStage) });
+            }
+        }
     }
 }

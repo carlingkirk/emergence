@@ -84,7 +84,7 @@
                 @if (ShowAutoSpecimen)
                 {
                     <div class="col-lg-9 col-xs">
-                        <label for="update-specimen">Create or update specimen @SelectedSpecimen.SpecimenId</label>
+                        <label for="update-specimen">Create or update specimen</label>
                         <div style="display: block;">
                             <input type="checkbox" @bind="UpdateSpecimen" id="update-specimen" class="check-lg" />
                             @if (UpdateSpecimen && Activity.Quantity.HasValue && SelectedSpecimen?.InventoryItem?.Quantity == Activity.Quantity.Value)

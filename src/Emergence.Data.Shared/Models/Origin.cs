@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Models
 {
-    public class Origin
+    public class Origin : IValidatableObject
     {
         public int OriginId { get; set; }
 
@@ -22,5 +24,22 @@ namespace Emergence.Data.Shared.Models
 
         public Location Location { get; set; }
         public Origin ParentOrigin { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrEmpty(Name))
+            {
+                yield return new ValidationResult(
+                    $"Please enter a name.",
+                    new[] { nameof(Name) });
+            }
+
+            if (Type == OriginType.Unknown)
+            {
+                yield return new ValidationResult(
+                    $"Please choose a type.",
+                    new[] { nameof(Type) });
+            }
+        }
     }
 }

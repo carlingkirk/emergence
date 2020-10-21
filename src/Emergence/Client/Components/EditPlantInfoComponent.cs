@@ -35,7 +35,7 @@ namespace Emergence.Client.Components
 
             PlantInfo.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
 
-            PlantInfo.Lifeform = SelectedLifeform;
+            PlantInfo.Lifeform = PlantInfo.SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
 
             if (!string.IsNullOrEmpty(MinZone))

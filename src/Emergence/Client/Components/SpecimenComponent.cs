@@ -26,6 +26,9 @@ namespace Emergence.Client.Components
             if (Id > 0 || Specimen != null)
             {
                 Specimen ??= await ApiClient.GetSpecimenAsync(Id);
+                Specimen.Name = Specimen.InventoryItem.Name;
+                Specimen.Quantity = Specimen.InventoryItem.Quantity;
+
                 SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
                 SelectedLifeform = Specimen.Lifeform;
 
