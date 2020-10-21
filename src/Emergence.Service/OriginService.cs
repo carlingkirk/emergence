@@ -50,6 +50,12 @@ namespace Emergence.Service
                 origin.Location = await _locationService.AddOrUpdateLocationAsync(origin.Location);
             }
 
+            if (origin.ParentOrigin != null && origin.ParentOrigin.OriginId == 0)
+            {
+                var parentOrigin = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.ParentOrigin.OriginId, origin.ParentOrigin.AsStore());
+                origin.ParentOrigin = parentOrigin.AsModel();
+            }
+
             var originResult = await _originRepository.AddOrUpdateAsync(l => l.Id == origin.OriginId, origin.AsStore());
             return originResult.AsModel();
         }
@@ -88,6 +94,24 @@ namespace Emergence.Service
                 Results = origins,
                 Count = count
             };
+        }
+
+        public async Task RemoveOriginAsync(Data.Shared.Models.Origin origin)
+        {
+            var children = _originRepository.GetSomeAsync(o => o.ParentOriginId == origin.OriginId, track: true);
+            var updateOrigins = new List<Origin>();
+
+            await foreach (var childOrigin in children)
+            {
+                childOrigin.ParentOrigin = null;
+                childOrigin.ParentOriginId = null;
+
+                updateOrigins.Add(childOrigin);
+            }
+
+            await _originRepository.UpdateSomeAsync(updateOrigins);
+
+            await _originRepository.RemoveAsync(origin.AsStore());
         }
 
         private IQueryable<Origin> OrderBy(IQueryable<Origin> originQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)

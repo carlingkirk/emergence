@@ -43,5 +43,17 @@ namespace Emergence.Client.Components
                 };
             }
         }
+
+        protected async Task RemoveOrigin()
+        {
+            var result = await ApiClient.RemoveOriginAsync(Origin);
+            if (result)
+            {
+                Origin = null;
+
+                await RefreshListAsync();
+                await UnloadItem();
+            }
+        }
     }
 }

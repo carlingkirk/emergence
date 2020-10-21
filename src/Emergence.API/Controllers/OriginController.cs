@@ -33,5 +33,20 @@ namespace Emergence.API.Controllers
             var result = await _originService.FindOrigins(findParams, UserId);
             return result;
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var origin = await _originService.GetOriginAsync(id);
+            if (origin.CreatedBy != UserId)
+            {
+                return Unauthorized();
+            }
+
+            await _originService.RemoveOriginAsync(origin);
+
+            return Ok();
+        }
     }
 }

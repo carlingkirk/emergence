@@ -28,6 +28,7 @@ namespace Emergence.Client.Common
         Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int id);
         Task<Origin> PutOriginAsync(Origin origin);
         Task<IEnumerable<Photo>> UploadPhotosAsync(IFileListEntry[] photos, PhotoType type);
+        Task<bool> RemoveOriginAsync(Origin origin);
         Task<Photo> UploadPhotoAsync(IFileListEntry photo, PhotoType type);
         Task<bool> RemovePhotoAsync(int id);
         Task<User> GetUserAsync(string userId);

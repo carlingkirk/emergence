@@ -141,6 +141,15 @@ namespace Emergence.Client.Common
             return await ReadResult<Origin>(result);
         }
 
+        public async Task<bool> RemoveOriginAsync(Origin origin)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/origin/{origin.OriginId}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
         public async Task<IEnumerable<Photo>> UploadPhotosAsync(IFileListEntry[] photos, PhotoType type)
         {
             using (var content = new MultipartFormDataContent())

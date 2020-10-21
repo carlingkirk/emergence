@@ -2,13 +2,14 @@
 @using Emergence.Data.Shared.Models
 @using Blazored.Typeahead
 @inherits EmergenceComponent
+@inject IModalServiceClient ModalServiceClient
 
 <BlazoredTypeahead SearchMethod="FindOriginsAsync"
-                    Value="SelectedOrigin"
-                    ValueChanged="@((Origin o) => InvokeSelectedOriginChangedAsync(o))"
-                    ValueExpression="@(() => SelectedOrigin)"
-                    MinimumLength="3"
-                    Debounce="500" Context="origin">
+                   Value="SelectedOrigin"
+                   ValueChanged="@((Origin o) => InvokeSelectedOriginChangedAsync(o))"
+                   ValueExpression="@(() => SelectedOrigin)"
+                   MinimumLength="3"
+                   Debounce="500" Context="origin">
     <SelectedTemplate>
         @if (!string.IsNullOrEmpty(origin.Name))
         {
@@ -26,14 +27,17 @@
     <ResultTemplate>
         @if (origin.OriginId == 0)
         {
-            if (!string.IsNullOrEmpty(origin.Name))
-            {
-                <span class="text-body">Add new "@(origin.Name)" </span>
-            }
-            else if (origin.Uri != null)
-            {
-                <span class="text-body">Add new "@(origin.Uri)" </span>
-            }
+            <a href="" @onclick="@(async () => { await AddOriginAsync((Origin)origin); })" @onclick:preventDefault>
+                <span>Add new </span>
+                @if (!string.IsNullOrEmpty(origin.Name))
+                {
+                    <span class="text-body">Add new "@(origin.Name)" </span>
+                }
+                else if (origin.Uri != null)
+                {
+                    <span class="text-body">Add new "@(origin.Uri)" </span>
+                }
+            </a>
         }
         else
         {
@@ -83,5 +87,17 @@
         }
 
         return origins;
+    }
+
+    protected async Task AddOriginAsync(Origin origin)
+    {
+        var result = await ModalServiceClient.ShowOriginModal(origin, true);
+
+        if (!result.Cancelled)
+        {
+            SelectedOrigin = origin;
+            SelectedOrigin.OriginId = ((Origin)result.Data).OriginId;
+            await SelectedOriginChanged.InvokeAsync(SelectedOrigin);
+        }
     }
 }
