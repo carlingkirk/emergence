@@ -83,12 +83,12 @@ namespace Emergence.Client.Components
         {
             if (PlantInfo.PlantInfoId == 0 || isNewPlantInfo)
             {
-                await Cancel.Invoke();
-
                 if (isNewPlantInfo)
                 {
                     await RefreshListAsync();
                 }
+
+                await Cancel.Invoke();
             }
             else
             {

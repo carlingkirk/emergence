@@ -39,6 +39,7 @@ namespace Emergence.Client.Components
                 Specimen.Lifeform = SelectedLifeform;
             }
 
+            PopulateInventoryItemName();
             Specimen.InventoryItem.Name = Specimen.Name;
             Specimen.InventoryItem.Quantity = Specimen.Quantity;
             Specimen.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
@@ -59,12 +60,12 @@ namespace Emergence.Client.Components
         {
             if (Specimen.SpecimenId == 0 || isNewSpecimen)
             {
-                await Cancel.Invoke();
-
                 if (isNewSpecimen)
                 {
                     await RefreshListAsync();
                 }
+
+                await Cancel.Invoke();
             }
             else
             {
@@ -75,9 +76,9 @@ namespace Emergence.Client.Components
 
         protected void PopulateInventoryItemName()
         {
-            if (SelectedLifeform != null && string.IsNullOrEmpty(Specimen.InventoryItem.Name))
+            if (SelectedLifeform != null && string.IsNullOrEmpty(Specimen.Name))
             {
-                Specimen.InventoryItem.Name = SelectedLifeform.ScientificName;
+                Specimen.Name = SelectedLifeform.ScientificName;
             }
         }
 

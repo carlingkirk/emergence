@@ -117,12 +117,12 @@ namespace Emergence.Client.Components
         {
             if (Activity.ActivityId == 0 || isNewActivity)
             {
-                await Cancel.Invoke();
-
                 if (isNewActivity)
                 {
                     await RefreshListAsync();
                 }
+
+                await Cancel.Invoke();
             }
             else
             {
