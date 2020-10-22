@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
 using Emergence.Data.Shared;
@@ -90,6 +91,13 @@ namespace Emergence.Client
         protected async Task<IEnumerable<T>> RefreshAsync()
         {
             await FindAsync();
+
+            if (List.Count() == 0 && CurrentPage > 1)
+            {
+                CurrentPage--;
+                await PageAsync(CurrentPage);
+            }
+
             return List;
         }
 
