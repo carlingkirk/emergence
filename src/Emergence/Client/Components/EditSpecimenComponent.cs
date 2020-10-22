@@ -29,11 +29,7 @@ namespace Emergence.Client.Components
                 Specimen.DateModified = DateTime.UtcNow;
             }
 
-            if (SelectedOrigin != null)
-            {
-                Specimen.InventoryItem.Origin = SelectedOrigin;
-            }
-
+            Specimen.InventoryItem.Origin = SelectedOrigin;
             if (SelectedLifeform != null)
             {
                 Specimen.Lifeform = SelectedLifeform;

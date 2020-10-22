@@ -31,11 +31,7 @@ namespace Emergence.Client.Components
                 Origin.Uri = new Uri(OriginUri);
             }
 
-            if (SelectedParentOrigin != null)
-            {
-                Origin.ParentOrigin = SelectedParentOrigin;
-            }
-
+            Origin.ParentOrigin = SelectedParentOrigin;
             Origin.CreatedBy ??= UserId;
             Origin.ModifiedBy = UserId;
 
@@ -48,10 +44,7 @@ namespace Emergence.Client.Components
 
                 Origin.Location.DateModified = DateTime.UtcNow;
             }
-            else
-            {
-                Console.WriteLine("WHYYYYY");
-            }
+
             Origin = await ApiClient.PutOriginAsync(Origin);
 
             if (BlazoredModal != null)

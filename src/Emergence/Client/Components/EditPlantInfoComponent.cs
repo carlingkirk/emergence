@@ -28,13 +28,8 @@ namespace Emergence.Client.Components
                 PlantInfo.DateModified = DateTime.UtcNow;
             }
 
-            if (SelectedOrigin != null)
-            {
-                PlantInfo.Origin = SelectedOrigin;
-            }
-
+            PlantInfo.Origin = SelectedOrigin;
             PlantInfo.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
-
             PlantInfo.Lifeform = PlantInfo.SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
 

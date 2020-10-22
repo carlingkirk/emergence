@@ -13,7 +13,6 @@ namespace Emergence.Client.Components
         [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
-        public string OriginSearch { get; set; }
         public string MinZone { get; set; }
         public string MaxZone { get; set; }
         public IList<Photo> UploadedPhotos { get; set; }
@@ -69,7 +68,7 @@ namespace Emergence.Client.Components
                 IsEditing = true;
                 PlantInfo = new PlantInfo
                 {
-                    Origin = new Origin(),
+                    Origin = null,
                     Requirements = new Requirements
                     {
                         WaterRequirements = new WaterRequirements(),
