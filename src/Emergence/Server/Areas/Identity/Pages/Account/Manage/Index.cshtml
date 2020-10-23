@@ -18,6 +18,11 @@
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="Input.DisplayName"></label>
+                    <input asp-for="Input.DisplayName" class="form-control" />
+                    <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <label asp-for="Input.FirstName"></label>
                     <input asp-for="Input.FirstName" class="form-control" />
                     <span asp-validation-for="Input.FirstName" class="text-danger"></span>
@@ -32,7 +37,11 @@
                     <input asp-for="Input.PhoneNumber" class="form-control" />
                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
-
+                <div class="form-group">
+                    <label asp-for="Input.Bio"></label>
+                    <textarea asp-for="Input.Bio" class="form-control" />
+                    <span asp-validation-for="Input.Bio" class="text-danger"></span>
+                </div>
             </div>
             <div class="col-lg-5 col-xs">
                 <label asp-for="Input.ProfilePhotoFile"></label><br />

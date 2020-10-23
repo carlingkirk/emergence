@@ -36,6 +36,8 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Display(Name = "Display Name")]
+            public string DisplayName { get; set; }
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
             [Display(Name = "Last Name")]
@@ -43,6 +45,8 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Bio")]
+            public string Bio { get; set; }
             [Display(Name = "Profile photo")]
             public IFormFile ProfilePhotoFile { get; set; }
             [Display(Name = "Address Line 1")]
@@ -87,8 +91,10 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                DisplayName = userProfile.DisplayName,
                 FirstName = userProfile.FirstName,
                 LastName = userProfile.LastName,
+                Bio = userProfile.Bio,
                 PhoneNumber = phoneNumber,
                 AddressLine1 = userProfile.Location?.AddressLine1,
                 AddressLine2 = userProfile.Location?.AddressLine2,
@@ -141,6 +147,8 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
             userProfile.FirstName = Input.FirstName;
             userProfile.LastName = Input.LastName;
+            userProfile.Bio = Input.Bio;
+            userProfile.DisplayName = Input.DisplayName;
             userProfile.Location.AddressLine1 = Input.AddressLine1;
             userProfile.Location.AddressLine2 = Input.AddressLine2;
             userProfile.Location.City = Input.City;

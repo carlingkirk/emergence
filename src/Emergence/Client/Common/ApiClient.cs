@@ -220,6 +220,20 @@ namespace Emergence.Client.Common
             return await ReadResult<User>(result);
         }
 
+        public async Task<User> GetUserAsync(int id)
+        {
+            var result = await _httpClient.GetAsync($"/api/user/get?id={id}");
+
+            return await ReadResult<User>(result);
+        }
+
+        public async Task<User> GetUserByNameAsync(string name)
+        {
+            var result = await _httpClient.GetAsync($"/api/user/get?name={name}");
+
+            return await ReadResult<User>(result);
+        }
+
         public async Task<bool> RemoveActivityAsync(Activity activity)
         {
             var result = await _httpClient.DeleteAsync($"/api/activity/{activity.ActivityId}");

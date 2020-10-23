@@ -109,6 +109,7 @@ namespace Emergence.Server
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
+            services.AddScoped(typeof(IRepository<DisplayName>), typeof(Repository<DisplayName>));
             services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
             services.AddScoped(typeof(IRepository<InventoryItem>), typeof(Repository<InventoryItem>));
             services.AddScoped(typeof(IRepository<Lifeform>), typeof(Repository<Lifeform>));

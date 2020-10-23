@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,13 +24,16 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
 
-        public RegisterModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<RegisterModel> logger, IEmailService emailService)
+        public RegisterModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<RegisterModel> logger,
+            IEmailService emailService, IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailService = emailService;
+            _userService = userService;
         }
 
         [BindProperty]
@@ -72,9 +76,19 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    var newUser = await _userManager.GetUserAsync(User);
+                    var randomName = await _userService.GetRandomNameAsync();
+                    _ = await _userService.AddUserAsync(new Data.Shared.Models.User
+                    {
+                        UserId = new Guid(newUser.Id),
+                        DisplayName = randomName,
+                        DateCreated = DateTime.UtcNow
+                    });
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
