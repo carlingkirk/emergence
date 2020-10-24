@@ -36,6 +36,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            public int Id { get; set; }
             [Display(Name = "Display Name")]
             public string DisplayName { get; set; }
             [Display(Name = "First Name")]
@@ -91,6 +92,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                Id = userProfile.Id,
                 DisplayName = userProfile.DisplayName,
                 FirstName = userProfile.FirstName,
                 LastName = userProfile.LastName,

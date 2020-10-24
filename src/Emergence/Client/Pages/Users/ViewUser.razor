@@ -1,4 +1,4 @@
-@page "/user/view/{Id:int}"
+@page "/user/{Id:int}"
 @page "/user/{Name}"
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
@@ -7,35 +7,47 @@
 
 @if (User != null)
 {
+    <div class="card-header h3">
+         <span class="font-italic">@(User.DisplayName ?? "Anonymous user")</span>
+    </div>
     <div class="form-group">
-        <div class="row">
-            <div class="col-lg-6 col-xs">
-                <img srcset="@(User.Photo.LargeUri) 2x, @(User.Photo.MediumUri) 1x" src="@(User.Photo.OriginalUri)"
-                     onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.Username)"
-                     style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
-            </div>
-            <div class="col-lg-6 col-xs">
-                <div>
-                    <label for="name">Name</label>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-xs">
+                    @if (!string.IsNullOrEmpty(User.DisplayName))
+                    {
+                    <div class="col">
+                        <div>
+                            <label for="name">Name</label>
+                        </div>
+                        <div>
+                            <span class="text-body">@(User.DisplayName)</span>
+                        </div>
+                    </div>
+                    }
+                    <div class="col">
+                        <div>
+                            <label for="name">Location</label>
+                        </div>
+                        <div>
+                            <span class="text-body">@User.Location?.CityState</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <label for="name">Bio</label>
+                        </div>
+                        <div>
+                            <span class="text-body">@User.Bio</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-body">@(User.DisplayName)</span>
-                </div>
-            </div>
-            <div class="col-lg col-xs">
-                <div>
-                    <label for="name">Bio</label>
-                </div>
-                <div>
-                    <span class="text-body">@User.Bio</span>
-                </div>
-            </div>
-            <div class="col-lg-6 col-xs">
-                <div>
-                    <label for="name">Location</label>
-                </div>
-                <div>
-                    <span class="text-body">@User.Location?.CityState</span>
+                <div class="col-lg-5 col-xs">
+                    <div style="padding-top: 1em;">
+                        <img srcset="@(User.Photo.LargeUri) 2x, @(User.Photo.MediumUri) 1x" src="@(User.Photo.OriginalUri)"
+                             onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.Username)"
+                             style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
+                    </div>
                 </div>
             </div>
         </div>
