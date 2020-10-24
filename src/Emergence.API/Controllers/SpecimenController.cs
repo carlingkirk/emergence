@@ -84,7 +84,7 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<Specimen>> FindSpecimens(FindParams findParams)
         {
-            var result = await _specimenService.FindSpecimens(findParams, UserId);
+            var result = await _specimenService.FindSpecimens(findParams);
             return result;
         }
 

@@ -44,13 +44,26 @@
             </div>
             <div class="col-lg-5 col-xs">
                 <div style="padding-top: 1em;">
+                    @if (User.Photo != null)
+                    {
                     <img srcset="@(User.Photo.LargeUri) 2x, @(User.Photo.MediumUri) 1x" src="@(User.Photo.OriginalUri)"
-                            onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.Username)"
-                            style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
+                         onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.Username)"
+                         style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
+                    }
+                    else
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="275" height="275" viewBox="0 0 275 275">
+                            <rect fill="#FFF" width="275" height="275" />
+                            <text fill="#000" font-family="Arial" font-size="1em" dy="1" font-weight="bold" x="50%" y="50%" text-anchor="middle">No photo</text>
+                        </svg>
+                    }
+                    
                 </div>
             </div>
         </div>
     </div>
+    @if (!string.IsNullOrEmpty(UserId))
+    {
     <div class="group">
         <div class="row">
             <div class="form-group">
@@ -61,6 +74,7 @@
             </div>
         </div>
     </div>
+    }
 }
 
 @code {

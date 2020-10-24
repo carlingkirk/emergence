@@ -60,7 +60,7 @@ namespace Emergence.Client
                 Take = Take,
                 SortBy = SortBy,
                 SortDirection = SortDirection,
-                CreatedBy = OnlyMine ? UserId : ForUserId
+                CreatedBy = ForUserId ?? (OnlyMine ? UserId : ForUserId)
             });
 
             List = result.Results;

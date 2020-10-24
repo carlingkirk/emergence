@@ -87,6 +87,8 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                     {
                         UserId = new Guid(newUser.Id),
                         DisplayName = randomName,
+                        EmailUpdates = true,
+                        SocialUpdates = true,
                         DateCreated = DateTime.UtcNow
                     });
 

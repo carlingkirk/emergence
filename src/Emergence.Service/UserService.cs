@@ -26,44 +26,60 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.User> GetUserAsync(int id)
         {
             var userResult = await _userRepository.GetWithIncludesAsync(u => u.Id == id, false, u => u.Include(u => u.Location));
-            var userModel = userResult.AsModel();
-
-            if (userResult.PhotoId.HasValue)
+            if (userResult != null)
             {
-                var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
-                userModel.Photo = photo;
+                var userModel = userResult.AsModel();
+
+                if (userResult.PhotoId.HasValue)
+                {
+                    var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
+                    userModel.Photo = photo;
+                }
+
+                return userModel;
             }
 
-            return userModel;
+            return null;
         }
 
         public async Task<Data.Shared.Models.User> GetUserAsync(string userId)
         {
             var userGuid = new Guid(userId);
             var userResult = await _userRepository.GetWithIncludesAsync(u => u.UserId == userGuid, false, u => u.Include(u => u.Location));
-            var userModel = userResult.AsModel();
-
-            if (userResult.PhotoId.HasValue)
+            if (userResult != null)
             {
-                var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
-                userModel.Photo = photo;
+                var userModel = userResult.AsModel();
+
+                if (userResult.PhotoId.HasValue)
+                {
+                    var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
+                    userModel.Photo = photo;
+                }
+
+                return userModel;
             }
 
-            return userModel;
+            return null;
         }
 
         public async Task<Data.Shared.Models.User> GetUserByNameAsync(string name)
         {
             var userResult = await _userRepository.GetWithIncludesAsync(u => u.DisplayName == name, false, u => u.Include(u => u.Location));
-            var userModel = userResult.AsModel();
 
-            if (userResult.PhotoId.HasValue)
+            if (userResult != null)
             {
-                var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
-                userModel.Photo = photo;
+                var userModel = userResult.AsModel();
+
+                if (userResult.PhotoId.HasValue)
+                {
+                    var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
+                    userModel.Photo = photo;
+                }
+
+                return userModel;
             }
 
-            return userModel;
+            return null;
         }
 
         public async Task<Data.Shared.Models.User> UpdateUserAsync(Data.Shared.Models.User user)

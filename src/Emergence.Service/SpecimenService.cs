@@ -61,15 +61,14 @@ namespace Emergence.Service
             return specimens;
         }
 
-        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams, string userId)
+        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams)
         {
             if (findParams.SearchText != null)
             {
                 findParams.SearchText = "%" + findParams.SearchText + "%";
             }
 
-            var specimenQuery = _specimenRepository.WhereWithIncludes(s => (s.CreatedBy == userId) &&
-                                                                       (findParams.SearchText == null ||
+            var specimenQuery = _specimenRepository.WhereWithIncludes(s => (findParams.SearchText == null ||
                                                                        EF.Functions.Like(s.InventoryItem.Name, findParams.SearchText) ||
                                                                         EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||
                                                                         EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchText)),
@@ -77,6 +76,12 @@ namespace Emergence.Service
                                                                               .Include(s => s.InventoryItem.Inventory)
                                                                               .Include(s => s.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
+
+            if (!string.IsNullOrEmpty(findParams.CreatedBy))
+            {
+                specimenQuery = specimenQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
+            }
+
             specimenQuery = OrderBy(specimenQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = specimenQuery.Count();

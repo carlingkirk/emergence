@@ -79,6 +79,8 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
                 userProfile = new User
                 {
                     UserId = new Guid(user.Id),
+                    EmailUpdates = true,
+                    SocialUpdates = true,
                     DateCreated = DateTime.UtcNow
                 };
                 userProfile = await _userService.UpdateUserAsync(userProfile);
@@ -130,13 +132,16 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             }
 
             var userProfile = await _userService.GetUserAsync(user.Id);
-            if (userProfile == null)
+
+            // Validate uniqueness on display name
+            if (userProfile.DisplayName != Input.DisplayName)
             {
-                userProfile = new User
+                var existingUser = await _userService.GetUserByNameAsync(Input.DisplayName);
+                if (existingUser != null)
                 {
-                    UserId = new Guid(user.Id),
-                    DateCreated = DateTime.UtcNow
-                };
+                    ModelState.AddModelError("Input.DisplayName", "Sorry, that display name is taken. Please choose another display name.");
+                    return Page();
+                }
             }
 
             if (userProfile.Location == null)
