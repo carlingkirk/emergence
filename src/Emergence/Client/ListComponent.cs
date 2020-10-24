@@ -15,6 +15,8 @@ namespace Emergence.Client
         public bool ShowSearch { get; set; }
         [Parameter]
         public bool LinkRelations { get; set; }
+        [Parameter]
+        public string ForUserId { get; set; }
         public IEnumerable<T> List { get; set; }
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
@@ -58,7 +60,7 @@ namespace Emergence.Client
                 Take = Take,
                 SortBy = SortBy,
                 SortDirection = SortDirection,
-                CreatedBy = OnlyMine ? UserId : null
+                CreatedBy = OnlyMine ? UserId : ForUserId
             });
 
             List = result.Results;
