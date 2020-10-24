@@ -8,8 +8,10 @@ namespace Emergence.Data.Shared.Extensions
         {
             Id = source.Id,
             UserId = source.UserId,
+            DisplayName = source.DisplayName,
             FirstName = source.FirstName,
             LastName = source.LastName,
+            Bio = source.Bio,
             Location = source.Location != null ? source.Location.AsModel() : source.LocationId.HasValue ? new Models.Location { LocationId = source.LocationId.Value } : null,
             Photo = source.Photo != null ? source.Photo.AsModel() : source.PhotoId.HasValue ? new Models.Photo { PhotoId = source.PhotoId.Value } : null,
             EmailUpdates = source.EmailUpdates,
@@ -22,8 +24,10 @@ namespace Emergence.Data.Shared.Extensions
         {
             Id = source.Id,
             UserId = source.UserId,
+            DisplayName = source.DisplayName,
             FirstName = source.FirstName,
             LastName = source.LastName,
+            Bio = source.Bio,
             LocationId = source.Location?.LocationId,
             PhotoId = source.Photo?.PhotoId,
             EmailUpdates = source.EmailUpdates,

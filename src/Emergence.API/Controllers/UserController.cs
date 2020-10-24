@@ -22,10 +22,16 @@ namespace Emergence.API.Controllers
 
         [HttpGet]
         [Route("get")]
-        public async Task<User> Get(int id) => await _userService.GetUserAsync(id);
-
-        [HttpGet]
-        [Route("get")]
-        public async Task<User> GetByName(string name) => await _userService.GetUserByNameAsync(name);
+        public async Task<User> Get(int? id, string name)
+        {
+            if (id.HasValue)
+            {
+                return await _userService.GetUserAsync(id.Value);
+            }
+            else
+            {
+                return await _userService.GetUserByNameAsync(name);
+            }
+        }
     }
 }

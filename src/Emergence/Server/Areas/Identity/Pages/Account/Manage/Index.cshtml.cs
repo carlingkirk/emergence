@@ -100,7 +100,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
                 AddressLine2 = userProfile.Location?.AddressLine2,
                 City = userProfile.Location?.City,
                 StateOrProvince = userProfile.Location?.StateOrProvince,
-                Country = userProfile.Location?.City,
+                Country = userProfile.Location?.Country,
                 PostalCode = userProfile.Location?.PostalCode,
                 EmailUpdates = userProfile.EmailUpdates,
                 SocialUpdates = userProfile.SocialUpdates
