@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -14,7 +15,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     LifeformId = 1,
                     Id = 1,
                     OriginId = 1,
-                    TaxonId = 1,
+                    TaxonId = Taxon().Id,
                     CommonName = "Dense Blazing Star",
                     ScientificName = "Liatris spicata",
                     MinimumBloomTime = 7,
@@ -31,14 +32,19 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumLight = "FullSun",
                     MinimumZone = "3",
                     MaximumZone = "8",
-                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]"
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
+                    Visibility = Visibility.Contacts,
+                    CreatedBy = "me",
+                    ModifiedBy = "me",
+                    DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 },
                 new PlantInfo
                 {
                     LifeformId = 2,
                     Id = 2,
                     OriginId = 2,
-                    TaxonId = 0,
+                    TaxonId = Taxon().Id,
                     CommonName = "White wild indigo",
                     ScientificName = "Baptisia alba",
                     MinimumBloomTime = 4,
@@ -55,7 +61,12 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumLight = "FullSun",
                     MinimumZone = "5",
                     MaximumZone = "8",
-                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"1\",\"StratificationType\":\"AbrasionScarify\"},{\"Step\":\"2\",\"DayLength\":\"10\",\"StratificationType\":\"ColdMoist\"}]"
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"1\",\"StratificationType\":\"AbrasionScarify\"},{\"Step\":\"2\",\"DayLength\":\"10\",\"StratificationType\":\"ColdMoist\"}]",
+                    Visibility = Visibility.Public,
+                    CreatedBy = "me",
+                    ModifiedBy = "me",
+                    DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 }
             };
             return plantInfos;
@@ -63,6 +74,7 @@ namespace Emergence.Test.Data.Fakes.Stores
 
         public static Taxon Taxon() => new Taxon
         {
+            Id = 1,
             Kingdom = "Plantae",
             Phylum = "Tracheophyta",
             Subphylum = "Angiospermae",

@@ -14,8 +14,9 @@ namespace Emergence.Data.Shared.Models
         public int? Quantity { get; set; }
 
         public string AssignedTo { get; set; }
-        public DateTime? DateOccured { get; set; }
+        public DateTime? DateOccurred { get; set; }
         public DateTime? DateScheduled { get; set; }
+        public Visibility Visibility { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
@@ -48,11 +49,11 @@ namespace Emergence.Data.Shared.Models
                     new[] { nameof(Name) });
             }
 
-            if (!DateOccured.HasValue && !DateScheduled.HasValue)
+            if (!DateOccurred.HasValue && !DateScheduled.HasValue)
             {
                 yield return new ValidationResult(
                     $"Please enter a value for either Date Occurred or Date Scheduled.",
-                    new[] { nameof(DateOccured) });
+                    new[] { nameof(DateOccurred) });
             }
         }
     }

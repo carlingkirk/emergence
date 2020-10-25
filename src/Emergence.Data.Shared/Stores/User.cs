@@ -19,6 +19,11 @@ namespace Emergence.Data.Shared.Stores
         public int? LocationId { get; set; }
         public bool EmailUpdates { get; set; }
         public bool SocialUpdates { get; set; }
+        public Visibility ProfileVisibility { get; set; }
+        public Visibility SpecimenVisibility { get; set; }
+        public Visibility PlantInfoVisibility { get; set; }
+        public Visibility OriginVisibility { get; set; }
+        public Visibility ActivityVisibility { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }

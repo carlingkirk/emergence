@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -20,6 +21,13 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Location = FakeLocations.Get().First(),
                     EmailUpdates = true,
                     SocialUpdates = true,
+                    DisplayName = "",
+                    Bio = "",
+                    ProfileVisibility = Visibility.Public,
+                    ActivityVisibility = Visibility.Public,
+                    OriginVisibility = Visibility.Public,
+                    PlantInfoVisibility = Visibility.Public,
+                    SpecimenVisibility = Visibility.Public,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom(5) * -1),
                     DateModified = null
                 }

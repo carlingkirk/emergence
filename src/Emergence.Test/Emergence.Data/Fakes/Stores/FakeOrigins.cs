@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -16,8 +18,15 @@ namespace Emergence.Test.Data.Fakes.Stores
                 "gardens (plus selected additions) by scientific name, common name and/or selected plant characteristics.",
                 Type = "Website",
                 Uri = new Uri("http://www.missouribotanicalgarden.org/plantfinder/plantfindersearch.aspx"),
+                Authors = "fred",
+                AltExternalId = "44",
+                ExternalId = "222",
+                Location = FakeLocations.Get().First(),
+                Visibility = Visibility.Contacts,
                 CreatedBy = "me",
-                DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5)
+                ModifiedBy = "me",
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
+                DateModified = Helpers.Today.AddMonths(-1).AddDays(5)
             },
             new Origin
             {
@@ -26,8 +35,15 @@ namespace Emergence.Test.Data.Fakes.Stores
                 Type = "Nursery",
                 Name = "Botany Yards",
                 Description = "",
+                Authors = "",
+                AltExternalId = "444",
+                ExternalId = "srtyhs",
+                Location = FakeLocations.Get().First(),
+                Visibility = Visibility.Public,
                 CreatedBy = "me",
-                DateCreated = Helpers.Today.AddMonths(-1).AddDays(5)
+                ModifiedBy = null,
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(5),
+                DateModified = null
             },
             new Origin
             {
@@ -38,8 +54,15 @@ namespace Emergence.Test.Data.Fakes.Stores
                 "February book release of Nature’s Best Hope: A New Approach to Conservation that Starts in Your Yard from Doug Tallamy, we invite you to " +
                 "be among the first to hear his new message. Growing more native plants to sustain all of nature is more urgent than ever.",
                 Uri = new Uri("https://gnps.org/2020-georgia-native-plant-society-annual-symposium/"),
+                Authors = "linda",
+                AltExternalId = "#$%#^",
+                ExternalId = "GGGGGGGGG",
+                Location = FakeLocations.Get().First(),
+                Visibility = Visibility.Hidden,
                 CreatedBy = "me",
-                DateCreated = Helpers.Today.AddMonths(-1).AddDays(8)
+                ModifiedBy = "me",
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
+                DateModified = Helpers.Today.AddMonths(-1).AddDays(5)
             }
         };
     }

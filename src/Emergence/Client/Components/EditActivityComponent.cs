@@ -83,7 +83,7 @@ namespace Emergence.Client.Components
                             Status = SelectedSpecimen.InventoryItem.Status,
                             Inventory = SelectedSpecimen.InventoryItem.Inventory,
                             Origin = SelectedSpecimen.InventoryItem.Origin,
-                            DateAcquired = Activity.DateOccured,
+                            DateAcquired = Activity.DateOccurred,
                             DateCreated = DateTime.UtcNow,
                             CreatedBy = UserId
                         },

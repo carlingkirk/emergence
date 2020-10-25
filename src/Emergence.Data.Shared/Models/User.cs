@@ -7,7 +7,6 @@ namespace Emergence.Data.Shared.Models
     {
         public int Id { get; set; }
         public Guid UserId { get; set; }
-        public string Username { get; set; }
         [Required]
         [RegularExpression("\\w")]
         public string DisplayName { get; set; }
@@ -19,6 +18,11 @@ namespace Emergence.Data.Shared.Models
         public string Bio { get; set; }
         public bool EmailUpdates { get; set; }
         public bool SocialUpdates { get; set; }
+        public Visibility ProfileVisibility { get; set; }
+        public Visibility SpecimenVisibility { get; set; }
+        public Visibility PlantInfoVisibility { get; set; }
+        public Visibility OriginVisibility { get; set; }
+        public Visibility ActivityVisibility { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Test.Mocks;
@@ -33,6 +34,11 @@ namespace Emergence.Test.Emergence.Service
             user.FirstName.Should().Be("Daria");
             user.Location.StateOrProvince.Should().Be("GA");
             user.Photo.OriginalUri.Should().Be("https://blobs.com/photos/" + user.Photo.BlobPath + "/1.png");
+            user.ProfileVisibility.Should().Be(Visibility.Public);
+            user.ActivityVisibility.Should().Be(Visibility.Public);
+            user.OriginVisibility.Should().Be(Visibility.Public);
+            user.PlantInfoVisibility.Should().Be(Visibility.Public);
+            user.ProfileVisibility.Should().Be(Visibility.Public);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Emergence.Data.Shared.Models
         public int Quantity { get; set; }
         public ItemStatus Status { get; set; }
         public DateTime? DateAcquired { get; set; }
+        public Visibility Visibility { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }

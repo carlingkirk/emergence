@@ -42,6 +42,7 @@ namespace Emergence.Test.API.Services
             origins.Where(o => o.Type == OriginType.Website).Should().HaveCount(1);
             origins.Where(o => o.Uri == null).Should().HaveCount(1);
             origins.Where(o => o.Name == "Botany Yards").Should().HaveCount(1);
+            origins.Where(o => o.Visibility == Visibility.Contacts).Should().HaveCount(1);
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace Emergence.Test.API.Services
             var mockOriginRepository = RepositoryMocks.GetStandardMockOriginRepository(Data.Fakes.Stores.FakeOrigins.Get().Where(o => o.Name == "Botany Yards"));
 
             var originService = new OriginService(mockOriginRepository.Object, _mockLocationService.Object);
-            var specimens = await originService.FindOrigins(new FindParams
+            var origins = await originService.FindOrigins(new FindParams
             {
                 SearchText = "Botany",
                 Skip = 0,
@@ -59,8 +60,9 @@ namespace Emergence.Test.API.Services
                 SortDirection = SortDirection.None
             }, "me");
 
-            specimens.Results.Should().NotBeNull("it exists");
-            specimens.Results.Should().HaveCount(1);
+            origins.Results.Should().NotBeNull("it exists");
+            origins.Results.Should().HaveCount(1);
+            origins.Results.Where(o => o.Visibility == Visibility.Public).Should().HaveCount(1);
         }
     }
 }

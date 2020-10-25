@@ -72,7 +72,12 @@ namespace Emergence.Test.Data.Fakes.Models
                     Taxon = new Taxon
                     {
 
-                    }
+                    },
+                    Visibility = Visibility.Public,
+                    CreatedBy = "me",
+                    ModifiedBy = "me",
+                    DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 }
             };
 

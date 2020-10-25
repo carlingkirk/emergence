@@ -47,7 +47,7 @@
                     @if (User.Photo != null)
                     {
                     <img srcset="@(User.Photo.LargeUri) 2x, @(User.Photo.MediumUri) 1x" src="@(User.Photo.OriginalUri)"
-                         onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.Username)"
+                         onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.DisplayName)"
                          style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
                     }
                     else

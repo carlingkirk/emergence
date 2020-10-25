@@ -46,6 +46,7 @@ namespace Emergence.Data.Shared.Stores
         public string MinimumZone { get; set; }
         [StringLength(8)]
         public string MaximumZone { get; set; }
+        public Visibility Visibility { get; set; }
         [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]

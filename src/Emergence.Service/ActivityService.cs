@@ -128,8 +128,8 @@ namespace Emergence.Service
                 { "Name", a => a.Name },
                 { "ScientificName", a => a.Specimen.Lifeform.ScientificName },
                 { "ActivityType", a => a.ActivityType },
-                { "DateOccured", a => a.DateOccured },
-                { "DateScheduled", a => a.DateOccured },
+                { "DateOccured", a => a.DateOccurred },
+                { "DateScheduled", a => a.DateScheduled },
                 { "DateCreated", a => a.DateCreated }
             };
 

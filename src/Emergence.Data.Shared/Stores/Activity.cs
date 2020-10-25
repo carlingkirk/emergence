@@ -18,7 +18,8 @@ namespace Emergence.Data.Shared.Stores
         [StringLength(36)]
         public string AssignedTo { get; set; }
         public DateTime? DateScheduled { get; set; }
-        public DateTime? DateOccured { get; set; }
+        public DateTime? DateOccurred { get; set; }
+        public Visibility Visibility { get; set; }
         [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]

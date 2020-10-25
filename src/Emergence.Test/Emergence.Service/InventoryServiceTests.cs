@@ -36,6 +36,7 @@ namespace Emergence.Test.API.Services
             inventory.Items.Where(i => i.Status == ItemStatus.Available).Should().HaveCount(2);
             inventory.Items.Where(i => i.Status == ItemStatus.Wishlist).Should().HaveCount(1);
             inventory.Items.Where(i => i.ItemType == ItemType.Supply).Should().HaveCount(1);
+            inventory.Items.Where(i => i.Visibility == Visibility.Contacts).Should().HaveCount(1);
         }
     }
 }

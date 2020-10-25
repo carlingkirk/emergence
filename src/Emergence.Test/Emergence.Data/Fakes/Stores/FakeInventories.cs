@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -30,6 +31,9 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ItemType = "Specimen",
                     Quantity = 25,
                     Status = "Available",
+                    Visibility = Visibility.Public,
+                    CreatedBy = "me",
+                    ModifiedBy = null,
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null
@@ -44,6 +48,9 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ItemType = "Specimen",
                     Quantity = 3,
                     Status = "Available",
+                    Visibility = Visibility.Contacts,
+                    CreatedBy = "me",
+                    ModifiedBy = null,
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null
@@ -58,6 +65,9 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ItemType = "Supply",
                     Quantity = 1,
                     Status = "Wishlist",
+                    Visibility = Visibility.Hidden,
+                    CreatedBy = "me",
+                    ModifiedBy = null,
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null

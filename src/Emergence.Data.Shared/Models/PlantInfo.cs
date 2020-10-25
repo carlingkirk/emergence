@@ -17,6 +17,7 @@ namespace Emergence.Data.Shared.Models
         public Height Height { get; set; }
         public Spread Spread { get; set; }
         public Requirements Requirements { get; set; }
+        public Visibility Visibility { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }

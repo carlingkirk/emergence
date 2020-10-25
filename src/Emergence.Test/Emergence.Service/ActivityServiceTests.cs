@@ -43,10 +43,11 @@ namespace Emergence.Test.Emergence.API.Services
             activities.Should().HaveCount(3);
             activities.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
             activities.Where(a => a.ActivityType == ActivityType.Stratification).Should().HaveCount(1);
-            activities.Where(a => a.DateOccured != null).Should().HaveCount(3);
+            activities.Where(a => a.DateOccurred != null).Should().HaveCount(3);
             activities.Where(a => a.DateScheduled != null).Should().HaveCount(2);
             activities.Where(a => a.DateCreated != null).Should().HaveCount(3);
             activities.Where(a => a.DateModified != null).Should().HaveCount(2);
+            activities.Where(a => a.Visibility == Visibility.Public).Should().HaveCount(1);
         }
 
         [Fact]
@@ -62,10 +63,11 @@ namespace Emergence.Test.Emergence.API.Services
             activities.Count.Should().Be(3);
             activities.Results.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
             activities.Results.Where(a => a.ActivityType == ActivityType.Stratification).Should().HaveCount(1);
-            activities.Results.Where(a => a.DateOccured != null).Should().HaveCount(3);
+            activities.Results.Where(a => a.DateOccurred != null).Should().HaveCount(3);
             activities.Results.Where(a => a.DateScheduled != null).Should().HaveCount(2);
             activities.Results.Where(a => a.DateCreated != null).Should().HaveCount(3);
             activities.Results.Where(a => a.DateModified != null).Should().HaveCount(2);
+            activities.Results.Where(a => a.Visibility == Visibility.Public).Should().HaveCount(1);
         }
     }
 }

@@ -25,6 +25,11 @@ namespace Emergence.Test.Data.Fakes.Models
                             Name = "Liatris spicata seeds",
                             Quantity = 50,
                             Status = ItemStatus.Available,
+                            Visibility = Visibility.Contacts,
+                            CreatedBy = "me",
+                            ModifiedBy = null,
+                            DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
+                            DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
                             Origin = new Origin
                             {
                                 OriginId = 2,
