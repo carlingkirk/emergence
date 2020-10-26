@@ -288,6 +288,13 @@ namespace Emergence.Test.Mocks
                 It.IsAny<Func<IIncludable<PlantInfo>, IIncludable>[]>()))
                 .ReturnsAsync(mockPlantInfos.FirstOrDefault());
 
+            mockPlantInfoRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<PlantInfo, bool>>>(),
+                It.IsAny<Func<IIncludable<PlantInfo>, IIncludable>[]>()))
+                .Returns(mockPlantInfos);
+
+            mockPlantInfoRepo.Setup(p => p.Where(It.IsAny<Expression<Func<PlantInfo, bool>>>()))
+                .Returns(mockPlantInfos);
+
             return mockPlantInfoRepo;
         }
 

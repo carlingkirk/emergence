@@ -4,6 +4,7 @@ using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
+using Emergence.Test.Data.Fakes.Models;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
@@ -26,32 +27,40 @@ namespace Emergence.Test.API.Services
         public async Task TestGetPlantInfoAsync()
         {
             var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
-            var plantInfo = await plantInfoService.GetPlantInfoAsync(1);
+            var plantInfo = await plantInfoService.GetPlantInfoAsync(1, FakeUsers.Get().First());
 
             plantInfo.Should().NotBeNull("it exists");
-        }
-
-        [Fact]
-        public async Task TestGetPlantInfosAsync()
-        {
-            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
-            var plantInfos = await plantInfoService.GetPlantInfosAsync();
-
-            plantInfos.Should().NotBeNull("it exists");
-            plantInfos.Should().HaveCount(2);
-            plantInfos.Where(p => p.BloomTime.MinimumBloomTime == Month.Jul).Should().HaveCount(1);
-            plantInfos.Where(p => p.Requirements.StratificationStages.Any(s => s.StratificationType == StratificationType.AbrasionScarify)).Should().HaveCount(1);
         }
 
         [Fact]
         public async Task TestAddOrUpdatePlantInfoAsync()
         {
             var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
-            var plantInfo = Data.Fakes.Models.FakePlantInfos.Get().First();
+            var plantInfo = FakePlantInfos.Get().First();
 
             var plantInfoResult = await plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
 
             plantInfoResult.Should().NotBeNull("it exists");
+        }
+
+        [Fact]
+        public async Task TestFindPlantInfosAsync()
+        {
+            var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
+
+            var plantInfoResult = await plantInfoService.FindPlantInfos(new FindParams
+            {
+                SearchText = "Liatris spicata",
+                Skip = 0,
+                Take = 10,
+                SortBy = "",
+                SortDirection = SortDirection.None,
+            },
+            FakeUsers.Get().First());
+
+            plantInfoResult.Results.Should().NotBeNull("it exists");
+            plantInfoResult.Count.Should().Be(2);
+            plantInfoResult.Results.Should().HaveCount(2);
         }
     }
 }

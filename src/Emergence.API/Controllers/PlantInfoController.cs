@@ -15,12 +15,14 @@ namespace Emergence.API.Controllers
         private readonly IPlantInfoService _plantInfoService;
         private readonly IOriginService _originService;
         private readonly IPhotoService _photoService;
+        private readonly IUserService _userService;
 
-        public PlantInfoController(IPlantInfoService plantInfoService, IOriginService originService, IPhotoService photoService)
+        public PlantInfoController(IPlantInfoService plantInfoService, IOriginService originService, IPhotoService photoService, IUserService userService)
         {
             _plantInfoService = plantInfoService;
             _originService = originService;
             _photoService = photoService;
+            _userService = userService;
         }
 
         [AllowAnonymous]
@@ -28,7 +30,8 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<PlantInfo> Get(int id)
         {
-            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id);
+            var user = await _userService.GetUserAsync(UserId);
+            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id, user);
             var photos = await _photoService.GetPhotosAsync(PhotoType.PlantInfo, plantInfo.PlantInfoId);
             plantInfo.Photos = photos;
 
@@ -63,7 +66,8 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<PlantInfo>> FindPlantInfos(FindParams findParams)
         {
-            var result = await _plantInfoService.FindPlantInfos(findParams);
+            var user = await _userService.GetUserAsync(UserId);
+            var result = await _plantInfoService.FindPlantInfos(findParams, user);
             return result;
         }
 
@@ -71,7 +75,8 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id);
+            var user = await _userService.GetUserAsync(UserId);
+            var plantInfo = await _plantInfoService.GetPlantInfoAsync(id, user);
             if (plantInfo.CreatedBy != UserId)
             {
                 return Unauthorized();

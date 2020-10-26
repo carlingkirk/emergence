@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
@@ -37,7 +38,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     CreatedBy = Helpers.UserId,
                     ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
-                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
+                    User = FakeUsers.Get().First()
                 },
                 new PlantInfo
                 {
@@ -66,7 +68,38 @@ namespace Emergence.Test.Data.Fakes.Stores
                     CreatedBy = Helpers.UserId,
                     ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
-                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
+                    User = FakeUsers.Get().First()
+                },
+                new PlantInfo
+                {
+                    LifeformId = 1,
+                    Id = 3,
+                    OriginId = 2,
+                    TaxonId = Taxon().Id,
+                    CommonName = "Dense Blazing Star",
+                    ScientificName = "Liatris spicata",
+                    MinimumBloomTime = 7,
+                    MaximumBloomTime = 8,
+                    MinimumHeight = 1,
+                    MaximumHeight = 2,
+                    HeightUnit = "Feet",
+                    MinimumSpread = 0.75,
+                    MaximumSpread = 1.5,
+                    SpreadUnit = "Feet",
+                    MinimumWater = "Medium",
+                    MaximumWater = "Medium",
+                    MinimumLight = "PartShade",
+                    MaximumLight = "FullSun",
+                    MinimumZone = "3",
+                    MaximumZone = "8",
+                    StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
+                    Visibility = Visibility.Inherit,
+                    CreatedBy = FakeUsers.GetPrivateUser().UserId.ToString(),
+                    ModifiedBy = FakeUsers.GetPrivateUser().UserId.ToString(),
+                    DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
+                    User = FakeUsers.GetPrivateUser()
                 }
             };
             return plantInfos;

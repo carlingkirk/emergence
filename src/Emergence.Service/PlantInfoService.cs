@@ -30,9 +30,10 @@ namespace Emergence.Service
             return plantInfoResult.AsModel();
         }
 
-        public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int id)
+        public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int id, Data.Shared.Models.User user)
         {
-            var plantInfo = await _plantInfoRepository.GetWithIncludesAsync(l => l.Id == id, false, p => p.Include(p => p.Lifeform).Include(p => p.Origin));
+            var plantInfo = await _plantInfoRepository.GetWithIncludesAsync(p => p.Id == id && p.CanViewContent(user.AsStore()),
+                                                                            false, p => p.Include(p => p.Lifeform).Include(p => p.Origin));
             return plantInfo?.AsModel();
         }
 
@@ -48,22 +49,11 @@ namespace Emergence.Service
             return plantInfo?.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> GetPlantInfosAsync()
-        {
-            var plantInfoResult = _plantInfoRepository.GetSomeAsync(l => l.Id > 0);
-            var plantInfos = new List<Data.Shared.Models.PlantInfo>();
-            await foreach (var plantInfo in plantInfoResult)
-            {
-                plantInfos.Add(plantInfo.AsModel());
-            }
-            return plantInfos;
-        }
-
-        public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams)
+        public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams, Data.Shared.Models.User user)
         {
             var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchTextQuery == null ||
-                                                                       EF.Functions.Like(p.CommonName, findParams.SearchTextQuery) ||
-                                                                       EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
+                                                                        EF.Functions.Like(p.CommonName, findParams.SearchTextQuery) ||
+                                                                        EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
                                                                         EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchTextQuery) ||
                                                                         EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchTextQuery)),
                                                                         p => p.Include(p => p.Lifeform)
@@ -73,6 +63,8 @@ namespace Emergence.Service
             {
                 plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
             }
+
+            plantInfoQuery = plantInfoQuery.Where(p => p.CanViewContent(user.AsStore()));
 
             plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
 

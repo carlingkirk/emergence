@@ -59,7 +59,10 @@ namespace Emergence.Service
                 return userModel;
             }
 
-            return null;
+            return new Data.Shared.Models.User
+            {
+                UserId = new Guid(userId)
+            };
         }
 
         public async Task<Data.Shared.Models.User> GetUserByNameAsync(string name)
