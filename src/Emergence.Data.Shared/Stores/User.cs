@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
@@ -20,7 +21,7 @@ namespace Emergence.Data.Shared.Stores
         public bool EmailUpdates { get; set; }
         public bool SocialUpdates { get; set; }
         public Visibility ProfileVisibility { get; set; }
-        public Visibility SpecimenVisibility { get; set; }
+        public Visibility InventoryItemVisibility { get; set; }
         public Visibility PlantInfoVisibility { get; set; }
         public Visibility OriginVisibility { get; set; }
         public Visibility ActivityVisibility { get; set; }
@@ -28,5 +29,7 @@ namespace Emergence.Data.Shared.Stores
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }
         public Location Location { get; set; }
+
+        public IEnumerable<UserContact> Contacts { get; set; }
     }
 }

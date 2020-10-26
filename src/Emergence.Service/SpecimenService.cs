@@ -61,7 +61,7 @@ namespace Emergence.Service
             return specimens;
         }
 
-        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams)
+        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams, Data.Shared.Models.User user)
         {
             if (findParams.SearchText != null)
             {
@@ -76,6 +76,8 @@ namespace Emergence.Service
                                                                               .Include(s => s.InventoryItem.Inventory)
                                                                               .Include(s => s.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
+
+            specimenQuery = specimenQuery.Where(s => s.InventoryItem.CanViewContent(user.AsStore()));
 
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {

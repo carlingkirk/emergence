@@ -34,8 +34,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumZone = "8",
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
                     Visibility = Visibility.Contacts,
-                    CreatedBy = "me",
-                    ModifiedBy = "me",
+                    CreatedBy = Helpers.UserId,
+                    ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 },
@@ -63,8 +63,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumZone = "8",
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"1\",\"StratificationType\":\"AbrasionScarify\"},{\"Step\":\"2\",\"DayLength\":\"10\",\"StratificationType\":\"ColdMoist\"}]",
                     Visibility = Visibility.Public,
-                    CreatedBy = "me",
-                    ModifiedBy = "me",
+                    CreatedBy = Helpers.UserId,
+                    ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 }

@@ -58,7 +58,7 @@ namespace Emergence.Test.API.Services
                 Take = 10,
                 SortBy = "",
                 SortDirection = SortDirection.None
-            }, "me");
+            }, Helpers.UserId);
 
             origins.Results.Should().NotBeNull("it exists");
             origins.Results.Should().HaveCount(1);

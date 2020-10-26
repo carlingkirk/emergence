@@ -56,7 +56,14 @@ namespace Emergence.Test.Emergence.API.Services
             var specimenService = ServiceMocks.GetStandardMockSpecimenService();
             var inventoryService = ServiceMocks.GetStandardMockInventoryService();
             var activityService = new ActivityService(_mockActivityRepository.Object, specimenService.Object, inventoryService.Object);
-            var activities = await activityService.FindActivities(new FindParams { SearchText = "Liatris spicata", Skip = 0, Take = 10, SortBy = "", SortDirection = SortDirection.None }, "me");
+            var activities = await activityService.FindActivities(new FindParams
+            {
+                SearchText = "Liatris spicata",
+                Skip = 0,
+                Take = 10,
+                SortBy = "",
+                SortDirection = SortDirection.None
+            }, Helpers.UserId);
 
             activities.Should().NotBeNull("it exists");
             activities.Results.Should().HaveCount(3);

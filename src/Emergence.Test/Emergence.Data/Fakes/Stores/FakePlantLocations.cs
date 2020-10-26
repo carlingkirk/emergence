@@ -15,7 +15,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     PlantInfoId = 1,
                     LocationId = 1,
                     Status = "Native",
-                    CreatedBy = "me",
+                    CreatedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddMonths(-1).AddDays(5)
                 }
             };

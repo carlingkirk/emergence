@@ -23,8 +23,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "222",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Contacts,
-                CreatedBy = "me",
-                ModifiedBy = "me",
+                CreatedBy = Helpers.UserId,
+                ModifiedBy = Helpers.UserId,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
                 DateModified = Helpers.Today.AddMonths(-1).AddDays(5)
             },
@@ -40,7 +40,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "srtyhs",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Public,
-                CreatedBy = "me",
+                CreatedBy = Helpers.UserId,
                 ModifiedBy = null,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(5),
                 DateModified = null
@@ -59,8 +59,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "GGGGGGGGG",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Hidden,
-                CreatedBy = "me",
-                ModifiedBy = "me",
+                CreatedBy = Helpers.UserId,
+                ModifiedBy = Helpers.UserId,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
                 DateModified = Helpers.Today.AddMonths(-1).AddDays(5)
             }

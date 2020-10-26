@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class PlantInfo : IIncludable<PlantInfo>, IIncludable<PlantInfo, Origin>, IIncludable<PlantInfo, Lifeform>, IIncludable<PlantInfo, Taxon>, IAuditable
+    public class PlantInfo : IIncludable<PlantInfo>, IIncludable<PlantInfo, Origin>, IIncludable<PlantInfo, Lifeform>, IIncludable<PlantInfo, Taxon>, IAuditable, IVisibile<InventoryItem>
     {
         public int Id { get; set; }
         public int LifeformId { get; set; }
@@ -53,5 +53,6 @@ namespace Emergence.Data.Shared.Stores
         public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
+        public User User { get; set; }
     }
 }

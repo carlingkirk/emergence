@@ -38,7 +38,7 @@ namespace Emergence.Test.Emergence.Service
             user.ActivityVisibility.Should().Be(Visibility.Public);
             user.OriginVisibility.Should().Be(Visibility.Public);
             user.PlantInfoVisibility.Should().Be(Visibility.Public);
-            user.ProfileVisibility.Should().Be(Visibility.Public);
+            user.InventoryItemVisibility.Should().Be(Visibility.Public);
         }
     }
 }

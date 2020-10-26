@@ -22,7 +22,7 @@ namespace Emergence.Test.Data.Fakes.Models
                     },
                     InventoryItem = new InventoryItem
                     {
-                        Inventory = new Inventory { InventoryId = 1, OwnerId = "me" },
+                        Inventory = new Inventory { InventoryId = 1, OwnerId = Helpers.UserId },
                         InventoryItemId = 1,
                         DateAcquired = new DateTime(2020,06,26),
                         ItemType = ItemType.Specimen,

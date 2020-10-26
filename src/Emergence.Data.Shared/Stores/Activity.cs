@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class Activity : IIncludable<Activity>, IIncludable<Activity, Specimen>, IAuditable
+    public class Activity : IIncludable<Activity>, IIncludable<Activity, Specimen>, IAuditable, IVisibile<Activity>
     {
         public int Id { get; set; }
         [StringLength(100)]
@@ -28,5 +28,6 @@ namespace Emergence.Data.Shared.Stores
         public DateTime? DateModified { get; set; }
 
         public Specimen Specimen { get; set; }
+        public User User { get; set; }
     }
 }

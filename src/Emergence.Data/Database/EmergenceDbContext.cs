@@ -36,6 +36,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<PlantLocation> PlantLocations { get; set; }
         public virtual DbSet<Synonym> Synonyms { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<DisplayName> DisplayNames { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -62,11 +63,22 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<PlantLocation>().HasKey(i => i.Id);
             modelBuilder.Entity<Synonym>().HasKey(i => i.Id);
             modelBuilder.Entity<User>().HasKey(u => u.Id);
+            modelBuilder.Entity<UserContact>().HasKey(u => u.Id);
             modelBuilder.Entity<DisplayName>().HasNoKey().ToView("DisplayNames").Property(v => v.Name).HasColumnName("Name");
 
             modelBuilder.Entity<User>().HasIndex(u => u.UserId).IsUnique();
             modelBuilder.Entity<PlantLocation>()
                 .HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
+
+            modelBuilder.Entity<User>().HasAlternateKey(u => u.UserId);
+
+            modelBuilder.Entity<Activity>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
+            modelBuilder.Entity<InventoryItem>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
+            modelBuilder.Entity<Origin>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
+            modelBuilder.Entity<PlantInfo>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
+
+            modelBuilder.Entity<UserContact>().HasOne<User>().WithMany().HasForeignKey(u => u.UserId);
+            modelBuilder.Entity<UserContact>().HasOne<User>().WithMany().HasForeignKey(u => u.ContactUserId);
         }
     }
 }

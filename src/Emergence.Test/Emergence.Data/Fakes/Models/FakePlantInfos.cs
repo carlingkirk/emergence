@@ -74,8 +74,8 @@ namespace Emergence.Test.Data.Fakes.Models
 
                     },
                     Visibility = Visibility.Public,
-                    CreatedBy = "me",
-                    ModifiedBy = "me",
+                    CreatedBy = Helpers.UserId,
+                    ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
                 }

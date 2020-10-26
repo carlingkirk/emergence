@@ -13,7 +13,7 @@ namespace Emergence.Test.Data.Fakes.Models
                 new User
                 {
                     Id = 1,
-                    UserId = Guid.NewGuid(),
+                    UserId = new Guid(Helpers.UserId),
                     FirstName = "Daria",
                     LastName = "Morgendorffer",
                     Photo = FakePhotos.Get().First(),
@@ -26,7 +26,7 @@ namespace Emergence.Test.Data.Fakes.Models
                     ActivityVisibility = Visibility.Public,
                     OriginVisibility = Visibility.Public,
                     PlantInfoVisibility = Visibility.Public,
-                    SpecimenVisibility = Visibility.Public,
+                    InventoryItemVisibility = Visibility.Public,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom(5) * -1),
                     DateModified = null
                 }

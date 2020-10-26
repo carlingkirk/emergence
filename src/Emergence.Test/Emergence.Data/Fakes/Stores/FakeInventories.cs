@@ -13,8 +13,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                 new Inventory
                 {
                     Id = 1,
-                    OwnerId = "me",
-                    CreatedBy = "me",
+                    OwnerId = Helpers.UserId,
+                    CreatedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(-5)
                 }
             };
@@ -32,11 +32,12 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Quantity = 25,
                     Status = "Available",
                     Visibility = Visibility.Public,
-                    CreatedBy = "me",
+                    CreatedBy = Helpers.UserId,
                     ModifiedBy = null,
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
-                    DateModified = null
+                    DateModified = null,
+                    User = FakeUsers.Get().First()
                 },
                 new InventoryItem
                 {
@@ -49,11 +50,12 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Quantity = 3,
                     Status = "Available",
                     Visibility = Visibility.Contacts,
-                    CreatedBy = "me",
+                    CreatedBy = Helpers.UserId,
                     ModifiedBy = null,
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
-                    DateModified = null
+                    DateModified = null,
+                    User = FakeUsers.Get().First()
                 },
                 new InventoryItem
                 {
@@ -66,12 +68,31 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Quantity = 1,
                     Status = "Wishlist",
                     Visibility = Visibility.Hidden,
-                    CreatedBy = "me",
+                    CreatedBy = Helpers.UserId,
                     ModifiedBy = null,
-                    DateAcquired = new DateTime(2020,03,31),
+                    DateAcquired = null,
                     DateCreated = new DateTime(2020,06,15),
-                    DateModified = null
+                    DateModified = null,
+                    User = FakeUsers.Get().First()
                 },
+                new InventoryItem
+                {
+                    Id = 4,
+                    InventoryId = 1,
+                    Inventory = Get().First(i => i.Id == 1),
+                    Name = "Morning glory seeds",
+                    OriginId = 3,
+                    ItemType = "Specimen",
+                    Quantity = 1,
+                    Status = "Wishlist",
+                    Visibility = Visibility.Inherit,
+                    CreatedBy = Helpers.PrivateUserId,
+                    ModifiedBy = null,
+                    DateAcquired = null,
+                    DateCreated = new DateTime(2020,06,15),
+                    DateModified = null,
+                    User = FakeUsers.GetPrivateUser()
+                }
             };
     }
 }

@@ -35,7 +35,7 @@ namespace Emergence.Test.API.Services
             var lifeforms = await lifeformService.GetLifeformsAsync();
 
             lifeforms.Should().NotBeNull("it exists");
-            lifeforms.Should().HaveCount(3);
+            lifeforms.Should().HaveCount(4);
             lifeforms.Where(l => l.CommonName == "Dense Blazing Star").Should().HaveCount(1);
             lifeforms.Where(l => l.ScientificName == "Bignonia capreolata").Should().HaveCount(1);
         }

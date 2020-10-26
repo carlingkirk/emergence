@@ -26,6 +26,12 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Id = 3,
                     CommonName = "Crossvine",
                     ScientificName = "Bignonia capreolata"
+                },
+                new Lifeform
+                {
+                    Id = 4,
+                    CommonName = "common morning-glory",
+                    ScientificName = "Ipomoea purpurea"
                 }
             };
 

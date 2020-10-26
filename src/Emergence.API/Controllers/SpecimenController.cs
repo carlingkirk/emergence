@@ -16,13 +16,15 @@ namespace Emergence.API.Controllers
         private readonly IInventoryService _inventoryService;
         private readonly IPhotoService _photoService;
         private readonly IOriginService _originService;
+        private readonly IUserService _userService;
 
-        public SpecimenController(ISpecimenService specimenService, IInventoryService inventoryService, IPhotoService photoService, IOriginService originService)
+        public SpecimenController(ISpecimenService specimenService, IInventoryService inventoryService, IPhotoService photoService, IOriginService originService, IUserService userService)
         {
             _specimenService = specimenService;
             _inventoryService = inventoryService;
             _photoService = photoService;
             _originService = originService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -84,7 +86,8 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<Specimen>> FindSpecimens(FindParams findParams)
         {
-            var result = await _specimenService.FindSpecimens(findParams);
+            var user = await _userService.GetUserAsync(UserId);
+            var result = await _specimenService.FindSpecimens(findParams, user);
             return result;
         }
 

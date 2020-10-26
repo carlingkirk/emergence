@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class InventoryItem : IIncludable<InventoryItem, Inventory>, IAuditable
+    public class InventoryItem : IIncludable<InventoryItem, Inventory>, IAuditable, IVisibile<InventoryItem>
     {
         public int InventoryId { get; set; }
         public int Id { get; set; }
@@ -24,6 +24,7 @@ namespace Emergence.Data.Shared.Stores
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
 
+        public User User { get; set; }
         public Inventory Inventory { get; set; }
         public Origin Origin { get; set; }
     }

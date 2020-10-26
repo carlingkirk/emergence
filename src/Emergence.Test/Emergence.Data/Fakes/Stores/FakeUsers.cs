@@ -13,7 +13,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 new User
                 {
                     Id = 1,
-                    UserId = Guid.NewGuid(),
+                    UserId = new Guid(Helpers.UserId),
                     FirstName = "Daria",
                     LastName = "",
                     Photo = FakePhotos.Get().First(),
@@ -27,10 +27,32 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ActivityVisibility = Visibility.Public,
                     OriginVisibility = Visibility.Public,
                     PlantInfoVisibility = Visibility.Public,
-                    SpecimenVisibility = Visibility.Public,
+                    InventoryItemVisibility = Visibility.Public,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom(5) * -1),
                     DateModified = null
                 }
             };
+
+        public static User GetPrivateUser() => new User
+        {
+            Id = 2,
+            UserId = new Guid(Helpers.PrivateUserId),
+            FirstName = "Jane",
+            LastName = "Lane",
+            Photo = FakePhotos.Get().First(),
+            PhotoId = 1,
+            Location = FakeLocations.Get().First(),
+            EmailUpdates = true,
+            SocialUpdates = true,
+            DisplayName = "JaneLane",
+            Bio = "Don't look at me",
+            ProfileVisibility = Visibility.Hidden,
+            ActivityVisibility = Visibility.Hidden,
+            OriginVisibility = Visibility.Hidden,
+            PlantInfoVisibility = Visibility.Hidden,
+            InventoryItemVisibility = Visibility.Hidden,
+            DateCreated = Helpers.Today.AddDays(Helpers.GetRandom(5) * -1),
+            DateModified = null
+        };
     }
 }

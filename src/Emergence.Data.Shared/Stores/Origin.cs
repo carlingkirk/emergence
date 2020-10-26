@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class Origin : IIncludable<Origin>, IIncludable<Origin, Origin>, IIncludable<Origin, Location>, IAuditable
+    public class Origin : IIncludable<Origin>, IIncludable<Origin, Origin>, IIncludable<Origin, Location>, IAuditable, IVisibile<Origin>
     {
         public int Id { get; set; }
         public int? ParentOriginId { get; set; }
@@ -32,5 +32,6 @@ namespace Emergence.Data.Shared.Stores
 
         public Origin ParentOrigin { get; set; }
         public Location Location { get; set; }
+        public User User { get; set; }
     }
 }
