@@ -31,7 +31,8 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<Specimen> Get(int id)
         {
-            var specimen = await _specimenService.GetSpecimenAsync(id);
+            var user = await _userService.GetUserAsync(UserId);
+            var specimen = await _specimenService.GetSpecimenAsync(id, user);
             var photos = await _photoService.GetPhotosAsync(PhotoType.Specimen, id);
 
             specimen.Photos = photos;
@@ -95,7 +96,8 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var specimen = await _specimenService.GetSpecimenAsync(id);
+            var user = await _userService.GetUserAsync(UserId);
+            var specimen = await _specimenService.GetSpecimenAsync(id, user);
             if (specimen.CreatedBy != UserId)
             {
                 return Unauthorized();

@@ -29,9 +29,11 @@ namespace Emergence.Service
             return specimenResult.AsModel();
         }
 
-        public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(int specimenId)
+        public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(int specimenId, Data.Shared.Models.User user)
         {
-            var result = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenId, track: false,
+            var result = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenId &&
+                                                                             s.InventoryItem.CanViewContent(user.AsStore()),
+                                                                             track: false,
                                                                         s => s.Include(s => s.InventoryItem)
                                                                               .Include(ii => ii.InventoryItem.Inventory)
                                                                               .Include(ii => ii.InventoryItem.Origin)
@@ -39,10 +41,12 @@ namespace Emergence.Service
             return result?.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensForInventoryAsync(int inventoryId)
+        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensForInventoryAsync(int inventoryId, Data.Shared.Models.User user)
         {
-            var specimenResult = _specimenRepository.GetSomeAsync(s => s.InventoryItemId == inventoryId);
             var specimens = new List<Data.Shared.Models.Specimen>();
+            var specimenQuery = _specimenRepository.Where(s => s.InventoryItem.CanViewContent(user.AsStore()));
+            var specimenResult = specimenQuery.GetSomeAsync(s => s.InventoryItemId == inventoryId);
+
             await foreach (var specimen in specimenResult)
             {
                 specimens.Add(specimen.AsModel());
@@ -69,13 +73,13 @@ namespace Emergence.Service
             }
 
             var specimenQuery = _specimenRepository.WhereWithIncludes(s => (findParams.SearchText == null ||
-                                                                       EF.Functions.Like(s.InventoryItem.Name, findParams.SearchText) ||
-                                                                        EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||
-                                                                        EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchText)),
-                                                                        s => s.Include(s => s.InventoryItem)
-                                                                              .Include(s => s.InventoryItem.Inventory)
-                                                                              .Include(s => s.InventoryItem.Origin)
-                                                                              .Include(s => s.Lifeform));
+                                                                           EF.Functions.Like(s.InventoryItem.Name, findParams.SearchText) ||
+                                                                           EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||
+                                                                           EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchText)),
+                                                                           s => s.Include(s => s.InventoryItem)
+                                                                                 .Include(s => s.InventoryItem.Inventory)
+                                                                                 .Include(s => s.InventoryItem.Origin)
+                                                                                 .Include(s => s.Lifeform));
 
             specimenQuery = specimenQuery.Where(s => s.InventoryItem.CanViewContent(user.AsStore()));
 

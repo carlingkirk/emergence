@@ -53,14 +53,14 @@ namespace Emergence.Service
             return activities;
         }
 
-        public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id)
+        public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id, Data.Shared.Models.User user)
         {
             var result = await _activityRepository.GetAsync(a => a.Id == id);
             var activity = result?.AsModel();
 
             if (result.SpecimenId.HasValue)
             {
-                var specimen = await _specimenService.GetSpecimenAsync(result.SpecimenId.Value);
+                var specimen = await _specimenService.GetSpecimenAsync(result.SpecimenId.Value, user);
                 activity.Specimen = specimen;
             }
 

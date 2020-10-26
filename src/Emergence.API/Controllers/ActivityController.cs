@@ -13,17 +13,20 @@ namespace Emergence.API.Controllers
     {
         private readonly IActivityService _activityService;
         private readonly IPhotoService _photoService;
-        public ActivityController(IActivityService activityService, IPhotoService photoService)
+        private readonly IUserService _userService;
+        public ActivityController(IActivityService activityService, IPhotoService photoService, IUserService userService)
         {
             _activityService = activityService;
             _photoService = photoService;
+            _userService = userService;
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<Activity> Get(int id)
         {
-            var activity = await _activityService.GetActivityAsync(id);
+            var user = await _userService.GetUserAsync(UserId);
+            var activity = await _activityService.GetActivityAsync(id, user);
             var photos = await _photoService.GetPhotosAsync(PhotoType.Activity, id);
 
             activity.Photos = photos;
@@ -61,7 +64,8 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var activity = await _activityService.GetActivityAsync(id);
+            var user = await _userService.GetUserAsync(UserId);
+            var activity = await _activityService.GetActivityAsync(id, user);
             if (activity.CreatedBy != UserId)
             {
                 return Unauthorized();

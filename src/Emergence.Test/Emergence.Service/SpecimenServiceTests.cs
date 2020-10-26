@@ -27,7 +27,7 @@ namespace Emergence.Test.API.Services
         public async Task TestGetSpecimenAsync()
         {
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
-            var specimen = await specimenService.GetSpecimenAsync(0);
+            var specimen = await specimenService.GetSpecimenAsync(1, FakeUsers.Get().First());
 
             specimen.Should().NotBeNull("it exists");
         }
@@ -36,13 +36,11 @@ namespace Emergence.Test.API.Services
         public async Task TestGetSpecimensAsync()
         {
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
-            var specimens = await specimenService.GetSpecimensForInventoryAsync(1);
+            var specimens = await specimenService.GetSpecimensForInventoryAsync(1, FakeUsers.Get().First());
 
             specimens.Should().NotBeNull("it exists");
-            specimens.Should().HaveCount(4);
-            specimens.Where(s => s.SpecimenStage == SpecimenStage.Seed).Should().HaveCount(2);
-            specimens.Where(s => s.SpecimenStage == SpecimenStage.Stratification).Should().HaveCount(1);
-            specimens.Where(s => s.SpecimenStage == SpecimenStage.Growing).Should().HaveCount(1);
+            specimens.Should().HaveCount(1);
+            specimens.Where(s => s.SpecimenStage == SpecimenStage.Seed).Should().HaveCount(1);
         }
 
         [Fact]

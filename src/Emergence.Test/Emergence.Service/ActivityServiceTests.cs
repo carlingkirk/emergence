@@ -4,6 +4,7 @@ using Emergence.Data;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
+using Emergence.Test.Data.Fakes.Models;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
@@ -26,7 +27,7 @@ namespace Emergence.Test.Emergence.API.Services
             var specimenService = ServiceMocks.GetStandardMockSpecimenService();
             var inventoryService = ServiceMocks.GetStandardMockInventoryService();
             var activityService = new ActivityService(_mockActivityRepository.Object, specimenService.Object, inventoryService.Object);
-            var activity = await activityService.GetActivityAsync(1);
+            var activity = await activityService.GetActivityAsync(1, FakeUsers.Get().First());
 
             activity.Should().NotBeNull("it exists");
         }
