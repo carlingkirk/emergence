@@ -116,6 +116,9 @@ namespace Emergence.Test.Mocks
                 It.IsAny<Func<IIncludable<Origin>, IIncludable>[]>()))
                 .Returns(mockOrigins);
 
+            mockOriginRepo.Setup(p => p.Where(It.IsAny<Expression<Func<Origin, bool>>>()))
+                .Returns(mockOrigins);
+
             return mockOriginRepo;
         }
 

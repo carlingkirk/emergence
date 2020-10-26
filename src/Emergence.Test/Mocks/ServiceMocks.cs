@@ -60,9 +60,6 @@ namespace Emergence.Test.Mocks
             mockOriginService.Setup(s => s.GetOriginAsync(It.IsAny<int>()))
                 .ReturnsAsync(originsResult?.FirstOrDefault() ?? FakeOrigins.Get().First());
 
-            mockOriginService.Setup(s => s.GetOriginsAsync())
-                .ReturnsAsync(originsResult ?? FakeOrigins.Get());
-
             return mockOriginService;
         }
 

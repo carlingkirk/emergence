@@ -23,21 +23,20 @@ namespace Emergence.Service
             _locationService = locationService;
         }
 
-        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id)
+        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id, Data.Shared.Models.User user)
         {
-            var origin = await _originRepository.GetWithIncludesAsync(l => l.Id == id, false, o => o.Include(o => o.ParentOrigin).Include(o => o.Location));
+            var origin = await _originRepository.GetWithIncludesAsync(o => o.Id == id && o.CanViewContent(user.AsStore()), false,
+                                                                      o => o.Include(o => o.ParentOrigin)
+                                                                            .Include(o => o.Location));
             return origin?.AsModel();
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Origin>> GetOriginsAsync()
+        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id)
         {
-            var originResult = _originRepository.GetSomeAsync(l => l.Id > 0);
-            var origins = new List<Data.Shared.Models.Origin>();
-            await foreach (var origin in originResult)
-            {
-                origins.Add(origin.AsModel());
-            }
-            return origins;
+            var origin = await _originRepository.GetWithIncludesAsync(o => o.Id == id, false,
+                                                                      o => o.Include(o => o.ParentOrigin)
+                                                                            .Include(o => o.Location));
+            return origin?.AsModel();
         }
 
         public async Task<Data.Shared.Models.Origin> AddOrUpdateOriginAsync(Data.Shared.Models.Origin origin, string userId)
@@ -68,16 +67,23 @@ namespace Emergence.Service
             return origin?.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, string userId)
+        public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, Data.Shared.Models.User user)
         {
-            var originQuery = _originRepository.WhereWithIncludes(o => o.CreatedBy == userId &&
-                                                                    (findParams.SearchTextQuery == null ||
-                                                                    EF.Functions.Like(o.Name, findParams.SearchTextQuery) ||
-                                                                    EF.Functions.Like(o.Description, findParams.SearchTextQuery) ||
-                                                                    EF.Functions.Like(o.Location.City, findParams.SearchTextQuery) ||
-                                                                    EF.Functions.Like(o.Location.AddressLine1, findParams.SearchTextQuery) ||
-                                                                    EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchTextQuery)),
-                                                                        o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
+            var originQuery = _originRepository.WhereWithIncludes(o => findParams.SearchTextQuery == null ||
+                                                                       EF.Functions.Like(o.Name, findParams.SearchTextQuery) ||
+                                                                       EF.Functions.Like(o.Description, findParams.SearchTextQuery) ||
+                                                                       EF.Functions.Like(o.Location.City, findParams.SearchTextQuery) ||
+                                                                       EF.Functions.Like(o.Location.AddressLine1, findParams.SearchTextQuery) ||
+                                                                       EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchTextQuery),
+                                                                  o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
+
+            originQuery = originQuery.Where(o => o.CanViewContent(user.AsStore()));
+
+            if (!string.IsNullOrEmpty(findParams.CreatedBy))
+            {
+                originQuery = originQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
+            }
+
             originQuery = OrderBy(originQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = originQuery.Count();

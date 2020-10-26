@@ -5,6 +5,7 @@ using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
+using Emergence.Test.Data.Fakes.Models;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
@@ -32,20 +33,6 @@ namespace Emergence.Test.API.Services
         }
 
         [Fact]
-        public async Task TestGetOriginsAsync()
-        {
-            var originService = new OriginService(_mockOriginRepository.Object, _mockLocationService.Object);
-            var origins = await originService.GetOriginsAsync();
-
-            origins.Should().NotBeNull("it exists");
-            origins.Should().HaveCount(3);
-            origins.Where(o => o.Type == OriginType.Website).Should().HaveCount(1);
-            origins.Where(o => o.Uri == null).Should().HaveCount(1);
-            origins.Where(o => o.Name == "Botany Yards").Should().HaveCount(1);
-            origins.Where(o => o.Visibility == Visibility.Contacts).Should().HaveCount(1);
-        }
-
-        [Fact]
         public async Task TestFindOrigins()
         {
             var mockOriginRepository = RepositoryMocks.GetStandardMockOriginRepository(Data.Fakes.Stores.FakeOrigins.Get().Where(o => o.Name == "Botany Yards"));
@@ -58,7 +45,7 @@ namespace Emergence.Test.API.Services
                 Take = 10,
                 SortBy = "",
                 SortDirection = SortDirection.None
-            }, Helpers.UserId);
+            }, FakeUsers.Get().First());
 
             origins.Results.Should().NotBeNull("it exists");
             origins.Results.Should().HaveCount(1);

@@ -23,10 +23,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "222",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Contacts,
-                CreatedBy = Helpers.UserId,
-                ModifiedBy = Helpers.UserId,
+                CreatedBy = FakeUsers.Get().First().UserId.ToString(),
+                ModifiedBy = FakeUsers.Get().First().UserId.ToString(),
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
-                DateModified = Helpers.Today.AddMonths(-1).AddDays(5)
+                DateModified = Helpers.Today.AddMonths(-1).AddDays(5),
+                User = FakeUsers.Get().First()
             },
             new Origin
             {
@@ -40,10 +41,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "srtyhs",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Public,
-                CreatedBy = Helpers.UserId,
+                CreatedBy = FakeUsers.Get().First().UserId.ToString(),
                 ModifiedBy = null,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(5),
-                DateModified = null
+                DateModified = null,
+                User = FakeUsers.Get().First()
             },
             new Origin
             {
@@ -59,10 +61,29 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "GGGGGGGGG",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Hidden,
-                CreatedBy = Helpers.UserId,
-                ModifiedBy = Helpers.UserId,
+                CreatedBy = FakeUsers.Get().First().UserId.ToString(),
+                ModifiedBy = FakeUsers.Get().First().UserId.ToString(),
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
-                DateModified = Helpers.Today.AddMonths(-1).AddDays(5)
+                DateModified = Helpers.Today.AddMonths(-1).AddDays(5),
+                User = FakeUsers.Get().First()
+            },
+            new Origin
+            {
+                Id = 4,
+                ParentOriginId = 3,
+                Type = "Nursery",
+                Name = "Botany Yards",
+                Description = "",
+                Authors = "",
+                AltExternalId = "444",
+                ExternalId = "srtyhs",
+                Location = FakeLocations.Get().First(),
+                Visibility = Visibility.Inherit,
+                CreatedBy = FakeUsers.GetPrivateUser().UserId.ToString(),
+                ModifiedBy = null,
+                DateCreated = Helpers.Today.AddMonths(-1).AddDays(5),
+                DateModified = null,
+                User = FakeUsers.GetPrivateUser()
             }
         };
     }
