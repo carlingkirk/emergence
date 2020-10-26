@@ -51,14 +51,9 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
         {
-            if (findParams.SearchText != null)
-            {
-                findParams.SearchText = "%" + findParams.SearchText + "%";
-            }
-
-            var lifeformQuery = _lifeformRepository.Where(l => findParams.SearchText == null ||
-                                                                        EF.Functions.Like(l.CommonName, findParams.SearchText) ||
-                                                                        EF.Functions.Like(l.ScientificName, findParams.SearchText));
+            var lifeformQuery = _lifeformRepository.Where(l => findParams.SearchTextQuery == null ||
+                                                               EF.Functions.Like(l.CommonName, findParams.SearchTextQuery) ||
+                                                               EF.Functions.Like(l.ScientificName, findParams.SearchTextQuery));
             lifeformQuery = OrderBy(lifeformQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = lifeformQuery.Count();

@@ -67,15 +67,10 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams, Data.Shared.Models.User user)
         {
-            if (findParams.SearchText != null)
-            {
-                findParams.SearchText = "%" + findParams.SearchText + "%";
-            }
-
-            var specimenQuery = _specimenRepository.WhereWithIncludes(s => (findParams.SearchText == null ||
-                                                                           EF.Functions.Like(s.InventoryItem.Name, findParams.SearchText) ||
-                                                                           EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchText) ||
-                                                                           EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchText)),
+            var specimenQuery = _specimenRepository.WhereWithIncludes(s => (findParams.SearchTextQuery == null ||
+                                                                           EF.Functions.Like(s.InventoryItem.Name, findParams.SearchTextQuery) ||
+                                                                           EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchTextQuery) ||
+                                                                           EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchTextQuery)),
                                                                            s => s.Include(s => s.InventoryItem)
                                                                                  .Include(s => s.InventoryItem.Inventory)
                                                                                  .Include(s => s.InventoryItem.Origin)

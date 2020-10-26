@@ -27,11 +27,12 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateScheduled = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
-                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
+                    User = FakeUsers.Get().First()
                 },
                 new Activity
                 {
-                    Id = 1,
+                    Id = 2,
                     ActivityType = "Germination",
                     SpecimenId = 1,
                     Specimen = FakeSpecimens.Get().Where(s => s.Id == 1).First(),
@@ -45,11 +46,12 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateScheduled = null,
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
-                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5)
+                    DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
+                    User = FakeUsers.Get().First()
                 },
                 new Activity
                 {
-                    Id = 1,
+                    Id = 3,
                     ActivityType = "Custom",
                     CustomActivityType = "Divide",
                     SpecimenId = 10,
@@ -64,7 +66,29 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateScheduled = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
-                    DateModified = null
+                    DateModified = null,
+                    User = FakeUsers.Get().First()
+                }
+                ,
+                new Activity
+                {
+                    Id = 4,
+                    ActivityType = "Custom",
+                    CustomActivityType = "Divide",
+                    SpecimenId = 10,
+                    Specimen = FakeSpecimens.Get().Where(s => s.Id == 4).First(),
+                    Name = "Divide: Liatris spicata",
+                    Description = "Split about 15 seedlings into 2\" containers with woody mix",
+                    Quantity = 3,
+                    AssignedTo = FakeUsers.GetPrivateUser().UserId.ToString(),
+                    Visibility = Visibility.Inherit,
+                    ModifiedBy = null,
+                    CreatedBy = FakeUsers.GetPrivateUser().UserId.ToString(),
+                    DateScheduled = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
+                    DateCreated = Helpers.Today,
+                    DateModified = null,
+                    User = FakeUsers.GetPrivateUser()
                 }
             };
             return activities;

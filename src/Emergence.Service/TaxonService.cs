@@ -75,10 +75,6 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Taxon>> FindTaxons(FindParams<Data.Shared.Models.Taxon> findParams, TaxonRank rank)
         {
-            if (findParams.SearchText != null)
-            {
-                findParams.SearchText = "%" + findParams.SearchText + "%";
-            }
             var taxonShape = findParams.Shape;
 
             var taxonQuery = _taxonRepository.WhereWithIncludes(t => t.Kingdom != null && (taxonShape == null ||

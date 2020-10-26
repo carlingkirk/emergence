@@ -26,36 +26,9 @@ namespace Emergence.Service
             _inventoryService = inventoryService;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.Activity>> GetActivitiesAsync()
-        {
-            var activitiesResult = _activityRepository.GetSomeAsync(a => a.Id > 0);
-
-            var activities = new List<Data.Shared.Models.Activity>();
-            await foreach (var activity in activitiesResult)
-            {
-                activities.Add(activity.AsModel());
-            }
-
-            var specimens = await _specimenService.GetSpecimensByIdsAsync(activities.Select(a => a.Specimen.SpecimenId));
-            foreach (var activity in activities)
-            {
-                var specimen = specimens.Where(s => s.SpecimenId == activity.Specimen.SpecimenId).First();
-                activity.Specimen = specimen;
-            }
-
-            var inventoryItems = await _inventoryService.GetInventoryItemsByIdsAsync(specimens.Select(s => s.InventoryItem.InventoryItemId));
-            foreach (var activity in activities)
-            {
-                var inventoryItem = inventoryItems.Where(i => i.InventoryItemId == activity.Specimen.InventoryItem.InventoryItemId).First();
-                activity.Specimen.InventoryItem = inventoryItem;
-            }
-
-            return activities;
-        }
-
         public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id, Data.Shared.Models.User user)
         {
-            var result = await _activityRepository.GetAsync(a => a.Id == id);
+            var result = await _activityRepository.GetAsync(a => a.Id == id && a.CanViewContent(user.AsStore()));
             var activity = result?.AsModel();
 
             if (result.SpecimenId.HasValue)
@@ -74,24 +47,26 @@ namespace Emergence.Service
             return activityResult.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(FindParams findParams, string userId, int? specimenId = 0)
+        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(FindParams findParams, Data.Shared.Models.User user, int? specimenId = 0)
         {
-            if (findParams.SearchText != null)
+            var activityQuery = _activityRepository.WhereWithIncludes(a => (!specimenId.HasValue ||
+                                                                            a.SpecimenId == specimenId) &&
+                                                                           (findParams.SearchTextQuery == null ||
+                                                                            EF.Functions.Like(a.Name, findParams.SearchTextQuery) ||
+                                                                            EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchTextQuery) ||
+                                                                            EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchTextQuery) ||
+                                                                            EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchTextQuery)),
+                                                                      a => a.Include(a => a.Specimen)
+                                                                            .Include(s => s.Specimen.InventoryItem)
+                                                                            .Include(s => s.Specimen.Lifeform));
+
+            activityQuery = activityQuery.Where(a => a.CanViewContent(user.AsStore()));
+
+            if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
-                findParams.SearchText = "%" + findParams.SearchText + "%";
+                activityQuery = activityQuery.Where(a => a.CreatedBy == findParams.CreatedBy);
             }
 
-            var activityQuery = _activityRepository.WhereWithIncludes(a => a.CreatedBy == userId &&
-                                                                                (!specimenId.HasValue ||
-                                                                                a.SpecimenId == specimenId) &&
-                                                                                (findParams.SearchText == null ||
-                                                                                 EF.Functions.Like(a.Name, findParams.SearchText) ||
-                                                                                 EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchText) ||
-                                                                                 EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchText) ||
-                                                                                 EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchText)),
-                                                                           a => a.Include(a => a.Specimen)
-                                                                                 .Include(s => s.Specimen.InventoryItem)
-                                                                                 .Include(s => s.Specimen.Lifeform));
             activityQuery = OrderBy(activityQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = activityQuery.Count();

@@ -61,16 +61,11 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams)
         {
-            if (findParams.SearchText != null)
-            {
-                findParams.SearchText = "%" + findParams.SearchText + "%";
-            }
-
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchText == null ||
-                                                                       EF.Functions.Like(p.CommonName, findParams.SearchText) ||
-                                                                       EF.Functions.Like(p.ScientificName, findParams.SearchText) ||
-                                                                        EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchText) ||
-                                                                        EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchText)),
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchTextQuery == null ||
+                                                                       EF.Functions.Like(p.CommonName, findParams.SearchTextQuery) ||
+                                                                       EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
+                                                                        EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchTextQuery) ||
+                                                                        EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchTextQuery)),
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
                                                                               .Include(p => p.Origin));

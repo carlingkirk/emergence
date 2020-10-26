@@ -33,25 +33,6 @@ namespace Emergence.Test.Emergence.API.Services
         }
 
         [Fact]
-        public async Task TestGetActivitiesAsync()
-        {
-            var specimenService = ServiceMocks.GetStandardMockSpecimenService();
-            var inventoryService = ServiceMocks.GetStandardMockInventoryService();
-            var activityService = new ActivityService(_mockActivityRepository.Object, specimenService.Object, inventoryService.Object);
-            var activities = await activityService.GetActivitiesAsync();
-
-            activities.Should().NotBeNull("it exists");
-            activities.Should().HaveCount(3);
-            activities.Where(a => a.Specimen.InventoryItem.Name == "Liatris spicata seeds").Should().HaveCount(3);
-            activities.Where(a => a.ActivityType == ActivityType.Stratification).Should().HaveCount(1);
-            activities.Where(a => a.DateOccurred != null).Should().HaveCount(3);
-            activities.Where(a => a.DateScheduled != null).Should().HaveCount(2);
-            activities.Where(a => a.DateCreated != null).Should().HaveCount(3);
-            activities.Where(a => a.DateModified != null).Should().HaveCount(2);
-            activities.Where(a => a.Visibility == Visibility.Public).Should().HaveCount(1);
-        }
-
-        [Fact]
         public async Task TestFindActivities()
         {
             var specimenService = ServiceMocks.GetStandardMockSpecimenService();
@@ -64,7 +45,7 @@ namespace Emergence.Test.Emergence.API.Services
                 Take = 10,
                 SortBy = "",
                 SortDirection = SortDirection.None
-            }, Helpers.UserId);
+            }, FakeUsers.Get().First());
 
             activities.Should().NotBeNull("it exists");
             activities.Results.Should().HaveCount(3);

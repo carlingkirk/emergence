@@ -56,7 +56,8 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<Activity>> FindActivities(FindParams findParams, int? specimenId)
         {
-            var result = await _activityService.FindActivities(findParams, UserId, specimenId);
+            var user = await _userService.GetUserAsync(UserId);
+            var result = await _activityService.FindActivities(findParams, user, specimenId);
             return result;
         }
 

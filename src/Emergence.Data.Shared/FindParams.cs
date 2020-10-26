@@ -18,6 +18,7 @@ namespace Emergence.Data.Shared
         public string SortBy { get; set; }
         public SortDirection SortDirection { get; set; }
         public string CreatedBy { get; set; }
+        public string SearchTextQuery => SearchText != null ? "%" + SearchText + "%" : null;
     }
 
     public class FindParams<T> : IFindParams

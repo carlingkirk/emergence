@@ -70,13 +70,13 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, string userId)
         {
-            findParams.SearchText = "%" + findParams.SearchText + "%";
             var originQuery = _originRepository.WhereWithIncludes(o => o.CreatedBy == userId &&
-                                                                    (EF.Functions.Like(o.Name, findParams.SearchText) ||
-                                                                    EF.Functions.Like(o.Description, findParams.SearchText) ||
-                                                                    EF.Functions.Like(o.Location.City, findParams.SearchText) ||
-                                                                    EF.Functions.Like(o.Location.AddressLine1, findParams.SearchText) ||
-                                                                    EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchText)),
+                                                                    (findParams.SearchTextQuery == null ||
+                                                                    EF.Functions.Like(o.Name, findParams.SearchTextQuery) ||
+                                                                    EF.Functions.Like(o.Description, findParams.SearchTextQuery) ||
+                                                                    EF.Functions.Like(o.Location.City, findParams.SearchTextQuery) ||
+                                                                    EF.Functions.Like(o.Location.AddressLine1, findParams.SearchTextQuery) ||
+                                                                    EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchTextQuery)),
                                                                         o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
             originQuery = OrderBy(originQuery, findParams.SortBy, findParams.SortDirection);
 
