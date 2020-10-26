@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Emergence.Data.Identity;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,17 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             public bool EmailUpdates { get; set; }
             [Display(Name = "Send me social notifications")]
             public bool SocialUpdates { get; set; }
+            [Display(Name = "Profile visibility")]
+            public Visibility ProfileVisibility { get; set; }
+            [Display(Name = "Specimen visibility")]
+            public Visibility InventoryItemVisibility { get; set; }
+            [Display(Name = "Plant profile visibility")]
+            public Visibility PlantInfoVisibility { get; set; }
+            [Display(Name = "Origin visibility")]
+            public Visibility OriginVisibility { get; set; }
+            [Display(Name = "Activity visibility")]
+            public Visibility ActivityVisibility { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -107,7 +119,12 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
                 Country = userProfile.Location?.Country,
                 PostalCode = userProfile.Location?.PostalCode,
                 EmailUpdates = userProfile.EmailUpdates,
-                SocialUpdates = userProfile.SocialUpdates
+                SocialUpdates = userProfile.SocialUpdates,
+                ProfileVisibility = userProfile.ProfileVisibility,
+                InventoryItemVisibility = userProfile.InventoryItemVisibility,
+                PlantInfoVisibility = userProfile.PlantInfoVisibility,
+                OriginVisibility = userProfile.OriginVisibility,
+                ActivityVisibility = userProfile.ActivityVisibility
             };
         }
 
@@ -164,6 +181,11 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             userProfile.Location.Country = Input.Country;
             userProfile.EmailUpdates = Input.EmailUpdates;
             userProfile.SocialUpdates = Input.SocialUpdates;
+            userProfile.ProfileVisibility = Input.ProfileVisibility;
+            userProfile.InventoryItemVisibility = Input.InventoryItemVisibility;
+            userProfile.PlantInfoVisibility = Input.PlantInfoVisibility;
+            userProfile.OriginVisibility = Input.OriginVisibility;
+            userProfile.ActivityVisibility = Input.ActivityVisibility;
             userProfile.DateModified = DateTime.UtcNow;
             userProfile.Location.DateModified = DateTime.UtcNow;
 

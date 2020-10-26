@@ -69,6 +69,26 @@
                 <div class="col">
                     <a href="/user/@(Model.Input.DisplayName ?? Model.Input.Id.ToString())"><span>View Public Profile</span></a>
                 </div>
+                <div class="col">
+                    <label asp-for="Input.ProfileVisibility"></label>
+                    <select asp-for="Input.ProfileVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.ProfileVisibility>()"></select>
+                </div>
+                <div class="col">
+                    <label asp-for="Input.InventoryItemVisibility"></label>
+                    <select asp-for="Input.InventoryItemVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()"></select>
+                </div>
+                <div class="col">
+                    <label asp-for="Input.PlantInfoVisibility"></label>
+                    <select asp-for="Input.PlantInfoVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()"></select>
+                </div>
+                <div class="col">
+                    <label asp-for="Input.OriginVisibility"></label>
+                    <select asp-for="Input.OriginVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()"></select>
+                </div>
+                <div class="col">
+                    <label asp-for="Input.ActivityVisibility"></label>
+                    <select asp-for="Input.ActivityVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()"></select>
+                </div>
             </div>
         </div>
         <div class="row">
