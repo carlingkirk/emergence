@@ -90,7 +90,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             {
                 userProfile = new User
                 {
-                    UserId = new Guid(user.Id),
+                    UserId = user.Id,
                     EmailUpdates = true,
                     SocialUpdates = true,
                     DateCreated = DateTime.UtcNow

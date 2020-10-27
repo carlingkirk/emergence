@@ -17,6 +17,7 @@ namespace Emergence.Data.Shared.Models
         public string ExternalId { get; set; }
         public string AltExternalId { get; set; }
         public Visibility Visibility { get; set; }
+        public int? UserId { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }

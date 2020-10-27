@@ -17,6 +17,7 @@ namespace Emergence.Data.Shared.Stores
         public string Status { get; set; }
         public DateTime? DateAcquired { get; set; }
         public Visibility Visibility { get; set; }
+        public int? UserId { get; set; }
         [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]

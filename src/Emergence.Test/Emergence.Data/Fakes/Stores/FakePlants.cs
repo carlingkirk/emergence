@@ -95,8 +95,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumZone = "8",
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
                     Visibility = Visibility.Inherit,
-                    CreatedBy = FakeUsers.GetPrivateUser().UserId.ToString(),
-                    ModifiedBy = FakeUsers.GetPrivateUser().UserId.ToString(),
+                    CreatedBy = FakeUsers.GetPrivateUser().UserId,
+                    ModifiedBy = FakeUsers.GetPrivateUser().UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
                     User = FakeUsers.GetPrivateUser()

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Emergence.Data.Shared;
@@ -13,7 +12,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 new User
                 {
                     Id = 1,
-                    UserId = new Guid(Helpers.UserId),
+                    UserId = Helpers.UserId,
                     FirstName = "Daria",
                     LastName = "",
                     Photo = FakePhotos.Get().First(),
@@ -36,7 +35,7 @@ namespace Emergence.Test.Data.Fakes.Stores
         public static User GetPrivateUser() => new User
         {
             Id = 2,
-            UserId = new Guid(Helpers.PrivateUserId),
+            UserId = Helpers.PrivateUserId,
             FirstName = "Jane",
             LastName = "Lane",
             Photo = FakePhotos.Get().First(),

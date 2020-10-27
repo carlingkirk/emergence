@@ -17,6 +17,7 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateOccurred { get; set; }
         public DateTime? DateScheduled { get; set; }
         public Visibility Visibility { get; set; }
+        public int? UserId { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
@@ -24,6 +25,7 @@ namespace Emergence.Data.Shared.Models
 
         public Specimen Specimen { get; set; }
         public IEnumerable<Photo> Photos { get; set; }
+        public User User { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

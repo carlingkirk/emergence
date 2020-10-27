@@ -11,6 +11,7 @@ namespace Emergence.Data.Shared.Models
         public ItemStatus Status { get; set; }
         public DateTime? DateAcquired { get; set; }
         public Visibility Visibility { get; set; }
+        public int? UserId { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? DateCreated { get; set; }
@@ -18,5 +19,6 @@ namespace Emergence.Data.Shared.Models
 
         public Origin Origin { get; set; }
         public Inventory Inventory { get; set; }
+        public User User { get; set; }
     }
 }

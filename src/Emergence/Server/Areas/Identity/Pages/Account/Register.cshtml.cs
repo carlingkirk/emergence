@@ -85,7 +85,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                     var randomName = await _userService.GetRandomNameAsync();
                     _ = await _userService.AddUserAsync(new Data.Shared.Models.User
                     {
-                        UserId = new Guid(newUser.Id),
+                        UserId = newUser.Id,
                         DisplayName = randomName,
                         EmailUpdates = true,
                         SocialUpdates = true,

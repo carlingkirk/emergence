@@ -44,8 +44,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.User> GetUserAsync(string userId)
         {
-            var userGuid = new Guid(userId);
-            var userResult = await _userRepository.GetWithIncludesAsync(u => u.UserId == userGuid, false, u => u.Include(u => u.Location));
+            var userResult = await _userRepository.GetWithIncludesAsync(u => u.UserId == userId, false, u => u.Include(u => u.Location));
             if (userResult != null)
             {
                 var userModel = userResult.AsModel();
@@ -61,7 +60,7 @@ namespace Emergence.Service
 
             return new Data.Shared.Models.User
             {
-                UserId = new Guid(userId)
+                UserId = userId
             };
         }
 

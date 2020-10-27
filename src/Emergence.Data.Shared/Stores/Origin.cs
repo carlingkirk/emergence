@@ -23,6 +23,7 @@ namespace Emergence.Data.Shared.Stores
         [StringLength(100)]
         public string AltExternalId { get; set; }
         public Visibility Visibility { get; set; }
+        public int? UserId { get; set; }
         [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]

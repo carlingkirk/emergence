@@ -7,7 +7,7 @@ namespace Emergence.Data.Shared.Stores
     public class User
     {
         public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         [StringLength(36)]
         public string DisplayName { get; set; }
         [StringLength(36)]
@@ -31,5 +31,9 @@ namespace Emergence.Data.Shared.Stores
         public Location Location { get; set; }
 
         public IEnumerable<UserContact> Contacts { get; set; }
+        public IEnumerable<Activity> Activities { get; set; }
+        public IEnumerable<InventoryItem> InventoryItems { get; set; }
+        public IEnumerable<Origin> Origins { get; set; }
+        public IEnumerable<PlantInfo> PlantInfos { get; set; }
     }
 }

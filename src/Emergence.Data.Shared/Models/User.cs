@@ -6,7 +6,7 @@ namespace Emergence.Data.Shared.Models
     public class User
     {
         public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         [Required]
         [RegularExpression("\\w")]
         public string DisplayName { get; set; }

@@ -70,13 +70,6 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<PlantLocation>()
                 .HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
 
-            modelBuilder.Entity<User>().HasAlternateKey(u => u.UserId);
-
-            modelBuilder.Entity<Activity>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
-            modelBuilder.Entity<InventoryItem>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
-            modelBuilder.Entity<Origin>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
-            modelBuilder.Entity<PlantInfo>().HasOne<User>().WithMany().HasForeignKey(i => i.CreatedBy);
-
             modelBuilder.Entity<UserContact>().HasOne<User>().WithMany().HasForeignKey(u => u.UserId);
             modelBuilder.Entity<UserContact>().HasOne<User>().WithMany().HasForeignKey(u => u.ContactUserId);
         }
