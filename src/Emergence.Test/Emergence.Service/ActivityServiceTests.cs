@@ -24,9 +24,7 @@ namespace Emergence.Test.Emergence.API.Services
         [Fact]
         public async Task TestGetActivityAsync()
         {
-            var specimenService = ServiceMocks.GetStandardMockSpecimenService();
-            var inventoryService = ServiceMocks.GetStandardMockInventoryService();
-            var activityService = new ActivityService(_mockActivityRepository.Object, specimenService.Object, inventoryService.Object);
+            var activityService = new ActivityService(_mockActivityRepository.Object);
             var activity = await activityService.GetActivityAsync(1, FakeUsers.Get().First());
 
             activity.Should().NotBeNull("it exists");
@@ -35,9 +33,7 @@ namespace Emergence.Test.Emergence.API.Services
         [Fact]
         public async Task TestFindActivities()
         {
-            var specimenService = ServiceMocks.GetStandardMockSpecimenService();
-            var inventoryService = ServiceMocks.GetStandardMockInventoryService();
-            var activityService = new ActivityService(_mockActivityRepository.Object, specimenService.Object, inventoryService.Object);
+            var activityService = new ActivityService(_mockActivityRepository.Object);
             var activities = await activityService.FindActivities(new FindParams
             {
                 SearchText = "Liatris spicata",

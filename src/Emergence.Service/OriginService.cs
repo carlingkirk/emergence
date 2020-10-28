@@ -25,9 +25,13 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id, Data.Shared.Models.User user)
         {
-            var origin = await _originRepository.GetWithIncludesAsync(o => o.Id == id && o.CanViewContent(user.AsStore()), false,
-                                                                      o => o.Include(o => o.ParentOrigin)
-                                                                            .Include(o => o.Location));
+            var originQuery = _originRepository.WhereWithIncludes(o => o.Id == id,
+                                                                  o => o.Include(o => o.ParentOrigin)
+                                                                        .Include(o => o.Location));
+            originQuery = originQuery.CanViewContent(user);
+
+            var origin = await originQuery.FirstOrDefaultAsync();
+
             return origin?.AsModel();
         }
 
@@ -77,7 +81,7 @@ namespace Emergence.Service
                                                                        EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchTextQuery),
                                                                   o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
 
-            originQuery = originQuery.Where(o => o.CanViewContent(user.AsStore()));
+            originQuery = originQuery.CanViewContent(user);
 
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {

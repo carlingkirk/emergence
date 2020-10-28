@@ -16,28 +16,21 @@ namespace Emergence.Service
     public class ActivityService : IActivityService
     {
         private readonly IRepository<Activity> _activityRepository;
-        private readonly ISpecimenService _specimenService;
-        private readonly IInventoryService _inventoryService;
 
-        public ActivityService(IRepository<Activity> activityRepository, ISpecimenService specimenService, IInventoryService inventoryService)
+        public ActivityService(IRepository<Activity> activityRepository)
         {
             _activityRepository = activityRepository;
-            _specimenService = specimenService;
-            _inventoryService = inventoryService;
         }
 
         public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id, Data.Shared.Models.User user)
         {
-            var result = await _activityRepository.GetAsync(a => a.Id == id && a.CanViewContent(user.AsStore()));
-            var activity = result?.AsModel();
+            var activityQuery = _activityRepository.WhereWithIncludes(a => a.Id == id,
+                                                                      a => a.Include(a => a.Specimen));
+            activityQuery = activityQuery.CanViewContent(user);
 
-            if (result.SpecimenId.HasValue)
-            {
-                var specimen = await _specimenService.GetSpecimenAsync(result.SpecimenId.Value, user);
-                activity.Specimen = specimen;
-            }
+            var activity = await activityQuery.FirstOrDefaultAsync();
 
-            return activity;
+            return activity?.AsModel();
         }
 
         public async Task<Data.Shared.Models.Activity> AddOrUpdateActivityAsync(Data.Shared.Models.Activity activity, string userId)
@@ -60,7 +53,7 @@ namespace Emergence.Service
                                                                             .Include(s => s.Specimen.InventoryItem)
                                                                             .Include(s => s.Specimen.Lifeform));
 
-            activityQuery = activityQuery.Where(a => a.CanViewContent(user.AsStore()));
+            activityQuery = activityQuery.CanViewContent(user);
 
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {

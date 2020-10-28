@@ -31,38 +31,16 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(int specimenId, Data.Shared.Models.User user)
         {
-            var result = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenId &&
-                                                                             s.InventoryItem.CanViewContent(user.AsStore()),
-                                                                             track: false,
-                                                                        s => s.Include(s => s.InventoryItem)
+            var specimenQuery = _specimenRepository.WhereWithIncludes(s => s.Id == specimenId,
+                                                                      s => s.Include(s => s.InventoryItem)
                                                                               .Include(ii => ii.InventoryItem.Inventory)
                                                                               .Include(ii => ii.InventoryItem.Origin)
                                                                               .Include(s => s.Lifeform));
-            return result?.AsModel();
-        }
+            specimenQuery = specimenQuery.CanViewContent(user);
 
-        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensForInventoryAsync(int inventoryId, Data.Shared.Models.User user)
-        {
-            var specimens = new List<Data.Shared.Models.Specimen>();
-            var specimenQuery = _specimenRepository.Where(s => s.InventoryItem.CanViewContent(user.AsStore()));
-            var specimenResult = specimenQuery.GetSomeAsync(s => s.InventoryItemId == inventoryId);
+            var specimen = await specimenQuery.FirstOrDefaultAsync();
 
-            await foreach (var specimen in specimenResult)
-            {
-                specimens.Add(specimen.AsModel());
-            }
-            return specimens;
-        }
-
-        public async Task<IEnumerable<Data.Shared.Models.Specimen>> GetSpecimensByIdsAsync(IEnumerable<int> specimenIds)
-        {
-            var specimenResult = _specimenRepository.GetSomeAsync(s => specimenIds.Any(i => i == s.Id));
-            var specimens = new List<Data.Shared.Models.Specimen>();
-            await foreach (var specimen in specimenResult)
-            {
-                specimens.Add(specimen.AsModel());
-            }
-            return specimens;
+            return specimen?.AsModel();
         }
 
         public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams, Data.Shared.Models.User user)
@@ -76,12 +54,13 @@ namespace Emergence.Service
                                                                                  .Include(s => s.InventoryItem.Origin)
                                                                                  .Include(s => s.Lifeform));
 
-            specimenQuery = specimenQuery.Where(s => s.InventoryItem.CanViewContent(user.AsStore()));
 
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 specimenQuery = specimenQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
             }
+
+            specimenQuery = specimenQuery.CanViewContent(user);
 
             specimenQuery = OrderBy(specimenQuery, findParams.SortBy, findParams.SortDirection);
 
@@ -101,6 +80,15 @@ namespace Emergence.Service
         }
 
         public async Task RemoveSpecimenAsync(Data.Shared.Models.Specimen specimen) => await _specimenRepository.RemoveAsync(specimen.AsStore());
+
+        private IQueryable<Specimen> CanViewContent(IQueryable<Specimen> specimenQuery, Data.Shared.Models.User user) =>
+            specimenQuery = specimenQuery.Where(c => (c.InventoryItem.Visibility != Visibility.Hidden &&
+                                                      c.InventoryItem.User.ProfileVisibility != Visibility.Hidden) ||
+                                                     (c.InventoryItem.Visibility == Visibility.Contacts &&
+                                                      c.InventoryItem.User.Contacts.Any(c => c.UserId == user.Id) &&
+                                                      c.InventoryItem.User.InventoryItemVisibility != Visibility.Hidden) ||
+                                                     (c.InventoryItem.User.InventoryItemVisibility == Visibility.Contacts &&
+                                                      c.InventoryItem.User.Contacts.Any(c => c.UserId == user.Id)));
 
         private IQueryable<Specimen> OrderBy(IQueryable<Specimen> specimenQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {

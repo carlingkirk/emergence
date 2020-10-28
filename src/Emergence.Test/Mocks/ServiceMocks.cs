@@ -37,8 +37,8 @@ namespace Emergence.Test.Mocks
         {
             var mockSpecimenService = new Mock<ISpecimenService>();
 
-            mockSpecimenService.Setup(s => s.GetSpecimensByIdsAsync(It.IsAny<IEnumerable<int>>()))
-                .ReturnsAsync(result ?? FakeSpecimens.Get());
+            mockSpecimenService.Setup(s => s.GetSpecimenAsync(It.IsAny<int>(), It.IsAny<User>()))
+                .ReturnsAsync(result.FirstOrDefault() ?? FakeSpecimens.Get().First());
 
             return mockSpecimenService;
         }
