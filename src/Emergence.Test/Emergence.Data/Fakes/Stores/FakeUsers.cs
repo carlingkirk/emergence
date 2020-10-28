@@ -28,7 +28,18 @@ namespace Emergence.Test.Data.Fakes.Stores
                     PlantInfoVisibility = Visibility.Public,
                     InventoryItemVisibility = Visibility.Public,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom(5) * -1),
-                    DateModified = null
+                    DateModified = null,
+                    Contacts = new List<UserContact>
+                    {
+                        new UserContact
+                        {
+                            Id = 1,
+                            UserId = 1,
+                            ContactUserId = 2,
+                            DateRequested = Helpers.Today,
+                            DateAccepted = Helpers.Today
+                        }
+                    }
                 }
             };
 
