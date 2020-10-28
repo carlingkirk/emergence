@@ -106,8 +106,7 @@ namespace Emergence.Data.Migrations
                     UserId = table.Column<int>(nullable: false),
                     ContactUserId = table.Column<int>(nullable: true),
                     DateRequested = table.Column<DateTime>(nullable: false),
-                    DateAccepted = table.Column<DateTime>(nullable: false),
-                    UserId1 = table.Column<int>(nullable: true)
+                    DateAccepted = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,12 +123,6 @@ namespace Emergence.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserContacts_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -168,11 +161,6 @@ namespace Emergence.Data.Migrations
                 name: "IX_UserContacts_UserId",
                 table: "UserContacts",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserContacts_UserId1",
-                table: "UserContacts",
-                column: "UserId1");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Activities_Users_UserId",
