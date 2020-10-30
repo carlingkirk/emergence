@@ -38,6 +38,15 @@
                 <label for="uri">Link</label>
                 <input @bind="@OriginUri" type="text" class="form-control" id="uri" />
             </div>
+            <div class="col-lg-3 col-xs">
+                <label for="visibility">Visibility</label>
+                <InputSelect @bind-Value="@Origin.Visibility" class="form-control" id="visibility">
+                    @foreach (var visibility in Visibilities)
+                        {
+                        <option value="@visibility">@visibility.ToFriendlyName()</option>
+                        }
+                </InputSelect>
+            </div>
         </div>
         <div class="row">
             <div class="col">

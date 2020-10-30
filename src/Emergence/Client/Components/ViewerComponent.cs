@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
+using Emergence.Data.Shared;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
@@ -28,6 +30,7 @@ namespace Emergence.Client.Components
         public EventCallback<IEnumerable<T>> ListChanged { get; set; }
         [Parameter]
         public Func<Task<IEnumerable<T>>> RefreshList { get; set; }
+        public IEnumerable<Visibility> Visibilities => Enum.GetValues(typeof(Visibility)).Cast<Visibility>();
 
         protected async Task Back() => await IsItemLoadedChanged.InvokeAsync(false);
 

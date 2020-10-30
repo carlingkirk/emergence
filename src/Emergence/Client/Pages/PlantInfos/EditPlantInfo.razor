@@ -17,7 +17,7 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary />
             </div>
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <label for="lifeform">Plant Name </label>
                 <BlazoredTypeahead SearchMethod="FindLifeformsAsync"
                                    @bind-Value="PlantInfo.SelectedLifeform"
@@ -34,9 +34,18 @@
                     </NotFoundTemplate>
                 </BlazoredTypeahead>
             </div>
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <label for="origin">Origin</label>
                 <OriginTypeahead @bind-SelectedOrigin="SelectedOrigin" />
+            </div>
+            <div class="col-lg-3 col-xs">
+                <label for="visibility">Visibility</label>
+                <InputSelect @bind-Value="@PlantInfo.Visibility" class="form-control" id="visibility">
+                    @foreach (var visibility in Visibilities)
+                        {
+                        <option value="@visibility">@visibility.ToFriendlyName()</option>
+                        }
+                </InputSelect>
             </div>
         </div>
     </div>

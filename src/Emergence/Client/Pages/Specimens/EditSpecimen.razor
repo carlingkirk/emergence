@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-7 col-xs">
+            <div class="col-lg-4 col-xs">
                 <label for="specimen-name">Specimen Name</label>
                 <InputText @bind-Value="@Specimen.Name" class="form-control" id="specimen-name" @onfocus="PopulateInventoryItemName" />
             </div>
@@ -53,6 +53,15 @@
                         <option value="@status">@status.ToFriendlyName()</option>
                     }
                 </select>
+            </div>
+            <div class="col-lg-3 col-xs">
+                <label for="visibility">Visibility</label>
+                <InputSelect @bind-Value="@Specimen.InventoryItem.Visibility" class="form-control" id="visibility">
+                    @foreach (var visibility in Visibilities)
+                        {
+                        <option value="@visibility">@visibility.ToFriendlyName()</option>
+                        }
+                </InputSelect>
             </div>
         </div>
         <div class="row">

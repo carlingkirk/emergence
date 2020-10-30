@@ -73,16 +73,16 @@
                 </div>
             }
         </div>
-        @if (SelectedSpecimen != null)
-        {
-            <div class="row">
+        <div class="row">
+            @if (SelectedSpecimen != null)
+            {
                 <div class="col-lg-3 col-xs">
                     <label for="quantity">Quantity</label>
                     <input @bind="@Activity.Quantity" type="text" class="form-control" id="quantity" disabled="@(SelectedSpecimen == null)" />
                 </div>
                 @if (ShowAutoSpecimen)
                 {
-                    <div class="col-lg-9 col-xs">
+                    <div class="col-lg-6 col-xs">
                         <label for="update-specimen">Create or update specimen</label>
                         <div style="display: block;">
                             <input type="checkbox" @bind="UpdateSpecimen" id="update-specimen" class="check-lg" />
@@ -109,8 +109,17 @@
                         </div>
                     </div>
                 }
+            }
+            <div class="col-lg-3 col-xs">
+                <label for="visibility">Visibility</label>
+                <InputSelect @bind-Value="@Activity.Visibility" class="form-control" id="visibility">
+                    @foreach (var visibility in Visibilities)
+                        {
+                        <option value="@visibility">@visibility.ToFriendlyName()</option>
+                        }
+                </InputSelect>
             </div>
-        }
+        </div>
         <div class="row">
             <div class="col">
                 <label for="name">Activity Title</label>
