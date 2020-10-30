@@ -23,11 +23,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "222",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Contacts,
-                CreatedBy = FakeUsers.Get().First().UserId,
-                ModifiedBy = FakeUsers.Get().First().UserId,
+                CreatedBy = FakeUsers.GetPublic().UserId,
+                ModifiedBy = FakeUsers.GetPublic().UserId,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
                 DateModified = Helpers.Today.AddMonths(-1).AddDays(5),
-                User = FakeUsers.Get().First()
+                User = FakeUsers.GetPublic()
             },
             new Origin
             {
@@ -41,11 +41,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "srtyhs",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Public,
-                CreatedBy = FakeUsers.Get().First().UserId,
+                CreatedBy = FakeUsers.GetPublic().UserId,
                 ModifiedBy = null,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(5),
                 DateModified = null,
-                User = FakeUsers.Get().First()
+                User = FakeUsers.GetPublic()
             },
             new Origin
             {
@@ -61,11 +61,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "GGGGGGGGG",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Hidden,
-                CreatedBy = FakeUsers.Get().First().UserId,
-                ModifiedBy = FakeUsers.Get().First().UserId,
+                CreatedBy = FakeUsers.GetPublic().UserId,
+                ModifiedBy = FakeUsers.GetPublic().UserId,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(-5),
                 DateModified = Helpers.Today.AddMonths(-1).AddDays(5),
-                User = FakeUsers.Get().First()
+                User = FakeUsers.GetPublic()
             },
             new Origin
             {
@@ -79,11 +79,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                 ExternalId = "srtyhs",
                 Location = FakeLocations.Get().First(),
                 Visibility = Visibility.Inherit,
-                CreatedBy = FakeUsers.GetPrivateUser().UserId,
+                CreatedBy = FakeUsers.GetPrivate().UserId,
                 ModifiedBy = null,
                 DateCreated = Helpers.Today.AddMonths(-1).AddDays(5),
                 DateModified = null,
-                User = FakeUsers.GetPrivateUser()
+                User = FakeUsers.GetPrivate()
             }
         };
     }

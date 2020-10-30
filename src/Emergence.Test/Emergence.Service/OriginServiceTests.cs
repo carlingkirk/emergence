@@ -2,10 +2,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
-using Emergence.Test.Data.Fakes.Models;
+using Emergence.Test.Data.Fakes.Stores;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
@@ -45,7 +46,7 @@ namespace Emergence.Test.API.Services
                 Take = 10,
                 SortBy = "",
                 SortDirection = SortDirection.None
-            }, FakeUsers.Get().First());
+            }, FakeUsers.GetPublic().AsModel());
 
             origins.Results.Should().NotBeNull("it exists");
             origins.Results.Should().HaveCount(1);

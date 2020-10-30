@@ -1,6 +1,7 @@
 using System.Linq;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
-using Emergence.Test.Data.Fakes.Models;
+using Emergence.Test.Data.Fakes.Stores;
 using FluentAssertions;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace Emergence.Test.Data.Shared.Models
         [Fact]
         public void TestLocationDisplay()
         {
-            var location = FakeLocations.Get().First();
+            var location = FakeLocations.Get().First().AsModel();
 
             location.HasAddressInfo.Should().Be(true, "Location has address info");
             location.CityState.Should().Be("Macon, GA");

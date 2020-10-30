@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
@@ -39,7 +38,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetContact()
                 },
                 new PlantInfo
                 {
@@ -69,7 +68,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetPublic()
                 },
                 new PlantInfo
                 {
@@ -95,11 +94,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MaximumZone = "8",
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
                     Visibility = Visibility.Inherit,
-                    CreatedBy = FakeUsers.GetPrivateUser().UserId,
-                    ModifiedBy = FakeUsers.GetPrivateUser().UserId,
+                    CreatedBy = FakeUsers.GetPrivate().UserId,
+                    ModifiedBy = FakeUsers.GetPrivate().UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.GetPrivateUser()
+                    User = FakeUsers.GetPrivate()
                 }
             };
             return plantInfos;

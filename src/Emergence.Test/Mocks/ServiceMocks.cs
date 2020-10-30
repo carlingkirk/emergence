@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
-using Emergence.Test.Data.Fakes.Models;
+using Emergence.Test.Data.Fakes.Stores;
 using Moq;
 
 namespace Emergence.Test.Mocks
@@ -14,7 +15,7 @@ namespace Emergence.Test.Mocks
             var mockLifeformService = new Mock<ILifeformService>();
 
             mockLifeformService.Setup(s => s.GetLifeformByScientificNameAsync(It.IsAny<string>()))
-                .ReturnsAsync(result.FirstOrDefault() ?? FakeLifeforms.Get().First());
+                .ReturnsAsync(result.FirstOrDefault() ?? FakeLifeforms.Get().First().AsModel());
 
             return mockLifeformService;
         }
@@ -24,7 +25,7 @@ namespace Emergence.Test.Mocks
             var mockPhotoService = new Mock<IPhotoService>();
             if (result == null)
             {
-                result = FakePhotos.Get();
+                result = FakePhotos.Get().Select(p => p.AsModel());
             }
 
             mockPhotoService.Setup(s => s.GetPhotoAsync(It.IsAny<int>()))
@@ -38,7 +39,7 @@ namespace Emergence.Test.Mocks
             var mockSpecimenService = new Mock<ISpecimenService>();
 
             mockSpecimenService.Setup(s => s.GetSpecimenAsync(It.IsAny<int>(), It.IsAny<User>()))
-                .ReturnsAsync(result.FirstOrDefault() ?? FakeSpecimens.Get().First());
+                .ReturnsAsync(result.FirstOrDefault() ?? FakeSpecimens.Get().First().AsModel());
 
             return mockSpecimenService;
         }
@@ -48,7 +49,7 @@ namespace Emergence.Test.Mocks
             var mockInventoryService = new Mock<IInventoryService>();
 
             mockInventoryService.Setup(s => s.GetInventoryItemsByIdsAsync(It.IsAny<IEnumerable<int>>()))
-                .ReturnsAsync(itemsResult ?? FakeInventories.Get().First().Items);
+                .ReturnsAsync(itemsResult ?? FakeInventories.GetItems().Select(i => i.AsModel()));
 
             return mockInventoryService;
         }
@@ -58,7 +59,7 @@ namespace Emergence.Test.Mocks
             var mockOriginService = new Mock<IOriginService>();
 
             mockOriginService.Setup(s => s.GetOriginAsync(It.IsAny<int>()))
-                .ReturnsAsync(originsResult?.FirstOrDefault() ?? FakeOrigins.Get().First());
+                .ReturnsAsync(originsResult?.FirstOrDefault() ?? FakeOrigins.Get().First().AsModel());
 
             return mockOriginService;
         }
@@ -68,7 +69,7 @@ namespace Emergence.Test.Mocks
             var mockLocationService = new Mock<ILocationService>();
 
             mockLocationService.Setup(l => l.GetLocationsAsync(It.IsAny<IEnumerable<int>>()))
-                .ReturnsAsync(result ?? FakeLocations.Get());
+                .ReturnsAsync(result ?? FakeLocations.Get().Select(l => l.AsModel()));
 
             return mockLocationService;
         }
@@ -78,7 +79,7 @@ namespace Emergence.Test.Mocks
             var mockTaxonService = new Mock<ITaxonService>();
 
             mockTaxonService.Setup(l => l.GetTaxonAsync(It.IsAny<int>()))
-                .ReturnsAsync(result.FirstOrDefault() ?? FakeTaxons.Get().First());
+                .ReturnsAsync(result.FirstOrDefault() ?? FakeTaxons.Get().First().AsModel());
 
             return mockTaxonService;
         }

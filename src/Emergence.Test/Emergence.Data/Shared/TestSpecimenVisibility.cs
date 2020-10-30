@@ -10,14 +10,14 @@ using EmergenceModels = Emergence.Data.Shared.Models;
 
 namespace Emergence.Test.Data.Shared
 {
-    public class TestVisibilityExtensions
+    public class TestSpecimenVisibility
     {
         [Fact]
         public void TestCanViewSpecimen()
         {
             var specimens = FakeSpecimens.Get().AsQueryable<Specimen>();
-            var visibleSpecimens = specimens.CanViewContent(FakeUsers.Get().First().AsModel());
-            visibleSpecimens.Should().HaveCount(1);
+            var visibleSpecimens = specimens.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visibleSpecimens.Should().HaveCount(2);
         }
 
         [Fact]
@@ -36,12 +36,12 @@ namespace Emergence.Test.Data.Shared
                 }
             }.AsQueryable();
 
-            var visibleSpecimens = specimens.CanViewContent(FakeUsers.Get().First().AsModel());
+            var visibleSpecimens = specimens.CanViewContent(FakeUsers.GetPublic().AsModel());
             visibleSpecimens.Should().HaveCount(0);
         }
 
         [Fact]
-        public void TestCannotViewInheritSpecimenHiddenUser()
+        public void TestCannotViewInheritSpecimenHiddenSpecimens()
         {
             var specimens = new List<Specimen>
             {
@@ -61,12 +61,12 @@ namespace Emergence.Test.Data.Shared
                 }
             }.AsQueryable();
 
-            var visibleSpecimens = specimens.CanViewContent(FakeUsers.Get().First().AsModel());
+            var visibleSpecimens = specimens.CanViewContent(FakeUsers.GetPublic().AsModel());
             visibleSpecimens.Should().HaveCount(0);
         }
 
         [Fact]
-        public void TestCannotViewSpecimenNotInContacts()
+        public void TestCannotViewInheritSpecimenHiddenUser()
         {
             var specimens = new List<Specimen>
             {
@@ -76,17 +76,44 @@ namespace Emergence.Test.Data.Shared
                     InventoryItem = new InventoryItem
                     {
                         Id = 1,
-                        Visibility = Visibility.Contacts,
+                        Visibility = Visibility.Inherit,
                         User = new User
                         {
-                            Contacts = new List<UserContact>()
+                            Contacts = new List<UserContact>(),
+                            ProfileVisibility = Visibility.Hidden
                         }
                     }
                 }
             }.AsQueryable();
 
-            var user = new EmergenceModels.User { Id = 2 };
-            var visibleSpecimens = specimens.CanViewContent(user);
+            var visibleSpecimens = specimens.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visibleSpecimens.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCannotViewSpecimenNotInContacts()
+        {
+            var ownerUser = new User
+            {
+                Id = 1,
+                Contacts = new List<UserContact>()
+            };
+            var viewingUser = new EmergenceModels.User { Id = 2 };
+            var specimens = new List<Specimen>
+            {
+                new Specimen
+                {
+                    Id = 1,
+                    InventoryItem = new InventoryItem
+                    {
+                        Id = 1,
+                        Visibility = Visibility.Contacts,
+                        User = ownerUser
+                    }
+                }
+            }.AsQueryable();
+
+            var visibleSpecimens = specimens.CanViewContent(viewingUser);
             visibleSpecimens.Should().HaveCount(0);
         }
 

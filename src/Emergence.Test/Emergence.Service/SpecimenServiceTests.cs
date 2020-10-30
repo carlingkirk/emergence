@@ -2,9 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
-using Emergence.Test.Data.Fakes.Models;
+using Emergence.Test.Data.Fakes.Stores;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,7 @@ namespace Emergence.Test.API.Services
         public async Task TestGetSpecimenAsync()
         {
             var specimenService = new SpecimenService(_mockSpecimenRepository.Object);
-            var specimen = await specimenService.GetSpecimenAsync(1, FakeUsers.Get().First());
+            var specimen = await specimenService.GetSpecimenAsync(1, FakeUsers.GetPublic().AsModel());
 
             specimen.Should().NotBeNull("it exists");
         }
@@ -44,7 +45,7 @@ namespace Emergence.Test.API.Services
                 SortBy = "",
                 SortDirection = SortDirection.None,
             },
-            FakeUsers.Get().First());
+            FakeUsers.GetPublic().AsModel());
 
             specimenResult.Results.Should().NotBeNull("it exists");
             specimenResult.Count.Should().Be(2);

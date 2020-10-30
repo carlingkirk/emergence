@@ -28,7 +28,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetPublic()
                 },
                 new Activity
                 {
@@ -47,7 +47,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetContact()
                 },
                 new Activity
                 {
@@ -67,7 +67,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
                     DateModified = null,
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetPublic()
                 }
                 ,
                 new Activity
@@ -80,15 +80,15 @@ namespace Emergence.Test.Data.Fakes.Stores
                     Name = "Divide: Liatris spicata",
                     Description = "Split about 15 seedlings into 2\" containers with woody mix",
                     Quantity = 3,
-                    AssignedTo = FakeUsers.GetPrivateUser().UserId,
+                    AssignedTo = FakeUsers.GetPrivate().UserId,
                     Visibility = Visibility.Inherit,
                     ModifiedBy = null,
-                    CreatedBy = FakeUsers.GetPrivateUser().UserId,
+                    CreatedBy = FakeUsers.GetPrivate().UserId,
                     DateScheduled = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateOccurred = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateCreated = Helpers.Today,
                     DateModified = null,
-                    User = FakeUsers.GetPrivateUser()
+                    User = FakeUsers.GetPrivate()
                 }
             };
             return activities;

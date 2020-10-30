@@ -33,7 +33,7 @@ namespace Emergence.Service
                 if (userResult.PhotoId.HasValue)
                 {
                     var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
-                    userModel.Photo = photo;
+                    userModel.Photo = photo.AsStore().AsModel("https://blobs.com/photos/");
                 }
 
                 return userModel;
@@ -52,7 +52,7 @@ namespace Emergence.Service
                 if (userResult.PhotoId.HasValue)
                 {
                     var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
-                    userModel.Photo = photo;
+                    userModel.Photo = photo.AsStore().AsModel("https://blobs.com/photos/");
                 }
 
                 return userModel;
@@ -75,7 +75,7 @@ namespace Emergence.Service
                 if (userResult.PhotoId.HasValue)
                 {
                     var photo = await _photoService.GetPhotoAsync(userResult.PhotoId.Value);
-                    userModel.Photo = photo;
+                    userModel.Photo = photo.AsStore().AsModel("https://blobs.com/photos/");
                 }
 
                 return userModel;

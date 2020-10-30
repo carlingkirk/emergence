@@ -2,9 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
-using Emergence.Test.Data.Fakes.Models;
+using Emergence.Test.Data.Fakes.Stores;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
@@ -27,7 +28,7 @@ namespace Emergence.Test.API.Services
         public async Task TestGetPlantInfoAsync()
         {
             var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
-            var plantInfo = await plantInfoService.GetPlantInfoAsync(1, FakeUsers.Get().First());
+            var plantInfo = await plantInfoService.GetPlantInfoAsync(1, FakeUsers.GetPublic().AsModel());
 
             plantInfo.Should().NotBeNull("it exists");
         }
@@ -36,7 +37,7 @@ namespace Emergence.Test.API.Services
         public async Task TestAddOrUpdatePlantInfoAsync()
         {
             var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object);
-            var plantInfo = FakePlantInfos.Get().First();
+            var plantInfo = FakePlantInfos.Get().First().AsModel();
 
             var plantInfoResult = await plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
 
@@ -56,7 +57,7 @@ namespace Emergence.Test.API.Services
                 SortBy = "",
                 SortDirection = SortDirection.None,
             },
-            FakeUsers.Get().First());
+            FakeUsers.GetPublic().AsModel());
 
             plantInfoResult.Results.Should().NotBeNull("it exists");
             plantInfoResult.Count.Should().Be(2);

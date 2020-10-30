@@ -37,7 +37,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null,
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetPublic()
                 },
                 new InventoryItem
                 {
@@ -55,7 +55,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateAcquired = new DateTime(2020,03,31),
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null,
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetContact()
                 },
                 new InventoryItem
                 {
@@ -73,7 +73,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateAcquired = null,
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null,
-                    User = FakeUsers.Get().First()
+                    User = FakeUsers.GetPublic()
                 },
                 new InventoryItem
                 {
@@ -91,7 +91,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateAcquired = null,
                     DateCreated = new DateTime(2020,06,15),
                     DateModified = null,
-                    User = FakeUsers.GetPrivateUser()
+                    User = FakeUsers.GetPrivate()
                 }
             };
     }
