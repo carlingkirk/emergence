@@ -13,11 +13,11 @@ namespace Emergence.Data.Shared.Extensions
                                           c.User.ActivityVisibility != Visibility.Hidden &&
                                           c.User.ProfileVisibility != Visibility.Hidden) ||
                                          // Inherited
-                                         (c.Visibility == Visibility.Inherit && //yes
-                                          (c.User.ActivityVisibility == Visibility.Public || //no
-                                           (c.User.ActivityVisibility == Visibility.Inherit && // yes
-                                            c.User.ProfileVisibility == Visibility.Public) || // no
-                                           (c.User.ActivityVisibility == Visibility.Contacts && // no
+                                         (c.Visibility == Visibility.Inherit &&
+                                          (c.User.ActivityVisibility == Visibility.Public ||
+                                           (c.User.ActivityVisibility == Visibility.Inherit &&
+                                            c.User.ProfileVisibility == Visibility.Public) ||
+                                           (c.User.ActivityVisibility == Visibility.Contacts &&
                                             c.User.Contacts != null &&
                                             c.User.Contacts.Any(c => c.ContactUserId == user.Id)))) ||
                                          // Contacts
@@ -33,11 +33,11 @@ namespace Emergence.Data.Shared.Extensions
                                           c.User.InventoryItemVisibility != Visibility.Hidden &&
                                           c.User.ProfileVisibility != Visibility.Hidden) ||
                                          // Inherited
-                                         (c.Visibility == Visibility.Inherit && //yes
-                                          (c.User.InventoryItemVisibility == Visibility.Public || //no
-                                           (c.User.InventoryItemVisibility == Visibility.Inherit && // yes
-                                            c.User.ProfileVisibility == Visibility.Public) || // no
-                                           (c.User.InventoryItemVisibility == Visibility.Contacts && // no
+                                         (c.Visibility == Visibility.Inherit &&
+                                          (c.User.InventoryItemVisibility == Visibility.Public ||
+                                           (c.User.InventoryItemVisibility == Visibility.Inherit &&
+                                            c.User.ProfileVisibility == Visibility.Public) ||
+                                           (c.User.InventoryItemVisibility == Visibility.Contacts &&
                                             c.User.Contacts != null &&
                                             c.User.Contacts.Any(c => c.ContactUserId == user.Id)))) ||
                                          // Contacts
@@ -53,11 +53,11 @@ namespace Emergence.Data.Shared.Extensions
                                           c.InventoryItem.User.InventoryItemVisibility != Visibility.Hidden &&
                                           c.InventoryItem.User.ProfileVisibility != Visibility.Hidden) ||
                                          // Inherited
-                                         (c.InventoryItem.Visibility == Visibility.Inherit && //yes
-                                          (c.InventoryItem.User.InventoryItemVisibility == Visibility.Public || //no
-                                           (c.InventoryItem.User.InventoryItemVisibility == Visibility.Inherit && // yes
-                                            c.InventoryItem.User.ProfileVisibility == Visibility.Public) || // no
-                                           (c.InventoryItem.User.InventoryItemVisibility == Visibility.Contacts && // no
+                                         (c.InventoryItem.Visibility == Visibility.Inherit &&
+                                          (c.InventoryItem.User.InventoryItemVisibility == Visibility.Public ||
+                                           (c.InventoryItem.User.InventoryItemVisibility == Visibility.Inherit &&
+                                            c.InventoryItem.User.ProfileVisibility == Visibility.Public) ||
+                                           (c.InventoryItem.User.InventoryItemVisibility == Visibility.Contacts &&
                                             c.InventoryItem.User.Contacts != null &&
                                             c.InventoryItem.User.Contacts.Any(c => c.ContactUserId == user.Id)))) ||
                                          // Contacts
@@ -73,11 +73,11 @@ namespace Emergence.Data.Shared.Extensions
                                           c.User.OriginVisibility != Visibility.Hidden &&
                                           c.User.ProfileVisibility != Visibility.Hidden) ||
                                          // Inherited
-                                         (c.Visibility == Visibility.Inherit && //yes
-                                          (c.User.OriginVisibility == Visibility.Public || //no
-                                           (c.User.OriginVisibility == Visibility.Inherit && // yes
-                                            c.User.ProfileVisibility == Visibility.Public) || // no
-                                           (c.User.OriginVisibility == Visibility.Contacts && // no
+                                         (c.Visibility == Visibility.Inherit &&
+                                          (c.User.OriginVisibility == Visibility.Public ||
+                                           (c.User.OriginVisibility == Visibility.Inherit &&
+                                            c.User.ProfileVisibility == Visibility.Public) ||
+                                           (c.User.OriginVisibility == Visibility.Contacts &&
                                             c.User.Contacts != null &&
                                             c.User.Contacts.Any(c => c.ContactUserId == user.Id)))) ||
                                          // Contacts
@@ -93,11 +93,11 @@ namespace Emergence.Data.Shared.Extensions
                                           c.User.PlantInfoVisibility != Visibility.Hidden &&
                                           c.User.ProfileVisibility != Visibility.Hidden) ||
                                          // Inherited
-                                         (c.Visibility == Visibility.Inherit && //yes
-                                          (c.User.PlantInfoVisibility == Visibility.Public || //no
-                                           (c.User.PlantInfoVisibility == Visibility.Inherit && // yes
-                                            c.User.ProfileVisibility == Visibility.Public) || // no
-                                           (c.User.PlantInfoVisibility == Visibility.Contacts && // no
+                                         (c.Visibility == Visibility.Inherit &&
+                                          (c.User.PlantInfoVisibility == Visibility.Public ||
+                                           (c.User.PlantInfoVisibility == Visibility.Inherit &&
+                                            c.User.ProfileVisibility == Visibility.Public) ||
+                                           (c.User.PlantInfoVisibility == Visibility.Contacts &&
                                             c.User.Contacts != null &&
                                             c.User.Contacts.Any(c => c.ContactUserId == user.Id)))) ||
                                          // Contacts
