@@ -25,7 +25,9 @@ namespace Emergence.Service
         public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id, Data.Shared.Models.User user)
         {
             var activityQuery = _activityRepository.WhereWithIncludes(a => a.Id == id,
-                                                                      a => a.Include(a => a.Specimen));
+                                                                      a => a.Include(a => a.Specimen)
+                                                                            .Include(s => s.Specimen.InventoryItem)
+                                                                            .Include(s => s.Specimen.Lifeform));
             activityQuery = activityQuery.CanViewContent(user);
 
             var activity = await activityQuery.FirstOrDefaultAsync();
