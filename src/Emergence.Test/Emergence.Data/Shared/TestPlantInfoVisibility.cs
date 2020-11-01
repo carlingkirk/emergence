@@ -37,6 +37,24 @@ namespace Emergence.Test.Data.Shared
         }
 
         [Fact]
+        public void TestCanViewOwnHiddenPlantInfo()
+        {
+            var plantInfos = new List<PlantInfo>
+            {
+                new PlantInfo
+                {
+                    Id = 1,
+                    Visibility = Visibility.Hidden,
+                    User = FakeUsers.GetPrivate(),
+                    UserId = FakeUsers.GetPrivate().Id
+                }
+            }.AsQueryable();
+
+            var visiblePlantInfos = plantInfos.CanViewContent(FakeUsers.GetPrivate().AsModel());
+            visiblePlantInfos.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void TestCannotViewInheritPlantInfoHiddenSpecimens()
         {
             var plantInfos = new List<PlantInfo>

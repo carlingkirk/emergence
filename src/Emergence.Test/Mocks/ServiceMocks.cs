@@ -25,7 +25,7 @@ namespace Emergence.Test.Mocks
             var mockPhotoService = new Mock<IPhotoService>();
             if (result == null)
             {
-                result = FakePhotos.Get().Select(p => p.AsModel());
+                result = FakePhotos.Get().Select(p => p.AsModel("https://blobs.com/photos/"));
             }
 
             mockPhotoService.Setup(s => s.GetPhotoAsync(It.IsAny<int>()))

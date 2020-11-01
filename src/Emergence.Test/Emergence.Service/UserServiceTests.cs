@@ -26,7 +26,8 @@ namespace Emergence.Test.Emergence.Service
             var photoService = ServiceMocks.GetStandardMockPhotoService();
             var locationService = ServiceMocks.GetStandardMockLocationService();
             var nameRepository = new Mock<IRepository<DisplayName>>();
-            var userService = new UserService(_mockUserRepository.Object, nameRepository.Object, photoService.Object, locationService.Object);
+            var cache = CacheMocks.GetDistributedCache();
+            var userService = new UserService(_mockUserRepository.Object, nameRepository.Object, photoService.Object, locationService.Object, cache);
             var user = await userService.GetUserAsync(1);
 
             user.Should().NotBeNull("it exists");

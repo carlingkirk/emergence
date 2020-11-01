@@ -37,6 +37,24 @@ namespace Emergence.Test.Data.Shared
         }
 
         [Fact]
+        public void TestCanViewOwnHiddenActivity()
+        {
+            var activities = new List<Activity>
+            {
+                new Activity
+                {
+                    Id = 1,
+                    Visibility = Visibility.Hidden,
+                    User = FakeUsers.GetPrivate(),
+                    UserId = FakeUsers.GetPrivate().Id
+                }
+            }.AsQueryable();
+
+            var visibleActivities = activities.CanViewContent(FakeUsers.GetPrivate().AsModel());
+            visibleActivities.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void TestCannotViewInheritActivityHiddenActivities()
         {
             var activities = new List<Activity>

@@ -38,6 +38,24 @@ namespace Emergence.Test.Data.Shared
         }
 
         [Fact]
+        public void TestCanViewOwnHiddenInventoryItem()
+        {
+            var inventoryItems = new List<InventoryItem>
+            {
+                new InventoryItem
+                {
+                    Id = 1,
+                    Visibility = Visibility.Hidden,
+                    User = FakeUsers.GetPrivate(),
+                    UserId = FakeUsers.GetPrivate().Id
+                }
+            }.AsQueryable();
+
+            var visibleInventoryItems = inventoryItems.CanViewContent(FakeUsers.GetPrivate().AsModel());
+            visibleInventoryItems.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void TestCannotViewInheritInventoryItemHiddenSpecimens()
         {
             var inventoryItems = new List<InventoryItem>

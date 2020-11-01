@@ -19,6 +19,7 @@ namespace Emergence.Data.Shared.Extensions
             DateScheduled = source.DateScheduled,
             Visibility = source.Visibility,
             UserId = source.UserId,
+            User = source.User != null ? source.User.AsModel() : source.UserId.HasValue ? new Models.User { Id = source.UserId.Value } : null,
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,

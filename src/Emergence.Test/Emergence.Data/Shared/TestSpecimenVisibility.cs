@@ -41,6 +41,28 @@ namespace Emergence.Test.Data.Shared
         }
 
         [Fact]
+        public void TestCanViewOwnHiddenSpecimen()
+        {
+            var specimens = new List<Specimen>
+            {
+                new Specimen
+                {
+                    Id = 1,
+                    InventoryItem = new InventoryItem
+                    {
+                        Id = 1,
+                        Visibility = Visibility.Hidden,
+                        User = FakeUsers.GetPrivate(),
+                        UserId = FakeUsers.GetPrivate().Id
+                    }
+                }
+            }.AsQueryable();
+
+            var visibleSpecimens = specimens.CanViewContent(FakeUsers.GetPrivate().AsModel());
+            visibleSpecimens.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void TestCannotViewInheritSpecimenHiddenSpecimens()
         {
             var specimens = new List<Specimen>

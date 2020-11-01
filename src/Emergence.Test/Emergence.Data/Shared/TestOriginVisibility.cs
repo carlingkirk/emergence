@@ -38,6 +38,24 @@ namespace Emergence.Test.Data.Shared
         }
 
         [Fact]
+        public void TestCanViewOwnHiddenOrigin()
+        {
+            var origins = new List<Origin>
+            {
+                new Origin
+                {
+                    Id = 1,
+                    Visibility = Visibility.Hidden,
+                    User = FakeUsers.GetPrivate(),
+                    UserId = FakeUsers.GetPrivate().Id
+                }
+            }.AsQueryable();
+
+            var visibleOrigins = origins.CanViewContent(FakeUsers.GetPrivate().AsModel());
+            visibleOrigins.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void TestCannotViewInheritOriginHiddenSpecimens()
         {
             var origins = new List<Origin>

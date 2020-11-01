@@ -7,6 +7,7 @@ namespace Emergence.Data.Shared.Extensions
     {
         public static IQueryable<Activity> CanViewContent(this IQueryable<Activity> content, Models.User user) =>
             content = content.Where(c => c.Visibility == Visibility.Public ||
+                                         c.UserId == user.Id ||
                                          // Not hidden
                                          (c.Visibility != Visibility.Hidden &&
                                           c.Visibility == Visibility.Inherit &&
@@ -27,6 +28,7 @@ namespace Emergence.Data.Shared.Extensions
 
         public static IQueryable<InventoryItem> CanViewContent(this IQueryable<InventoryItem> content, Models.User user) =>
             content = content.Where(c => c.Visibility == Visibility.Public ||
+                                         c.UserId == user.Id ||
                                          // Not hidden
                                          (c.Visibility != Visibility.Hidden &&
                                           c.Visibility == Visibility.Inherit &&
@@ -47,6 +49,7 @@ namespace Emergence.Data.Shared.Extensions
 
         public static IQueryable<Specimen> CanViewContent(this IQueryable<Specimen> content, Models.User user) =>
             content = content.Where(c => c.InventoryItem.Visibility == Visibility.Public ||
+                                         c.InventoryItem.UserId == user.Id ||
                                          // Not hidden
                                          (c.InventoryItem.Visibility != Visibility.Hidden &&
                                           c.InventoryItem.Visibility == Visibility.Inherit &&
@@ -67,6 +70,7 @@ namespace Emergence.Data.Shared.Extensions
 
         public static IQueryable<Origin> CanViewContent(this IQueryable<Origin> content, Models.User user) =>
             content = content.Where(c => c.Visibility == Visibility.Public ||
+                                         c.UserId == user.Id ||
                                          // Not hidden
                                          (c.Visibility != Visibility.Hidden &&
                                           c.Visibility == Visibility.Inherit &&
@@ -87,6 +91,7 @@ namespace Emergence.Data.Shared.Extensions
 
         public static IQueryable<PlantInfo> CanViewContent(this IQueryable<PlantInfo> content, Models.User user) =>
             content = content.Where(c => c.Visibility == Visibility.Public ||
+                                         c.UserId == user.Id ||
                                          // Not hidden
                                          (c.Visibility != Visibility.Hidden &&
                                           c.Visibility == Visibility.Inherit &&

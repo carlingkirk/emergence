@@ -90,6 +90,7 @@ namespace Emergence.Server
 
             // Configuration
             services.AddSingleton<IConfigurationService, ConfigurationService>();
+            services.AddDistributedMemoryCache();
 
             // Application Services
             services.AddTransient<IActivityService, ActivityService>();

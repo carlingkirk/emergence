@@ -4,7 +4,9 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
+using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Emergence.Service
 {
@@ -14,13 +16,15 @@ namespace Emergence.Service
         private readonly IRepository<DisplayName> _nameRepository;
         private readonly IPhotoService _photoService;
         private readonly ILocationService _locationService;
+        private readonly IDistributedCache _cache;
 
-        public UserService(IRepository<User> userRepository, IRepository<DisplayName> nameRepository, IPhotoService photoService, ILocationService locationService)
+        public UserService(IRepository<User> userRepository, IRepository<DisplayName> nameRepository, IPhotoService photoService, ILocationService locationService, IDistributedCache cache)
         {
             _userRepository = userRepository;
             _nameRepository = nameRepository;
             _photoService = photoService;
             _locationService = locationService;
+            _cache = cache;
         }
 
         public async Task<Data.Shared.Models.User> GetUserAsync(int id)
@@ -79,6 +83,28 @@ namespace Emergence.Service
                 }
 
                 return userModel;
+            }
+
+            return null;
+        }
+
+        public async Task<int?> GetUserIdAsync(string userId)
+        {
+            var cacheKey = "UserId:" + userId + ":Id";
+            var id = await _cache.GetIntAsync(cacheKey);
+
+            if (id != null)
+            {
+                return id.Value;
+            }
+            else
+            {
+                var userResult = await _userRepository.GetAsync(u => u.UserId == userId, false);
+                if (userResult != null)
+                {
+                    await _cache.SetCacheValueAsync<int>(cacheKey, userResult.Id);
+                    return userResult.Id;
+                }
             }
 
             return null;

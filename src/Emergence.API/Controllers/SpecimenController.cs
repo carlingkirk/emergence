@@ -51,6 +51,9 @@ namespace Emergence.API.Controllers
                 specimen.InventoryItem = new InventoryItem { CreatedBy = UserId };
             }
 
+            specimen.InventoryItem.CreatedBy = UserId;
+            specimen.InventoryItem.UserId = await _userService.GetUserIdAsync(UserId);
+
             if (specimen.InventoryItem.Origin != null && specimen.InventoryItem.Origin.OriginId == 0)
             {
                 specimen.InventoryItem.Origin = await _originService.AddOrUpdateOriginAsync(specimen.InventoryItem.Origin, UserId);
