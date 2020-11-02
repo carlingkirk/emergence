@@ -76,7 +76,8 @@ namespace Emergence.Server
                 options.SigningCredential = new SigningCredentials(new X509SecurityKey(cert), "RS256");
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddGoogle(options =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddGoogle(options =>
                 {
                     options.ClientId = Configuration["GoogleOAuthClientId"];
                     options.ClientSecret = Configuration["GoogleOAuthClientSecret"];
@@ -135,7 +136,16 @@ namespace Emergence.Server
             });
 
             services.AddControllersWithViews();
-            services.AddControllers().AddApplicationPart(Assembly.Load("Emergence.API"));
+            services.AddControllers()
+                .AddApplicationPart(Assembly.Load("Emergence.API"))
+                .ConfigureApiBehaviorOptions(opt =>
+                {
+                    opt.SuppressModelStateInvalidFilter = true;
+                })
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
+                });
             services.AddRazorPages();
         }
 
