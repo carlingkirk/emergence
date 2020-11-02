@@ -32,7 +32,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int id, Data.Shared.Models.User user)
         {
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id == id, p => p.Include(p => p.Lifeform).Include(p => p.Origin));
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id == id, false, p => p.Include(p => p.Lifeform).Include(p => p.Origin));
             plantInfoQuery = plantInfoQuery.CanViewContent(user);
 
             var plantInfo = await plantInfoQuery.FirstOrDefaultAsync();
@@ -58,6 +58,7 @@ namespace Emergence.Service
                                                                         EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
                                                                         EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchTextQuery) ||
                                                                         EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchTextQuery)),
+                                                                        false,
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
                                                                               .Include(p => p.Origin));

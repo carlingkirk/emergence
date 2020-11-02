@@ -9,8 +9,8 @@ namespace Emergence.Data
 {
     public interface IRepository<T>
     {
-        IQueryable<T> Where(Expression<Func<T, bool>> predicate);
-        IQueryable<T> WhereWithIncludes(Expression<Func<T, bool>> predicate, params Func<IIncludable<T>, IIncludable>[] includes);
+        IQueryable<T> Where(Expression<Func<T, bool>> predicate, bool track = false);
+        IQueryable<T> WhereWithIncludes(Expression<Func<T, bool>> predicate, bool track = false, params Func<IIncludable<T>, IIncludable>[] includes);
         Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false);
         Task<T> GetWithIncludesAsync(Expression<Func<T, bool>> predicate, bool track = false, params Func<IIncludable<T>, IIncludable>[] includes);
         IAsyncEnumerable<T> GetSomeAsync(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null, bool track = false);

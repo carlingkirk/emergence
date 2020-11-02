@@ -18,15 +18,27 @@ namespace Emergence.Data.Repository
             _context = context;
         }
 
-        public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> Where(Expression<Func<T, bool>> predicate, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
+
+            if (!track)
+            {
+                entities = entities.AsNoTracking();
+            };
+
             return entities;
         }
 
-        public IQueryable<T> WhereWithIncludes(Expression<Func<T, bool>> predicate, params Func<IIncludable<T>, IIncludable>[] includes)
+        public IQueryable<T> WhereWithIncludes(Expression<Func<T, bool>> predicate, bool track = false, params Func<IIncludable<T>, IIncludable>[] includes)
         {
             var entities = _context.Set<T>().Where(predicate);
+
+            if (!track)
+            {
+                entities = entities.AsNoTracking();
+            };
+
             if (includes != null)
             {
                 foreach (var include in includes)

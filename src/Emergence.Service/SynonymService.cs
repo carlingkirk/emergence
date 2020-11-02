@@ -39,7 +39,7 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.Synonym>> GetSynonymsFromTaxonsAsync(IEnumerable<int> taxonIds)
         {
-            var synonymResult = _synonymRepository.WhereWithIncludes(s => taxonIds.Any(i => i == s.TaxonId), s => s.Include(s => s.Taxon)).GetSomeAsync();
+            var synonymResult = _synonymRepository.WhereWithIncludes(s => taxonIds.Any(i => i == s.TaxonId), false, s => s.Include(s => s.Taxon)).GetSomeAsync();
             var synonyms = new List<Data.Shared.Models.Synonym>();
             await foreach (var synonym in synonymResult)
             {
@@ -69,6 +69,7 @@ namespace Emergence.Service
                                                                          (rank == TaxonRank.Subspecies && s.Taxon.Subspecies == taxonName) ||
                                                                          (rank == TaxonRank.Variety && s.Taxon.Subvariety == taxonName) ||
                                                                          (rank == TaxonRank.Subkingdom && s.Taxon.Subkingdom == taxonName)),
+                                                                         false,
                                                                     s => s.Include(s => s.Taxon));
 
             var synonymResult = synonymQuery.GetSomeAsync();

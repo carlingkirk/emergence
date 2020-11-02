@@ -24,7 +24,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Activity> GetActivityAsync(int id, Data.Shared.Models.User user)
         {
-            var activityQuery = _activityRepository.WhereWithIncludes(a => a.Id == id,
+            var activityQuery = _activityRepository.WhereWithIncludes(a => a.Id == id, false,
                                                                       a => a.Include(a => a.Specimen)
                                                                             .Include(s => s.Specimen.InventoryItem)
                                                                             .Include(s => s.Specimen.Lifeform));
@@ -50,6 +50,7 @@ namespace Emergence.Service
                                                                             EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchTextQuery) ||
                                                                             EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchTextQuery) ||
                                                                             EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchTextQuery)),
+                                                                            false,
                                                                       a => a.Include(a => a.Specimen)
                                                                             .Include(s => s.Specimen.InventoryItem)
                                                                             .Include(s => s.Specimen.Lifeform));

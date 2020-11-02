@@ -31,7 +31,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Specimen> GetSpecimenAsync(int specimenId, Data.Shared.Models.User user)
         {
-            var specimenQuery = _specimenRepository.WhereWithIncludes(s => s.Id == specimenId,
+            var specimenQuery = _specimenRepository.WhereWithIncludes(s => s.Id == specimenId, false,
                                                                       s => s.Include(s => s.InventoryItem)
                                                                               .Include(ii => ii.InventoryItem.Inventory)
                                                                               .Include(ii => ii.InventoryItem.Origin)
@@ -49,6 +49,7 @@ namespace Emergence.Service
                                                                            EF.Functions.Like(s.InventoryItem.Name, findParams.SearchTextQuery) ||
                                                                            EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchTextQuery) ||
                                                                            EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchTextQuery)),
+                                                                           false,
                                                                            s => s.Include(s => s.InventoryItem)
                                                                                  .Include(s => s.InventoryItem.Inventory)
                                                                                  .Include(s => s.InventoryItem.Origin)
