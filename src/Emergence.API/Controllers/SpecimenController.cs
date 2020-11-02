@@ -31,7 +31,7 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<Specimen> Get(int id)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var specimen = await _specimenService.GetSpecimenAsync(id, user);
             var photos = await _photoService.GetPhotosAsync(PhotoType.Specimen, id);
 
@@ -90,7 +90,7 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<Specimen>> FindSpecimens(FindParams findParams)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _specimenService.FindSpecimens(findParams, user);
             return result;
         }
@@ -99,7 +99,7 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var specimen = await _specimenService.GetSpecimenAsync(id, user);
             if (specimen.CreatedBy != UserId)
             {

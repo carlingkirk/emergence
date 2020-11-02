@@ -30,7 +30,7 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<PlantInfo> Get(int id)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var plantInfo = await _plantInfoService.GetPlantInfoAsync(id, user);
             var photos = await _photoService.GetPhotosAsync(PhotoType.PlantInfo, plantInfo.PlantInfoId);
             plantInfo.Photos = photos;
@@ -41,6 +41,9 @@ namespace Emergence.API.Controllers
         [HttpPut]
         public async Task<PlantInfo> Put(PlantInfo plantInfo)
         {
+            plantInfo.CreatedBy = UserId;
+            plantInfo.UserId = await _userService.GetUserIdAsync(UserId);
+
             if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0)
             {
                 plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, UserId);
@@ -66,7 +69,7 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<PlantInfo>> FindPlantInfos(FindParams findParams)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _plantInfoService.FindPlantInfos(findParams, user);
             return result;
         }
@@ -75,7 +78,7 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var plantInfo = await _plantInfoService.GetPlantInfoAsync(id, user);
             if (plantInfo.CreatedBy != UserId)
             {

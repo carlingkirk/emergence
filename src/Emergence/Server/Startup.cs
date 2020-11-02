@@ -124,6 +124,7 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));
             services.AddScoped(typeof(IRepository<User>), typeof(Repository<User>));
 
+            services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 

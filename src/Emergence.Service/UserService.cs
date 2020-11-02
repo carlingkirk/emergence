@@ -4,9 +4,7 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
-using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace Emergence.Service
 {
@@ -16,15 +14,15 @@ namespace Emergence.Service
         private readonly IRepository<DisplayName> _nameRepository;
         private readonly IPhotoService _photoService;
         private readonly ILocationService _locationService;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cacheService;
 
-        public UserService(IRepository<User> userRepository, IRepository<DisplayName> nameRepository, IPhotoService photoService, ILocationService locationService, IDistributedCache cache)
+        public UserService(IRepository<User> userRepository, IRepository<DisplayName> nameRepository, IPhotoService photoService, ILocationService locationService, ICacheService cacheService)
         {
             _userRepository = userRepository;
             _nameRepository = nameRepository;
             _photoService = photoService;
             _locationService = locationService;
-            _cache = cache;
+            _cacheService = cacheService;
         }
 
         public async Task<Data.Shared.Models.User> GetUserAsync(int id)
@@ -91,10 +89,11 @@ namespace Emergence.Service
         public async Task<int?> GetUserIdAsync(string userId)
         {
             var cacheKey = "UserId:" + userId + ":Id";
-            var id = await _cache.GetIntAsync(cacheKey);
+            var id = await _cacheService.GetIntAsync(cacheKey);
 
             if (id != null)
             {
+
                 return id.Value;
             }
             else
@@ -102,12 +101,18 @@ namespace Emergence.Service
                 var userResult = await _userRepository.GetAsync(u => u.UserId == userId, false);
                 if (userResult != null)
                 {
-                    await _cache.SetCacheValueAsync<int>(cacheKey, userResult.Id);
+                    await _cacheService.SetCacheValueAsync<int>(cacheKey, userResult.Id);
                     return userResult.Id;
                 }
             }
 
             return null;
+        }
+
+        public async Task<Data.Shared.Models.User> GetIdentifyingUser(string userId)
+        {
+            var id = await GetUserIdAsync(userId);
+            return new Data.Shared.Models.User { Id = id ?? default, UserId = userId };
         }
 
         public async Task<Data.Shared.Models.User> UpdateUserAsync(Data.Shared.Models.User user)

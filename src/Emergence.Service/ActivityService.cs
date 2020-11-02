@@ -35,9 +35,8 @@ namespace Emergence.Service
             return activity?.AsModel();
         }
 
-        public async Task<Data.Shared.Models.Activity> AddOrUpdateActivityAsync(Data.Shared.Models.Activity activity, string userId)
+        public async Task<Data.Shared.Models.Activity> AddOrUpdateActivityAsync(Data.Shared.Models.Activity activity)
         {
-            activity.CreatedBy = userId;
             var activityResult = await _activityRepository.AddOrUpdateAsync(a => a.Id == activity.ActivityId, activity.AsStore());
             return activityResult.AsModel();
         }

@@ -4,6 +4,7 @@ using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using Emergence.Test.Data.Fakes.Stores;
+using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 
 namespace Emergence.Test.Mocks
@@ -82,6 +83,69 @@ namespace Emergence.Test.Mocks
                 .ReturnsAsync(result.FirstOrDefault() ?? FakeTaxons.Get().First().AsModel());
 
             return mockTaxonService;
+        }
+
+        public static Mock<IUserService> GetStandardMockUserService(IEnumerable<User> result = null)
+        {
+            if (result == null)
+            {
+                result = FakeUsers.Get().Select(u => u.AsModel());
+            }
+
+            var mockUserService = new Mock<IUserService>();
+
+            mockUserService.Setup(u => u.GetIdentifyingUser(It.IsAny<string>()))
+                .ReturnsAsync((string userId) => result.FirstOrDefault(u => u.UserId == userId));
+
+            mockUserService.Setup(u => u.GetUserAsync(It.IsAny<string>()))
+                .ReturnsAsync((string userId) => result.FirstOrDefault(u => u.UserId == userId));
+
+            mockUserService.Setup(u => u.GetUserByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync((string name) => result.FirstOrDefault(u => u.DisplayName == name));
+
+            mockUserService.Setup(u => u.GetUserIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((string userId) => result.FirstOrDefault(u => u.UserId == userId).Id);
+
+            mockUserService.Setup(u => u.GetRandomNameAsync())
+                .ReturnsAsync("ElatedScurfpea");
+
+            mockUserService.Setup(u => u.AddUserAsync(It.IsAny<User>()))
+                .ReturnsAsync((User user) => user);
+
+            mockUserService.Setup(u => u.UpdateUserAsync(It.IsAny<User>()))
+                .ReturnsAsync((User user) => user);
+
+            return mockUserService;
+        }
+
+        public static Mock<ICacheService> GetStandardMockCacheService(Dictionary<string, string> keyValues = null)
+        {
+            var mockCacheService = new Mock<ICacheService>();
+            mockCacheService.Setup(c => c.GetIntAsync(It.IsAny<string>())).ReturnsAsync((string key) =>
+            {
+                if (keyValues.TryGetValue(key, out var value))
+                {
+                    if (int.TryParse(value, out var intValue))
+                    {
+                        return intValue;
+                    }
+                }
+                return null;
+            });
+
+            mockCacheService.Setup(c => c.GetStringAsync(It.IsAny<string>())).ReturnsAsync((string key) =>
+            {
+                if (keyValues.TryGetValue(key, out var value))
+                {
+                    return value;
+                }
+                return null;
+            });
+
+            mockCacheService.Setup(c => c.SetCacheValueAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DistributedCacheEntryOptions>()));
+            mockCacheService.Setup(c => c.SetCacheValueAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DistributedCacheEntryOptions>()));
+
+            return mockCacheService;
         }
     }
 }

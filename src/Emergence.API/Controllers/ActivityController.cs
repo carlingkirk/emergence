@@ -25,7 +25,7 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<Activity> Get(int id)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var activity = await _activityService.GetActivityAsync(id, user);
             var photos = await _photoService.GetPhotosAsync(PhotoType.Activity, id);
 
@@ -37,7 +37,9 @@ namespace Emergence.API.Controllers
         [HttpPut]
         public async Task<Activity> Put(Activity activity)
         {
-            var activityResult = await _activityService.AddOrUpdateActivityAsync(activity, UserId);
+            activity.CreatedBy = UserId;
+            activity.UserId = await _userService.GetUserIdAsync(UserId);
+            var activityResult = await _activityService.AddOrUpdateActivityAsync(activity);
 
             if (activity.Photos != null && activity.Photos.Any())
             {
@@ -56,7 +58,7 @@ namespace Emergence.API.Controllers
         [Route("Find")]
         public async Task<FindResult<Activity>> FindActivities(FindParams findParams, int? specimenId)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _activityService.FindActivities(findParams, user, specimenId);
             return result;
         }
@@ -65,7 +67,7 @@ namespace Emergence.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _userService.GetUserAsync(UserId);
+            var user = await _userService.GetIdentifyingUser(UserId);
             var activity = await _activityService.GetActivityAsync(id, user);
             if (activity.CreatedBy != UserId)
             {
