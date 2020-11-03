@@ -178,5 +178,105 @@ namespace Emergence.Test.Data.Shared
             var visibleInventoryItems = inventoryItems.CanViewContent(user);
             visibleInventoryItems.Should().HaveCount(1);
         }
+
+        [Fact]
+        public void TestCanViewInventoryItemInheritNotInContacts()
+        {
+            var inventoryItems = new List<InventoryItem>
+            {
+                new InventoryItem
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        InventoryItemVisibility = Visibility.Contacts,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleInventoryItems = inventoryItems.CanViewContent(user);
+            visibleInventoryItems.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewInventoryItemProfileInheritNotInContacts()
+        {
+            var inventoryItems = new List<InventoryItem>
+            {
+                new InventoryItem
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Contacts,
+                        InventoryItemVisibility = Visibility.Inherit,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleInventoryItems = inventoryItems.CanViewContent(user);
+            visibleInventoryItems.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewInventoryItemInheritPublic()
+        {
+            var inventoryItems = new List<InventoryItem>
+            {
+                new InventoryItem
+                {
+                    Id = 1,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Public
+                    }
+                }
+            }.AsQueryable();
+
+            var visibleInventoryItems = inventoryItems.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visibleInventoryItems.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TestCanViewPublicInventoryItemHiddenProfile()
+        {
+            var inventoryItems = new List<InventoryItem>
+            {
+                new InventoryItem
+                {
+                    Id = 1,
+                    Visibility = Visibility.Public,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Hidden
+                    }
+                }
+            }.AsQueryable();
+
+            var visibleInventoryItems = inventoryItems.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visibleInventoryItems.Should().HaveCount(1);
+        }
     }
 }

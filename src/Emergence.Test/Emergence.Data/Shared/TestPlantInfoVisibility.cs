@@ -177,5 +177,105 @@ namespace Emergence.Test.Data.Shared
             var visiblePlantInfos = plantInfos.CanViewContent(user);
             visiblePlantInfos.Should().HaveCount(1);
         }
+
+        [Fact]
+        public void TestCanViewPlantInfoInheritNotInContacts()
+        {
+            var plantInfos = new List<PlantInfo>
+            {
+                new PlantInfo
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        InventoryItemVisibility = Visibility.Contacts,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visiblePlantInfos = plantInfos.CanViewContent(user);
+            visiblePlantInfos.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewPlantInfoProfileInheritNotInContacts()
+        {
+            var plantInfos = new List<PlantInfo>
+            {
+                new PlantInfo
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Contacts,
+                        InventoryItemVisibility = Visibility.Inherit,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visiblePlantInfos = plantInfos.CanViewContent(user);
+            visiblePlantInfos.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewPlantInfoInheritPublic()
+        {
+            var plantInfos = new List<PlantInfo>
+            {
+                new PlantInfo
+                {
+                    Id = 1,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Public
+                    }
+                }
+            }.AsQueryable();
+
+            var visiblePlantInfos = plantInfos.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visiblePlantInfos.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TestCanViewPublicPlantInfoHiddenProfile()
+        {
+            var plantInfos = new List<PlantInfo>
+            {
+                new PlantInfo
+                {
+                    Id = 1,
+                    Visibility = Visibility.Public,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Hidden
+                    }
+                }
+            }.AsQueryable();
+
+            var visiblePlantInfos = plantInfos.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visiblePlantInfos.Should().HaveCount(1);
+        }
     }
 }

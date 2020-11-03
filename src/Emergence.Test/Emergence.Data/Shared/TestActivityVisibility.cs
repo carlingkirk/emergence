@@ -180,6 +180,67 @@ namespace Emergence.Test.Data.Shared
         }
 
         [Fact]
+        public void TestCanViewActivityInheritNotInContacts()
+        {
+            var activities = new List<Activity>
+            {
+                new Activity
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        ActivityVisibility = Visibility.Contacts,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleActivitys = activities.CanViewContent(user);
+            visibleActivitys.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewActivityProfileInheritNotInContacts()
+        {
+            var activities = new List<Activity>
+            {
+                new Activity
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Contacts,
+                        ActivityVisibility = Visibility.Inherit,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleActivitys = activities.CanViewContent(user);
+            visibleActivitys.Should().HaveCount(0);
+        }
+
+        [Fact]
         public void TestCanViewActivityInheritPublic()
         {
             var activities = new List<Activity>
@@ -191,6 +252,27 @@ namespace Emergence.Test.Data.Shared
                     User = new User
                     {
                         ActivityVisibility = Visibility.Public
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleActivities = activities.CanViewContent(user);
+            visibleActivities.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TestCanViewPublicActivityHiddenActivities()
+        {
+            var activities = new List<Activity>
+            {
+                new Activity
+                {
+                    Id = 1,
+                    Visibility = Visibility.Public,
+                    User = new User
+                    {
+                        ActivityVisibility = Visibility.Hidden
                     }
                 }
             }.AsQueryable();

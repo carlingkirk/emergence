@@ -178,5 +178,105 @@ namespace Emergence.Test.Data.Shared
             var visibleOrigins = origins.CanViewContent(user);
             visibleOrigins.Should().HaveCount(1);
         }
+
+        [Fact]
+        public void TestCanViewOriginInheritNotInContacts()
+        {
+            var origins = new List<Origin>
+            {
+                new Origin
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        OriginVisibility = Visibility.Contacts,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleOrigins = origins.CanViewContent(user);
+            visibleOrigins.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewOriginProfileInheritNotInContacts()
+        {
+            var origins = new List<Origin>
+            {
+                new Origin
+                {
+                    Id = 1,
+                    Visibility = Visibility.Inherit,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Contacts,
+                        OriginVisibility = Visibility.Inherit,
+                        Contacts = new List<UserContact>()
+                        {
+                            new UserContact
+                            {
+                                Id = 1,
+                                UserId = 1,
+                                ContactUserId = 5
+                            }
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var user = new EmergenceModels.User { Id = 2 };
+            var visibleOrigins = origins.CanViewContent(user);
+            visibleOrigins.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TestCanViewOriginInheritPublic()
+        {
+            var origins = new List<Origin>
+            {
+                new Origin
+                {
+                    Id = 1,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Public
+                    }
+                }
+            }.AsQueryable();
+
+            var visibleOrigins = origins.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visibleOrigins.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TestCanViewPublicOriginHiddenProfile()
+        {
+            var origins = new List<Origin>
+            {
+                new Origin
+                {
+                    Id = 1,
+                    Visibility = Visibility.Public,
+                    User = new User
+                    {
+                        ProfileVisibility = Visibility.Hidden
+                    }
+                }
+            }.AsQueryable();
+
+            var visibleOrigins = origins.CanViewContent(FakeUsers.GetPublic().AsModel());
+            visibleOrigins.Should().HaveCount(1);
+        }
     }
 }
