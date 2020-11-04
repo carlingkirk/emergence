@@ -70,8 +70,8 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<PlantLocation>()
                 .HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
 
-            modelBuilder.Entity<UserContact>().HasOne<User>().WithMany().HasForeignKey(u => u.UserId);
-            modelBuilder.Entity<UserContact>().HasOne<User>().WithMany().HasForeignKey(u => u.ContactUserId);
+            modelBuilder.Entity<User>().HasMany(u => u.Contacts).WithOne().HasForeignKey(u => u.UserId);
+            modelBuilder.Entity<User>().HasMany(u => u.OthersContacts).WithOne().HasForeignKey(u => u.ContactUserId);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace Emergence.Data.Shared.Stores
         public Photo Photo { get; set; }
         public Location Location { get; set; }
 
+        public IEnumerable<UserContact> OthersContacts { get; set; }
         public IEnumerable<UserContact> Contacts { get; set; }
         public IEnumerable<Activity> Activities { get; set; }
         public IEnumerable<InventoryItem> InventoryItems { get; set; }

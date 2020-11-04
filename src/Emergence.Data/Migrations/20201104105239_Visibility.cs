@@ -11,10 +11,9 @@ namespace Emergence.Data.Migrations
                 name: "IX_Users_UserId",
                 table: "Users");
 
-            migrationBuilder.RenameColumn(
-                            name: "DateOccured",
-                            table: "Activities",
-                            newName: "DateOccurred");
+            migrationBuilder.DropColumn(
+                name: "DateOccured",
+                table: "Activities");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",
@@ -86,6 +85,11 @@ namespace Emergence.Data.Migrations
                 nullable: false,
                 defaultValue: 0);
 
+            migrationBuilder.AddColumn<DateTime>(
+                name: "DateOccurred",
+                table: "Activities",
+                nullable: true);
+
             migrationBuilder.AddColumn<int>(
                 name: "UserId",
                 table: "Activities",
@@ -103,7 +107,7 @@ namespace Emergence.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: true),
                     ContactUserId = table.Column<int>(nullable: true),
                     DateRequested = table.Column<DateTime>(nullable: false),
                     DateAccepted = table.Column<DateTime>(nullable: false)
@@ -122,7 +126,7 @@ namespace Emergence.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emergence.Data.Migrations
 {
     [DbContext(typeof(EmergenceDbContext))]
-    [Migration("20201027103230_Visibility")]
+    [Migration("20201104105239_Visibility")]
     partial class Visibility
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -886,10 +886,7 @@ namespace Emergence.Data.Migrations
                     b.Property<DateTime>("DateRequested")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId1")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -897,8 +894,6 @@ namespace Emergence.Data.Migrations
                     b.HasIndex("ContactUserId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("UserContacts");
                 });
@@ -1033,18 +1028,12 @@ namespace Emergence.Data.Migrations
             modelBuilder.Entity("Emergence.Data.Shared.Stores.UserContact", b =>
                 {
                     b.HasOne("Emergence.Data.Shared.Stores.User", null)
-                        .WithMany()
+                        .WithMany("OthersContacts")
                         .HasForeignKey("ContactUserId");
 
                     b.HasOne("Emergence.Data.Shared.Stores.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Emergence.Data.Shared.Stores.User", null)
                         .WithMany("Contacts")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

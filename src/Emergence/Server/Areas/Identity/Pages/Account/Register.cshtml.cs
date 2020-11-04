@@ -81,11 +81,10 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var newUser = await _userManager.GetUserAsync(User);
                     var randomName = await _userService.GetRandomNameAsync();
                     _ = await _userService.AddUserAsync(new Data.Shared.Models.User
                     {
-                        UserId = newUser.Id,
+                        UserId = user.Id,
                         DisplayName = randomName,
                         EmailUpdates = true,
                         SocialUpdates = true,
