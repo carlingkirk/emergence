@@ -7,7 +7,7 @@
 <div class="card-header h3">
     @if (!IsModal)
     {
-        <button class="btn btn-primary" @onclick="Back">Back</button>
+        <button type="button" class="btn btn-primary" @onclick="Back">Back</button>
     }
     <span class="title">Specimen: </span>
     @if (SelectedLifeform != null && (!string.IsNullOrEmpty(SelectedLifeform.ScientificName) || !string.IsNullOrEmpty(SelectedLifeform.CommonName)))
@@ -42,7 +42,7 @@
     @if (IsEditable && !IsEditing && Specimen != null && Specimen.SpecimenId > 0)
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
-        <button class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
+        <button type="button" class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
     }
 </div>
 @if (!IsEditing && Specimen != null)

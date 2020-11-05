@@ -26,8 +26,10 @@ namespace Emergence.Service
         {
             var activityQuery = _activityRepository.WhereWithIncludes(a => a.Id == id, false,
                                                                       a => a.Include(a => a.Specimen)
-                                                                            .Include(s => s.Specimen.InventoryItem)
-                                                                            .Include(s => s.Specimen.Lifeform));
+                                                                            .Include(a => a.Specimen.InventoryItem)
+                                                                            .Include(a => a.Specimen.Lifeform)
+                                                                            .Include(a => a.User)
+                                                                            .Include(a => a.User.Photo));
             activityQuery = activityQuery.CanViewContent(user);
 
             var activity = await activityQuery.FirstOrDefaultAsync();

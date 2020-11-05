@@ -191,7 +191,7 @@
                         <div class="col">
                             <label for="req-scarification">Stratification Stages</label>
                             <div class="@(AnyStratificationStages() ? "d-none" : "")">
-                                <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
                             </div>
 
                             @foreach (var stage in ChosenStratificationStages)
@@ -202,7 +202,7 @@
                                 <div class="row">
                                     <div class="col-md-2 col-3">
                                         <div class="@(firstRow ? "" : "d-none")"><label>Step</label></div>
-                                        <button class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(stage.Step))"><span class="oi oi-minus"></span></button>
+                                        <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => RemoveStratificationStage(stage.Step))"><span class="oi oi-minus"></span></button>
                                         <span id="@GetElementId("req-scarification", key)">@stage.Step</span>
                                     </div>
                                     <div class="col-md-2 col-3">
@@ -221,7 +221,7 @@
                                 </div>
                                 <div class="@(lastRow ? "row" : "d-none")">
                                     <div class="col-1">
-                                        <button class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                                        <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
                                     </div>
                                 </div>
                             }
@@ -253,7 +253,7 @@
     <button type="submit" class="btn btn-primary">Save</button>
     @if (BlazoredModal != null)
     {
-        <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+        <button type="button" @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
     }
     else
     {

@@ -27,7 +27,9 @@ namespace Emergence.Service
         {
             var originQuery = _originRepository.WhereWithIncludes(o => o.Id == id, false,
                                                                   o => o.Include(o => o.ParentOrigin)
-                                                                        .Include(o => o.Location));
+                                                                        .Include(o => o.Location)
+                                                                        .Include(o => o.User)
+                                                                        .Include(o => o.User.Photo));
             originQuery = originQuery.CanViewContent(user);
 
             var origin = await originQuery.FirstOrDefaultAsync();

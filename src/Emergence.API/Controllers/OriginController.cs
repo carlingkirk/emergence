@@ -13,11 +13,13 @@ namespace Emergence.API.Controllers
     {
         private readonly IOriginService _originService;
         private readonly IUserService _userService;
+        private readonly IPhotoService _photoService;
 
-        public OriginController(IOriginService originService, IUserService userService)
+        public OriginController(IOriginService originService, IUserService userService, IPhotoService photoService)
         {
             _originService = originService;
             _userService = userService;
+            _photoService = photoService;
         }
 
         [AllowAnonymous]
@@ -26,7 +28,15 @@ namespace Emergence.API.Controllers
         public async Task<Origin> Get(int id)
         {
             var user = await _userService.GetIdentifyingUser(UserId);
-            return await _originService.GetOriginAsync(id, user);
+            var origin = await _originService.GetOriginAsync(id, user);
+
+            if (origin.User?.PhotoId != null)
+            {
+                var userPhoto = await _photoService.GetPhotoAsync(origin.User.PhotoId.Value);
+                origin.User.PhotoThumbnailUri = userPhoto.ThumbnailUri;
+            }
+
+            return origin;
         }
 
         [HttpPut]

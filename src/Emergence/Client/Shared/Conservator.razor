@@ -1,0 +1,25 @@
+@using Emergence.Data.Shared.Models
+@using Emergence.Data.Shared
+
+<div>
+    <label for="user">By</label>
+</div>
+<div>
+    @if (User.Visibility != Visibility.Hidden)
+    {
+        <a href="/user/@(User.DisplayName)">
+            <img src="@(User.PhotoThumbnailUri)" alt="Profile photo of @(User.DisplayName)" class="shadow-sm align-center avatar" />
+            <span class="text-body" id="user">@(User.DisplayName)</span>
+        </a>
+    }
+    else
+    {
+        <img src="@(User.PhotoThumbnailUri)" alt="Profile photo of @(User.DisplayName)" class="shadow-sm align-center avatar" />
+        <span class="text-body" id="user">@(User.DisplayName)</span>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public UserSummary User { get; set; }
+}

@@ -10,7 +10,7 @@
 {
 <div class="form-group">
     <div class="row">
-        <div class="col-lg-6 col-xs">
+        <div class="col-lg-4 col-xs">
             <div>
                 <label for="name">Name</label>
             </div>
@@ -31,13 +31,19 @@
         }
         @if (@Origin.ParentOrigin != null)
         {
-            <div class="col-lg-4 col-xs">
+            <div class="col-lg-3 col-xs">
                 <div>
                     <label for="name">Parent Origin</label>
                 </div>
                 <div>
                     <span class="text-body">@Origin.ParentOrigin.Name</span>
                 </div>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Origin.User?.DisplayName))
+        {
+            <div class="col-lg-3 col-xs">
+                <Conservator User="Origin.User" />
             </div>
         }
         @if (Origin.Uri != null)

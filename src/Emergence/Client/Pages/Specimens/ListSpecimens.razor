@@ -81,7 +81,7 @@
                     @if (string.IsNullOrEmpty(ForUserId))
                     {
                     <td>
-                        <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+                        <button type="button" class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
                     </td>
                     }
                 </tr>
@@ -94,7 +94,7 @@
             }
             @if (!string.IsNullOrEmpty(UserId) && string.IsNullOrEmpty(ForUserId))
             {
-                <button class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Specimen, 0))"><span class="oi oi-plus btn-oi"></span>Specimen</button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Specimen, 0))"><span class="oi oi-plus btn-oi"></span>Specimen</button>
             }
         </div>
     }

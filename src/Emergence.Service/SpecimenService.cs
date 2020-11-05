@@ -33,9 +33,11 @@ namespace Emergence.Service
         {
             var specimenQuery = _specimenRepository.WhereWithIncludes(s => s.Id == specimenId, false,
                                                                       s => s.Include(s => s.InventoryItem)
-                                                                              .Include(ii => ii.InventoryItem.Inventory)
-                                                                              .Include(ii => ii.InventoryItem.Origin)
-                                                                              .Include(s => s.Lifeform));
+                                                                              .Include(s => s.InventoryItem.Inventory)
+                                                                              .Include(s => s.InventoryItem.Origin)
+                                                                              .Include(s => s.Lifeform)
+                                                                              .Include(s => s.InventoryItem.User)
+                                                                              .Include(s => s.InventoryItem.User.Photo));
             specimenQuery = specimenQuery.CanViewContent(user);
 
             var specimen = await specimenQuery.FirstOrDefaultAsync();

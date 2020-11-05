@@ -19,6 +19,6 @@ namespace Emergence.Data.Shared.Models
 
         public Origin Origin { get; set; }
         public Inventory Inventory { get; set; }
-        public User User { get; set; }
+        public UserSummary User { get; set; }
     }
 }

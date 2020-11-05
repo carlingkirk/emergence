@@ -29,7 +29,7 @@ namespace Emergence.Data.Shared.Models
         public Lifeform Lifeform { get; set; }
         public IEnumerable<PlantLocation> Locations { get; set; }
         public IEnumerable<Photo> Photos { get; set; }
-        public User User { get; set; }
+        public UserSummary User { get; set; }
 
         [Required(ErrorMessage = "Please find a plant by searching in the Plant Name field by scientific name or common name.")]
         public Lifeform SelectedLifeform { get; set; }

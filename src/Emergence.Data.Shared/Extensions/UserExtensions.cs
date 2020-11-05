@@ -25,6 +25,15 @@ namespace Emergence.Data.Shared.Extensions
             DateModified = source.DateModified
         };
 
+        public static Models.UserSummary AsSummaryModel(this User source) => new Models.UserSummary
+        {
+            Id = source.Id,
+            DisplayName = source.DisplayName,
+            PhotoId = source.Photo?.Id,
+            PhotoThumbnailUri = source.Photo?.AsModel().ThumbnailUri,
+            Visibility = source.ProfileVisibility
+        };
+
         public static User AsStore(this Models.User source) => new User
         {
             Id = source.Id,

@@ -32,7 +32,11 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.PlantInfo> GetPlantInfoAsync(int id, Data.Shared.Models.User user)
         {
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id == id, false, p => p.Include(p => p.Lifeform).Include(p => p.Origin));
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id == id, false,
+                                                                        p => p.Include(p => p.Lifeform)
+                                                                              .Include(p => p.Origin)
+                                                                              .Include(p => p.User)
+                                                                              .Include(p => p.User.Photo));
             plantInfoQuery = plantInfoQuery.CanViewContent(user);
 
             var plantInfo = await plantInfoQuery.FirstOrDefaultAsync();

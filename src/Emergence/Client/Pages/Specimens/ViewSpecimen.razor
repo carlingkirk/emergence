@@ -9,7 +9,7 @@
 {
     <div class="form-group">
         <div class="row">
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="specimen-name">Specimen Name </label>
                 </div>
@@ -17,7 +17,7 @@
                     <span class="text-body">@(Specimen.InventoryItem.Name)</span>
                 </div>
             </div>
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="quantity">Quantity</label>
                 </div>
@@ -25,7 +25,13 @@
                     <span class="text-body">@Specimen.InventoryItem.Quantity</span>
                 </div>
             </div>
-            <div class="col-lg-6 col-xs">
+            @if (!string.IsNullOrEmpty(Specimen.InventoryItem.User?.DisplayName))
+            {
+                <div class="col-lg-4 col-xs">
+                    <Conservator User="Specimen.InventoryItem.User" />
+                </div>
+            }
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="status">Status</label>
                 </div>
@@ -33,7 +39,7 @@
                     <span class="text-body">@Specimen.InventoryItem.Status.ToFriendlyName()</span>
                 </div>
             </div>
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="stage">Stage</label>
                 </div>
@@ -43,7 +49,7 @@
             </div>
             @if (@Specimen.InventoryItem.DateAcquired.HasValue)
             {
-                <div class="col-lg-6 col-xs">
+                <div class="col-lg-4 col-xs">
                     <div>
                         <label for="date-acquired">Date Acquired</label>
                     </div>
@@ -52,7 +58,7 @@
                     </div>
                 </div>
             }
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="type">Type</label>
                 </div>
@@ -60,7 +66,7 @@
                     <span class="text-body">@Specimen.InventoryItem.ItemType.ToFriendlyName()</span>
                 </div>
             </div>
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="origin">Origin</label>
                 </div>

@@ -11,7 +11,7 @@
 {
 <div class="form-group">
     <div class="row">
-        <div class="col-6 col-xs-1">
+        <div class="col-lg-4 col-xs">
             <div>
                 <label for="type">Type</label>
             </div>
@@ -19,7 +19,7 @@
                 <span class="text-body">@Activity.ActivityType.ToFriendlyName()</span>
             </div>
         </div>
-        <div class="col-6 col-xs-1">
+        <div class="col-lg-4 col-xs">
             <div>
                 <label for="specimen">Specimen</label>
             </div>
@@ -34,7 +34,13 @@
                 }
             </div>
         </div>
-        <div class="col-6 col-xs-1">
+        @if (!string.IsNullOrEmpty(Activity.User?.DisplayName))
+        {
+            <div class="col-lg-4 col-xs">
+                <Conservator User="Activity.User" />
+            </div>
+        }
+        <div class="col-lg-4 col-xs">
             <div>
                 <label for="name">Name</label>
             </div>
@@ -42,7 +48,7 @@
                 <span class="text-body">@Activity.Name</span>
             </div>
         </div>
-        <div class="col-6 col-xs-1">
+        <div class="col-lg-8 col-xs">
             <div>
                 <label for="description">Description</label>
             </div>
@@ -50,7 +56,7 @@
                 <span class="text-body">@Activity.Description</span>
             </div>
         </div>
-        <div class="col-6 col-xs-1">
+        <div class="col-lg-4 col-xs">
             <div>
                 <label for="date-occured">Date Occured</label>
             </div>
@@ -58,7 +64,7 @@
                 <span class="text-body">@Activity.DateOccurred</span>
             </div>
         </div>
-        <div class="col-6 col-xs-1">
+        <div class="col-lg-4 col-xs">
             <div>
                 <label for="date-scheduled">Date Scheduled</label>
             </div>

@@ -33,6 +33,13 @@ namespace Emergence.API.Controllers
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var specimen = await _specimenService.GetSpecimenAsync(id, user);
+
+            if (specimen.InventoryItem.User?.PhotoId != null)
+            {
+                var userPhoto = await _photoService.GetPhotoAsync(specimen.InventoryItem.User.PhotoId.Value);
+                specimen.InventoryItem.User.PhotoThumbnailUri = userPhoto.ThumbnailUri;
+            }
+
             var photos = await _photoService.GetPhotosAsync(PhotoType.Specimen, id);
 
             specimen.Photos = photos;

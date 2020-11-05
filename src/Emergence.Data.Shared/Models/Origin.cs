@@ -26,7 +26,7 @@ namespace Emergence.Data.Shared.Models
 
         public Location Location { get; set; }
         public Origin ParentOrigin { get; set; }
-        public User User { get; set; }
+        public UserSummary User { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

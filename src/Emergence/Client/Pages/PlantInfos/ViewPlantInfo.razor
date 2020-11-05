@@ -11,7 +11,7 @@
 {
     <div class="form-group">
         <div class="row">
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="lifeform">Plant Name </label>
                 </div>
@@ -19,7 +19,7 @@
                     <span class="text-body">@(PlantInfo.Lifeform.CommonName)</span>&nbsp;<span class="text-body font-italic">@(PlantInfo.Lifeform.ScientificName)</span>
                 </div>
             </div>
-            <div class="col-6 col-xs-1">
+            <div class="col-lg-4 col-xs">
                 <div>
                     <label for="origin">Origin</label>
                 </div>
@@ -30,141 +30,144 @@
                     <a href="@PlantInfo.Origin?.Uri" target="_blank" alt="@PlantInfo.Origin?.Uri"><span class="link">@PlantInfo.Origin?.ShortUri</span></a>
                 </div>
             </div>
+            @if (!string.IsNullOrEmpty(PlantInfo.User?.DisplayName))
+            {
+                <div class="col-lg-4 col-xs">
+                    <Conservator User="PlantInfo.User" />
+                </div>
+            }
         </div>
     </div>
     <div class="form-group">
         <div class="row">
-            <div class="col-10">
-                <div class="row">
-                    @if (PlantInfo.Requirements.LightRequirements.MinimumLight != LightType.Unknown || PlantInfo.Requirements.LightRequirements.MaximumLight != LightType.Unknown)
-                    {
-                        <div class="col">
-                            <div><label for="light">Light</label></div>
-                            <div>
-                                <span id="light">
-                                    @DisplayRange(PlantInfo.Requirements.LightRequirements.MinimumLight.ToFriendlyName(),
-                                                    PlantInfo.Requirements.LightRequirements.MaximumLight.ToFriendlyName())
-                                </span>
-                            </div>
-                        </div>
-                    }
-                    @if (PlantInfo.Requirements.WaterRequirements.MinimumWater != WaterType.Unknown || PlantInfo.Requirements.WaterRequirements.MaximumWater != WaterType.Unknown)
-                    {
-                        <div class="col">
-                            <div>
-                                <label for="water">Water</label>
-                            </div>
-                            <div>
-                                <span id="water">
-                                    @DisplayRange(PlantInfo.Requirements.WaterRequirements.MinimumWater.ToFriendlyName(),
-                                                    PlantInfo.Requirements.WaterRequirements.MaximumWater.ToFriendlyName())
-                                </span>
-                            </div>
-                        </div>
-                    }
-                    @if (!string.IsNullOrEmpty(MinZone) || !string.IsNullOrEmpty(MaxZone))
-                    {
-                        <div class="col">
-                            <div>
-                                <label for="zones">Zones</label>
-                            </div>
-                            <div>
-                                <span id="zones">
-                                    @DisplayRange(MinZone, MaxZone)
-                                </span>
-                            </div>
-                        </div>
-                    }
-                </div>
-                <div class="row">
-                    @if (PlantInfo.BloomTime.MinimumBloomTime != Month.Unknown || PlantInfo.BloomTime.MaximumBloomTime != Month.Unknown)
-                    {
-                        <div class="col">
-                            <div>
-                                <label for="bloom">Bloom Times</label>
-                            </div>
-                            <div>
-                                <span id="bloom">
-                                    @DisplayRange(PlantInfo.BloomTime.MinimumBloomTime.ToFriendlyName(), PlantInfo.BloomTime.MaximumBloomTime.ToFriendlyName())
-                                </span>
-                            </div>
-                        </div>
-                    }
-                    @if (PlantInfo.Height.MinimumHeight.HasValue || PlantInfo.Height.MinimumHeight.HasValue)
-                    {
-                        <div class="col">
-                            <div>
-                                <label for="height-min">Height</label>
-                            </div>
-                            <div>
-                                <span id="height">
-                                    @DisplayRange(PlantInfo.Height.MinimumHeight.ToString(), PlantInfo.Height.MaximumHeight.ToString(),
-                                                    PlantInfo.Height.Unit.ToFriendlyName())
-                                </span>
-                            </div>
-                        </div>
-                    }
-                    @if (PlantInfo.Spread.MinimumSpread.HasValue || PlantInfo.Spread.MaximumSpread.HasValue)
-                    {
-                        <div class="col">
-                            <div>
-                                <label for="spread">Spread</label>
-                            </div>
-                            <div>
-                                <span id="spread">
-                                    @DisplayRange(PlantInfo.Spread.MinimumSpread.ToString(),
-                                                    PlantInfo.Spread.MaximumSpread.ToString(),
-                                                    PlantInfo.Spread.Unit.ToFriendlyName())
-                                </span>
-                            </div>
-                        </div>
-                    }
-                </div>
-                @if (PlantInfo.Requirements.SoilRequirements != null)
-                {
-                    <div class="col">
-                        <label for="req-soil">Soil Types</label>
-                        @foreach (var soilType in PlantInfo.Requirements.SoilRequirements)
-                        {
-                            <span>@soilType</span>
-                        }
+            @if (PlantInfo.Requirements.LightRequirements.MinimumLight != LightType.Unknown || PlantInfo.Requirements.LightRequirements.MaximumLight != LightType.Unknown)
+            {
+                <div class="col-lg-4 col-xs">
+                    <div><label for="light">Light</label></div>
+                    <div>
+                        <span id="light">
+                            @DisplayRange(PlantInfo.Requirements.LightRequirements.MinimumLight.ToFriendlyName(),
+                                            PlantInfo.Requirements.LightRequirements.MaximumLight.ToFriendlyName())
+                        </span>
                     </div>
-                }
-                @if (PlantInfo.Requirements.StratificationStages != null)
-                {
-                    <div class="row">
-                        <div class="col">
-                            <label for="req-scarification">Stratification Stages</label>
-
-                            @foreach (var stage in PlantInfo.Requirements.StratificationStages)
-                            {
-                                var key = stage.Step.ToString();
-                                var firstRow = stage.Step == 1;
-                                <div class="row">
-                                    <div class="col-1">
-                                        <div class="@(firstRow ? "" : "d-none")"><label>Step</label></div>
-                                        <span>@stage.Step</span>
-                                    </div>
-                                    <div class="col-1">
-                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-days", key)">Days</label>
-                                        <span id="@GetElementId("req-scarification-days", key)">@stage.DayLength</span>
-                                    </div>
-                                    <div class="col-7">
-                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("req-scarification-type", key)">Statification Method</label>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <span>@stage.StratificationType.ToFriendlyName()</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                </div>
+            }
+            @if (PlantInfo.Requirements.WaterRequirements.MinimumWater != WaterType.Unknown || PlantInfo.Requirements.WaterRequirements.MaximumWater != WaterType.Unknown)
+            {
+                <div class="col-lg-4 col-xs">
+                    <div>
+                        <label for="water">Water</label>
+                    </div>
+                    <div>
+                        <span id="water">
+                            @DisplayRange(PlantInfo.Requirements.WaterRequirements.MinimumWater.ToFriendlyName(),
+                                            PlantInfo.Requirements.WaterRequirements.MaximumWater.ToFriendlyName())
+                        </span>
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(MinZone) || !string.IsNullOrEmpty(MaxZone))
+            {
+                <div class="col-lg-4 col-xs">
+                    <div>
+                        <label for="zones">Zones</label>
+                    </div>
+                    <div>
+                        <span id="zones">
+                            @DisplayRange(MinZone, MaxZone)
+                        </span>
+                    </div>
+                </div>
+            }
+            @if (PlantInfo.BloomTime.MinimumBloomTime != Month.Unknown || PlantInfo.BloomTime.MaximumBloomTime != Month.Unknown)
+            {
+                <div class="col-lg-4 col-xs">
+                    <div>
+                        <label for="bloom">Bloom Times</label>
+                    </div>
+                    <div>
+                        <span id="bloom">
+                            @DisplayRange(PlantInfo.BloomTime.MinimumBloomTime.ToFriendlyName(), PlantInfo.BloomTime.MaximumBloomTime.ToFriendlyName())
+                        </span>
+                    </div>
+                </div>
+            }
+            @if (PlantInfo.Height.MinimumHeight.HasValue || PlantInfo.Height.MinimumHeight.HasValue)
+            {
+                <div class="col-lg-4 col-xs">
+                    <div>
+                        <label for="height-min">Height</label>
+                    </div>
+                    <div>
+                        <span id="height">
+                            @DisplayRange(PlantInfo.Height.MinimumHeight.ToString(), PlantInfo.Height.MaximumHeight.ToString(),
+                                            PlantInfo.Height.Unit.ToFriendlyName())
+                        </span>
+                    </div>
+                </div>
+            }
+            @if (PlantInfo.Spread.MinimumSpread.HasValue || PlantInfo.Spread.MaximumSpread.HasValue)
+            {
+                <div class="col-lg-4 col-xs">
+                    <div>
+                        <label for="spread">Spread</label>
+                    </div>
+                    <div>
+                        <span id="spread">
+                            @DisplayRange(PlantInfo.Spread.MinimumSpread.ToString(),
+                                            PlantInfo.Spread.MaximumSpread.ToString(),
+                                            PlantInfo.Spread.Unit.ToFriendlyName())
+                        </span>
+                    </div>
+                </div>
+            }
+            @if (PlantInfo.Requirements.SoilRequirements != null)
+            {
+                <div class="col-lg-4 col-xs">
+                    <label for="req-soil">Soil Types</label>
+                    @foreach (var soilType in PlantInfo.Requirements.SoilRequirements)
+                    {
+                        <span>@soilType</span>
+                    }
+                </div>
+            }
+            @if (PlantInfo.Requirements.StratificationStages != null)
+            {
+                <div class="col-lg-10 col-xs">
+                    <label for="req-scarification">Stratification Stages</label>
+                    @foreach (var stage in PlantInfo.Requirements.StratificationStages)
+                    {
+                        var key = stage.Step.ToString();
+                        var firstRow = stage.Step == 1;
+                        <div class="row">
+                            <div class="col-1">
+                                <div class="@(firstRow ? "" : "d-none")">
+                                    <label for="@GetElementId("req-scarification-step", key)">Step</label>
                                 </div>
-                            }
+                                <div>
+                                    <span id="@GetElementId("req-scarification-step", key)">@stage.Step</span>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <div class="@(firstRow ? "" : "d-none")">
+                                    <label for="@GetElementId("req-scarification-days", key)">Days</label>
+                                </div>
+                                <div>
+                                    <span id="@GetElementId("req-scarification-days", key)">@stage.DayLength</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-7 col-xs">
+                                <div class="@(firstRow ? "" : "d-none")">
+                                    <label for="@GetElementId("req-scarification-type", key)">Statification Method</label>
+                                </div>
+                                <div>
+                                    <span id="@GetElementId("req-scarification-type", key)">@stage.StratificationType.ToFriendlyName()</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            }
         </div>
     </div>
     @if (UploadedPhotos != null && UploadedPhotos.Any())

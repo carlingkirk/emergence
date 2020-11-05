@@ -6,7 +6,7 @@
 <div class="card-header h3">
     @if (!IsModal)
     {
-        <button class="btn btn-primary" @onclick="Back">Back</button>
+        <button type="button" class="btn btn-primary" @onclick="Back">Back</button>
     }
     <span class="title">Plant Profile: </span>
     @if (PlantInfo != null && (!string.IsNullOrEmpty(ScientificName) || !string.IsNullOrEmpty(CommonName)))
@@ -42,7 +42,7 @@
     @if (IsEditable && !IsEditing && PlantInfo != null && PlantInfo.PlantInfoId > 0)
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
-        <button class="btn btn-primary" @onclick="async () => await RemovePlantInfo()">Delete</button>
+        <button type="button" class="btn btn-primary" @onclick="async () => await RemovePlantInfo()">Delete</button>
     }
 </div>
 
