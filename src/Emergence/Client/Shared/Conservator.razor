@@ -5,18 +5,19 @@
     <label for="user">By</label>
 </div>
 <div>
-    @if (User.Visibility != Visibility.Hidden)
-    {
-        <a href="/user/@(User.DisplayName)">
+    <a href="/user/@(User.DisplayName)">
+        @if (!string.IsNullOrEmpty(User.PhotoThumbnailUri))
+        {
             <img src="@(User.PhotoThumbnailUri)" alt="Profile photo of @(User.DisplayName)" class="shadow-sm align-center avatar" />
-            <span class="text-body" id="user">@(User.DisplayName)</span>
-        </a>
-    }
-    else
-    {
-        <img src="@(User.PhotoThumbnailUri)" alt="Profile photo of @(User.DisplayName)" class="shadow-sm align-center avatar" />
+        }
+        else
+        {
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 45 45" class="shadow-sm align-center avatar" >
+                <rect fill="#A9A074" width="45" height="45" />
+            </svg>
+        }
         <span class="text-body" id="user">@(User.DisplayName)</span>
-    }
+    </a>
 </div>
 
 @code {

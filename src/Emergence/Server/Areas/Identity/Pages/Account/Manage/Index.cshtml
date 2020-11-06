@@ -24,12 +24,12 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.FirstName"></label>
-                    <input asp-for="Input.FirstName" class="form-control" />
+                    <input asp-for="Input.FirstName" class="form-control" maxlength="36"/>
                     <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.LastName"></label>
-                    <input asp-for="Input.LastName" class="form-control" />
+                    <input asp-for="Input.LastName" class="form-control" maxlength="36" />
                     <span asp-validation-for="Input.LastName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Bio"></label>
-                    <textarea asp-for="Input.Bio" class="form-control" ></textarea>
+                    <textarea asp-for="Input.Bio" class="form-control" maxlength="500" rows="10"></textarea>
                     <span asp-validation-for="Input.Bio" class="text-danger"></span>
                 </div>
             </div>
@@ -98,32 +98,32 @@
                         <div class="row">
                             <div class="col-lg-12 col-xs">
                                 <label asp-for="Input.AddressLine1"></label>
-                                <input asp-for="Input.AddressLine1" class="form-control" />
+                                <input asp-for="Input.AddressLine1" class="form-control" maxlength="200" />
                                 <span asp-validation-for="Input.AddressLine1" class="text-danger"></span>
                             </div>
                             <div class="col-lg-12 col-xs">
                                 <label asp-for="Input.AddressLine2"></label>
-                                <input asp-for="Input.AddressLine2" class="form-control" />
+                                <input asp-for="Input.AddressLine2" class="form-control" maxlength="200" />
                                 <span asp-validation-for="Input.AddressLine2" class="text-danger"></span>
                             </div>
                             <div class="col-lg-8 col-xs">
                                 <label asp-for="Input.City"></label>
-                                <input asp-for="Input.City" class="form-control" />
+                                <input asp-for="Input.City" class="form-control" maxlength="200" />
                                 <span asp-validation-for="Input.City" class="text-danger"></span>
                             </div>
                             <div class="col-lg-4 col-xs">
                                 <label asp-for="Input.StateOrProvince"></label>
-                                <input asp-for="Input.StateOrProvince" class="form-control" />
+                                <input asp-for="Input.StateOrProvince" class="form-control" maxlength="10" />
                                 <span asp-validation-for="Input.StateOrProvince" class="text-danger"></span>
                             </div>
                             <div class="col-lg-4 col-xs">
                                 <label asp-for="Input.PostalCode"></label>
-                                <input asp-for="Input.PostalCode" class="form-control" />
+                                <input asp-for="Input.PostalCode" class="form-control" maxlength="10" />
                                 <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
                             </div>
                             <div class="col-lg-8 col-xs">
                                 <label asp-for="Input.Country"></label>
-                                <input asp-for="Input.Country" class="form-control" />
+                                <input asp-for="Input.Country" class="form-control" maxlength="100" />
                                 <span asp-validation-for="Input.Country" class="text-danger"></span>
                             </div>
                         </div>

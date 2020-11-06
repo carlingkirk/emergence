@@ -27,5 +27,7 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }
         public Location Location { get; set; }
+
+        public bool IsViewerContact { get; set; }
     }
 }

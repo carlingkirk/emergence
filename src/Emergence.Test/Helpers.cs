@@ -13,5 +13,7 @@ namespace Emergence.Test
 
         public static string UserId => "39E22869-A6AB-496E-B490-731FF49EF33B";
         public static string PrivateUserId => "2876E16E-F579-48C3-8BCA-F64C11590879";
+
+        public static string ContactUserId => "31BB0BB5-5EB6-48AA-A808-47F107CBBF76";
     }
 }

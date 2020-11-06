@@ -153,7 +153,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account.Manage
             // Validate uniqueness on display name
             if (userProfile.DisplayName != Input.DisplayName)
             {
-                var existingUser = await _userService.GetUserByNameAsync(Input.DisplayName);
+                var existingUser = await _userService.GetUserByNameAsync(Input.DisplayName, userProfile);
                 if (existingUser != null)
                 {
                     ModelState.AddModelError("Input.DisplayName", "Sorry, that display name is taken. Please choose another display name.");

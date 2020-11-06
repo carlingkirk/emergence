@@ -1,5 +1,6 @@
 @page "/user/{Id:int}"
 @page "/user/{Name}"
+@using Emergence.Data.Shared
 @using Emergence.Data.Shared.Models
 @using Emergence.Client.Components
 @using Emergence.Client.Pages.Specimens
@@ -9,74 +10,89 @@
 @if (User != null)
 {
     <div class="card-header h3">
-        <span class="font-italic">@DisplayName</span>
+        <span class="font-italic">@User.DisplayName</span>
     </div>
     <div class="group">
         <div class="row">
             <div class="col-lg-6 col-xs">
-                @if (!string.IsNullOrEmpty(User.DisplayName))
+                <div>
+                    <label for="name">Name</label>
+                </div>
+                <div>
+                    <span class="text-body">@(User.DisplayName)</span>
+                </div>
+            </div>
+            @if (User.ProfileVisibility == Visibility.Contacts && !User.IsViewerContact)
+            {
+                <div class="col-lg-12 col-xs" style="padding: 1em; text-align: center;">
+                    <span class="text-body">This profile is visible to @User.DisplayName's contacts only.</span>
+                </div>
+            }
+            else if (User.ProfileVisibility == Visibility.Hidden)
+            {
+                <div class="col-lg-12 col-xs" style="padding: 1em; text-align: center;">
+                    <span class="text-body">This profile is set to hidden.</span>
+                </div>
+            }
+            else
+            {
+                @if (!string.IsNullOrEmpty(User.Location?.CityState))
                 {
-                    <div class="col">
+                    <div class="col-lg-6 col-xs">
                         <div>
-                            <label for="name">Name</label>
+                            <label for="name">Location</label>
                         </div>
                         <div>
-                            <span class="text-body">@(User.DisplayName)</span>
+                            <span class="text-body">@User.Location?.CityState</span>
                         </div>
                     </div>
                 }
-                <div class="col">
-                    <div>
-                        <label for="name">Location</label>
+                @if (!string.IsNullOrEmpty(User.Bio))
+                {
+                    <div class="col-lg-6 col-xs">
+                        <div>
+                            <label for="name">Bio</label>
+                        </div>
+                        <div style="overflow: auto; width: 100%;">
+                            <span class="text-body">@User.Bio</span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="text-body">@User.Location?.CityState</span>
+                }
+                <div class="col-lg-6 col-xs">
+                    <div style="padding-top: 1em;">
+                        @if (User.Photo != null)
+                        {
+                            <img srcset="@(User.Photo.LargeUri) 2x, @(User.Photo.MediumUri) 1x" src="@(User.Photo.OriginalUri)"
+                                 onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.DisplayName)"
+                                 style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="275" height="275" viewBox="0 0 275 275">
+                                <rect fill="#FFF" width="275" height="275" />
+                                <text fill="#000" font-family="Arial" font-size="1em" dy="1" font-weight="bold" x="50%" y="50%" text-anchor="middle">No photo</text>
+                            </svg>
+                        }
+
                     </div>
                 </div>
-                <div class="col">
-                    <div>
-                        <label for="name">Bio</label>
-                    </div>
-                    <div>
-                        <span class="text-body">@User.Bio</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5 col-xs">
-                <div style="padding-top: 1em;">
-                    @if (User.Photo != null)
-                    {
-                    <img srcset="@(User.Photo.LargeUri) 2x, @(User.Photo.MediumUri) 1x" src="@(User.Photo.OriginalUri)"
-                         onerror="this.onerror=null;this.srcset='';this.src='@(User.Photo.OriginalUri)'" alt="Uploaded photo of @(User.DisplayName)"
-                         style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
-                    }
-                    else
-                    {
-                        <svg xmlns="http://www.w3.org/2000/svg" width="275" height="275" viewBox="0 0 275 275">
-                            <rect fill="#FFF" width="275" height="275" />
-                            <text fill="#000" font-family="Arial" font-size="1em" dy="1" font-weight="bold" x="50%" y="50%" text-anchor="middle">No photo</text>
-                        </svg>
-                    }
-                    
-                </div>
-            </div>
+            }
         </div>
     </div>
-    @if (!string.IsNullOrEmpty(UserId))
+    @if (!string.IsNullOrEmpty(User.UserId))
     {
-    <div class="group">
-        <div class="row">
-            <div class="form-group">
-                <div class="col">
-                    <label for="specimens">@(DisplayName)'s Specimens</label>
-                    <ListSpecimens ForUserId="@User.UserId.ToString()" LinkRelations="false" />
+        <div class="group">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col">
+                        <label for="specimens">@(User.DisplayName)'s Specimens</label>
+                        <ListSpecimens ForUserId="@User.UserId.ToString()" LinkRelations="false" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     }
 }
 
 @code {
-    private string DisplayName => User.DisplayName ?? "Anonymous user";
 }

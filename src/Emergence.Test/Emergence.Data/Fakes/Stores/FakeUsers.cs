@@ -73,7 +73,7 @@ namespace Emergence.Test.Data.Fakes.Stores
         public static User GetContact() => new User
         {
             Id = 3,
-            UserId = Helpers.PrivateUserId,
+            UserId = Helpers.ContactUserId,
             FirstName = "Mr.",
             LastName = "Belvedere",
             Photo = FakePhotos.Get().First().AsModel("https://blobs.com/photos/").AsStore(),

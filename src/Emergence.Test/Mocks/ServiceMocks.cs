@@ -100,7 +100,7 @@ namespace Emergence.Test.Mocks
             mockUserService.Setup(u => u.GetUserAsync(It.IsAny<string>()))
                 .ReturnsAsync((string userId) => result.FirstOrDefault(u => u.UserId == userId));
 
-            mockUserService.Setup(u => u.GetUserByNameAsync(It.IsAny<string>()))
+            mockUserService.Setup(u => u.GetUserByNameAsync(It.IsAny<string>(), It.IsAny<User>()))
                 .ReturnsAsync((string name) => result.FirstOrDefault(u => u.DisplayName == name));
 
             mockUserService.Setup(u => u.GetUserIdAsync(It.IsAny<string>()))

@@ -109,5 +109,19 @@ namespace Emergence.Data.Shared.Extensions
                                          (c.Visibility == Visibility.Contacts &&
                                           c.User.Contacts != null &&
                                           c.User.Contacts.Any(c => c.ContactUserId == user.Id)))));
+
+        public static IQueryable<User> CanViewUsers(this IQueryable<User> users, Models.User user) =>
+            users = users.Where(u => u.UserId == user.UserId || u.ProfileVisibility == Visibility.Public ||
+                                     // Contacts
+                                     (u.ProfileVisibility == Visibility.Contacts &&
+                                      u.Contacts != null &&
+                                      u.Contacts.Any(c => c.ContactUserId == user.Id)));
+
+        public static bool CanViewUser(this Models.User requestor, User user) =>
+            user.UserId == requestor.UserId || user.ProfileVisibility == Visibility.Public ||
+            // Contacts
+            (user.ProfileVisibility == Visibility.Contacts &&
+             user.Contacts != null &&
+             user.Contacts.Any(c => c.ContactUserId == requestor.Id));
     }
 }
