@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +12,13 @@ namespace Emergence.API.Controllers
     public class UserController : BaseAPIController
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IUserContactService _userContactService;
+        private readonly IPhotoService _photoService;
+        public UserController(IUserService userService, IUserContactService userContactService, IPhotoService photoService)
         {
             _userService = userService;
+            _userContactService = userContactService;
+            _photoService = photoService;
         }
 
         [HttpGet]
@@ -35,7 +41,42 @@ namespace Emergence.API.Controllers
                 user = await _userService.GetUserByNameAsync(name, viewingUser);
             }
 
-            return user ?? new User { DisplayName = "Anonymous user" };
+            return await GetVisibleUser(user, viewingUser);
+        }
+
+        private async Task<User> GetVisibleUser(User user, User requestor)
+        {
+            if (user != null)
+            {
+                user = await _userContactService.GetUserContactStatusAsync(requestor, user);
+
+                if (!requestor.CanViewUser(user))
+                {
+                    user = new User
+                    {
+                        Id = user.Id,
+                        UserId = user.UserId,
+                        DisplayName = user.DisplayName,
+                        Photo = user.Photo,
+                        ProfileVisibility = user.ProfileVisibility,
+                        Contacts = user.Contacts,
+                        ContactRequests = user.ContactRequests
+                    };
+                }
+
+                if (user.Photo != null)
+                {
+                    var photo = await _photoService.GetPhotoAsync(user.Photo.PhotoId);
+                    user.Photo = photo;
+                }
+
+                user.IsViewerContact = user.Contacts != null && user.Contacts.Any(c => c.ContactUserId == requestor.Id);
+                user.IsViewerContactRequested = user.ContactRequests != null && user.ContactRequests.Any(c => c.ContactUserId == requestor.Id);
+
+                return user;
+            }
+
+            return null;
         }
     }
 }

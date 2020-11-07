@@ -10,7 +10,27 @@
 @if (User != null)
 {
     <div class="card-header h3">
-        <span class="font-italic">@User.DisplayName</span>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-xs-6">
+                    <span class="font-italic">@User.DisplayName</span>
+                </div>
+                <div class="col-lg-4 col-xs-6 h6" style="text-align: right;">
+                    @if (User.IsViewerContact)
+                    {
+                        <span class="text-body">You are a contact</span>
+                    }
+                    else if (User.IsViewerContactRequested)
+                    {
+                        <span class="text-body">Contact request sent</span>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="AddContact"><span class="oi oi-plus btn-oi"></span>Contact</button>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
     <div class="group">
         <div class="row">

@@ -36,5 +36,6 @@ namespace Emergence.Client.Common
         Task<User> GetUserByNameAsync(string name);
         Task<bool> RemoveActivityAsync(Activity activity);
         Task<bool> RemovePlantInfoAsync(PlantInfo plantInfo);
+        Task<UserContactRequest> AddContactRequestAsync(UserContactRequest userContactRequest);
     }
 }

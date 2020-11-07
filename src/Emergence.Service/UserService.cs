@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
@@ -15,17 +14,15 @@ namespace Emergence.Service
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<DisplayName> _nameRepository;
         private readonly IPhotoService _photoService;
-        private readonly IUserContactService _userContactService;
         private readonly ILocationService _locationService;
         private readonly ICacheService _cacheService;
 
         public UserService(IRepository<User> userRepository, IRepository<DisplayName> nameRepository, IPhotoService photoService, ILocationService locationService,
-            ICacheService cacheService, IUserContactService userContactService)
+            ICacheService cacheService)
         {
             _userRepository = userRepository;
             _nameRepository = nameRepository;
             _photoService = photoService;
-            _userContactService = userContactService;
             _locationService = locationService;
             _cacheService = cacheService;
         }
@@ -34,7 +31,7 @@ namespace Emergence.Service
         {
             var user = await _userRepository.GetWithIncludesAsync(u => u.Id == id, false, u => u.Include(u => u.Location));
 
-            return await GetVisibleUser(user, requestor);
+            return user.AsModel();
         }
 
         public async Task<Data.Shared.Models.User> GetUserAsync(string userId)
@@ -63,7 +60,7 @@ namespace Emergence.Service
         {
             var user = await _userRepository.GetWithIncludesAsync(u => u.DisplayName == name, false, u => u.Include(u => u.Location));
 
-            return await GetVisibleUser(user, requestor);
+            return user.AsModel();
         }
 
         public async Task<int?> GetUserIdAsync(string userId)
@@ -125,54 +122,6 @@ namespace Emergence.Service
         {
             var result = await _nameRepository.GetAsync(n => true);
             return result.Name;
-        }
-
-        private async Task<Data.Shared.Models.User> GetVisibleUser(User user, Data.Shared.Models.User requestor)
-        {
-            Data.Shared.Models.User userModel;
-            Data.Shared.Models.UserContact userContact = null;
-            if (user != null)
-            {
-                if (user.ProfileVisibility == Data.Shared.Visibility.Contacts)
-                {
-                    userContact = await _userContactService.GetUserContact(requestor, user);
-                    if (userContact != null)
-                    {
-                        user.Contacts = new List<UserContact>
-                        {
-                            userContact.AsStore()
-                        };
-                    }
-                }
-
-                if (requestor.CanViewUser(user))
-                {
-                    userModel = user.AsModel();
-                }
-                else
-                {
-                    userModel = new Data.Shared.Models.User
-                    {
-                        Id = user.Id,
-                        UserId = user.UserId,
-                        DisplayName = user.DisplayName,
-                        Photo = user.Photo?.AsModel(),
-                        ProfileVisibility = user.ProfileVisibility
-                    };
-                }
-
-                if (userModel.Photo != null)
-                {
-                    var photo = await _photoService.GetPhotoAsync(user.PhotoId.Value);
-                    userModel.Photo = photo;
-                }
-
-                userModel.IsViewerContact = userContact != null;
-
-                return userModel;
-            }
-
-            return null;
         }
     }
 }

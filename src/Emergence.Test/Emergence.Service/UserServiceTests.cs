@@ -36,7 +36,6 @@ namespace Emergence.Test.Emergence.Service
             user.DateCreated.Should().BeBefore(DateTime.UtcNow);
             user.FirstName.Should().Be("Daria");
             user.Location.StateOrProvince.Should().Be("GA");
-            user.Photo.OriginalUri.Should().Be("https://blobs.com/photos/" + user.Photo.BlobPath + "/1.png");
             user.ProfileVisibility.Should().Be(Visibility.Public);
             user.ActivityVisibility.Should().Be(Visibility.Public);
             user.OriginVisibility.Should().Be(Visibility.Public);

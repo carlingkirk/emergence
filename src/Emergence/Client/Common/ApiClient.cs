@@ -252,6 +252,13 @@ namespace Emergence.Client.Common
             return true;
         }
 
+        public async Task<UserContactRequest> AddContactRequestAsync(UserContactRequest userContactRequest)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/usercontact/request", userContactRequest);
+
+            return await ReadResult<UserContactRequest>(result);
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)
@@ -277,5 +284,7 @@ namespace Emergence.Client.Common
                 throw new Exception(result.StatusCode + ": " + message);
             }
         }
+
+
     }
 }

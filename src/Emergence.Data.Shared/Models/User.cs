@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Models
@@ -28,6 +29,9 @@ namespace Emergence.Data.Shared.Models
         public Photo Photo { get; set; }
         public Location Location { get; set; }
 
+        public IEnumerable<UserContact> Contacts { get; set; }
+        public IEnumerable<UserContactRequest> ContactRequests { get; set; }
         public bool IsViewerContact { get; set; }
+        public bool IsViewerContactRequested { get; set; }
     }
 }

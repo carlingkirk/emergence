@@ -27,5 +27,14 @@ namespace Emergence.Client.Components
                 User ??= await ApiClient.GetUserByNameAsync(Name);
             }
         }
+
+        protected async Task AddContact()
+        {
+            var userContactRequest = await ApiClient.AddContactRequestAsync(new UserContactRequest { UserId = User.Id });
+            if (userContactRequest != null)
+            {
+                User.IsViewerContactRequested = true;
+            }
+        }
     }
 }

@@ -6,12 +6,12 @@ namespace Emergence.Service.Interfaces
 {
     public interface IUserContactService
     {
-        public Task<UserContact> GetUserContact(User requestor, Data.Shared.Stores.User user);
-        public Task<IEnumerable<UserContact>> GetUserContacts(int userId);
-        public Task<IEnumerable<UserContactRequest>> GetUserContactRequests(int userId);
-        public Task<UserContact> AddUserContact(UserContactRequest request);
-        public Task<bool> RemoveUserContactRequest(int id);
-        public Task<bool> RemoveUserContact(int id);
-        public Task<UserContactRequest> AddUserContactRequest(UserContactRequest userContact);
+        public Task<User> GetUserContactStatusAsync(User requestor, User user);
+        public Task<IEnumerable<UserContact>> GetUserContactsAsync(int userId);
+        public Task<IEnumerable<UserContactRequest>> GetUserContactRequestsAsync(int userId);
+        public Task<UserContact> AddUserContactAsync(UserContactRequest request);
+        public Task<bool> RemoveUserContactRequestAsync(int id);
+        public Task<bool> RemoveUserContactAsync(int id);
+        public Task<UserContactRequest> AddUserContactRequestAsync(UserContactRequest userContact);
     }
 }

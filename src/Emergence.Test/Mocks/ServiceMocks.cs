@@ -118,6 +118,29 @@ namespace Emergence.Test.Mocks
             return mockUserService;
         }
 
+        public static Mock<IUserContactService> GetStandardMockUserContactService(IEnumerable<UserContact> contactResult = null, IEnumerable<UserContactRequest> contactRequestResult = null)
+        {
+            if (contactResult == null)
+            {
+                contactResult = FakeUserContacts.GetContacts().Select(u => u.AsModel());
+            }
+
+            if (contactRequestResult == null)
+            {
+                contactRequestResult = FakeUserContacts.GetContactRequests().Select(u => u.AsModel());
+            }
+
+            var mockUserContactService = new Mock<IUserContactService>();
+
+            mockUserContactService.Setup(uc => uc.GetUserContactsAsync(It.IsAny<int>()))
+                .ReturnsAsync(contactResult);
+
+            mockUserContactService.Setup(uc => uc.GetUserContactStatusAsync(It.IsAny<User>(), It.IsAny<User>()))
+                .ReturnsAsync((User user, User requestor) => user);
+
+            return mockUserContactService;
+        }
+
         public static Mock<ICacheService> GetStandardMockCacheService(Dictionary<string, string> keyValues = null)
         {
             var mockCacheService = new Mock<ICacheService>();

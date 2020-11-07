@@ -14,21 +14,43 @@ namespace Emergence.Service
     {
         private readonly IRepository<UserContact> _userContactRepository;
         private readonly IRepository<UserContactRequest> _userContactRequestRepository;
+
         public UserContactService(IRepository<UserContact> userContactRepository, IRepository<UserContactRequest> userContactRequestRepository)
         {
             _userContactRepository = userContactRepository;
             _userContactRequestRepository = userContactRequestRepository;
         }
 
-        public async Task<Data.Shared.Models.UserContact> GetUserContact(Data.Shared.Models.User requestor, User user)
+        public async Task<Data.Shared.Models.User> GetUserContactStatusAsync(Data.Shared.Models.User requestor, Data.Shared.Models.User user)
         {
             var userContact = await _userContactRepository.Where(uc => uc.UserId == user.Id && uc.ContactUserId == requestor.Id)
                 .FirstOrDefaultAsync();
 
-            return userContact.AsModel();
+            if (userContact != null)
+            {
+                user.Contacts = new List<Data.Shared.Models.UserContact>
+                {
+                    userContact.AsModel()
+                };
+            }
+            else
+            {
+                var userContactRequest = await _userContactRequestRepository.Where(uc => uc.UserId == user.Id && uc.ContactUserId == requestor.Id)
+                    .FirstOrDefaultAsync();
+
+                if (userContactRequest != null)
+                {
+                    user.ContactRequests = new List<Data.Shared.Models.UserContactRequest>
+                    {
+                        userContactRequest.AsModel()
+                    };
+                }
+            }
+
+            return user;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.UserContact>> GetUserContacts(int userId)
+        public async Task<IEnumerable<Data.Shared.Models.UserContact>> GetUserContactsAsync(int userId)
         {
             var userContacts = new List<Data.Shared.Models.UserContact>();
             var userContactResult = _userContactRepository.GetSomeAsync(uc => uc.UserId == userId);
@@ -41,7 +63,7 @@ namespace Emergence.Service
             return userContacts;
         }
 
-        public async Task<IEnumerable<Data.Shared.Models.UserContactRequest>> GetUserContactRequests(int userId)
+        public async Task<IEnumerable<Data.Shared.Models.UserContactRequest>> GetUserContactRequestsAsync(int userId)
         {
             var userContactRequests = new List<Data.Shared.Models.UserContactRequest>();
             var userContactRequestResult = _userContactRequestRepository.GetSomeAsync(uc => uc.UserId == userId);
@@ -54,7 +76,7 @@ namespace Emergence.Service
             return userContactRequests;
         }
 
-        public async Task<Data.Shared.Models.UserContact> AddUserContact(Data.Shared.Models.UserContactRequest request)
+        public async Task<Data.Shared.Models.UserContact> AddUserContactAsync(Data.Shared.Models.UserContactRequest request)
         {
             var userContactRequest = await _userContactRequestRepository.GetAsync(ucr => ucr.Id == request.Id);
 
@@ -77,7 +99,7 @@ namespace Emergence.Service
             return null;
         }
 
-        public async Task<Data.Shared.Models.UserContactRequest> AddUserContactRequest(Data.Shared.Models.UserContactRequest request)
+        public async Task<Data.Shared.Models.UserContactRequest> AddUserContactRequestAsync(Data.Shared.Models.UserContactRequest request)
         {
             var userContactResult = await _userContactRequestRepository.AddOrUpdateAsync(uc => uc.UserId == request.UserId &&
                                                                                                uc.ContactUserId == request.ContactUserId,
@@ -86,7 +108,7 @@ namespace Emergence.Service
             return userContactResult.AsModel();
         }
 
-        public async Task<bool> RemoveUserContactRequest(int id)
+        public async Task<bool> RemoveUserContactRequestAsync(int id)
         {
             var userContactRequest = await _userContactRequestRepository.GetAsync(ucr => ucr.Id == id);
 
@@ -98,7 +120,7 @@ namespace Emergence.Service
             return await _userContactRequestRepository.RemoveAsync(userContactRequest);
         }
 
-        public async Task<bool> RemoveUserContact(int id)
+        public async Task<bool> RemoveUserContactAsync(int id)
         {
             var userContactResult = await _userContactRepository.GetAsync(uc => uc.Id == id);
 
