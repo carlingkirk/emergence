@@ -32,6 +32,8 @@ namespace Emergence.Data.Shared.Stores
 
         public IEnumerable<UserContact> OthersContacts { get; set; }
         public IEnumerable<UserContact> Contacts { get; set; }
+        public IEnumerable<UserContactRequest> OthersContactRequests { get; set; }
+        public IEnumerable<UserContactRequest> ContactRequests { get; set; }
         public IEnumerable<Activity> Activities { get; set; }
         public IEnumerable<InventoryItem> InventoryItems { get; set; }
         public IEnumerable<Origin> Origins { get; set; }

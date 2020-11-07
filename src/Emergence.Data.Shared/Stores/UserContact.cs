@@ -1,8 +1,9 @@
 using System;
+using Emergence.Data.Shared.Interfaces;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class UserContact
+    public class UserContact : IContact
     {
         public int Id { get; set; }
         public int UserId { get; set; }

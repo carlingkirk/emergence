@@ -37,6 +37,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<Synonym> Synonyms { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserContact> UserContacts { get; set; }
+        public virtual DbSet<UserContactRequest> UserContactRequests { get; set; }
         public virtual DbSet<DisplayName> DisplayNames { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -64,6 +65,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Synonym>().HasKey(i => i.Id);
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<UserContact>().HasKey(u => u.Id);
+            modelBuilder.Entity<UserContactRequest>().HasKey(u => u.Id);
             modelBuilder.Entity<DisplayName>().HasNoKey().ToView("DisplayNames").Property(v => v.Name).HasColumnName("Name");
 
             modelBuilder.Entity<User>().HasIndex(u => u.UserId).IsUnique();
@@ -72,6 +74,9 @@ namespace Emergence.Data.Repository
 
             modelBuilder.Entity<User>().HasMany(u => u.Contacts).WithOne().HasForeignKey(u => u.UserId);
             modelBuilder.Entity<User>().HasMany(u => u.OthersContacts).WithOne().HasForeignKey(u => u.ContactUserId);
+
+            modelBuilder.Entity<User>().HasMany(u => u.ContactRequests).WithOne().HasForeignKey(u => u.UserId);
+            modelBuilder.Entity<User>().HasMany(u => u.OthersContactRequests).WithOne().HasForeignKey(u => u.ContactUserId);
         }
     }
 }
