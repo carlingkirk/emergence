@@ -11,7 +11,9 @@ namespace Emergence.Data.Shared.Extensions
             UserId = source.UserId,
             ContactUserId = source.ContactUserId.Value,
             DateAccepted = source.DateAccepted,
-            DateRequested = source.DateRequested
+            DateRequested = source.DateRequested,
+            User = source.User?.AsSummaryModel(),
+            ContactUser = source.ContactUser?.AsSummaryModel()
         };
 
         public static UserContact AsStore(this Models.UserContact source) => new UserContact
@@ -28,7 +30,9 @@ namespace Emergence.Data.Shared.Extensions
             Id = source.Id,
             UserId = source.UserId,
             ContactUserId = source.ContactUserId,
-            DateRequested = source.DateRequested
+            DateRequested = source.DateRequested,
+            User = source.User?.AsSummaryModel(),
+            ContactUser = source.ContactUser?.AsSummaryModel()
         };
 
         public static UserContactRequest AsStore(this Models.UserContactRequest source) => new UserContactRequest
@@ -45,7 +49,9 @@ namespace Emergence.Data.Shared.Extensions
             UserId = source.UserId,
             ContactUserId = source.ContactUserId.Value,
             DateAccepted = dateAccepted,
-            DateRequested = source.DateRequested
+            DateRequested = source.DateRequested,
+            User = source.User,
+            ContactUser = source.ContactUser
         };
     }
 }

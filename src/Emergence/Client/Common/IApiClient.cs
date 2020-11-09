@@ -37,5 +37,7 @@ namespace Emergence.Client.Common
         Task<bool> RemoveActivityAsync(Activity activity);
         Task<bool> RemovePlantInfoAsync(PlantInfo plantInfo);
         Task<UserContactRequest> AddContactRequestAsync(UserContactRequest userContactRequest);
+        Task<FindResult<UserContact>> FindContactsAsync(FindParams findParams);
+        Task<FindResult<UserContactRequest>> FindContactRequestsAsync(FindParams findParams);
     }
 }

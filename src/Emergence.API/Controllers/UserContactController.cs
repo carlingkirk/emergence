@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,24 @@ namespace Emergence.API.Controllers
             userContactRequest.DateRequested = DateTime.UtcNow;
 
             return await _userContactService.AddUserContactRequestAsync(userContactRequest);
+        }
+
+        [HttpPost]
+        [Route("find")]
+        public async Task<FindResult<UserContact>> FindUserContacts(FindParams findParams)
+        {
+            var result = await _userContactService.FindUserContacts(findParams, UserId);
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("request/find")]
+        public async Task<FindResult<UserContactRequest>> FindUserContactRequests(FindParams findParams)
+        {
+            var result = await _userContactService.FindUserContactRequests(findParams, UserId);
+
+            return result;
         }
 
         [HttpDelete]

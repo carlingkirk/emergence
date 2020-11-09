@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
+using Emergence.Data.Extensions;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
@@ -130,6 +134,115 @@ namespace Emergence.Service
             }
 
             return await _userContactRepository.RemoveAsync(userContactResult);
+        }
+
+        public async Task<FindResult<Data.Shared.Models.UserContact>> FindUserContacts(FindParams findParams, string userId)
+        {
+            var userContactQuery = _userContactRepository.WhereWithIncludes(uc => uc.User.UserId == userId &&
+                                                                                  (findParams.SearchTextQuery == null ||
+                                                                                   EF.Functions.Like(uc.ContactUser.DisplayName, findParams.SearchTextQuery)),
+                                                                            false,
+                                                                            uc => uc.Include(uc => uc.User),
+                                                                            uc => uc.Include(uc => uc.ContactUser));
+
+            userContactQuery = OrderBy(userContactQuery, findParams.SortBy, findParams.SortDirection);
+
+            var count = userContactQuery.Count();
+            var userContactResult = userContactQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+
+            var userContacts = new List<Data.Shared.Models.UserContact>();
+            await foreach (var userContact in userContactResult)
+            {
+                userContacts.Add(userContact.AsModel());
+            }
+
+            return new FindResult<Data.Shared.Models.UserContact>
+            {
+                Count = count,
+                Results = userContacts
+            };
+        }
+
+        public async Task<FindResult<Data.Shared.Models.UserContactRequest>> FindUserContactRequests(FindParams findParams, string userId)
+        {
+            var userContactQuery = _userContactRequestRepository.WhereWithIncludes(uc => uc.User.UserId == userId &&
+                                                                                  (findParams.SearchTextQuery == null ||
+                                                                                   EF.Functions.Like(uc.ContactUser.DisplayName, findParams.SearchTextQuery)),
+                                                                                   false,
+                                                                                   uc => uc.Include(uc => uc.User).Include(uc => uc.ContactUser));
+
+            userContactQuery = OrderBy(userContactQuery, findParams.SortBy, findParams.SortDirection);
+
+            var count = userContactQuery.Count();
+            var userContactResult = userContactQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+
+            var userContacts = new List<Data.Shared.Models.UserContactRequest>();
+            await foreach (var userContact in userContactResult)
+            {
+                userContacts.Add(userContact.AsModel());
+            }
+
+            return new FindResult<Data.Shared.Models.UserContactRequest>
+            {
+                Count = count,
+                Results = userContacts
+            };
+        }
+
+        private IQueryable<UserContact> OrderBy(IQueryable<UserContact> userContactQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
+        {
+            if (sortDirection == SortDirection.None)
+            {
+                return userContactQuery;
+            }
+            if (sortBy == null)
+            {
+                sortBy = "DisplayName";
+            }
+            var userContactSorts = new Dictionary<string, Expression<Func<UserContact, object>>>
+            {
+                { "DisplayName", uc => uc.ContactUser.DisplayName },
+                { "DateAccepted", uc => uc.DateAccepted }
+            };
+
+            if (sortDirection == SortDirection.Descending)
+            {
+                userContactQuery = userContactQuery.WithOrder(a => a.OrderByDescending(userContactSorts[sortBy]));
+            }
+            else
+            {
+                userContactQuery = userContactQuery.WithOrder(a => a.OrderBy(userContactSorts[sortBy]));
+            }
+
+            return userContactQuery;
+        }
+
+        private IQueryable<UserContactRequest> OrderBy(IQueryable<UserContactRequest> userContactQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
+        {
+            if (sortDirection == SortDirection.None)
+            {
+                return userContactQuery;
+            }
+            if (sortBy == null)
+            {
+                sortBy = "DisplayName";
+            }
+            var userContactSorts = new Dictionary<string, Expression<Func<UserContactRequest, object>>>
+            {
+                { "DisplayName", uc => uc.ContactUser.DisplayName },
+                { "DateRequested", uc => uc.DateRequested }
+            };
+
+            if (sortDirection == SortDirection.Descending)
+            {
+                userContactQuery = userContactQuery.WithOrder(a => a.OrderByDescending(userContactSorts[sortBy]));
+            }
+            else
+            {
+                userContactQuery = userContactQuery.WithOrder(a => a.OrderBy(userContactSorts[sortBy]));
+            }
+
+            return userContactQuery;
         }
     }
 }

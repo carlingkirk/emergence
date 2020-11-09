@@ -10,5 +10,8 @@ namespace Emergence.Data.Shared.Models
         public int? ContactUserId { get; set; }
         public DateTime DateRequested { get; set; }
         public DateTime DateAccepted { get; set; }
+
+        public UserSummary User { get; set; }
+        public UserSummary ContactUser { get; set; }
     }
 }

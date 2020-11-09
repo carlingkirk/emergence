@@ -1,0 +1,60 @@
+@page "/contacts"
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Enums
+@using Emergence.Data.Shared.Extensions
+@inject IModalServiceClient ModalServiceClient
+@inherits ListContactsComponent
+
+@if (!IsItemLoaded)
+{
+    <form @onsubmit="SearchAsync">
+        @if (ShowSearch)
+        {
+            <input type="text" @bind="SearchText" id="search" />
+            <button class="btn btn-primary" type="submit">Search</button>
+        }
+
+        @if (List != null)
+        {
+            <table>
+                <SortableHeaders HeaderNames="@(
+                            new Dictionary<string, string>
+                            {
+                                { "DisplayName", "Display Name" },
+                                { "DateAccepted", "Date Accepted" }
+                            })"
+                                Sort="SortAsync"
+                                @bind-Values="List" />
+                @if (!List.Any())
+                {
+                    <tr>
+                        <td>
+                            <span>No contacts found</span>
+                        </td>
+                    </tr>
+                }
+                @foreach (var contact in List)
+                {
+                    <tr>
+                        <td>
+                            <span @onclick="async () => await ModalServiceClient.ShowUserModal(contact.ContactUser)" class="link">@contact.ContactUser.DisplayName</span>
+                        </td>
+                        <td>
+                            <span>@contact.DateAccepted.ToLocalTime().ToShortDateString()</span>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div>
+                @if (List.Any())
+                {
+                    <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+                }
+            </div>
+        }
+    </form>
+}
+
+@code {
+
+}

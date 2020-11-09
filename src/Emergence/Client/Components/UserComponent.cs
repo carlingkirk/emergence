@@ -13,6 +13,8 @@ namespace Emergence.Client.Components
         public int Id { get; set; }
         [Parameter]
         public string Name { get; set; }
+        [Parameter]
+        public bool IsModal { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

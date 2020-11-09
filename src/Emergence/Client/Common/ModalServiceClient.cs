@@ -5,6 +5,7 @@ using Emergence.Client.Pages.Activities;
 using Emergence.Client.Pages.Origins;
 using Emergence.Client.Pages.PlantInfos;
 using Emergence.Client.Pages.Specimens;
+using Emergence.Client.Pages.Users;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
@@ -112,6 +113,16 @@ namespace Emergence.Client.Common
             modalParams.Add("SelectedSpecimen", specimen);
 
             var modal = _modalService.Show<ActivityViewer>("Activity", modalParams, DefaultModalOptions);
+            return await modal.Result;
+        }
+
+        public async Task<ModalResult> ShowUserModal(UserSummary user)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Id", user.Id);
+            modalParams.Add("IsModal", true);
+
+            var modal = _modalService.Show<ViewUser>("User", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
     }

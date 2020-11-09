@@ -77,6 +77,12 @@ namespace Emergence.Data.Repository
 
             modelBuilder.Entity<User>().HasMany(u => u.ContactRequests).WithOne().HasForeignKey(u => u.UserId);
             modelBuilder.Entity<User>().HasMany(u => u.OthersContactRequests).WithOne().HasForeignKey(u => u.ContactUserId);
+
+            modelBuilder.Entity<UserContact>().HasOne(uc => uc.User).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContact>(uc => uc.UserId);
+            modelBuilder.Entity<UserContact>().HasOne(uc => uc.ContactUser).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContact>(uc => uc.ContactUserId);
+
+            modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.User).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContactRequest>(uc => uc.UserId);
+            modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.ContactUser).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContactRequest>(uc => uc.ContactUserId);
         }
     }
 }
