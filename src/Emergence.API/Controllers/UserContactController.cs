@@ -64,7 +64,7 @@ namespace Emergence.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<bool> RemoveUserContact(int id) => await _userContactService.RemoveUserContactRequestAsync(id);
+        public async Task<bool> RemoveUserContact(int id) => await _userContactService.RemoveUserContactAsync(id);
 
         [HttpDelete]
         [Route("request/{id}")]

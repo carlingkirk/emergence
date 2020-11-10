@@ -13,46 +13,53 @@
 
         @if (List != null)
         {
-            <table>
-                <SortableHeaders HeaderNames="@(
+    <div class="group">
+        <table>
+            <SortableHeaders HeaderNames="@(
                             new Dictionary<string, string>
                             {
                                 { "DisplayName", "Display Name" },
                                 { "DateRequested", "Date Requested" }
                             })"
-                                 Sort="SortAsync"
-                                 @bind-Values="List" />
-                @if (!List.Any())
-                {
-                    <tr>
-                        <td>
-                            <span>No contact requests found</span>
-                        </td>
-                    </tr>
-                }
-                @foreach (var contact in List)
-                {
-                    <tr>
-                        <td>
-                            <a href="" @onclick="async () => await ModalServiceClient.ShowUserModal(contact.ContactUser)" @onclick:preventDefault>
-                                <UserDisplay User="contact.ContactUser" />
-                            </a>
-                        </td>
-                        <td>
-                            <span>@contact.DateRequested.ToLocalTime().ToShortDateString()</span>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary" @onclick="async () => await AddContactAsync(contact)"><span class="oi oi-plus btn-oi"></span>Add to Contacts</button>
-                        </td>
-                    </tr>
-                }
-            </table>
-            <div>
-                @if (List.Any())
-                {
-                    <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
-                }
-            </div>
+                             Sort="SortAsync"
+                             @bind-Values="List" />
+            @if (!List.Any())
+            {
+                <tr>
+                    <td>
+                        <span>No contact requests found</span>
+                    </td>
+                </tr>
+            }
+            @foreach (var contact in List)
+            {
+                <tr>
+                    <td style="padding: .5rem;">
+                        <a href="" @onclick="async () => await ModalServiceClient.ShowUserModal(contact.ContactUser)" @onclick:preventDefault>
+                            <UserDisplay User="contact.ContactUser" Size="35" />
+                        </a>
+                    </td>
+                    <td>
+                        <span>@contact.DateRequested.ToLocalTime().ToShortDateString()</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" @onclick="async () => await AddContactAsync(contact)"><span class="oi oi-plus btn-oi"></span>Accept</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-secondary" @onclick="async () => await RemoveContactRequestAsync(contact)">
+                            <span class="oi oi-x btn-oi"></span>Reject
+                        </button>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div>
+            @if (List.Any())
+            {
+                <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+            }
+        </div>
+    </div>
         }
     </form>
 }

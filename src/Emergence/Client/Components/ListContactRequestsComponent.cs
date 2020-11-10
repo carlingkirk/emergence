@@ -20,7 +20,19 @@ namespace Emergence.Client.Components
         protected async Task AddContactAsync(UserContactRequest userContactRequest)
         {
             var userContact = await ApiClient.AddContactAsync(userContactRequest);
-            await FindAsync();
+            if (userContact != null)
+            {
+                await FindAsync();
+            }
+        }
+
+        protected async Task RemoveContactRequestAsync(UserContactRequest userContactRequest)
+        {
+            var result = await ApiClient.RemoveContactRequestAsync(userContactRequest);
+            if (result)
+            {
+                await FindAsync();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
 
         @if (List != null)
         {
+        <div class="group">
             <table>
                 <SortableHeaders HeaderNames="@(
                             new Dictionary<string, string>
@@ -32,16 +33,19 @@
                 }
                 @foreach (var contact in List)
                 {
-                    <tr>
-                        <td>
-                            <a href="" @onclick="async () => await ModalServiceClient.ShowUserModal(contact.ContactUser)" @onclick:preventDefault>
-                                <UserDisplay User="contact.ContactUser" />
-                            </a>
-                        </td>
-                        <td>
-                            <span>@contact.DateAccepted.ToLocalTime().ToShortDateString()</span>
-                        </td>
-                    </tr>
+            <tr>
+                <td style="padding: .5rem;">
+                    <a href="" @onclick="async () => await ModalServiceClient.ShowUserModal(contact.ContactUser)" @onclick:preventDefault>
+                        <UserDisplay User="contact.ContactUser" Size="35" />
+                    </a>
+                </td>
+                <td>
+                    <span>@contact.DateAccepted.ToLocalTime().ToShortDateString()</span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-secondary" @onclick="async () => await RemoveContactAsync(contact)"><span class="oi oi-x btn-oi"></span>Remove</button>
+                </td>
+            </tr>
                 }
             </table>
             <div>
@@ -50,6 +54,7 @@
                     <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
                 }
             </div>
+        </div>
         }
     </form>
 }

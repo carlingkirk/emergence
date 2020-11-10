@@ -19,8 +19,8 @@ namespace Emergence.Client.Components
 
         protected async Task RemoveContactAsync(UserContact userContact)
         {
-            //TODO await ApiClient.RemoveContactAsync(userContact);
-            //TODO refresh list
+            await ApiClient.RemoveContactAsync(userContact);
+            await FindAsync();
         }
     }
 }

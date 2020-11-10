@@ -280,6 +280,24 @@ namespace Emergence.Client.Common
             return await ReadResult<UserContact>(result);
         }
 
+        public async Task<bool> RemoveContactAsync(UserContact userContact)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/usercontact/{userContact.Id}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
+        public async Task<bool> RemoveContactRequestAsync(UserContactRequest userContactRequest)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/usercontact/request/{userContactRequest.Id}");
+
+            var response = await ReadResult(result);
+
+            return true;
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)
@@ -305,7 +323,5 @@ namespace Emergence.Client.Common
                 throw new Exception(result.StatusCode + ": " + message);
             }
         }
-
-
     }
 }

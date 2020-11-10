@@ -15,8 +15,8 @@
         }
         else
         {
-            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 45 45" class="shadow-sm align-center avatar">
-                <rect fill="#A9A074" width="45" height="45" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="@Size" height="@Size" viewBox="0 0 @Size @Size" class="shadow-sm align-center avatar">
+                <rect fill="#A9A074" width="@Size" height="@Size" />
             </svg>
         }
         <span class="text-body" id="user">@(User.DisplayName)</span>
@@ -29,4 +29,17 @@
 
     [Parameter]
     public string Label { get; set; }
+
+    [Parameter]
+    public int? Size { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (!Size.HasValue)
+        {
+            Size = 45;
+        }
+
+        base.OnInitialized();
+    }
 }
