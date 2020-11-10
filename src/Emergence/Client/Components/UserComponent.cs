@@ -30,7 +30,7 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected async Task AddContact()
+        protected async Task AddContactRequestAsync()
         {
             var userContactRequest = await ApiClient.AddContactRequestAsync(new UserContactRequest { UserId = User.Id });
             if (userContactRequest != null)

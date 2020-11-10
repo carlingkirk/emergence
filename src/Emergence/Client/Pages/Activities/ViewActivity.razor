@@ -37,7 +37,7 @@
         @if (!string.IsNullOrEmpty(Activity.User?.DisplayName))
         {
             <div class="col-lg-4 col-xs">
-                <Conservator User="Activity.User" />
+                <UserDisplay Label="By" User="Activity.User" />
             </div>
         }
         <div class="col-lg-4 col-xs">

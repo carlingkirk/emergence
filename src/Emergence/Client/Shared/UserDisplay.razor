@@ -1,9 +1,12 @@
 @using Emergence.Data.Shared.Models
 @using Emergence.Data.Shared
 
-<div>
-    <label for="user">By</label>
-</div>
+@if (!string.IsNullOrEmpty(Label))
+{
+    <div>
+        <label for="user">@Label</label>
+    </div>
+}
 <div>
     <a href="/user/@(User.DisplayName)">
         @if (!string.IsNullOrEmpty(User.PhotoThumbnailUri))
@@ -12,7 +15,7 @@
         }
         else
         {
-            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 45 45" class="shadow-sm align-center avatar" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 45 45" class="shadow-sm align-center avatar">
                 <rect fill="#A9A074" width="45" height="45" />
             </svg>
         }
@@ -23,4 +26,7 @@
 @code {
     [Parameter]
     public UserSummary User { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
 }

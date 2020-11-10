@@ -16,5 +16,11 @@ namespace Emergence.Client.Components
                 Count = result.Count
             };
         }
+
+        protected async Task RemoveContactAsync(UserContact userContact)
+        {
+            //TODO await ApiClient.RemoveContactAsync(userContact);
+            //TODO refresh list
+        }
     }
 }

@@ -33,7 +33,7 @@
             @if (!string.IsNullOrEmpty(PlantInfo.User?.DisplayName))
             {
                 <div class="col-lg-4 col-xs">
-                    <Conservator User="PlantInfo.User" />
+                    <UserDisplay Label="By" User="PlantInfo.User" />
                 </div>
             }
         </div>

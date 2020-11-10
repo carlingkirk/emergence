@@ -332,3 +332,28 @@ span.link {
   padding: 15px;
   margin: 5px;
 }
+
+/* Tabs */
+
+li.active > .nav-link {
+  background-color: #56a51c;
+  border-color: #56a51c;
+  color: #fff;
+}
+
+.nav-link {
+  color: #212529;
+}
+
+.nav-tabs {
+  border: 0;
+  margin-left: .25rem;
+}
+
+  .nav-tabs .nav-link {
+    border-color: #d1d5da;
+  }
+
+.tab-pane > .group {
+    margin: 0;
+}

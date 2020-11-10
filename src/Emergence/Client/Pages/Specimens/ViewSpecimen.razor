@@ -28,7 +28,7 @@
             @if (!string.IsNullOrEmpty(Specimen.InventoryItem.User?.DisplayName))
             {
                 <div class="col-lg-4 col-xs">
-                    <Conservator User="Specimen.InventoryItem.User" />
+                    <UserDisplay Label="By" User="Specimen.InventoryItem.User" />
                 </div>
             }
             <div class="col-lg-4 col-xs">

@@ -1,0 +1,64 @@
+@page "/contacts"
+
+<ul class="nav nav-tabs">
+    @foreach (var tab in Tabs)
+    {
+        <li class="nav-item@(tab.Key == CurrentTab.Key ? " active" : "")">
+            <a class="nav-link" id="@(tab.Key)-tab" data-toggle="tab" href="#@(tab.Key)" role="tab" aria-controls="@(tab.Key)"
+               aria-selected="false" @onclick="() => SwitchTab(tab.Key)" @onclick:preventDefault>@(tab.Value)</a>
+        </li>
+    }
+</ul>
+
+<div class="tab-content" id="manage-contacts">
+    @if (CurrentTab.Key == "contacts")
+    {
+    <div class="tab-pane fade show active" id="contacts" role="tabpanel" aria-labelledby="contacts">
+        <div class="group">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col">
+                        <label for="specimens">Your Contacts</label>
+                        <ListContacts />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    else if (CurrentTab.Key == "contact-requests")
+    {
+    <div class="tab-pane fade show active" id="contact-requests" role="tabpanel" aria-labelledby="contact-requests">
+        <div class="group">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col">
+                        <label for="specimens">Your Contact Requests</label>
+                        <ListContactRequests />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+@code {
+    protected Dictionary<string, string> Tabs => new Dictionary<string, string>
+    {
+        { "contacts", "My Contacts" },
+        { "contact-requests", "My Contact Requests"}
+    };
+    protected KeyValuePair<string, string> CurrentTab { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CurrentTab = Tabs.First();
+        base.OnInitialized();
+    }
+
+    protected void SwitchTab(string tab)
+    {
+        CurrentTab = Tabs.First(t => t.Key == tab);
+    }
+}

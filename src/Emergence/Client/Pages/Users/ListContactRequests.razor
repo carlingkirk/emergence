@@ -1,6 +1,6 @@
 @using Emergence.Client.Components
 @inject IModalServiceClient ModalServiceClient
-@inherits ListContactsComponent
+@inherits ListContactRequestsComponent
 
 @if (!IsItemLoaded)
 {
@@ -18,15 +18,15 @@
                             new Dictionary<string, string>
                             {
                                 { "DisplayName", "Display Name" },
-                                { "DateAccepted", "Date Accepted" }
+                                { "DateRequested", "Date Requested" }
                             })"
-                                Sort="SortAsync"
-                                @bind-Values="List" />
+                                 Sort="SortAsync"
+                                 @bind-Values="List" />
                 @if (!List.Any())
                 {
                     <tr>
                         <td>
-                            <span>No contacts found</span>
+                            <span>No contact requests found</span>
                         </td>
                     </tr>
                 }
@@ -39,7 +39,10 @@
                             </a>
                         </td>
                         <td>
-                            <span>@contact.DateAccepted.ToLocalTime().ToShortDateString()</span>
+                            <span>@contact.DateRequested.ToLocalTime().ToShortDateString()</span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" @onclick="async () => await AddContactAsync(contact)"><span class="oi oi-plus btn-oi"></span>Add to Contacts</button>
                         </td>
                     </tr>
                 }

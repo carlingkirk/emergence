@@ -43,7 +43,7 @@
         @if (!string.IsNullOrEmpty(Origin.User?.DisplayName))
         {
             <div class="col-lg-3 col-xs">
-                <Conservator User="Origin.User" />
+                <UserDisplay Label="By" User="Origin.User" />
             </div>
         }
         @if (Origin.Uri != null)

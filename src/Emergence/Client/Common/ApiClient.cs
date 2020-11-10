@@ -273,6 +273,13 @@ namespace Emergence.Client.Common
             return await ReadResult<UserContactRequest>(result);
         }
 
+        public async Task<UserContact> AddContactAsync(UserContactRequest userContactRequest)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/usercontact", userContactRequest);
+
+            return await ReadResult<UserContact>(result);
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result)
         {
             if (result.IsSuccessStatusCode)

@@ -169,7 +169,8 @@ namespace Emergence.Service
                                                                                   (findParams.SearchTextQuery == null ||
                                                                                    EF.Functions.Like(uc.ContactUser.DisplayName, findParams.SearchTextQuery)),
                                                                                    false,
-                                                                                   uc => uc.Include(uc => uc.User).Include(uc => uc.ContactUser));
+                                                                                   uc => uc.Include(uc => uc.User),
+                                                                                   uc => uc.Include(uc => uc.ContactUser));
 
             userContactQuery = OrderBy(userContactQuery, findParams.SortBy, findParams.SortDirection);
 

@@ -45,7 +45,6 @@ namespace Emergence.Data.Shared.Extensions
 
         public static Models.UserContact AsUserContact(this Models.UserContactRequest source, DateTime dateAccepted) => new Models.UserContact
         {
-            Id = source.Id,
             UserId = source.UserId,
             ContactUserId = source.ContactUserId.Value,
             DateAccepted = dateAccepted,
