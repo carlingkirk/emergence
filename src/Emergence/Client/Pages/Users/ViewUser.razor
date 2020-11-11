@@ -11,10 +11,10 @@
 {
     <div class="card-header h3">
         <div class="row">
-            <div class="col-lg-8 col-6">
+            <div class="col-lg-8 col-xs">
                 <span class="font-italic">@User.DisplayName</span>
             </div>
-            <div class="col-lg-4 col-6" style="text-align: right;">
+            <div class="col-lg-4 col-xs" style="text-align: right;">
                 @if (User.UserId == UserId)
                 {
                     <span class="text-body">Your profile</span>
@@ -58,28 +58,28 @@
             }
             else
             {
+                <div class="col-lg-6 col-xs">
                 @if (!string.IsNullOrEmpty(User.Location?.CityState))
                 {
-                    <div class="col-lg-6 col-xs">
-                        <div>
-                            <label for="name">Location</label>
-                        </div>
-                        <div>
-                            <span class="text-body">@User.Location?.CityState</span>
-                        </div>
+                    <div>
+                        <label for="name">Location</label>
+                    </div>
+                    <div>
+                        <span class="text-body">@User.Location?.CityState</span>
                     </div>
                 }
+                </div>
+                <div class="col-lg-6 col-xs">
                 @if (!string.IsNullOrEmpty(User.Bio))
                 {
-                    <div class="col-lg-6 col-xs">
-                        <div>
-                            <label for="name">Bio</label>
-                        </div>
-                        <div style="overflow: auto; width: 100%;">
-                            <span class="text-body">@User.Bio</span>
-                        </div>
+                    <div>
+                        <label for="name">Bio</label>
+                    </div>
+                    <div style="overflow: auto; width: 100%;">
+                        <span class="text-body">@User.Bio</span>
                     </div>
                 }
+                </div>
                 <div class="col-lg-6 col-xs">
                     <div style="padding-top: 1em;">
                         @if (User.Photo != null)
@@ -90,7 +90,7 @@
                         }
                         else
                         {
-                            <svg xmlns="http://www.w3.org/2000/svg" width="275" height="275" viewBox="0 0 275 275">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 275 275" style="max-width:275px;max-height:275px" class="shadow-sm align-center">
                                 <rect fill="#FFF" width="275" height="275" />
                                 <text fill="#000" font-family="Arial" font-size="1em" dy="1" font-weight="bold" x="50%" y="50%" text-anchor="middle">No photo</text>
                             </svg>
