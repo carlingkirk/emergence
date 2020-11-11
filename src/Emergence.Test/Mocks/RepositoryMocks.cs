@@ -408,5 +408,101 @@ namespace Emergence.Test.Mocks
 
             return mockTaxonRepo;
         }
+
+        public static Mock<IRepository<UserContact>> GetStandardMockUserContactRepository(IEnumerable<UserContact> userContacts = null)
+        {
+            var random = new Random();
+            if (userContacts == null)
+            {
+                userContacts = Data.Fakes.Stores.FakeUserContacts.GetContacts();
+            }
+
+            var mockUserContacts = userContacts.AsQueryable().BuildMockDbSet().Object;
+            var mockUserContactRepo = new Mock<IRepository<UserContact>>();
+
+            mockUserContactRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<UserContact, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(mockUserContacts.ToAsyncEnumerable());
+
+            mockUserContactRepo.Setup(p => p.GetAsync(It.IsAny<Expression<Func<UserContact, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(mockUserContacts.FirstOrDefault());
+
+            mockUserContactRepo.Setup(p => p.AddSomeAsync(It.IsAny<IEnumerable<UserContact>>()))
+                .ReturnsAsync((IEnumerable<UserContact> userContacts) =>
+                {
+                    userContacts = userContacts.AsQueryable().ToList();
+                    foreach (var userContact in userContacts)
+                    {
+                        userContact.Id = random.Next(1, int.MaxValue);
+                    }
+                    return userContacts;
+                });
+
+            mockUserContactRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<UserContact, bool>>>(), It.IsAny<UserContact>()))
+                .ReturnsAsync((Expression<Func<UserContact, bool>> expr, UserContact userContact) =>
+                {
+                    userContact.Id = random.Next(1, int.MaxValue);
+
+                    return userContact;
+                });
+
+            mockUserContactRepo.Setup(p => p.Where(It.IsAny<Expression<Func<UserContact, bool>>>(), It.IsAny<bool>()))
+                .Returns(mockUserContacts);
+
+            mockUserContactRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<UserContact, bool>>>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<UserContact>, IIncludable>[]>()))
+                .Returns(mockUserContacts);
+
+            mockUserContactRepo.Setup(ucr => ucr.RemoveAsync(It.IsAny<UserContact>())).ReturnsAsync(true);
+
+            return mockUserContactRepo;
+        }
+
+        public static Mock<IRepository<UserContactRequest>> GetStandardMockUserContactRequestRepository(IEnumerable<UserContactRequest> userContactRequests = null)
+        {
+            var random = new Random();
+            if (userContactRequests == null)
+            {
+                userContactRequests = Data.Fakes.Stores.FakeUserContacts.GetContactRequests();
+            }
+
+            var mockUserContactRequests = userContactRequests.AsQueryable().BuildMockDbSet().Object;
+            var mockUserContactRequestRepo = new Mock<IRepository<UserContactRequest>>();
+
+            mockUserContactRequestRepo.Setup(ucr => ucr.GetSomeAsync(It.IsAny<Expression<Func<UserContactRequest, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
+                .Returns(mockUserContactRequests.ToAsyncEnumerable());
+
+            mockUserContactRequestRepo.Setup(ucr => ucr.GetAsync(It.IsAny<Expression<Func<UserContactRequest, bool>>>(), It.IsAny<bool>()))
+                .ReturnsAsync(mockUserContactRequests.FirstOrDefault());
+
+            mockUserContactRequestRepo.Setup(ucr => ucr.AddSomeAsync(It.IsAny<IEnumerable<UserContactRequest>>()))
+                .ReturnsAsync((IEnumerable<UserContactRequest> userContactRequests) =>
+                {
+                    userContactRequests = userContactRequests.AsQueryable().ToList();
+                    foreach (var userContactRequest in userContactRequests)
+                    {
+                        userContactRequest.Id = random.Next(1, int.MaxValue);
+                    }
+                    return userContactRequests;
+                });
+
+            mockUserContactRequestRepo.Setup(p => p.AddOrUpdateAsync(It.IsAny<Expression<Func<UserContactRequest, bool>>>(), It.IsAny<UserContactRequest>()))
+                .ReturnsAsync((Expression<Func<UserContactRequest, bool>> expr, UserContactRequest userContactRequest) =>
+                {
+                    userContactRequest.Id = random.Next(1, int.MaxValue);
+
+                    return userContactRequest;
+                });
+
+            mockUserContactRequestRepo.Setup(ucr => ucr.Where(It.IsAny<Expression<Func<UserContactRequest, bool>>>(), It.IsAny<bool>()))
+                .Returns(mockUserContactRequests);
+
+            mockUserContactRequestRepo.Setup(ucr => ucr.WhereWithIncludes(It.IsAny<Expression<Func<UserContactRequest, bool>>>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<UserContactRequest>, IIncludable>[]>()))
+                .Returns(mockUserContactRequests);
+
+            mockUserContactRequestRepo.Setup(ucr => ucr.RemoveAsync(It.IsAny<UserContactRequest>())).ReturnsAsync(true);
+
+            return mockUserContactRequestRepo;
+        }
     }
 }
