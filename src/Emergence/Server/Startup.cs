@@ -174,7 +174,6 @@ namespace Emergence.Server
             if (debugMode)
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
                 app.UseWebAssemblyDebugging();
             }
             else
