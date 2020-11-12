@@ -33,10 +33,10 @@
                         {
                             <td>
                                 <div>
-                                    <label for="">@crumb.Key</label>
+                                    <label for="@crumb.Key">@crumb.Key</label>
                                 </div>
                                 <div>
-                                    <span class="link" @onclick="async () => await NavigateAsync(crumb.Key)">@(crumb.Value.GetTaxonName(crumb.Key) + (crumb.Key < Rank ? " >" : ""))</span>
+                                    <span id="@crumb.Key" class="link" @onclick="async () => await NavigateAsync(crumb.Key)">@(crumb.Value.GetTaxonName(crumb.Key) + (crumb.Key < Rank ? " >" : ""))</span>
                                 </div>
                             </td>
                         }
