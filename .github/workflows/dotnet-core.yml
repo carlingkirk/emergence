@@ -1,4 +1,4 @@
-name: Build and test
+name: Build and test Emergence web
 
 on:
   push:
@@ -22,11 +22,11 @@ jobs:
       with:
         dotnet-version: 5.0.100
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore Emergence.sln
       working-directory: src
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build Emergence.sln --configuration Release --no-restore
       working-directory: src
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test Emergence.sln --no-restore --verbosity normal
       working-directory: src
