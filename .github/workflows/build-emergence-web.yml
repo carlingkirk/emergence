@@ -1,4 +1,4 @@
-name: Build and test Emergence web
+name: Build and test
 
 on:
   push:
