@@ -69,8 +69,9 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<DisplayName>().HasNoKey().ToView("DisplayNames").Property(v => v.Name).HasColumnName("Name");
 
             modelBuilder.Entity<User>().HasIndex(u => u.UserId).IsUnique();
-            modelBuilder.Entity<PlantLocation>()
-                .HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
+            modelBuilder.Entity<PlantLocation>().HasIndex(pl => new { pl.LocationId, pl.PlantInfoId }).IsUnique();
+            modelBuilder.Entity<UserContact>().HasIndex(u => new { u.UserId, u.ContactUserId }).IsUnique();
+            modelBuilder.Entity<UserContactRequest>().HasIndex(u => new { u.UserId, u.ContactUserId }).IsUnique();
 
             modelBuilder.Entity<User>().HasMany(u => u.Contacts).WithOne().HasForeignKey(u => u.UserId);
             modelBuilder.Entity<User>().HasMany(u => u.OthersContacts).WithOne().HasForeignKey(u => u.ContactUserId);
@@ -78,11 +79,11 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<User>().HasMany(u => u.ContactRequests).WithOne().HasForeignKey(u => u.UserId);
             modelBuilder.Entity<User>().HasMany(u => u.OthersContactRequests).WithOne().HasForeignKey(u => u.ContactUserId);
 
-            modelBuilder.Entity<UserContact>().HasOne(uc => uc.User).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContact>(uc => uc.UserId);
-            modelBuilder.Entity<UserContact>().HasOne(uc => uc.ContactUser).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContact>(uc => uc.ContactUserId);
+            modelBuilder.Entity<UserContact>().HasOne(uc => uc.User).WithMany(u => u.Contacts);
+            modelBuilder.Entity<UserContact>().HasOne(uc => uc.ContactUser).WithMany(u => u.OthersContacts);
 
-            modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.User).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContactRequest>(uc => uc.UserId);
-            modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.ContactUser).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContactRequest>(uc => uc.ContactUserId);
+            modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.User).WithMany(u => u.ContactRequests);
+            modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.ContactUser).WithMany(u => u.OthersContactRequests);
         }
     }
 }

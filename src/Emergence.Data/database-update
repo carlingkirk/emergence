@@ -2,6 +2,6 @@ dotnet ef migrations add InitialCreate --project Emergence.Data --context Emerge
 dotnet ef migrations add Incremental --project Emergence.Data --context EmergenceDbContext --startup-project "Emergence/Server/"
 dotnet ef migrations list --project Emergence.Data --context EmergenceDbContext --startup-project "Emergence/Server/"
 dotnet ef migrations remove --project Emergence.Data --context EmergenceDbContext --startup-project "Emergence/Server/"
-dotnet ef database update --context ApplicationDbContext --startup-project "../Emergence/Server/"
+dotnet ef database update --context EmergenceDbContext --startup-project "../Emergence/Server/"
 dotnet ef migrations list --context EmergenceDbContext --startup-project "../Emergence/Server/"
 dotnet ef migrations add Net5Update --project Emergence.Data --context ApplicationDbContext --startup-project "Emergence/Server/"
