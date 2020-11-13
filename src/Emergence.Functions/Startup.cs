@@ -1,9 +1,6 @@
 using System;
-using Emergence.Data.Repository;
-using Emergence.Service;
-using Emergence.Service.Interfaces;
+using Emergence.Functions.Services;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,16 +26,11 @@ namespace Emergence.Functions
                 .AddEnvironmentVariables()
                 .Build();
 
-            builder.Services.AddDbContext<EmergenceDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("EmergenceDbConnection")));
-
             builder.Services.AddLogging();
             builder.Services.AddSingleton<IConfiguration>(configuration);
             builder.Services.AddSingleton<IConfigurationService, FunctionConfigurationService>();
             builder.Services.AddTransient<IBlobService, BlobService>();
             builder.Services.AddTransient<IPhotoService, PhotoService>();
-            builder.Services.AddTransient<IExifService, ExifService>();
         }
     }
 }

@@ -1,5 +1,4 @@
-using Emergence.Data.Shared;
-using Emergence.Service.Interfaces;
+using Emergence.Functions.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace Emergence.Functions

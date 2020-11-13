@@ -1,7 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using Emergence.Data.Shared.Models;
-using Emergence.Service.Interfaces;
+using Emergence.Functions.Services;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
