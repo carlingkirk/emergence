@@ -3,4 +3,4 @@
 This project is intended to aid in plant propagation activities and research.
 
 
-![.NET Core](https://github.com/carlingkirk/emergence/workflows/.NET%20Core/badge.svg)
+![Build and test](https://github.com/carlingkirk/emergence/workflows/Build%20and%20test/badge.svg)
