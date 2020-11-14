@@ -1,31 +1,34 @@
 @using BlazorInputFile
 @using Emergence.Data.Shared
 @using Emergence.Data.Shared.Models
+@inject IModalServiceClient ModalServiceClient
 @inherits EmergenceComponent
 
 @if (UploadedPhotos != null)
 {
-    <div class="row">
-        <div class="col-6">
-            <label for="photos">Photos</label>
-            <BlazorInputFile.InputFile OnChange="UploadPhotosAsync" multiple capture="camera" accept="image/*" class="form-control" style="border: 0; padding: .25em 0;"></BlazorInputFile.InputFile>
-        </div>
+<div class="row">
+    <div class="col-6">
+        <label for="photos">Photos</label>
+        <BlazorInputFile.InputFile OnChange="UploadPhotosAsync" multiple capture="camera" accept="image/*" class="form-control" style="border: 0; padding: .25em 0;"></BlazorInputFile.InputFile>
     </div>
-    <div class="row">
-        @foreach (var photo in UploadedPhotos)
-        {
+</div>
+<div class="row">
+    @foreach (var photo in UploadedPhotos)
+    {
         <div class="col-lg-2 col-xs">
-                <div class="col">
+            <div class="col">
+                <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
                     <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
-                         onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
-                         style="max-width:300px;" />
-                </div>
-                <div class="col">
-                    <button type="button" class="btn btn-sm btn-secondary" style="margin-top:.25rem;" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
-                </div>
+                            onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
+                            style="max-width:300px;" />
+                </a>
             </div>
-        }
-    </div>
+            <div class="col">
+                <button type="button" class="btn btn-sm btn-secondary" style="margin-top:.25rem;" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
+            </div>
+        </div>
+    }
+</div>
 }
 
 @code {
@@ -35,6 +38,8 @@
     public List<Photo> UploadedPhotos { get; set; }
     [Parameter]
     public EventCallback<List<Photo>> UploadedPhotosChanged { get; set; }
+    [Parameter]
+    public string Name { get; set; }
 
     protected async Task UploadPhotosAsync(IFileListEntry[] files)
     {

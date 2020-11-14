@@ -246,7 +246,7 @@
     <div class="form-group">
         <div class="row">
             <div class="col">
-                <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.PlantInfo" />
+                <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.PlantInfo" Name="@(PlantInfo.Lifeform.ScientificName)" />
             </div>
         </div>
     </div>

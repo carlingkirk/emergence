@@ -173,7 +173,7 @@
     @if (UploadedPhotos != null && UploadedPhotos.Any())
     {
         <div class="form-group">
-            <ViewPhotos UploadedPhotos="UploadedPhotos" />
+            <ViewPhotos UploadedPhotos="UploadedPhotos" Name="@(PlantInfo.Lifeform.ScientificName)" />
         </div>
     }
 }

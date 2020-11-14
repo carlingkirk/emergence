@@ -6,6 +6,7 @@ using Emergence.Client.Pages.Origins;
 using Emergence.Client.Pages.PlantInfos;
 using Emergence.Client.Pages.Specimens;
 using Emergence.Client.Pages.Users;
+using Emergence.Client.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Client.Common
@@ -123,6 +124,16 @@ namespace Emergence.Client.Common
             modalParams.Add("IsModal", true);
 
             var modal = _modalService.Show<ViewUser>("User", modalParams, DefaultModalOptions);
+            return await modal.Result;
+        }
+
+        public async Task<ModalResult> ShowPhotoModal(Photo photo, string name)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Photo", photo);
+            modalParams.Add("Name", name);
+
+            var modal = _modalService.Show<PhotoViewer>("Photo", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
     }

@@ -79,7 +79,7 @@
     @if (UploadedPhotos != null && UploadedPhotos.Any())
     {
         <div class="form-group">
-            <ViewPhotos UploadedPhotos="UploadedPhotos" />
+            <ViewPhotos UploadedPhotos="UploadedPhotos" Name="@(Specimen.Name)" />
         </div>
     }
 }

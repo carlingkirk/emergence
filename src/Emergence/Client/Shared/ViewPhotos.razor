@@ -1,28 +1,33 @@
 @using Emergence.Data.Shared.Models
+@inject IModalServiceClient ModalServiceClient
 @inherits EmergenceComponent
 
 @if (UploadedPhotos != null)
 {
-    <div class="row">
-        <div class="col-6">
-            <label for="photos">Photos</label>
-        </div>
+<div class="row">
+    <div class="col-6">
+        <label for="photos">Photos</label>
     </div>
-    <div class="row">
+</div>
+<div class="row">
     @foreach (var photo in UploadedPhotos)
     {
         <div class="col-lg-2 col-xs">
             <div class="col">
-                <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
-                     onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
-                     style="max-width:300px;" />
+                <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
+                    <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
+                            onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
+                            style="max-width:300px;" />
+                </a>
             </div>
         </div>
     }
-    </div>
+</div>
 }
 
 @code {
     [Parameter]
     public List<Photo> UploadedPhotos { get; set; }
+    [Parameter]
+    public string Name { get; set; }
 }

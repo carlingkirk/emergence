@@ -16,5 +16,6 @@ namespace Emergence.Client.Common
         Task<ModalResult> ShowActivityModal(Activity activity);
         Task<ModalResult> ShowActivityModal(Specimen specimen);
         Task<ModalResult> ShowUserModal(UserSummary user);
+        Task<ModalResult> ShowPhotoModal(Photo photo, string name);
     }
 }

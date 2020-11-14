@@ -1,0 +1,21 @@
+@using Emergence.Data.Shared.Models
+@using Emergence.Data.Shared.Extensions
+
+<div class="card-header h3">
+    @if (Photo != null)
+    {
+    <span class="title">@Photo.Type.ToFriendlyName(): </span>
+    <span class="font-italic">@Name</span>
+    }
+</div>
+<img srcset="@(Photo.LargeUri) 1x" src="@(Photo.OriginalUri)"
+        onerror="this.onerror=null;this.srcset='';this.src='@(Photo.OriginalUri)'" alt="Uploaded photo of @(Photo.Type)"
+        style="max-width:100%" />
+
+@code {
+    [Parameter]
+    public Photo Photo { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+}
