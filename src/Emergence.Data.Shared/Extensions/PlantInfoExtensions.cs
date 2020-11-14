@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Emergence.Data.Shared.Stores;
 using Newtonsoft.Json;
 
@@ -20,34 +19,12 @@ namespace Emergence.Data.Shared.Extensions
             Models.Zone maximumZone = null;
             if (!string.IsNullOrEmpty(source.MinimumZone))
             {
-                int.TryParse(source.MinimumZone.First().ToString(), out var minimumZoneNumber);
-                string minimumZoneLetter = null;
-                if (source.MinimumZone.Length == 2)
-                {
-                    minimumZoneLetter = source.MinimumZone.Last().ToString();
-                }
-
-                minimumZone = new Models.Zone
-                {
-                    Number = minimumZoneNumber,
-                    Letter = minimumZoneLetter
-                };
+                minimumZone = source.MinimumZone.ParseZone();
             }
 
             if (!string.IsNullOrEmpty(source.MaximumZone))
             {
-                int.TryParse(source.MaximumZone.First().ToString(), out var maximumZoneNumber);
-                string maximumZoneLetter = null;
-                if (source.MaximumZone.Length == 2)
-                {
-                    maximumZoneLetter = source.MaximumZone.Last().ToString();
-                }
-
-                maximumZone = new Models.Zone
-                {
-                    Number = maximumZoneNumber,
-                    Letter = maximumZoneLetter
-                };
+                maximumZone = source.MaximumZone.ParseZone();
             }
 
             return new Models.PlantInfo

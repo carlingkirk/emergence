@@ -229,18 +229,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <label for="req-soil">Soil Types</label>
-                <ul class="checklist">
-                    @foreach (var soilType in SoilTypes)
-                    {
-                        <li>
-                            <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
-                            <label for="@GetElementId("req-soil", soilType.ToString())">@soilType</label>
-                        </li>
-                    }
-                </ul>
-            </div>
         </div>
     </div>
     <div class="form-group">

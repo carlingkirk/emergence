@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -35,12 +36,7 @@ namespace Emergence.Client.Components
 
             if (!string.IsNullOrEmpty(MinZone))
             {
-                var minZoneNumber = MinZone.Substring(0, 1);
-                var minZoneLetter = MinZone.Length > 1 ? MinZone.Substring(1, 1) : null;
-                int.TryParse(minZoneNumber, out var minZoneInt);
-
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone.Letter = minZoneLetter;
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone.Number = minZoneInt;
+                PlantInfo.Requirements.ZoneRequirements.MinimumZone = MinZone.ParseZone();
             }
             else
             {
@@ -49,11 +45,7 @@ namespace Emergence.Client.Components
 
             if (!string.IsNullOrEmpty(MaxZone))
             {
-                var maxZoneNumber = MaxZone.Substring(0, 1);
-                var maxZoneLetter = MaxZone.Length > 1 ? MaxZone.Substring(1, 1) : null;
-                int.TryParse(maxZoneNumber, out var maxZoneInt);
-                PlantInfo.Requirements.ZoneRequirements.MaximumZone.Letter = maxZoneLetter;
-                PlantInfo.Requirements.ZoneRequirements.MaximumZone.Number = maxZoneInt;
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone = MaxZone.ParseZone();
             }
             else
             {

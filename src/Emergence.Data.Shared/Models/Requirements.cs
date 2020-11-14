@@ -95,11 +95,11 @@ namespace Emergence.Data.Shared.Models
 
         public string ToFriendlyString()
         {
-            if (Number > 0 && !string.IsNullOrEmpty(Letter))
+            if (Number >= 0 && !string.IsNullOrEmpty(Letter))
             {
                 return Number.ToString() + Letter;
             }
-            else if (Number > 0)
+            else if (Number >= 0)
             {
                 return Number.ToString();
             }
