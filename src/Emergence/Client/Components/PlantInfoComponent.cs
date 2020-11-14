@@ -15,7 +15,7 @@ namespace Emergence.Client.Components
         public Origin SelectedOrigin { get; set; }
         public string MinZone { get; set; }
         public string MaxZone { get; set; }
-        public IList<Photo> UploadedPhotos { get; set; }
+        public List<Photo> UploadedPhotos { get; set; }
         public IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();

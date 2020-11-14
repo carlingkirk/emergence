@@ -14,7 +14,7 @@ namespace Emergence.Client.Components
         public Specimen Specimen { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
-        public IList<Photo> UploadedPhotos { get; set; }
+        public List<Photo> UploadedPhotos { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
         public IEnumerable<ItemStatus> Statuses => Enum.GetValues(typeof(ItemStatus)).Cast<ItemStatus>();
