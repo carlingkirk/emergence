@@ -10,8 +10,8 @@
     {
         <input type="text" @bind="SearchText" id="search" />
         <button class="btn btn-primary" type="submit">Search</button>
-        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" />
-        <label for="only-mine">Only Mine</label>
+        <input type="checkbox" class="check-lg" @bind="ShowPublic" id="show-public" />
+        <label for="show-public">Show Public</label>
     }
 
     @if (List != null)
@@ -66,7 +66,7 @@
                         <span>
                             @if (@origin.Uri != null)
                             {
-                            <a href="@origin?.Uri" target="_blank" alt="@origin?.Uri"><span class="link">@origin?.ShortUri</span></a>
+                                <a href="@origin?.Uri" target="_blank" alt="@origin?.Uri"><span class="link">@origin?.ShortUri</span></a>
                             }
                         </span>
                     </td>

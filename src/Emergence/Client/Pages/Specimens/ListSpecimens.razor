@@ -14,8 +14,8 @@
         <button class="btn btn-primary" type="submit">Search</button>
         @if (string.IsNullOrEmpty(ForUserId))
         {
-        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" />
-        <label for="only-mine">Only Mine</label>
+            <input type="checkbox" class="check-lg" @bind="ShowPublic" id="show-public" />
+            <label for="show-public">Show Public</label>
         }
     }
 
@@ -71,7 +71,7 @@
                     <td>
                         @if (specimen.InventoryItem?.Origin != null)
                         {
-                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, specimen.InventoryItem.Origin.OriginId))" class="link">@(specimen.InventoryItem.Origin != null ? specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, specimen.InventoryItem.Origin.OriginId))" class="link">@(specimen.InventoryItem.Origin != null ? specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
                         }
                         else
                         {
@@ -80,9 +80,9 @@
                     </td>
                     @if (string.IsNullOrEmpty(ForUserId))
                     {
-                    <td>
-                        <button type="button" class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
-                    </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+                        </td>
                     }
                 </tr>
             }

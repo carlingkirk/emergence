@@ -11,8 +11,8 @@
     {
         <input type="text" @bind="SearchText" id="search" />
         <button class="btn btn-primary" type="submit">Search</button>
-        <input type="checkbox" class="check-lg" @bind="OnlyMine" id="only-mine" />
-        <label for="only-mine">Only Mine</label>
+        <input type="checkbox" class="check-lg" @bind="ShowPublic" id="show-public" />
+        <label for="show-public">Show Public</label>
     }
 
     @if (List != null)
@@ -53,7 +53,7 @@
                     <td>
                         @if (plantInfo.Origin != null)
                         {
-                        <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@(plantInfo.Origin != null ? plantInfo.Origin?.Name ?? "(No name)" : null)</span>
+                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@(plantInfo.Origin != null ? plantInfo.Origin?.Name ?? "(No name)" : null)</span>
                         }
                         else
                         {

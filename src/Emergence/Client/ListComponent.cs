@@ -24,7 +24,7 @@ namespace Emergence.Client
         public int CurrentPage { get; set; }
         public int Take { get; set; }
         public int Count { get; set; }
-        public bool OnlyMine { get; set; }
+        public bool ShowPublic { get; set; }
         public bool IsItemLoaded { get; set; }
         public int Id { get; set; }
         public T Parent { get; set; }
@@ -33,7 +33,6 @@ namespace Emergence.Client
         protected ListComponent()
         {
             ShowSearch = true;
-            OnlyMine = true;
             LinkRelations = true;
         }
 
@@ -60,7 +59,7 @@ namespace Emergence.Client
                 Take = Take,
                 SortBy = SortBy,
                 SortDirection = SortDirection,
-                CreatedBy = ForUserId ?? (OnlyMine ? UserId : ForUserId)
+                CreatedBy = ForUserId ?? (!ShowPublic ? UserId : ForUserId)
             });
 
             List = result.Results;
