@@ -34,7 +34,7 @@ namespace Emergence.Service
 
         public async Task<Data.Shared.Models.Inventory> GetInventoryAsync(string userId, bool withItems = false)
         {
-            var result = await _inventoryRepository.GetAsync(i => i.OwnerId == userId);
+            var result = await _inventoryRepository.GetAsync(i => i.CreatedBy == userId);
             var inventory = result?.AsModel();
             if (inventory != null && withItems)
             {
