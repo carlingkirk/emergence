@@ -49,11 +49,8 @@ namespace Emergence.Client.Components
                 PlantInfo.SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
 
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone ??= new Zone();
-                PlantInfo.Requirements.ZoneRequirements.MaximumZone ??= new Zone();
-
-                MinZone = PlantInfo.Requirements.ZoneRequirements.MinimumZone.ToFriendlyString();
-                MaxZone = PlantInfo.Requirements.ZoneRequirements.MaximumZone.ToFriendlyString();
+                MinZone = PlantInfo.Requirements.ZoneRequirements.MinimumZone?.ToFriendlyString();
+                MaxZone = PlantInfo.Requirements.ZoneRequirements.MaximumZone?.ToFriendlyString();
 
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {

@@ -28,6 +28,7 @@ namespace Emergence.Test.Emergence.Data.Shared
             yield return new object[] { "0", new Zone { Number = 0 } };
             yield return new object[] { "b", null };
             yield return new object[] { "%", null };
+            yield return new object[] { "", null };
         }
     }
 }

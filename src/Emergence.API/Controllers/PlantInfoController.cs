@@ -49,10 +49,12 @@ namespace Emergence.API.Controllers
         public async Task<PlantInfo> Put(PlantInfo plantInfo)
         {
             plantInfo.CreatedBy = UserId;
-            plantInfo.UserId = await _userService.GetUserIdAsync(UserId);
+            var userId = await _userService.GetUserIdAsync(UserId);
+            plantInfo.UserId = userId;
 
             if (plantInfo.Origin != null && plantInfo.Origin.OriginId == 0)
             {
+                plantInfo.Origin.UserId = userId;
                 plantInfo.Origin = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, UserId);
             }
 

@@ -33,25 +33,8 @@ namespace Emergence.Client.Components
             PlantInfo.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
             PlantInfo.Lifeform = PlantInfo.SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
-
-            if (!string.IsNullOrEmpty(MinZone))
-            {
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone = MinZone.ParseZone();
-            }
-            else
-            {
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone = null;
-            }
-
-            if (!string.IsNullOrEmpty(MaxZone))
-            {
-                PlantInfo.Requirements.ZoneRequirements.MaximumZone = MaxZone.ParseZone();
-            }
-            else
-            {
-                PlantInfo.Requirements.ZoneRequirements.MaximumZone = null;
-            }
-
+            PlantInfo.Requirements.ZoneRequirements.MinimumZone = MinZone.ParseZone();
+            PlantInfo.Requirements.ZoneRequirements.MaximumZone = MaxZone.ParseZone();
             PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
 
             PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
