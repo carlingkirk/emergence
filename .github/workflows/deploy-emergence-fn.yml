@@ -1,4 +1,4 @@
-name: Deploy to Azure Function App
+name: Build and Deploy Emergence Functions
 
 on:
   push:

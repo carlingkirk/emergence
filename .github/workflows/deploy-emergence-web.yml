@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - emergenceapp
+name: Build and Deploy Emergence Web
 
 on:
   push:
@@ -10,19 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
-
+    - uses: actions/checkout@v2
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v1.7.2
       with:
-        dotnet-version: '3.1.102'
+        dotnet-version: 5.0.100
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build Emergence.sln --configuration Release
       working-directory: src
+      
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish Emergence.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
       working-directory: src
+      
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
