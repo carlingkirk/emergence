@@ -92,61 +92,37 @@
         }
         else
         {
-            @if (!List.Any())
-            {
-                <span>No specimens found</span>
-            }
             <div class="container">
                 <div class="row">
+                    @if (!List.Any())
+                    {
+                        <span>No specimens found</span>
+                    }
                     @foreach (var specimen in List)
                     {
-                    <div class="col-lg-4 col-md-6 col-xs item-card">
-                        <div class="group">
-                            <div class="row">
-                                <div class="col-4 card-container">
-                                    <div>
-                                        @{ var photo = specimen.Photos?.FirstOrDefault();}
-                                        @if (photo != null)
-                                        {
-                                            <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, specimen.Lifeform.ScientificName)" @onclick:preventDefault>
-                                                <img srcset="@(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
-                                                     onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
-                                                     class="card-img contain" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="shadow-sm align-center">
-                                                <rect fill="@GetRandomColor(specimen.Lifeform.CommonName)" width="100" height="100" />
-                                                <text fill="#FFF" dy="1" x="50%" y="50%" text-anchor="middle">&nbsp;</text>
-                                            </svg>
-                                        }
-                                    </div>
+                        var photo = specimen.Photos?.FirstOrDefault();
+                        
+                        <Card Name="@specimen.Lifeform.ScientificName" ColorSearch="@specimen.Lifeform.CommonName" Photo="@photo">
+                            <Content>
+                                <div class="col-12">
+                                    <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                        <span class="link">@specimen.Lifeform.CommonName</span>
+                                    </a>
                                 </div>
-                                <div class="col-8">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
-                                                <span class="link">@specimen.Lifeform.CommonName</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-12">
-                                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
-                                                <span style="font-style:italic">@specimen.Lifeform.ScientificName</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-12">
-                                            <span>@specimen.InventoryItem.Quantity</span>
-                                            <span>@specimen.SpecimenStage.ToFriendlyName()</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <span>by @specimen.InventoryItem.User.DisplayName</span>
-                                        </div>
-                                    </div>
+                                <div class="col-12">
+                                    <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                        <span style="font-style:italic">@specimen.Lifeform.ScientificName</span>
+                                    </a>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="col-12">
+                                    <span>@specimen.InventoryItem.Quantity</span>
+                                    <span>@specimen.SpecimenStage.ToFriendlyName()</span>
+                                </div>
+                                <div class="col-12">
+                                    <span>by @specimen.InventoryItem.User.DisplayName</span>
+                                </div>
+                            </Content>
+                        </Card>
                     }
                 </div>
             </div>

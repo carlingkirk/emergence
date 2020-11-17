@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -117,40 +116,6 @@ namespace Emergence.Client
             IsItemLoaded = true;
             ViewItemType = type;
             Parent = parent;
-        }
-
-        protected string GetRandomColor(string search)
-        {
-            var colors = new Dictionary<string, string>
-            {
-                { "black", "#333333" },
-                { "white", "#F9FFF7" },
-                { "gray", "#ADAFA8" },
-                { "red", "#E24441" },
-                { "orange", "#E8AD2E" },
-                { "yellow", "#EFEF6E" },
-                { "green", "#94C973" },
-                { "blue", "#5959FF" },
-                { "purple", "#963AFF" },
-                { "pink", "#FF77D6" },
-                { "teal", "#8EFFD5" },
-                { "olive","#3D550C" }
-            };
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                foreach (var color in colors)
-                {
-                    if (search.Contains(color.Key))
-                    {
-                        return color.Value;
-                    }
-                }
-            }
-
-            var random = new Random();
-            var colorPick = random.Next(1, colors.Count - 1);
-            return colors.ElementAt(colorPick).Value;
         }
     }
 }

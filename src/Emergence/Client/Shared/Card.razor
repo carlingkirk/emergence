@@ -1,0 +1,85 @@
+@using Emergence.Data.Shared.Models
+@inject IModalServiceClient ModalServiceClient
+
+<div class="col-lg-4 col-md-6 col-xs item-card">
+    <div class="group">
+        <div class="row">
+            <div class="col-4 card-container">
+                <div>
+                    @if (Photo != null)
+                    {
+                        <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(Photo, Name)" @onclick:preventDefault>
+                            <img srcset="@(Photo.ThumbnailUri) 1x" src="@(Photo.OriginalUri)"
+                                 onerror="this.onerror=null;this.srcset='';this.src='@(Photo.OriginalUri)'" alt="Uploaded photo of @(Photo.Type)"
+                                 class="card-img contain" />
+                        </a>
+                    }
+                    else
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="shadow-sm align-center">
+                            <rect fill="@Color" width="100" height="100" />
+                            <text fill="#FFF" dy="1" x="50%" y="50%" text-anchor="middle">&nbsp;</text>
+                        </svg>
+                    }
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    @Content
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Photo Photo { get; set; }
+    [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public string ColorSearch { get; set; }
+    [Parameter]
+    public RenderFragment Content { get; set; }
+    protected string Color { get; set; }
+    private Random _random { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _random = new Random(ColorSearch.GetHashCode());
+        Color = GetRandomColor(ColorSearch);
+    }
+
+    protected string GetRandomColor(string search)
+    {
+        var colors = new Dictionary<string, string>
+            {
+                { "black", "#333333" },
+                { "gray", "#ADAFA8" },
+                { "red", "#E24441" },
+                { "orange", "#E8AD2E" },
+                { "yellow", "#EFEF6E" },
+                { "green", "#94C973" },
+                { "blue", "#5959FF" },
+                { "purple", "#963AFF" },
+                { "pink", "#FF77D6" },
+                { "teal", "#8EFFD5" },
+                { "olive","#3D550C" }
+            };
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            foreach (var color in colors)
+            {
+                if (search.Contains(color.Key))
+                {
+                    return color.Value;
+                }
+            }
+        }
+
+        var colorPick = _random.Next(1, colors.Count - 1);
+        return colors.ElementAt(colorPick).Value;
+    }
+}
