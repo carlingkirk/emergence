@@ -17,6 +17,7 @@ namespace Emergence.Service.Interfaces
         Task<Photo> GetPhotoAsync(int id);
         Task<IEnumerable<Photo>> GetPhotosAsync(IEnumerable<int> ids);
         Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int typeId);
+        Task<IEnumerable<Photo>> GetPhotosByTypeAsync(PhotoType photoType, List<int> typeIds);
         Task<bool> RemovePhotoAsync(int id, string userId);
         Task<Image> ProcessPhotoAsync(Stream stream, Image image, ImageSize imageSize);
         Task RemovePhotosAsync(IEnumerable<Photo> photos);

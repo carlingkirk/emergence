@@ -28,7 +28,7 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.Synonym>> GetSynonymsAsync(IEnumerable<int> ids)
         {
-            var synonymResult = _synonymRepository.GetSomeAsync(l => ids.Any(i => i == l.Id));
+            var synonymResult = _synonymRepository.GetSomeAsync(s => ids.Contains(s.Id));
             var synonyms = new List<Data.Shared.Models.Synonym>();
             await foreach (var synonym in synonymResult)
             {

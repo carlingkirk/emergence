@@ -21,7 +21,7 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.Location>> GetLocationsAsync(IEnumerable<int> ids)
         {
-            var locationResult = _locationRepository.GetSomeAsync(l => ids.Any(i => i == l.Id));
+            var locationResult = _locationRepository.GetSomeAsync(l => ids.Contains(l.Id));
             var locations = new List<Data.Shared.Models.Location>();
             await foreach (var location in locationResult)
             {

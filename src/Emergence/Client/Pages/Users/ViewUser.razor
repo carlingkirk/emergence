@@ -15,7 +15,7 @@
                 <span class="font-italic">@User.DisplayName</span>
             </div>
             <div class="col-lg-4 col-xs" style="text-align: right;">
-                @if (User.UserId == UserId)
+                @if (string.Equals(User.UserId, UserId, StringComparison.OrdinalIgnoreCase))
                 {
                     <span class="text-body">Your profile</span>
                 }
@@ -59,26 +59,26 @@
             else
             {
                 <div class="col-lg-6 col-xs">
-                @if (!string.IsNullOrEmpty(User.Location?.CityState))
-                {
-                    <div>
-                        <label for="name">Location</label>
-                    </div>
-                    <div>
-                        <span class="text-body">@User.Location?.CityState</span>
-                    </div>
-                }
+                    @if (!string.IsNullOrEmpty(User.Location?.CityState))
+                    {
+                        <div>
+                            <label for="name">Location</label>
+                        </div>
+                        <div>
+                            <span class="text-body">@User.Location?.CityState</span>
+                        </div>
+                    }
                 </div>
                 <div class="col-lg-6 col-xs">
-                @if (!string.IsNullOrEmpty(User.Bio))
-                {
-                    <div>
-                        <label for="name">Bio</label>
-                    </div>
-                    <div style="overflow: auto; width: 100%;">
-                        <span class="text-body">@User.Bio</span>
-                    </div>
-                }
+                    @if (!string.IsNullOrEmpty(User.Bio))
+                    {
+                        <div>
+                            <label for="name">Bio</label>
+                        </div>
+                        <div style="overflow: auto; width: 100%;">
+                            <span class="text-body">@User.Bio</span>
+                        </div>
+                    }
                 </div>
                 <div class="col-lg-6 col-xs">
                     <div style="padding-top: 1em;">

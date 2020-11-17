@@ -18,11 +18,14 @@
             <label for="show-public">Show Public</label>
         }
     }
-
+    <input type="checkbox" class="check-lg" @bind="ListView" id="list-view" />
+    <label for="list-view">List View</label>
     @if (List != null)
     {
-        <table>
-            <SortableHeaders HeaderNames="@(
+        @if (ListView)
+        {
+            <table>
+                <SortableHeaders HeaderNames="@(
                 new Dictionary<string, string>
                 {
                             { "ScientificName", "Scientific Name" },
@@ -34,59 +37,120 @@
                             { "Origin", "Origin" },
                             { "", "" }
                 })"
-                             Sort="SortAsync"
-                             @bind-Values="List" @bind-SortBy="SortBy" @bind-SortDirection="SortDirection" />
+                                 Sort="SortAsync"
+                                 @bind-Values="List" @bind-SortBy="SortBy" @bind-SortDirection="SortDirection" />
+                @if (!List.Any())
+                {
+                    <tr>
+                        <td>
+                            <span>No specimens found</span>
+                        </td>
+                    </tr>
+                }
+                @foreach (var specimen in List)
+                {
+                    <tr>
+                        <td>
+                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault><span class="link">@specimen.Lifeform.ScientificName</span></a>
+                        </td>
+                        <td>
+                            <span>@specimen.Lifeform.CommonName</span>
+                        </td>
+                        <td>
+                            <span>@specimen.InventoryItem.Quantity</span>
+                        </td>
+                        <td>
+                            <span>@specimen.SpecimenStage.ToFriendlyName()</span>
+                        </td>
+                        <td>
+                            <span>@specimen.InventoryItem.Status.ToFriendlyName()</span>
+                        </td>
+                        <td>
+                            <span>
+                                @(specimen.InventoryItem.DateAcquired.HasValue ? specimen.InventoryItem.DateAcquired.Value.ToLocalTime().ToShortDateString() : "")
+                            </span>
+                        </td>
+                        <td>
+                            @if (specimen.InventoryItem?.Origin != null)
+                            {
+                                <span @onclick="@(() => LoadInfo(ViewItemType.Origin, specimen.InventoryItem.Origin.OriginId))" class="link">@(specimen.InventoryItem.Origin != null ? specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
+                        </td>
+                        @if (string.IsNullOrEmpty(ForUserId))
+                        {
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
             @if (!List.Any())
             {
-                <tr>
-                    <td>
-                        <span>No specimens found</span>
-                    </td>
-                </tr>
+                <span>No specimens found</span>
             }
-            @foreach (var specimen in List)
-            {
-                <tr>
-                    <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault><span class="link">@specimen.Lifeform.ScientificName</span></a>
-                    </td>
-                    <td>
-                        <span>@specimen.Lifeform.CommonName</span>
-                    </td>
-                    <td>
-                        <span>@specimen.InventoryItem.Quantity</span>
-                    </td>
-                    <td>
-                        <span>@specimen.SpecimenStage.ToFriendlyName()</span>
-                    </td>
-                    <td>
-                        <span>@specimen.InventoryItem.Status.ToFriendlyName()</span>
-                    </td>
-                    <td>
-                        <span>
-                            @(specimen.InventoryItem.DateAcquired.HasValue ?
-                          specimen.InventoryItem.DateAcquired.Value.ToLocalTime().ToShortDateString() : "")
-                        </span>
-                    </td>
-                    <td>
-                        @if (specimen.InventoryItem?.Origin != null)
-                        {
-                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, specimen.InventoryItem.Origin.OriginId))" class="link">@(specimen.InventoryItem.Origin != null ? specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
-                        }
-                        else
-                        {
-                            <span></span>
-                        }
-                    </td>
-                    @if (string.IsNullOrEmpty(ForUserId))
+            <div class="container">
+                <div class="row">
+                    @foreach (var specimen in List)
                     {
-                        <td>
-                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => LoadInfo(ViewItemType.Activity, 0, specimen))"><span class="oi oi-plus btn-oi"></span>Activity</button>
-                        </td>
+                    <div class="col-lg-4 col-md-6 col-xs item-card">
+                        <div class="group">
+                            <div class="row">
+                                <div class="col-4 card-container">
+                                    <div>
+                                        @{ var photo = specimen.Photos?.FirstOrDefault();}
+                                        @if (photo != null)
+                                        {
+                                            <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, specimen.Lifeform.ScientificName)" @onclick:preventDefault>
+                                                <img srcset="@(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
+                                                     onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
+                                                     class="card-img contain" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="shadow-sm align-center">
+                                                <rect fill="#FFF" width="100" height="100" />
+                                                <text fill="#FFF" dy="1" x="50%" y="50%" text-anchor="middle">&nbsp;</text>
+                                            </svg>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                                <span class="link">@specimen.Lifeform.CommonName</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                                <span style="font-style:italic">@specimen.Lifeform.ScientificName</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-12">
+                                            <span>@specimen.InventoryItem.Quantity</span>
+                                            <span>@specimen.SpecimenStage.ToFriendlyName()</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <span>by @specimen.InventoryItem.User.DisplayName</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     }
-                </tr>
-            }
-        </table>
+                </div>
+            </div>
+        }
         <div>
             @if (List.Any())
             {

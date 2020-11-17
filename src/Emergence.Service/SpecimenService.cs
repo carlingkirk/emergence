@@ -55,6 +55,8 @@ namespace Emergence.Service
                                                                            s => s.Include(s => s.InventoryItem)
                                                                                  .Include(s => s.InventoryItem.Inventory)
                                                                                  .Include(s => s.InventoryItem.Origin)
+                                                                                 .Include(s => s.InventoryItem.User)
+                                                                                 .Include(s => s.InventoryItem.User.Photo)
                                                                                  .Include(s => s.Lifeform));
 
 

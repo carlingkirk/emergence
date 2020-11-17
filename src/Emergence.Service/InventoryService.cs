@@ -56,7 +56,7 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.InventoryItem>> GetInventoryItemsByIdsAsync(IEnumerable<int> inventoryIds)
         {
-            var itemResult = _inventoryItemRepository.GetSomeAsync(i => inventoryIds.Any(id => id == i.Id));
+            var itemResult = _inventoryItemRepository.GetSomeAsync(i => inventoryIds.Contains(i.Id));
             var items = new List<Data.Shared.Models.InventoryItem>();
             await foreach (var item in itemResult)
             {

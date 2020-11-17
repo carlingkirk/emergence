@@ -26,6 +26,7 @@ namespace Emergence.Client
         public int Count { get; set; }
         public bool ShowPublic { get; set; }
         public bool IsItemLoaded { get; set; }
+        public bool ListView { get; set; }
         public int Id { get; set; }
         public T Parent { get; set; }
         public ViewItemType ViewItemType { get; set; }

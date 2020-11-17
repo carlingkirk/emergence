@@ -70,7 +70,19 @@ namespace Emergence.Service
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosAsync(IEnumerable<int> ids)
         {
-            var photoResult = _photoRepository.GetSomeAsync(p => ids.Any(i => i == p.Id));
+            var photoResult = _photoRepository.GetSomeAsync(p => ids.Contains(p.Id));
+            var photos = new List<Data.Shared.Models.Photo>();
+            await foreach (var photo in photoResult)
+            {
+                photos.Add(photo.AsModel(_blobStorageRoot));
+            }
+            return photos;
+        }
+
+        public async Task<IEnumerable<Data.Shared.Models.Photo>> GetPhotosByTypeAsync(PhotoType photoType, List<int> typeIds)
+        {
+            var type = photoType.ToString();
+            var photoResult = _photoRepository.GetSomeAsync(p => p.TypeId != null && p.Type == type && typeIds.Contains(p.TypeId.Value));
             var photos = new List<Data.Shared.Models.Photo>();
             await foreach (var photo in photoResult)
             {
