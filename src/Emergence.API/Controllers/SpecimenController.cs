@@ -101,6 +101,7 @@ namespace Emergence.API.Controllers
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _specimenService.FindSpecimens(findParams, user);
+
             var typeIds = result.Results.Select(s => s.SpecimenId).ToList();
             var photos = await _photoService.GetPhotosByTypeAsync(PhotoType.Specimen, typeIds);
 

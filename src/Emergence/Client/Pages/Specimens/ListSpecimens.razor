@@ -25,27 +25,10 @@
         @if (ListView)
         {
             <table>
-                <SortableHeaders HeaderNames="@(
-                new Dictionary<string, string>
-                {
-                            { "ScientificName", "Scientific Name" },
-                            { "CommonName", "Common Name" },
-                            { "Quantity", "Quantity" },
-                            { "Stage", "Growth Stage" },
-                            { "Status", "Status" },
-                            { "DateAcquired", "Date Acquired" },
-                            { "Origin", "Origin" },
-                            { "", "" }
-                })"
-                                 Sort="SortAsync"
-                                 @bind-Values="List" @bind-SortBy="SortBy" @bind-SortDirection="SortDirection" />
+                <SortableHeaders HeaderNames="Headers" Sort="SortAsync" @bind-Values="List" @bind-SortBy="SortBy" @bind-SortDirection="SortDirection" />
                 @if (!List.Any())
                 {
-                    <tr>
-                        <td>
-                            <span>No specimens found</span>
-                        </td>
-                    </tr>
+                    <tr><td><span>No specimens found</span></td></tr>
                 }
                 @foreach (var specimen in List)
                 {

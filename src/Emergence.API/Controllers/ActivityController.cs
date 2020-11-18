@@ -67,6 +67,19 @@ namespace Emergence.API.Controllers
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _activityService.FindActivities(findParams, user, specimenId);
+
+            var typeIds = result.Results.Select(a => a.ActivityId).ToList();
+            var photos = await _photoService.GetPhotosByTypeAsync(PhotoType.Activity, typeIds);
+
+            foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
+            {
+                var activity = result.Results.Where(a => a.ActivityId == photoGroup.Key).FirstOrDefault();
+                if (activity != null)
+                {
+                    activity.Photos = photoGroup.ToList();
+                }
+            }
+
             return result;
         }
 

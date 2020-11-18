@@ -14,63 +14,93 @@
         <input type="checkbox" class="check-lg" @bind="ShowPublic" id="show-public" />
         <label for="show-public">Show Public</label>
     }
+    <input type="checkbox" class="check-lg" @bind="ListView" id="list-view" />
+    <label for="list-view">List View</label>
 
     @if (List != null)
     {
-        <table>
-            <SortableHeaders HeaderNames="@(
-                                new Dictionary<string, string>
+        @if (ListView)
+        {
+            <table>
+                <SortableHeaders HeaderNames="@Headers" Sort="SortAsync" @bind-Values="List" />
+                @if (!List.Any())
+                {
+                    <tr><td><span>No activities found</span></td></tr>
+                }
+                @foreach (var activity in List)
+                {
+                    <tr>
+                        <td>
+                            <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@(activity.Name ?? "(No name)")</span></a>
+                        </td>
+                        <td>
+                            @if (LinkRelations)
+                            {
+                                <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen?.Lifeform?.ScientificName</span>
+                            }
+                            else
+                            {
+                                <span>@activity.Specimen?.Lifeform?.ScientificName</span>
+                            }
+                        </td>
+                        <td>
+                            <span>@activity.ActivityType.ToFriendlyName()</span>
+                        </td>
+                        <td>
+                            <span>
+                                @(activity.DateOccurred.HasValue ? activity.DateOccurred.Value.ToLocalTime().ToShortDateString() : "")
+                            </span>
+                        </td>
+                        <td>
+                            <span>
+                                @(activity.DateScheduled.HasValue ? activity.DateScheduled.Value.ToLocalTime().ToShortDateString() : "")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+        <div class="container">
+            <div class="row">
+                @if (!List.Any())
+                {
+                    <span>No activities found</span>
+                }
+                @foreach (var activity in List)
+                {
+                    var photo = activity.Photos?.FirstOrDefault();
+
+                    <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo">
+                        <Content>
+                            <div class="col-12">
+                                <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault>
+                                <span class="link">@(activity.Name ?? "(No name)")</span>
+                                </a>
+                            </div>
+                            @if (!activity.Name.Contains(activity.Specimen.Lifeform.ScientificName))
+                            {
+                            <div class="col-12">
+                                <span>@activity.Specimen?.Lifeform?.ScientificName</span>
+                            </div>
+                            }
+                            <div class="col-12">
+                                @if (!activity.Name.Contains(activity.ActivityType.ToFriendlyName()))
                                 {
-                                    { "Name", "Name" },
-                                    { "ScientificName", "Scientific Name" },
-                                    { "ActivityType", "Activity Type" },
-                                    { "DateOccured", "Date Occured" },
-                                    { "DateScheduled", "Date Scheduled" }
-                                })"
-                             Sort="SortAsync"
-                             @bind-Values="List" />
-            @if (!List.Any())
-            {
-                <tr>
-                    <td>
-                        <span>No activities found</span>
-                    </td>
-                </tr>
-            }
-            @foreach (var activity in List)
-            {
-                <tr>
-                    <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault><span class="link">@(activity.Name ?? "(No name)")</span></a>
-                    </td>
-                    <td>
-                        @if (LinkRelations)
-                        {
-                            <span @onclick="@(() => LoadInfo(ViewItemType.Specimen, activity.Specimen.SpecimenId))" class="link">@activity.Specimen?.Lifeform?.ScientificName</span>
-                        }
-                        else
-                        {
-                            <span>@activity.Specimen?.Lifeform?.ScientificName</span>
-                        }
-                    </td>
-                    <td>
-                        <span>@activity.ActivityType.ToFriendlyName()</span>
-                    </td>
-                    <td>
-                        <span>
-                            @(activity.DateOccurred.HasValue ?
-                        activity.DateOccurred.Value.ToLocalTime().ToShortDateString() : "")
-                        </span>
-                    </td>
-                    <td>
-                        <span>
-                            @(activity.DateScheduled.HasValue ?
-                        activity.DateScheduled.Value.ToLocalTime().ToShortDateString() : "")
-                        </span>
-                    </td>
-                </tr>
-            }
-        </table>
+                                    <span>@activity.ActivityType.ToFriendlyName()</span>
+                                }
+                                <span>@(activity.DisplayDate.HasValue ? " on " +  activity.DisplayDate.Value.ToLocalTime().ToShortDateString() : "")</span>
+                            </div>
+                            <div class="col-12">
+                                <span>by @activity.User.DisplayName</span>
+                            </div>
+                        </Content>
+                    </Card>
+                }
+            </div>
+        </div>
+        }
         <div>
             @if (List.Any())
             {
