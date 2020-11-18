@@ -116,22 +116,45 @@ namespace Emergence.Test.Emergence.API.Services
             photos.FirstOrDefault().Location.LocationId.Should().Be(1);
         }
 
-        [Fact(Skip = "Integration test")]
+        [Fact(Skip = "Integration Test")]
         public async Task TestResizePhoto()
         {
             var photoService = new PhotoService(_mockBlobService.Object, _mockPhotoRepository.Object, _mockConfigurationService.Object);
-            using (var stream = new MemoryStream())
-            using (var image = Image.Load("../../../Data/original.jpg"))
+            
+            using (var image = Image.Load("../../../data/original.jpg"))
             {
-                var resized = await photoService.ProcessPhotoAsync(stream, image, Models.ImageSize.Large);
-
-                resized.Height.Should().BeLessOrEqualTo((int)Models.ImageSize.Large);
-                resized.Width.Should().BeLessOrEqualTo((int)Models.ImageSize.Large);
-
-                using (var fileStream = File.OpenWrite("../../../Data/full.png"))
+                using (var stream = new MemoryStream())
                 {
-                    stream.Seek(0, SeekOrigin.Begin);
-                    await stream.CopyToAsync(fileStream);
+                    var large = await photoService.ProcessPhotoAsync(stream, image, Models.ImageSize.Large);
+                    large.Height.Should().BeLessOrEqualTo((int)Models.ImageSize.Large);
+                    large.Width.Should().BeLessOrEqualTo((int)Models.ImageSize.Large);
+                    using (var fileStream = File.OpenWrite("../../../data/full.png"))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        await stream.CopyToAsync(fileStream);
+                    }
+                }
+                using (var stream = new MemoryStream())
+                {
+                    var medium = await photoService.ProcessPhotoAsync(stream, image, Models.ImageSize.Medium);
+                    medium.Height.Should().BeLessOrEqualTo((int)Models.ImageSize.Medium);
+                    medium.Width.Should().BeLessOrEqualTo((int)Models.ImageSize.Medium);
+                    using (var fileStream = File.OpenWrite("../../../data/medium.png"))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        await stream.CopyToAsync(fileStream);
+                    }
+                }
+                using (var stream = new MemoryStream())
+                {
+                    var thumb = await photoService.ProcessPhotoAsync(stream, image, Models.ImageSize.Thumb);
+                    thumb.Height.Should().BeLessOrEqualTo((int)Models.ImageSize.Thumb);
+                    thumb.Width.Should().BeLessOrEqualTo((int)Models.ImageSize.Thumb);
+                    using (var fileStream = File.OpenWrite("../../../data/thumb.png"))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        await stream.CopyToAsync(fileStream);
+                    }
                 }
             }
         }
