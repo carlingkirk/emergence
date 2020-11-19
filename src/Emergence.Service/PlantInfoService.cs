@@ -65,7 +65,8 @@ namespace Emergence.Service
                                                                         false,
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
-                                                                              .Include(p => p.Origin));
+                                                                              .Include(p => p.Origin)
+                                                                              .Include(p => p.User));
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);

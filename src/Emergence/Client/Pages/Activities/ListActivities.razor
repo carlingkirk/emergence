@@ -70,7 +70,7 @@
                 }
                 @foreach (var activity in List)
                 {
-                    var photo = activity.Photos?.FirstOrDefault();
+                    var photo = activity.Photos?.FirstOrDefault() ?? activity.SpecimenPhotos?.FirstOrDefault();
 
                     <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo">
                         <Content>

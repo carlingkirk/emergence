@@ -80,6 +80,19 @@ namespace Emergence.API.Controllers
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _plantInfoService.FindPlantInfos(findParams, user);
+
+            var typeIds = result.Results.Select(p => p.PlantInfoId).ToList();
+            var photos = await _photoService.GetPhotosByTypeAsync(PhotoType.PlantInfo, typeIds);
+
+            foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
+            {
+                var plantInfo = result.Results.Where(p => p.PlantInfoId == photoGroup.Key).FirstOrDefault();
+                if (plantInfo != null)
+                {
+                    plantInfo.Photos = photoGroup.ToList();
+                }
+            }
+
             return result;
         }
 

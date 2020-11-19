@@ -80,6 +80,22 @@ namespace Emergence.API.Controllers
                 }
             }
 
+            typeIds = result.Results.Where(a => a.Photos == null || !a.Photos.Any()).Select(a => a.Specimen.SpecimenId).ToList();
+
+            photos = await _photoService.GetPhotosByTypeAsync(PhotoType.Specimen, typeIds);
+
+            foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
+            {
+                var activities = result.Results.Where(a => a.Specimen.SpecimenId == photoGroup.Key);
+                foreach (var activity in activities)
+                {
+                    if (activity != null)
+                    {
+                        activity.SpecimenPhotos = photoGroup.ToList();
+                    }
+                }
+            }
+
             return result;
         }
 

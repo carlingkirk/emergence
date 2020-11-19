@@ -14,91 +14,120 @@
         <input type="checkbox" class="check-lg" @bind="ShowPublic" id="show-public" />
         <label for="show-public">Show Public</label>
     }
+    <input type="checkbox" class="check-lg" @bind="ListView" id="list-view" />
+    <label for="list-view">List View</label>
 
     @if (List != null)
     {
-        <table>
-            <SortableHeaders HeaderNames="@(
-                                new Dictionary<string, string>
-                                {
-                                    { "ScientificName", "Scientific Name" },
-                                    { "CommonName", "Common Name" },
-                                    { "Origin", "Origin" },
-                                    { "Zone", "Zone" },
-                                    { "Light", "Light" },
-                                    { "Water", "Water" },
-                                    { "BloomTime", "Bloom Time" },
-                                    { "Height", "Height" },
-                                    { "Spread", "Spread" }
-                                })"
-                             Sort="SortAsync"
-                             @bind-Values="List" />
-            @if (!List.Any())
-            {
-                <tr>
-                    <td>
-                        <span>No plant profiles found</span>
-                    </td>
-                </tr>
-            }
-            @foreach (var plantInfo in List)
-            {
-                <tr>
-                    <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
-                    </td>
-                    <td>
-                        <span>@plantInfo.Lifeform.CommonName</span>
-                    </td>
-                    <td>
-                        @if (plantInfo.Origin != null)
-                        {
-                            <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@(plantInfo.Origin != null ? plantInfo.Origin?.Name ?? "(No name)" : null)</span>
-                        }
-                        else
-                        {
-                            <span></span>
-                        }
-                    </td>
-                    <td>
-                        @if (plantInfo.Requirements?.ZoneRequirements != null)
-                        {
-                            <span>@plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
-                        }
-                    </td>
-                    <td>
-                        @if (plantInfo.Requirements?.LightRequirements != null)
-                        {
-                            <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
-                        }
-                    </td>
-                    <td>
-                        @if (plantInfo.Requirements?.WaterRequirements != null)
-                        {
-                            <span>@plantInfo.Requirements.WaterRequirements.ToFriendlyString()</span>
-                        }
-                    </td>
-                    <td>
-                        @if (plantInfo.BloomTime != null)
-                        {
-                            <span>@plantInfo.BloomTime.ToFriendlyString()</span>
-                        }
-                    </td>
-                    <td>
-                        @if (plantInfo.Height != null)
-                        {
-                            <span>@plantInfo.Height.ToFriendlyString()</span>
-                        }
-                    </td>
-                    <td>
-                        @if (plantInfo.Spread != null)
-                        {
-                            <span>@plantInfo.Spread.ToFriendlyString()</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </table>
+        @if (ListView)
+        {
+            <table>
+                <SortableHeaders HeaderNames="Headers" Sort="SortAsync" @bind-Values="List" />
+                @if (!List.Any())
+                {
+                    <tr><td><span>No plant profiles found</span></td></tr>
+                }
+                @foreach (var plantInfo in List)
+                {
+                    <tr>
+                        <td>
+                            <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
+                        </td>
+                        <td>
+                            <span>@plantInfo.Lifeform.CommonName</span>
+                        </td>
+                        <td>
+                            @if (plantInfo.Origin != null)
+                            {
+                                <span @onclick="@(() => LoadInfo(ViewItemType.Origin, plantInfo.Origin.OriginId))" class="link">@(plantInfo.Origin != null ? plantInfo.Origin?.Name ?? "(No name)" : null)</span>
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
+                        </td>
+                        <td>
+                            @if (plantInfo.Requirements?.ZoneRequirements != null)
+                            {
+                                <span>@plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
+                            }
+                        </td>
+                        <td>
+                            @if (plantInfo.Requirements?.LightRequirements != null)
+                            {
+                                <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
+                            }
+                        </td>
+                        <td>
+                            @if (plantInfo.Requirements?.WaterRequirements != null)
+                            {
+                                <span>@plantInfo.Requirements.WaterRequirements.ToFriendlyString()</span>
+                            }
+                        </td>
+                        <td>
+                            @if (plantInfo.BloomTime != null)
+                            {
+                                <span>@plantInfo.BloomTime.ToFriendlyString()</span>
+                            }
+                        </td>
+                        <td>
+                            @if (plantInfo.Height != null)
+                            {
+                                <span>@plantInfo.Height.ToFriendlyString()</span>
+                            }
+                        </td>
+                        <td>
+                            @if (plantInfo.Spread != null)
+                            {
+                                <span>@plantInfo.Spread.ToFriendlyString()</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <div class="container">
+                <div class="row">
+                    @if (!List.Any())
+                    {
+                    <span>No plant profiles found</span>
+                    }
+                    @foreach (var plantInfo in List)
+                    {
+                        var photo = plantInfo.Photos?.FirstOrDefault();
+
+                        <Card Name="@plantInfo.Lifeform.ScientificName" ColorSearch="@plantInfo.Lifeform.CommonName" Photo="@photo">
+                            <Content>
+                                <div class="col-12">
+                                    <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
+                                        <span class="link">@plantInfo.Lifeform.CommonName</span>
+                                    </a>
+                                </div>
+                                <div class="col-12">
+                                    <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
+                                        <span style="font-style:italic">@plantInfo.Lifeform.ScientificName</span>
+                                    </a>
+                                </div>
+                                <div class="col-12">
+                                    @if (plantInfo.Requirements?.ZoneRequirements != null)
+                                    {
+                                        <span>Zones @plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
+                                    }
+                                    <div class="col-12">
+                                        <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <span>by @plantInfo.User.DisplayName</span>
+                                </div>
+                            </Content>
+                        </Card>
+                    }
+                </div>
+            </div>
+        }
         <div>
             @if (List.Any())
             {

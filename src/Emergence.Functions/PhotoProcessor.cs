@@ -55,7 +55,7 @@ namespace Emergence.Functions
 
                 if (largeResult && mediumResult && thumbResult)
                 {
-                    log.LogInformation($"ProcessActivityPhoto Processed blob\n Name:{name} \n File: original{fileExt} \n Size: {photoStream.Length} Bytes");
+                    log.LogInformation($"ProcessOriginalPhoto Processed blob\n Name:{name} \n File: original{fileExt} \n Size: {photoStream.Length} Bytes");
                 }
             }
         }

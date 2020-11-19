@@ -27,6 +27,7 @@ namespace Emergence.Data.Shared.Models
         public IEnumerable<Photo> Photos { get; set; }
         public UserSummary User { get; set; }
 
+        public IEnumerable<Photo> SpecimenPhotos { get; set; }
         public DateTime? DisplayDate => DateOccurred ?? DateScheduled ?? null;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
