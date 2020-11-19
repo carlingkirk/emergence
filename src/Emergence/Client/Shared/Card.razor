@@ -72,7 +72,7 @@
         {
             foreach (var color in colors)
             {
-                if (search.Contains(color.Key))
+                if (search.ToLowerInvariant().Contains(color.Key))
                 {
                     return color.Value;
                 }

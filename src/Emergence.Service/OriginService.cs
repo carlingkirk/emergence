@@ -82,7 +82,9 @@ namespace Emergence.Service
                                                                        EF.Functions.Like(o.Location.AddressLine1, findParams.SearchTextQuery) ||
                                                                        EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchTextQuery),
                                                                        false,
-                                                                  o => o.Include(o => o.Location).Include(o => o.ParentOrigin));
+                                                                  o => o.Include(o => o.Location)
+                                                                        .Include(o => o.ParentOrigin)
+                                                                        .Include(o => o.User));
 
             originQuery = originQuery.CanViewContent(user);
 

@@ -23,6 +23,7 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public string ShortUri => Uri != null ? Uri.ToString().Length > 40 ? Uri.ToString().Substring(0, 40) + "..." : Uri.ToString() : null;
+        public string TinyUri => Uri != null ? Uri.ToString().Length > 20 ? Uri.ToString().Substring(0, 20) + "..." : Uri.ToString() : null;
 
         public Location Location { get; set; }
         public Origin ParentOrigin { get; set; }

@@ -13,66 +13,91 @@
         <input type="checkbox" class="check-lg" @bind="ShowPublic" id="show-public" />
         <label for="show-public">Show Public</label>
     }
+    <input type="checkbox" class="check-lg" @bind="ListView" id="list-view" />
+    <label for="list-view">List View</label>
 
     @if (List != null)
     {
-        <table>
-            <SortableHeaders HeaderNames="@(
-                                new Dictionary<string, string>
-                                    {
-                                            { "Name", "Name" },
-                                            { "Type", "Type" },
-                                            { "Description", "Description" },
-                                            { "ParentOrigin", "Parent Origin" },
-                                            { "City", "City" },
-                                            { "Link", "Link" }
-                                    })"
-                             Sort="SortAsync"
-                             @bind-Values="List" />
-            @if (!List.Any())
-            {
-                <tr>
-                    <td>
-                        <span>No origins found</span>
-                    </td>
-                </tr>
-            }
-            @foreach (var origin in List)
-            {
-                <tr>
-                    <td>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@(origin.Name ?? "(No name)")</span></a>
-                    </td>
-                    <td>
-                        <span>@origin.Type.ToFriendlyName()</span>
-                    </td>
-                    <td>
-                        <span>@origin.Description</span>
-                    </td>
-                    <td>
-                        @if (@origin.ParentOrigin != null)
-                        {
-                            <span @onclick="() => LoadInfo(ViewItemType.Origin, origin.ParentOrigin.OriginId)" class="link">@origin.ParentOrigin.Name</span>
-                        }
-                        else
-                        {
-                            <span></span>
-                        }
-                    </td>
-                    <td>
-                        <span>@(origin.Location?.CityState)</span>
-                    </td>
-                    <td>
-                        <span>
-                            @if (@origin.Uri != null)
+        @if (ListView)
+        {
+            <table>
+                <SortableHeaders HeaderNames="Headers" Sort="SortAsync" @bind-Values="List" />
+                @if (!List.Any())
+                {
+                    <tr><td><span>No origins found</span></td></tr>
+                }
+                @foreach (var origin in List)
+                {
+                    <tr>
+                        <td>
+                            <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault><span class="link">@(origin.Name ?? "(No name)")</span></a>
+                        </td>
+                        <td>
+                            <span>@origin.Type.ToFriendlyName()</span>
+                        </td>
+                        <td>
+                            <span>@origin.Description</span>
+                        </td>
+                        <td>
+                            @if (@origin.ParentOrigin != null)
                             {
-                                <a href="@origin?.Uri" target="_blank" alt="@origin?.Uri"><span class="link">@origin?.ShortUri</span></a>
+                                <span @onclick="() => LoadInfo(ViewItemType.Origin, origin.ParentOrigin.OriginId)" class="link">@origin.ParentOrigin.Name</span>
                             }
-                        </span>
-                    </td>
-                </tr>
-            }
-        </table>
+                            else
+                            {
+                                <span></span>
+                            }
+                        </td>
+                        <td>
+                            <span>@(origin.Location?.CityState)</span>
+                        </td>
+                        <td>
+                            <span>
+                                @if (@origin.Uri != null)
+                                {
+                                    <a href="@origin?.Uri" target="_blank" alt="@origin?.Uri"><span class="link">@origin?.ShortUri</span></a>
+                                }
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <div class="container">
+                <div class="row">
+                    @if (!List.Any())
+                    {
+                        <span>No origins found</span>
+                    }
+                    @foreach (var origin in List)
+                    {
+                        <Card Name="@origin.Name" ColorSearch="@origin.Name">
+                            <Content>
+                                <div class="col-12">
+                                    <a href="" @onclick="() => LoadInfo(ViewItemType.Origin, origin.OriginId)" @onclick:preventDefault>
+                                        <span class="link">@(origin.Name ?? "(No name)")</span>
+                                    </a>
+                                </div>
+                                <div class="col-12">
+                                    <span>@origin.Type.ToFriendlyName()</span>
+                                </div>
+                                <div class="col-12">
+                                    <span>@origin.Location?.CityState</span>
+                                </div>
+                                <div class="col-12">
+                                    <a href="@origin?.Uri" target="_blank" alt="@origin?.Uri"><span class="link">@origin?.TinyUri</span></a>
+                                </div>
+                                <div class="col-12">
+                                    <span>by @origin.User.DisplayName</span>
+                                </div>
+                            </Content>
+                        </Card>
+                    }
+                </div>
+            </div>
+        }
         <div>
             @if (List.Any())
             {
