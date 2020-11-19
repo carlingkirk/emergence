@@ -6,6 +6,7 @@
 
 @attribute [Authorize]
 @inherits ActivityComponent
+@inject IModalServiceClient ModalServiceClient
 
 @if (Activity != null)
 {
@@ -26,11 +27,11 @@
             <div>
                 @if (!string.IsNullOrEmpty(Activity.Specimen?.InventoryItem?.Name))
                 {
-                    <span class="text-body">@(Activity.Specimen.InventoryItem.Name)</span>
+                    <span class="link" @onclick="async () => await ModalServiceClient.ShowSpecimenModal(Activity.Specimen.SpecimenId)">@(Activity.Specimen.InventoryItem.Name)</span>
                 }
                 else if (Activity.Specimen?.SpecimenId == 0 && Activity.Specimen?.Lifeform != null)
                 {
-                    <span class="text-body">@(Activity.Specimen.Lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
+                    <span class="link" @onclick="async () => await ModalServiceClient.ShowSpecimenModal(Activity.Specimen.SpecimenId)">@(Activity.Specimen.Lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
                 }
             </div>
         </div>

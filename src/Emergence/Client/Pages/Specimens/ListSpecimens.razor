@@ -87,16 +87,15 @@
                         
                         <Card Name="@specimen.Lifeform.ScientificName" ColorSearch="@specimen.Lifeform.CommonName" Photo="@photo">
                             <Content>
-                                <div class="col-12">
-                                    <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                    <div class="col-12">
+                                    
                                         <span class="link">@specimen.Lifeform.CommonName</span>
-                                    </a>
-                                </div>
-                                <div class="col-12">
-                                    <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                                    </div>
+                                    <div class="col-12">
                                         <span style="font-style:italic">@specimen.Lifeform.ScientificName</span>
-                                    </a>
-                                </div>
+                                    </div>
+                                </a>
                                 <div class="col-12">
                                     <span>@specimen.InventoryItem.Quantity</span>
                                     <span>@specimen.SpecimenStage.ToFriendlyName()</span>

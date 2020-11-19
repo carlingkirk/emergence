@@ -100,16 +100,14 @@
 
                         <Card Name="@plantInfo.Lifeform.ScientificName" ColorSearch="@plantInfo.Lifeform.CommonName" Photo="@photo">
                             <Content>
-                                <div class="col-12">
-                                    <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
+                                <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
+                                    <div class="col-12">
                                         <span class="link">@plantInfo.Lifeform.CommonName</span>
-                                    </a>
-                                </div>
-                                <div class="col-12">
-                                    <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
+                                    </div>
+                                    <div class="col-12">
                                         <span style="font-style:italic">@plantInfo.Lifeform.ScientificName</span>
-                                    </a>
-                                </div>
+                                    </div>
+                                </a>
                                 <div class="col-12">
                                     @if (plantInfo.Requirements?.ZoneRequirements != null)
                                     {

@@ -52,9 +52,9 @@ namespace Emergence.Service
             return metadata;
         }
 
-        private double? GetLatitude(ExifReader exifReader) => GetCoordinate(ExifTags.GPSLatitude, exifReader);
+        private double? GetLatitude(ExifReader exifReader) => GetCoordinate(ExifTags.GPSLatitude, ExifTags.GPSLatitudeRef, exifReader);
 
-        private double? GetLongitude(ExifReader exifReader) => GetCoordinate(ExifTags.GPSLongitude, exifReader);
+        private double? GetLongitude(ExifReader exifReader) => GetCoordinate(ExifTags.GPSLongitude, ExifTags.GPSLongitudeRef, exifReader);
 
         private DateTime? GetDateTaken(ExifReader exifReader)
         {
@@ -184,13 +184,21 @@ namespace Emergence.Service
             return null;
         }
 
-        private double? GetCoordinate(ExifTags type, ExifReader exifReader)
+        private double? GetCoordinate(ExifTags type, ExifTags refType, ExifReader exifReader)
         {
             try
             {
                 if (exifReader.GetTagValue(type, out double[] coordinates))
                 {
-                    return ToDoubleCoordinates(coordinates);
+                    var location = ToDoubleCoordinates(coordinates);
+                    if (exifReader.GetTagValue(refType, out string cardinal))
+                    {
+                        return cardinal == "N" || cardinal == "E" ? location : location * -1;
+                    }
+                    else
+                    {
+                        return location;
+                    }
                 }
             }
             catch (Exception ex)
