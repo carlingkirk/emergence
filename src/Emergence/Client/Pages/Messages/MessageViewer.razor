@@ -1,0 +1,54 @@
+@page "/message/{Id:int}"
+@using Emergence.Client.Components
+
+@inherits MessageComponent
+<div class="card-header h3">
+    @if (!IsModal)
+    {
+        <button type="button" class="btn btn-primary" @onclick="Back">Back</button>
+    }
+    <span class="title">Message: </span>
+</div>
+<div class="group">
+    @if (Message != null)
+    {
+    <div class="form-group">
+        <div class="row">
+            @if (!string.IsNullOrEmpty(Message.User?.DisplayName))
+            {
+                <div class="col-lg-4 col-xs">
+                    <UserDisplay Label="By" User="Message.User" />
+                </div>
+            }
+            <div class="col-lg-4 col-xs">
+                <div>
+                    <label for="message-body">Message</label>
+                </div>
+                <div>
+                    <span class="text-body">@Message.MessageBody</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-xs">
+                <div>
+                    <label for="date-sent">Date Sent</label>
+                </div>
+                <div>
+                    <span class="text-body">@Message.DateSent</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+</div>
+
+@code {
+
+    protected async Task GoBack()
+    {
+        await IsItemLoadedChanged.InvokeAsync(false);
+    }
+}

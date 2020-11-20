@@ -83,6 +83,13 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<UserContactRequest>>(result);
         }
 
+        public async Task<FindResult<UserMessage>> FindMessagesAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/message/find", findParams);
+
+            return await ReadResult<FindResult<UserMessage>>(result);
+        }
+
         public async Task<Specimen> GetSpecimenAsync(int id)
         {
             var result = await _httpClient.GetAsync($"/api/specimen/{id}");

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Emergence.Client.Pages.Activities;
+using Emergence.Client.Pages.Messages;
 using Emergence.Client.Pages.Origins;
 using Emergence.Client.Pages.PlantInfos;
 using Emergence.Client.Pages.Specimens;
@@ -134,6 +135,15 @@ namespace Emergence.Client.Common
             modalParams.Add("Name", name);
 
             var modal = _modalService.Show<PhotoViewer>("Photo", modalParams, DefaultModalOptions);
+            return await modal.Result;
+        }
+
+        public async Task<ModalResult> ShowMessageModal(UserMessage message)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Message", message);
+
+            var modal = _modalService.Show<MessageViewer>("Message", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
     }

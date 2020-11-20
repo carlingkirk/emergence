@@ -1,0 +1,50 @@
+@using Emergence.Client.Components
+@inject IModalServiceClient ModalServiceClient
+@inherits ListMessagesComponent
+
+@if (!IsItemLoaded)
+{
+    <form @onsubmit="SearchAsync">
+        @if (ShowSearch)
+        {
+            <input type="text" @bind="SearchText" id="search" />
+            <button class="btn btn-primary" type="submit">Search</button>
+        }
+
+        @if (List != null)
+        {
+            <div class="group">
+                <table>
+                    <SortableHeaders HeaderNames="Headers" Sort="SortAsync" @bind-Values="List" />
+                    @if (!List.Any())
+                    {
+                        <tr><td><span>No messages found</span></td></tr>
+                    }
+                    @foreach (var message in List)
+                    {
+                        <tr>
+                            <td style="padding: .5rem;">
+                                <a href="" @onclick="async () => await ModalServiceClient.ShowMessageModal(message)" @onclick:preventDefault>
+                                    <UserDisplay User="message.Sender" Size="35" />
+                                </a>
+                            </td>
+                            <td>
+                                <span>@message.DateSent.ToLocalTime().ToShortDateString()</span>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div>
+                    @if (List.Any())
+                    {
+                        <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
+                    }
+                </div>
+            </div>
+        }
+    </form>
+}
+
+@code {
+
+}

@@ -38,6 +38,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<UserContactRequest> UserContactRequests { get; set; }
+        public virtual DbSet<UserMessage> UserMessages { get; set; }
         public virtual DbSet<DisplayName> DisplayNames { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -66,6 +67,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<UserContact>().HasKey(u => u.Id);
             modelBuilder.Entity<UserContactRequest>().HasKey(u => u.Id);
+            modelBuilder.Entity<UserMessage>().HasKey(u => u.Id);
             modelBuilder.Entity<DisplayName>().HasNoKey().ToView("DisplayNames").Property(v => v.Name).HasColumnName("Name");
 
             modelBuilder.Entity<User>().HasIndex(u => u.UserId).IsUnique();
@@ -83,6 +85,9 @@ namespace Emergence.Data.Repository
 
             modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.User).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContactRequest>(uc => uc.UserId);
             modelBuilder.Entity<UserContactRequest>().HasOne(uc => uc.ContactUser).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserContactRequest>(uc => uc.ContactUserId);
+
+            modelBuilder.Entity<UserMessage>().HasOne(um => um.User).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserMessage>(uc => uc.UserId);
+            modelBuilder.Entity<UserMessage>().HasOne(um => um.Sender).WithOne().HasForeignKey<User>(u => u.Id).HasPrincipalKey<UserMessage>(uc => uc.SenderId);
         }
     }
 }
