@@ -1,0 +1,80 @@
+@page "/messages"
+
+<ul class="nav nav-tabs">
+    @foreach (var tab in Tabs)
+    {
+        <li class="nav-item@(tab.Key == CurrentTab.Key ? " active" : "")">
+            <a class="nav-link" id="@(tab.Key)-tab" data-toggle="tab" href="#@(tab.Key)" role="tab" aria-controls="@(tab.Key)"
+               aria-selected="false" @onclick="() => SwitchTab(tab.Key)" @onclick:preventDefault>@(tab.Value)</a>
+        </li>
+    }
+</ul>
+
+<div class="tab-content" id="messages">
+    @if (CurrentTab.Key == "my-messages")
+    {
+        <div class="tab-pane fade show active" id="my-messages" role="tabpanel" aria-labelledby="my-messages">
+            <div class="group">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col">
+                            <label for="my-message-list">Your Messages</label>
+                            <ListMessages />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (CurrentTab.Key == "sent-messages")
+    {
+        <div class="tab-pane fade show active" id="sent-messages" role="tabpanel" aria-labelledby="sent-messages">
+            <div class="group">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col">
+                            <label for="sent-message-list">Sent Messages</label>
+                            <ListMessages Sent="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (CurrentTab.Key == "send-message")
+    {
+        <div class="tab-pane fade show active" id="send-message" role="tabpanel" aria-labelledby="send-message">
+            <div class="group">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col">
+                            <label for="sent-message-list">Send Message</label>
+                            <EditMessage />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    protected Dictionary<string, string> Tabs => new Dictionary<string, string>
+    {
+        { "my-messages", "Your Messages" },
+        { "sent-messages", "Sent Messages"},
+        { "send-message", "Send Message" }
+    };
+    protected KeyValuePair<string, string> CurrentTab { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CurrentTab = Tabs.First();
+        base.OnInitialized();
+    }
+
+    protected void SwitchTab(string tab)
+    {
+        CurrentTab = Tabs.First(t => t.Key == tab);
+    }
+}

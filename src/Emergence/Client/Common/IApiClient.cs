@@ -12,11 +12,15 @@ namespace Emergence.Client.Common
         Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams);
         Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
         Task<FindResult<UserMessage>> FindMessagesAsync(FindParams findParams);
+        Task<FindResult<UserMessage>> FindSentMessagesAsync(FindParams findParams);
         Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams);
         Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
         Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
         Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
         Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank);
+        Task<FindResult<UserContact>> FindContactsAsync(FindParams findParams);
+        Task<FindResult<UserContactRequest>> FindContactRequestsAsync(FindParams findParams);
+        Task<FindResult<User>> FindUsersAsync(FindParams findParams);
         Task<Lifeform> GetLifeformAsync(int id);
         Task<Specimen> GetSpecimenAsync(int id);
         Task<Specimen> PutSpecimenAsync(Specimen specimen);
@@ -41,7 +45,6 @@ namespace Emergence.Client.Common
         Task<UserContact> AddContactAsync(UserContactRequest userContactRequest);
         Task<bool> RemoveContactAsync(UserContact userContact);
         Task<bool> RemoveContactRequestAsync(UserContactRequest userContactRequest);
-        Task<FindResult<UserContact>> FindContactsAsync(FindParams findParams);
-        Task<FindResult<UserContactRequest>> FindContactRequestsAsync(FindParams findParams);
+        Task<UserMessage> SendMessageAsync(UserMessage message);
     }
 }

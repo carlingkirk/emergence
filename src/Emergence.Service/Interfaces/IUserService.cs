@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 
 namespace Emergence.Service.Interfaces
@@ -13,5 +14,6 @@ namespace Emergence.Service.Interfaces
         Task<User> UpdateUserAsync(User user);
         Task<User> AddUserAsync(User user);
         Task<string> GetRandomNameAsync();
+        Task<FindResult<UserSummary>> FindUsers(FindParams findParams, string userId);
     }
 }

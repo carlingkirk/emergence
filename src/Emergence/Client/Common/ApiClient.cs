@@ -90,6 +90,20 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<UserMessage>>(result);
         }
 
+        public async Task<FindResult<UserMessage>> FindSentMessagesAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/message/sent/find", findParams);
+
+            return await ReadResult<FindResult<UserMessage>>(result);
+        }
+
+        public async Task<FindResult<User>> FindUsersAsync(FindParams findParams)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/user/find", findParams);
+
+            return await ReadResult<FindResult<User>>(result);
+        }
+
         public async Task<Specimen> GetSpecimenAsync(int id)
         {
             var result = await _httpClient.GetAsync($"/api/specimen/{id}");
@@ -303,6 +317,13 @@ namespace Emergence.Client.Common
             var response = await ReadResult(result);
 
             return true;
+        }
+
+        public async Task<UserMessage> SendMessageAsync(UserMessage message)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/message", message);
+
+            return await ReadResult<UserMessage>(result);
         }
 
         private async Task<T> ReadResult<T>(HttpResponseMessage result)

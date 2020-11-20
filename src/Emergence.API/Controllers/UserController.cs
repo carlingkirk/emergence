@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
@@ -42,6 +43,15 @@ namespace Emergence.API.Controllers
             }
 
             return await GetVisibleUser(user, viewingUser);
+        }
+
+        [HttpPost]
+        [Route("find")]
+        public async Task<FindResult<UserSummary>> FindUsers(FindParams findParams)
+        {
+            var result = await _userService.FindUsers(findParams, UserId);
+
+            return result;
         }
 
         private async Task<User> GetVisibleUser(User user, User requestor)

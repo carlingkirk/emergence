@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
@@ -122,6 +126,58 @@ namespace Emergence.Service
         {
             var result = await _nameRepository.GetAsync(n => true);
             return result.Name;
+        }
+
+        public async Task<FindResult<Data.Shared.Models.UserSummary>> FindUsers(FindParams findParams, string userId)
+        {
+            var userQuery = _userRepository.WhereWithIncludes(u => u.UserId != userId &&
+                                                                   (findParams.SearchTextQuery == null ||
+                                                                   EF.Functions.Like(u.DisplayName, findParams.SearchTextQuery)),
+                                                                   false);
+
+            userQuery = OrderBy(userQuery, findParams.SortBy, findParams.SortDirection);
+
+            var count = userQuery.Count();
+            var userResult = userQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+
+            var users = new List<Data.Shared.Models.UserSummary>();
+            await foreach (var user in userResult)
+            {
+                users.Add(user.AsSummaryModel());
+            }
+
+            return new FindResult<Data.Shared.Models.UserSummary>
+            {
+                Count = count,
+                Results = users
+            };
+        }
+
+        private IQueryable<User> OrderBy(IQueryable<User> userQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
+        {
+            if (sortDirection == SortDirection.None)
+            {
+                return userQuery;
+            }
+            if (sortBy == null)
+            {
+                sortBy = "DisplayName";
+            }
+            var userSorts = new Dictionary<string, Expression<Func<User, object>>>
+            {
+                { "DisplayName", u => u.DisplayName }
+            };
+
+            if (sortDirection == SortDirection.Descending)
+            {
+                userQuery = userQuery.WithOrder(a => a.OrderByDescending(userSorts[sortBy]));
+            }
+            else
+            {
+                userQuery = userQuery.WithOrder(a => a.OrderBy(userSorts[sortBy]));
+            }
+
+            return userQuery;
         }
     }
 }

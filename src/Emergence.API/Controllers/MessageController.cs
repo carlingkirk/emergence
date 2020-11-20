@@ -69,7 +69,7 @@ namespace Emergence.API.Controllers
         }
 
         [HttpPost]
-        [Route("request/find")]
+        [Route("sent/find")]
         public async Task<FindResult<UserMessage>> FindUserContactRequests(FindParams findParams)
         {
             var result = await _messageService.FindSentMessages(findParams, UserId);
