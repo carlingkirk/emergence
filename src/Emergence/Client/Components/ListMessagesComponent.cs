@@ -10,11 +10,18 @@ namespace Emergence.Client.Components
     {
         [Parameter]
         public bool Sent { get; set; }
-        protected static Dictionary<string, string> Headers =>
+        protected Dictionary<string, string> GetHeaders() => Sent ?
             new Dictionary<string, string>
             {
                 { "DisplayName", "Display Name" },
-                { "DateSent", "Date Sent" }
+                { "DateSent", "Date Sent" },
+                { "MessageBody", "Message" }
+            } :
+            new Dictionary<string, string>
+            {
+                { "SenderName", "Display Name" },
+                { "DateSent", "Date Sent" },
+                { "MessageBody", "Message" }
             };
 
         public override async Task<FindResult<UserMessage>> GetListAsync(FindParams findParams)

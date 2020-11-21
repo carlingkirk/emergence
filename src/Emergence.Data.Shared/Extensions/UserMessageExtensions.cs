@@ -7,8 +7,8 @@ namespace Emergence.Data.Shared.Extensions
         public static Models.UserMessage AsModel(this UserMessage source) => new Models.UserMessage
         {
             Id = source.Id,
-            User = source.User.AsSummaryModel(),
-            Sender = source.Sender.AsSummaryModel(),
+            User = source.User?.AsSummaryModel(),
+            Sender = source.Sender?.AsSummaryModel(),
             DateSent = source.DateSent,
             MessageBody = source.MessageBody
         };

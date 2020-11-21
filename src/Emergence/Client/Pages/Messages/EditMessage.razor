@@ -4,8 +4,6 @@
 @using Blazored.Typeahead
 @inherits MessageComponent
 
-@inject IApiClient ApiClient
-
 <EditForm Model="@Message" OnValidSubmit="SendMessageAsync">
     <div class="form-group">
         <div class="row">
@@ -32,7 +30,7 @@
             </div>
             <div class="col-lg-12 col-xs">
                 <label for="message-body">Message</label>
-                <InputText @bind-Value="@Message.MessageBody" class="form-control" id="message-body" />
+                <InputTextArea @bind-Value="@Message.MessageBody" class="form-control" id="message-body" />
             </div>
         </div>
     </div>
@@ -49,6 +47,8 @@
 </EditForm>
 
 @code {
+    [Parameter]
+    public UserSummary Recipient { get; set; }
     [CascadingParameter]
     protected BlazoredModalInstance BlazoredModal { get; set; }
     public UserSummary SelectedUser { get; set; }
@@ -57,6 +57,12 @@
     {
         base.OnInitialized();
         IsEditing = true;
+
+        if (Recipient != null)
+        {
+            SelectedUser = Recipient;
+        }
+
         Message = new UserMessage
         {
             User = SelectedUser
@@ -85,7 +91,7 @@
         await Cancel.Invoke();
     }
 
-    protected async Task<IEnumerable<User>> FindUsersAsync(string searchText)
+    protected async Task<IEnumerable<UserSummary>> FindUsersAsync(string searchText)
     {
         var result = await ApiClient.FindUsersAsync(new FindParams
         {

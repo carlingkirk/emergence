@@ -146,5 +146,14 @@ namespace Emergence.Client.Common
             var modal = _modalService.Show<MessageViewer>("Message", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
+
+        public async Task<ModalResult> ShowMessageModal(UserSummary recipient)
+        {
+            var modalParams = new ModalParameters();
+            modalParams.Add("Recipient", recipient);
+
+            var modal = _modalService.Show<MessageViewer>("Message", modalParams, DefaultModalOptions);
+            return await modal.Result;
+        }
     }
 }

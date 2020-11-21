@@ -1,0 +1,36 @@
+@using Emergence.Client.Components
+@inherits MessageComponent
+
+@if (Message != null)
+{
+    <div class="form-group">
+        <div class="row">
+            @if (!string.IsNullOrEmpty(Message.User?.DisplayName))
+            {
+                <div class="col-lg-4 col-xs">
+                    <UserDisplay Label="By" User="Message.User" />
+                </div>
+            }
+            <div class="col-lg-4 col-xs">
+                <div>
+                    <label for="message-body">Message</label>
+                </div>
+                <div>
+                    <span class="text-body">@Message.MessageBody</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-xs">
+                <div>
+                    <label for="date-sent">Date Sent</label>
+                </div>
+                <div>
+                    <span class="text-body">@Message.DateSent</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+}

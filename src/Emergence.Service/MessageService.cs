@@ -122,6 +122,7 @@ namespace Emergence.Service
             {
                 { "DisplayName", um => um.User.DisplayName },
                 { "SenderName", um => um.Sender.DisplayName },
+                { "MessageBody", um => um.MessageBody },
                 { "DateSent", um => um.DateSent }
             };
 
