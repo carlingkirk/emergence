@@ -15,15 +15,13 @@ namespace Emergence.Client.Components
             {
                 { "DisplayName", "To" },
                 { "DateSent", "Date Sent" },
-                { "Subject", "Subject" },
-                { "MessageBody", "Message" }
+                { "Subject", "Subject / Message" }
             } :
             new Dictionary<string, string>
             {
                 { "SenderName", "From" },
                 { "DateSent", "Date Sent" },
-                { "Subject", "Subject" },
-                { "MessageBody", "Message" }
+                { "Subject", "Subject / Message" }
             };
 
         public override async Task<FindResult<UserMessage>> GetListAsync(FindParams findParams)

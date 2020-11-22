@@ -13,7 +13,7 @@
         @if (List != null)
         {
             <div class="group">
-                <table>
+                <table style="table-layout:fixed;width: 100%;">
                     <SortableHeaders HeaderNames="GetHeaders()" Sort="SortAsync" @bind-Values="List" />
                     @if (!List.Any())
                     {
@@ -22,26 +22,33 @@
                     @foreach (var message in List)
                     {
                     <tr>
-                        <td style="padding: .5rem;">
-                            @if (Sent)
-                            {
-                                <UserDisplay User="message.User" Size="35" />
-                            }
-                            else
-                            {
-                                <UserDisplay User="message.Sender" Size="35" />
-                            }
-                        </td>
-                        <td>
-                            <span>@message.DateSent.ToLocalTime().ToShortDateString()</span>
-                        </td>
-                        <td>
-                            <a href="" @onclick="async () => await ModalServiceClient.ShowMessageModal(message, Sent)" @onclick:preventDefault>
-                                <span>@message.Subject</span>
-                            </a>
-                        </td>
-                        <td>
-                            <span>@message.ShortMessage</span>
+                        <td colspan="3">
+                            <div class="container item-card">
+                                <div class="group">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-xs-6">
+                                            @if (Sent)
+                                            {
+                                                <UserDisplay User="message.User" Size="35" />
+                                            }
+                                            else
+                                            {
+                                                <UserDisplay User="message.Sender" Size="35" />
+                                            }
+                                        </div>
+                                        <div class="col-lg-3 col-xs-6">
+                                            <span>@message.DateSent.ToLocalTime()</span>
+                                        </div>
+                                        <div class="col-lg-6 col-xs">
+                                            <a href="" @onclick="async () => await ModalServiceClient.ShowMessageModal(message, Sent)" @onclick:preventDefault>
+                                                <span>@message.Subject</span>
+                                            </a>
+                                            <br />
+                                            <span>@message.ShortMessage</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     }
