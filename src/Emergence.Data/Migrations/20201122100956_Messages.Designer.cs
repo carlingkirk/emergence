@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emergence.Data.Migrations
 {
     [DbContext(typeof(EmergenceDbContext))]
-    [Migration("20201120124932_Messages")]
+    [Migration("20201122100956_Messages")]
     partial class Messages
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -949,10 +949,13 @@ namespace Emergence.Data.Migrations
                     b.Property<string>("MessageBody")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SenderId")
+                    b.Property<int?>("SenderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1173,15 +1176,11 @@ namespace Emergence.Data.Migrations
                 {
                     b.HasOne("Emergence.Data.Shared.Stores.User", "Sender")
                         .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SenderId");
 
                     b.HasOne("Emergence.Data.Shared.Stores.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Sender");
 

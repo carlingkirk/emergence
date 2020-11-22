@@ -10,6 +10,7 @@ namespace Emergence.Data.Shared.Extensions
             User = source.User?.AsSummaryModel(),
             Sender = source.Sender?.AsSummaryModel(),
             DateSent = source.DateSent,
+            Subject = source.Subject,
             MessageBody = source.MessageBody
         };
 
@@ -19,6 +20,7 @@ namespace Emergence.Data.Shared.Extensions
             UserId = source.User.Id,
             SenderId = source.Sender.Id,
             DateSent = source.DateSent,
+            Subject = source.Subject,
             MessageBody = source.MessageBody
         };
     }

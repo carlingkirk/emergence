@@ -13,8 +13,9 @@ namespace Emergence.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    SenderId = table.Column<int>(type: "int", nullable: true),
+                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MessageBody = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateSent = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -26,7 +27,7 @@ namespace Emergence.Data.Migrations
                         column: x => x.SenderId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserMessages_Users_UserId",
                         column: x => x.UserId,
@@ -46,6 +47,10 @@ namespace Emergence.Data.Migrations
                 column: "UserId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder) => migrationBuilder.DropTable(name: "UserMessages");
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "UserMessages");
+        }
     }
 }
