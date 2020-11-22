@@ -8,19 +8,42 @@
         <button type="button" class="btn btn-primary" @onclick="Back">Back</button>
     }
     <span class="title">Message: </span>
+    @if (Message != null && (!string.IsNullOrEmpty(Message.Subject)))
+    {
+        <span>@Message.Subject</span>
+    }
+    else
+    {
+        <span class="font-italic">New</span>
+    }
 </div>
 <div class="group">
     @if (IsEditing && Message != null)
     {
-        <EditMessage Message="Message" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        <EditMessage Cancel="GoBack" Message="Message" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
     }
     else if (Message != null)
     {
-        <ViewMessage Message="Message" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        <ViewMessage Cancel="GoBack" Message="Message" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
     }
     else
     {
         <span>Loading...</span>
+    }
+
+    @if (IsReplying)
+    {
+        <EditMessage Cancel="GoBack" Message="ReplyMessage" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+    }
+    else if (!IsEditing)
+    {
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary" @onclick="Reply">
+                    <span class="oi oi-plus btn-oi"></span>Reply
+                </button>
+            </div>
+        </div>
     }
 </div>
 

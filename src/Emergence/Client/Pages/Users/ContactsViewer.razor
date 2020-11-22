@@ -1,3 +1,4 @@
+@using Emergence.Client.Pages.Messages
 @page "/contacts"
 
 <ul class="nav nav-tabs">
@@ -13,10 +14,9 @@
 <div class="tab-content" id="manage-contacts">
     @if (CurrentTab.Key == "contacts")
     {
-    <div class="tab-pane fade show active" id="contacts" role="tabpanel" aria-labelledby="contacts">
-        <div class="group">
-            <div class="row">
-                <div class="form-group">
+        <div class="tab-pane fade show active" id="contacts" role="tabpanel" aria-labelledby="contacts">
+            <div class="group">
+                <div class="row">
                     <div class="col">
                         <label for="specimens">Your Contacts</label>
                         <ListContacts />
@@ -24,18 +24,41 @@
                 </div>
             </div>
         </div>
-    </div>
     }
     else if (CurrentTab.Key == "contact-requests")
     {
-    <div class="tab-pane fade show active" id="contact-requests" role="tabpanel" aria-labelledby="contact-requests">
-        <div class="group">
-            <div class="row">
-                <div class="form-group">
+        <div class="tab-pane fade show active" id="contact-requests" role="tabpanel" aria-labelledby="contact-requests">
+            <div class="group">
+                <div class="row">
                     <div class="col">
                         <label for="specimens">Your Contact Requests</label>
                         <ListContactRequests />
                     </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (CurrentTab.Key == "my-messages")
+    {
+    <div class="tab-pane fade show active" id="my-messages" role="tabpanel" aria-labelledby="my-messages">
+        <div class="group">
+            <div class="row">
+                <div class="col">
+                    <label for="my-message-list">Your Messages</label>
+                    <ListMessages />
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    else if (CurrentTab.Key == "sent-messages")
+    {
+    <div class="tab-pane fade show active" id="sent-messages" role="tabpanel" aria-labelledby="sent-messages">
+        <div class="group">
+            <div class="row">
+                <div class="col">
+                    <label for="sent-message-list">Sent Messages</label>
+                    <ListMessages Sent="true" />
                 </div>
             </div>
         </div>
@@ -46,9 +69,12 @@
 @code {
     protected Dictionary<string, string> Tabs => new Dictionary<string, string>
     {
+        { "my-messages", "Your Messages" },
+        { "sent-messages", "Sent Messages"},
         { "contacts", "My Contacts" },
-        { "contact-requests", "My Contact Requests"}
+        { "contact-requests", "My Contact Requests"},
     };
+
     protected KeyValuePair<string, string> CurrentTab { get; set; }
 
     protected override void OnInitialized()

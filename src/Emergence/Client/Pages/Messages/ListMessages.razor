@@ -10,7 +10,6 @@
             <input type="text" @bind="SearchText" id="search" />
             <button class="btn btn-primary" type="submit">Search</button>
         }
-
         @if (List != null)
         {
             <div class="group">
@@ -37,17 +36,13 @@
                             <span>@message.DateSent.ToLocalTime().ToShortDateString()</span>
                         </td>
                         <td>
-                            <a href="" @onclick="async () => await ModalServiceClient.ShowMessageModal(message)" @onclick:preventDefault>
-                                <span>@message.ShortMessage</span>
+                            <a href="" @onclick="async () => await ModalServiceClient.ShowMessageModal(message, Sent)" @onclick:preventDefault>
+                                <span>@message.Subject</span>
                             </a>
                         </td>
-                        @if (!Sent)
-                        {
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary" @onclick="async () => await ModalServiceClient.ShowMessageModal(message.Sender)">
-                            <span class="oi oi-plus btn-oi"></span>Reply</button>
+                            <span>@message.ShortMessage</span>
                         </td>
-                        }
                     </tr>
                     }
                 </table>
@@ -56,6 +51,9 @@
                     {
                         <Pager Page="PageAsync" @bind-Values="List" Count="@Count" Take="@Take" CurrentPage="@CurrentPage"></Pager>
                     }
+                    <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowMessageModal(null, false))">
+                        <span class="oi oi-plus btn-oi"></span>Message
+                    </button>
                 </div>
             </div>
         }

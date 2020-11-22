@@ -57,6 +57,7 @@ namespace Emergence.Service
             var messageQuery = _userMessageRepository.WhereWithIncludes(um => um.User.UserId == userId &&
                                                                               (findParams.SearchTextQuery == null ||
                                                                                EF.Functions.Like(um.Sender.DisplayName, findParams.SearchTextQuery) ||
+                                                                               EF.Functions.Like(um.Subject, findParams.SearchTextQuery) ||
                                                                                EF.Functions.Like(um.MessageBody, findParams.SearchTextQuery)),
                                                                         false,
                                                                         um => um.Include(um => um.User),
@@ -85,6 +86,7 @@ namespace Emergence.Service
             var messageQuery = _userMessageRepository.WhereWithIncludes(um => um.Sender.UserId == senderId &&
                                                                               (findParams.SearchTextQuery == null ||
                                                                                EF.Functions.Like(um.User.DisplayName, findParams.SearchTextQuery) ||
+                                                                               EF.Functions.Like(um.Subject, findParams.SearchTextQuery) ||
                                                                                EF.Functions.Like(um.MessageBody, findParams.SearchTextQuery)),
                                                                         false,
                                                                         um => um.Include(um => um.User),
@@ -122,6 +124,7 @@ namespace Emergence.Service
             {
                 { "DisplayName", um => um.User.DisplayName },
                 { "SenderName", um => um.Sender.DisplayName },
+                { "Subject", um => um.Subject },
                 { "MessageBody", um => um.MessageBody },
                 { "DateSent", um => um.DateSent }
             };

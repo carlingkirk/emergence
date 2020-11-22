@@ -29,13 +29,17 @@
                 </BlazoredTypeahead>
             </div>
             <div class="col-lg-12 col-xs">
+                <label for="subject">Subject</label>
+                <InputText @bind-Value="@Message.Subject" class="form-control" id="subject" />
+            </div>
+            <div class="col-lg-12 col-xs">
                 <label for="message-body">Message</label>
                 <InputTextArea @bind-Value="@Message.MessageBody" class="form-control" id="message-body" />
             </div>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary">Send</button>
     @if (BlazoredModal != null)
     {
         <button type="button" @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
@@ -47,31 +51,15 @@
 </EditForm>
 
 @code {
-    [Parameter]
-    public UserSummary Recipient { get; set; }
-    [CascadingParameter]
-    protected BlazoredModalInstance BlazoredModal { get; set; }
-    public UserSummary SelectedUser { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        IsEditing = true;
-
-        if (Recipient != null)
-        {
-            SelectedUser = Recipient;
-        }
-
-        Message = new UserMessage
-        {
-            User = SelectedUser
-        };
-    }
-
     protected async Task SendMessageAsync()
     {
         Message.User = SelectedUser;
+
+        if (string.IsNullOrEmpty(Message.Subject))
+        {
+            Message.Subject = "(no subject)";
+        }
+
         var message = await ApiClient.SendMessageAsync(Message);
 
         if (BlazoredModal != null)

@@ -11,6 +11,6 @@ namespace Emergence.Data.Shared.Models
         public string MessageBody { get; set; }
         public DateTime DateSent { get; set; }
 
-        public string ShortMessage => MessageBody != null ? MessageBody.ToString().Length > 40 ? MessageBody.ToString().Substring(0, 255) + "..." : MessageBody.ToString() : null;
+        public string ShortMessage => MessageBody != null ? MessageBody.ToString().Length > 160 ? MessageBody.ToString().Substring(0, 160) + "..." : MessageBody.ToString() : null;
     }
 }

@@ -13,14 +13,16 @@ namespace Emergence.Client.Components
         protected Dictionary<string, string> GetHeaders() => Sent ?
             new Dictionary<string, string>
             {
-                { "DisplayName", "Display Name" },
+                { "DisplayName", "To" },
                 { "DateSent", "Date Sent" },
+                { "Subject", "Subject" },
                 { "MessageBody", "Message" }
             } :
             new Dictionary<string, string>
             {
-                { "SenderName", "Display Name" },
+                { "SenderName", "From" },
                 { "DateSent", "Date Sent" },
+                { "Subject", "Subject" },
                 { "MessageBody", "Message" }
             };
 

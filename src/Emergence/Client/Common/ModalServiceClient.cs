@@ -138,19 +138,23 @@ namespace Emergence.Client.Common
             return await modal.Result;
         }
 
-        public async Task<ModalResult> ShowMessageModal(UserMessage message)
+        public async Task<ModalResult> ShowMessageModal(UserMessage message, bool isSent)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Message", message);
+            modalParams.Add("IsModal", true);
+            modalParams.Add("IsSent", isSent);
 
             var modal = _modalService.Show<MessageViewer>("Message", modalParams, DefaultModalOptions);
             return await modal.Result;
         }
 
-        public async Task<ModalResult> ShowMessageModal(UserSummary recipient)
+        public async Task<ModalResult> ShowMessageModal(UserSummary recipient, string subject)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("Recipient", recipient);
+            modalParams.Add("Subject", subject);
+            modalParams.Add("IsModal", true);
 
             var modal = _modalService.Show<MessageViewer>("Message", modalParams, DefaultModalOptions);
             return await modal.Result;
