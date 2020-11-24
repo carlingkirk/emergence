@@ -12,6 +12,9 @@ namespace Emergence.Data.Shared.Extensions
             InventoryItem = source.InventoryItem != null ? source.InventoryItem.AsModel() : new Models.InventoryItem { InventoryItemId = source.InventoryItemId },
             Lifeform = source.Lifeform != null ? source.Lifeform.AsModel() : source.LifeformId.HasValue ? new Models.Lifeform { LifeformId = source.LifeformId.Value } : null,
             PlantInfo = source.PlantInfo != null ? source.PlantInfo.AsModel() : source.PlantInfoId.HasValue ? new Models.PlantInfo { PlantInfoId = source.PlantInfoId.Value } : null,
+            ParentSpecimen = source.ParentSpecimen != null ?
+                source.ParentSpecimen.AsModel() : source.ParentSpecimenId.HasValue ?
+                    new Models.Specimen { SpecimenId = source.ParentSpecimenId.Value } : null,
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,
@@ -25,6 +28,7 @@ namespace Emergence.Data.Shared.Extensions
             InventoryItemId = source.InventoryItem.InventoryItemId,
             LifeformId = source.Lifeform?.LifeformId,
             PlantInfoId = source.PlantInfo?.PlantInfoId,
+            ParentSpecimenId = source.ParentSpecimen?.SpecimenId,
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,

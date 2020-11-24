@@ -94,13 +94,22 @@
                             }
                             else if (UpdateSpecimen && SelectedSpecimen?.InventoryItem?.Quantity > 0)
                             {
-                                <label for="enable-specimen-update">
-                                    Original specimen quantity will be reduced
-                                    @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
-                                    {
-                                        <span>to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity)</span>
-                                    }
-                                </label>
+                                if (Activity.ActivityType == ActivityType.SeedCollection)
+                                {
+                                    <label for="enable-specimen-update">
+                                        New specimen will be created with stage @GetSpecimenStage(Activity.ActivityType).ToFriendlyName()
+                                    </label>
+                                }
+                                else
+                                {
+                                    <label for="enable-specimen-update">
+                                        Original specimen quantity will be reduced
+                                        @if (Activity.Quantity.HasValue && Activity.Quantity.Value > 0)
+                                        {
+                                            <span>to @(SelectedSpecimen.InventoryItem.Quantity - Activity.Quantity)</span>
+                                        }
+                                    </label>
+                                }
                             }
                             else if (!UpdateSpecimen && Activity.Quantity.HasValue)
                             {

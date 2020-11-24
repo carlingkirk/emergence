@@ -10,9 +10,11 @@ namespace Emergence.Data.Shared.Stores
         public int? LifeformId { get; set; }
         public string SpecimenStage { get; set; }
         public int? PlantInfoId { get; set; }
+        public int? ParentSpecimenId { get; set; }
         public Lifeform Lifeform { get; set; }
         public InventoryItem InventoryItem { get; set; }
         public PlantInfo PlantInfo { get; set; }
+        public Specimen ParentSpecimen { get; set; }
         [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]

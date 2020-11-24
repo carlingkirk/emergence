@@ -25,7 +25,8 @@ namespace Emergence.Client.Components
         protected bool ShowAutoSpecimen => Activity.ActivityId == 0 && !IsNewSpecimen &&
             (Activity.ActivityType == ActivityType.PlantInGround ||
              Activity.ActivityType == ActivityType.Germination ||
-             Activity.ActivityType == ActivityType.Stratification);
+             Activity.ActivityType == ActivityType.Stratification ||
+             Activity.ActivityType == ActivityType.SeedCollection);
 
         public EditActivityComponent()
         {
@@ -87,6 +88,7 @@ namespace Emergence.Client.Components
                             DateCreated = DateTime.UtcNow,
                             CreatedBy = UserId
                         },
+                        ParentSpecimen = SelectedSpecimen,
                         CreatedBy = UserId,
                         DateCreated = DateTime.UtcNow
                     };
@@ -209,6 +211,8 @@ namespace Emergence.Client.Components
                     return SpecimenStage.Stratification;
                 case ActivityType.PlantInGround:
                     return SpecimenStage.InGround;
+                case ActivityType.SeedCollection:
+                    return SpecimenStage.Seed;
                 default:
                     return SpecimenStage.Unknown;
             }

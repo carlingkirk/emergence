@@ -17,7 +17,7 @@ namespace Emergence.Data.Shared.Models
         public IEnumerable<Photo> Photos { get; set; }
         public Lifeform Lifeform { get; set; }
         public PlantInfo PlantInfo { get; set; }
-
+        public Specimen ParentSpecimen { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
 

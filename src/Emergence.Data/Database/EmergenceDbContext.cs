@@ -89,6 +89,8 @@ namespace Emergence.Data.Repository
 
             modelBuilder.Entity<UserMessage>().HasOne(u => u.User);
             modelBuilder.Entity<UserMessage>().HasOne(u => u.Sender);
+
+            modelBuilder.Entity<Specimen>().HasOne(s => s.ParentSpecimen);
         }
     }
 }
