@@ -27,6 +27,7 @@ namespace Emergence.Client.Components
         public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages != null && (PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any());
         public string CommonName => PlantInfo?.CommonName ?? PlantInfo.Lifeform?.CommonName ?? "";
         public string ScientificName => PlantInfo?.ScientificName ?? PlantInfo.Lifeform?.ScientificName ?? "";
+        protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (PlantInfo?.CreatedBy == UserId);
 
         protected override async Task OnInitializedAsync()
         {

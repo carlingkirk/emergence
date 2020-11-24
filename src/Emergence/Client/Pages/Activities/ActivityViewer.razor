@@ -34,7 +34,7 @@
     {
         <span>Loading...</span>
     }
-    @if (IsEditable && !IsEditing && Activity != null && Activity.ActivityId > 0)
+    @if (IsOwner && !IsEditing && Activity != null && Activity.ActivityId > 0)
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
         <button type="button" class="btn btn-primary" @onclick="async () => await RemoveActivity()">Delete</button>
@@ -49,7 +49,5 @@
         {
             await IsItemLoadedChanged.InvokeAsync(false);
         }
-    }
-
-    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && (Activity?.CreatedBy == UserId);
+    } 
 }

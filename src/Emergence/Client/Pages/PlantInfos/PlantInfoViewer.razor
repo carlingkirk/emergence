@@ -39,7 +39,7 @@
         <span>Loading...</span>
     }
 
-    @if (IsEditable && !IsEditing && PlantInfo != null && PlantInfo.PlantInfoId > 0)
+    @if (IsOwner && !IsEditing && PlantInfo != null && PlantInfo.PlantInfoId > 0)
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
         <button type="button" class="btn btn-primary" @onclick="async () => await RemovePlantInfo()">Delete</button>
@@ -55,6 +55,4 @@
             await IsItemLoadedChanged.InvokeAsync(false);
         }
     }
-
-    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && PlantInfo?.CreatedBy == UserId;
 }

@@ -37,24 +37,35 @@ namespace Emergence.Client.Components
                     SelectedUser = Recipient;
                 }
 
-                Message = new UserMessage
+                if (Message == null)
                 {
-                    User = SelectedUser,
-                    Subject = Subject
-                };
+                    Message = new UserMessage
+                    {
+                        User = SelectedUser,
+                        Subject = Subject
+                    };
+                }
             }
             else
             {
+                if (Message.Id == 0)
+                {
+                    IsEditing = true;
+                }
+
                 SelectedUser = Message.User;
             }
         }
 
         protected void Reply()
         {
+            var quotedBody = "> " + Message.MessageBody.Replace(Environment.NewLine, Environment.NewLine + "> ");
             ReplyMessage = new UserMessage
             {
                 User = IsSent ? Message.User : Message.Sender,
-                Subject = "Re: " + Message.Subject
+                Subject = "Re: " + Message.Subject,
+                MessageBody = $"{Environment.NewLine}{Environment.NewLine}> On {Message.DateSent.ToShortDateString()} at {Message.DateSent.ToShortTimeString()}, " +
+                $"{Message.Sender.DisplayName} wrote {Environment.NewLine}{quotedBody}"
             };
 
             IsReplying = true;

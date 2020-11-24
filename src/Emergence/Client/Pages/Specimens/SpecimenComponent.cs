@@ -12,12 +12,15 @@ namespace Emergence.Client.Components
     {
         [Parameter]
         public Specimen Specimen { get; set; }
+        [Inject]
+        protected NavigationManager NavigationManager { get; set; }
         public Origin SelectedOrigin { get; set; }
         public Lifeform SelectedLifeform { get; set; }
         public List<Photo> UploadedPhotos { get; set; }
         public IEnumerable<SpecimenStage> SpecimenStages => Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>();
         public IEnumerable<ItemType> ItemTypes => Enum.GetValues(typeof(ItemType)).Cast<ItemType>();
         public IEnumerable<ItemStatus> Statuses => Enum.GetValues(typeof(ItemStatus)).Cast<ItemStatus>();
+        protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (Specimen?.CreatedBy == UserId);
 
         protected override async Task OnInitializedAsync()
         {
@@ -80,5 +83,12 @@ namespace Emergence.Client.Components
                 await UnloadItem();
             }
         }
+
+        protected UserMessage GetMessage() => new UserMessage
+        {
+            User = Specimen.InventoryItem.User,
+            Subject = "Re: " + Specimen.Lifeform.CommonName + " " + Specimen.Lifeform.ScientificName,
+            MessageBody = $"Regarding your {Specimen.Lifeform.ScientificName} at {NavigationManager.BaseUri + "specimen/" + Specimen.SpecimenId},\r\n"
+        };
     }
 }

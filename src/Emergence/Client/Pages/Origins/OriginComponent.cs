@@ -15,6 +15,7 @@ namespace Emergence.Client.Components
         public Origin SelectedParentOrigin { get; set; }
         public string OriginUri { get; set; }
         public IEnumerable<OriginType> OriginTypes => Enum.GetValues(typeof(OriginType)).Cast<OriginType>();
+        protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (Origin?.CreatedBy == UserId);
 
         protected override async Task OnInitializedAsync()
         {

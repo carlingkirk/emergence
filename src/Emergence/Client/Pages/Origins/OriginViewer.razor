@@ -34,7 +34,7 @@
     {
         <span>Loading...</span>
     }
-    @if (IsEditable && !IsEditing && Origin != null && Origin.OriginId > 0)
+    @if (IsOwner && !IsEditing && Origin != null && Origin.OriginId > 0)
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
         <button type="button" class="btn btn-primary" @onclick="async () => await RemoveOrigin()">Delete</button>
@@ -49,6 +49,4 @@
             await IsItemLoadedChanged.InvokeAsync(false);
         }
     }
-
-    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && Origin?.CreatedBy == UserId;
 }

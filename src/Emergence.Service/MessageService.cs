@@ -112,13 +112,10 @@ namespace Emergence.Service
 
         private IQueryable<UserMessage> OrderBy(IQueryable<UserMessage> messageQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {
-            if (sortDirection == SortDirection.None)
-            {
-                return messageQuery;
-            }
             if (sortBy == null)
             {
                 sortBy = "DateSent";
+                sortDirection = SortDirection.Descending;
             }
             var messageSorts = new Dictionary<string, Expression<Func<UserMessage, object>>>
             {

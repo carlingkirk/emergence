@@ -3,6 +3,7 @@
 @using Emergence.Client.Pages.Activities
 
 @inherits SpecimenComponent
+@inject IModalServiceClient ModalServiceClient
 
 <div class="card-header h3">
     @if (!IsModal)
@@ -39,10 +40,16 @@
     {
         <span>Loading...</span>
     }
-    @if (IsEditable && !IsEditing && Specimen != null && Specimen.SpecimenId > 0)
+    @if (IsOwner && !IsEditing && Specimen != null && Specimen.SpecimenId > 0)
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
         <button type="button" class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
+    }
+    @if (!IsOwner)
+    {
+        <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowMessageModal(GetMessage(), false))">
+            <span class="oi oi-plus btn-oi"></span>Message
+        </button>
     }
 </div>
 @if (!IsEditing && Specimen != null)
@@ -67,6 +74,4 @@
             await IsItemLoadedChanged.InvokeAsync(false);
         }
     }
-
-    protected bool IsEditable => !string.IsNullOrEmpty(UserId) && Specimen?.CreatedBy == UserId;
 }

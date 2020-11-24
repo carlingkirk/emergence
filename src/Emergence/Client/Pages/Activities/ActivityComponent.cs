@@ -16,6 +16,7 @@ namespace Emergence.Client.Components
         public Specimen SelectedSpecimen { get; set; }
         public List<Photo> UploadedPhotos { get; set; }
         public IEnumerable<ActivityType> ActivityTypes => Enum.GetValues(typeof(ActivityType)).Cast<ActivityType>();
+        protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (Activity?.CreatedBy == UserId);
 
         protected override async Task OnInitializedAsync()
         {
