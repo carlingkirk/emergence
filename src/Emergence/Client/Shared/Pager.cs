@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Client.Common;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Shared

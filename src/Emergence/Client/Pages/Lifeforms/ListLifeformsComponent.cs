@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 

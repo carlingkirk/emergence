@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Microsoft.AspNetCore.Components;
 
-namespace Emergence.Client
+namespace Emergence.Client.Common
 {
     public abstract class ListComponent<T> : EmergenceComponent, ISortable<T>, ISearchable<T>, IPageable<T> where T : class
     {

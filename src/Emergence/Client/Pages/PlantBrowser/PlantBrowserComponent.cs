@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Extensions;

@@ -1,6 +1,6 @@
 using Emergence.Data.Shared;
 
-namespace Emergence.Client
+namespace Emergence.Client.Common
 {
     public interface ISortable<T>
     {

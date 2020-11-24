@@ -1,4 +1,4 @@
-namespace Emergence.Client
+namespace Emergence.Client.Common
 {
     public interface IPageable<T>
     {
