@@ -190,8 +190,18 @@ namespace Emergence.Service
             if (image.Width > maxDimension || image.Height > maxDimension)
             {
                 var aspectRatio = image.Width / (double)image.Height;
-                var newWidth = (int)Math.Floor(aspectRatio > 1 ? maxDimension : maxDimension * aspectRatio);
-                var newHeight = (int)Math.Floor(aspectRatio < 1 ? maxDimension : maxDimension * aspectRatio);
+                int newWidth;
+                int newHeight;
+                if (aspectRatio > 1)
+                {
+                    newWidth = maxDimension;
+                    newHeight = (int)Math.Floor(maxDimension / aspectRatio);
+                }
+                else
+                {
+                    newWidth = (int)Math.Floor(maxDimension * aspectRatio);
+                    newHeight = maxDimension;
+                }
                 return image.Clone(i => i.Resize(newWidth, newHeight));
             }
             return image;
