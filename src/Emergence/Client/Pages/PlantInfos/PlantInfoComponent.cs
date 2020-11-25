@@ -22,9 +22,10 @@ namespace Emergence.Client.Components
         public IEnumerable<Month> Months => Enum.GetValues(typeof(Month)).Cast<Month>();
         public IEnumerable<DistanceUnit> DistanceUnits => Enum.GetValues(typeof(DistanceUnit)).Cast<DistanceUnit>();
         public IEnumerable<StratificationType> StratificationTypes => Enum.GetValues(typeof(StratificationType)).Cast<StratificationType>();
-        public List<SoilType> ChosenSoilTypes;
-        public LinkedList<StratificationStage> ChosenStratificationStages = new LinkedList<StratificationStage>();
-        public bool AnyStratificationStages() => PlantInfo.Requirements.StratificationStages != null && (PlantInfo.Requirements.StratificationStages.Any() || ChosenStratificationStages.Any());
+        public List<SoilType> ChosenSoilTypes { get; set; }
+        public LinkedList<StratificationStage> ChosenStratificationStages { get; set; }
+        public bool AnyStratificationStages() => (PlantInfo.Requirements?.StratificationStages != null && PlantInfo.Requirements.StratificationStages.Any()) ||
+            (ChosenStratificationStages != null && ChosenStratificationStages.Any());
         public string CommonName => PlantInfo?.CommonName ?? PlantInfo.Lifeform?.CommonName ?? "";
         public string ScientificName => PlantInfo?.ScientificName ?? PlantInfo.Lifeform?.ScientificName ?? "";
         protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (PlantInfo?.CreatedBy == UserId);
