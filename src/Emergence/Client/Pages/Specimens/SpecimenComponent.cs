@@ -32,7 +32,7 @@ namespace Emergence.Client.Components
                 Specimen.Name = Specimen.InventoryItem.Name;
                 Specimen.Quantity = Specimen.InventoryItem.Quantity;
 
-                SelectedOrigin = Specimen.InventoryItem.Origin ?? null;
+                SelectedOrigin = Specimen.InventoryItem.Origin;
                 SelectedLifeform = Specimen.Lifeform;
 
                 if (Specimen.Lifeform != null)
@@ -66,7 +66,8 @@ namespace Emergence.Client.Components
                         },
                         DateCreated = DateTime.UtcNow,
                         CreatedBy = UserId
-                    }
+                    },
+                    CreatedBy = UserId
                 };
                 UploadedPhotos = new List<Photo>();
             }

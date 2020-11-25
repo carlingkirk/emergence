@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BlazorInputFile;
@@ -10,7 +11,8 @@ namespace Emergence.Client.Common
     public interface IApiClient
     {
         Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams);
-        Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams);
+        Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams, Specimen specimen);
+        Task<FindResult<Activity>> FindScheduledActivitiesAsync(FindParams findParams, DateTime date);
         Task<FindResult<UserMessage>> FindMessagesAsync(FindParams findParams);
         Task<FindResult<UserMessage>> FindSentMessagesAsync(FindParams findParams);
         Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams);

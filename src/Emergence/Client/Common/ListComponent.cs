@@ -21,6 +21,7 @@ namespace Emergence.Client.Common
         public SortDirection SortDirection { get; set; }
         public string SearchText { get; set; }
         public int CurrentPage { get; set; }
+        [Parameter]
         public int Take { get; set; }
         public int Count { get; set; }
         public bool ShowPublic { get; set; }
@@ -43,7 +44,7 @@ namespace Emergence.Client.Common
             await base.OnInitializedAsync();
 
             CurrentPage = 1;
-            Take = 12;
+            Take = Take == 0 ? 12 : Take;
             await FindAsync();
         }
 
@@ -93,7 +94,7 @@ namespace Emergence.Client.Common
         {
             await FindAsync();
 
-            if (List.Count() == 0 && CurrentPage > 1)
+            if (!List.Any() && CurrentPage > 1)
             {
                 CurrentPage--;
                 await PageAsync(CurrentPage);

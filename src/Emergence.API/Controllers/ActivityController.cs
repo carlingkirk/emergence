@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
@@ -62,18 +63,44 @@ namespace Emergence.API.Controllers
         }
 
         [HttpPost]
-        [Route("Find")]
+        [Route("find")]
         public async Task<FindResult<Activity>> FindActivities(FindParams findParams, int? specimenId)
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _activityService.FindActivities(findParams, user, specimenId);
 
+            return await FindResult(result);
+        }
+
+        [HttpPost]
+        [Route("find/scheduled")]
+        public async Task<FindResult<Activity>> FindScheduledActivities(FindParams findParams, long? date)
+        {
+            var user = await _userService.GetIdentifyingUser(UserId);
+
+            DateTime startDate;
+            if (date.HasValue)
+            {
+                startDate = new DateTime(date.Value);
+            }
+            else
+            {
+                startDate = DateTime.UtcNow;
+            }
+
+            var result = await _activityService.FindScheduledActivities(findParams, user, startDate);
+
+            return await FindResult(result);
+        }
+
+        private async Task<FindResult<Activity>> FindResult(FindResult<Activity> result)
+        {
             var typeIds = result.Results.Select(a => a.ActivityId).ToList();
             var photos = await _photoService.GetPhotosByTypeAsync(PhotoType.Activity, typeIds);
 
             foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
             {
-                var activity = result.Results.Where(a => a.ActivityId == photoGroup.Key).FirstOrDefault();
+                var activity = result.Results.FirstOrDefault(a => a.ActivityId == photoGroup.Key);
                 if (activity != null)
                 {
                     activity.Photos = photoGroup.ToList();

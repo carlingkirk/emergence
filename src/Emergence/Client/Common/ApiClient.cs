@@ -27,9 +27,16 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Activity>>(result);
         }
 
-        public async Task<FindResult<Activity>> FindActivitiesAsync(Specimen specimen, FindParams findParams)
+        public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams, Specimen specimen)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/activity/find?specimenId={specimen.SpecimenId}", findParams);
+
+            return await ReadResult<FindResult<Activity>>(result);
+        }
+
+        public async Task<FindResult<Activity>> FindScheduledActivitiesAsync(FindParams findParams, DateTime date)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/activity/find/scheduled?date={date.Ticks}", findParams);
 
             return await ReadResult<FindResult<Activity>>(result);
         }

@@ -1,7 +1,7 @@
 @using Emergence.Data.Shared.Models
 @inject IModalServiceClient ModalServiceClient
 
-<div class="col-lg-4 col-md-6 col-xs item-card">
+<div class="@(Single ? "" : "col-lg-4 col-md-6") col-xs item-card">
     <div class="group">
         <div class="row">
             <div class="col-4 card-container">
@@ -33,6 +33,8 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool Single { get; set; }
     [Parameter]
     public Photo Photo { get; set; }
     [Parameter]

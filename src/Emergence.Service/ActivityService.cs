@@ -43,21 +43,38 @@ namespace Emergence.Service
             return activityResult.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(FindParams findParams, Data.Shared.Models.User user, int? specimenId = 0)
+        public async Task<FindResult<Data.Shared.Models.Activity>> FindActivities(FindParams findParams, Data.Shared.Models.User user, int? specimenId = null)
         {
-            var activityQuery = _activityRepository.WhereWithIncludes(a => (!specimenId.HasValue ||
-                                                                            a.SpecimenId == specimenId) &&
-                                                                           (findParams.SearchTextQuery == null ||
-                                                                            EF.Functions.Like(a.Name, findParams.SearchTextQuery) ||
-                                                                            EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchTextQuery) ||
-                                                                            EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchTextQuery) ||
-                                                                            EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchTextQuery)),
-                                                                            false,
-                                                                      a => a.Include(a => a.Specimen)
-                                                                            .Include(a => a.Specimen.InventoryItem)
-                                                                            .Include(a => a.Specimen.Lifeform)
-                                                                            .Include(a => a.User));
+            var activityQuery = GetActivityQuery(findParams, user, specimenId);
 
+            return await FindResult(activityQuery, findParams);
+        }
+
+        public async Task<FindResult<Data.Shared.Models.Activity>> FindScheduledActivities(FindParams findParams, Data.Shared.Models.User user, DateTime date)
+        {
+            var activityQuery = GetActivityQuery(findParams, user);
+
+            activityQuery = activityQuery.Where(a => a.DateScheduled >= date);
+
+            return await FindResult(activityQuery, findParams);
+        }
+
+        public async Task RemoveActivityAsync(Data.Shared.Models.Activity activity) => await _activityRepository.RemoveAsync(activity.AsStore());
+
+        private IQueryable<Activity> GetActivityQuery(FindParams findParams, Data.Shared.Models.User user, int? specimenId = null)
+        {
+            var activityQuery = _activityRepository.WhereWithIncludes(a => (!specimenId.HasValue || a.SpecimenId == specimenId) &&
+                                                       (!findParams.ContactsOnly || a.User.Contacts.Any(u => u.UserId == user.Id)) &&
+                                                       (findParams.SearchTextQuery == null ||
+                                                        EF.Functions.Like(a.Name, findParams.SearchTextQuery) ||
+                                                        EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchTextQuery) ||
+                                                        EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchTextQuery) ||
+                                                        EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchTextQuery)),
+                                                  false,
+                                                  a => a.Include(a => a.Specimen)
+                                                        .Include(a => a.Specimen.InventoryItem)
+                                                        .Include(a => a.Specimen.Lifeform)
+                                                        .Include(a => a.User));
             activityQuery = activityQuery.CanViewContent(user);
 
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
@@ -67,6 +84,11 @@ namespace Emergence.Service
 
             activityQuery = OrderBy(activityQuery, findParams.SortBy, findParams.SortDirection);
 
+            return activityQuery;
+        }
+
+        private async Task<FindResult<Data.Shared.Models.Activity>> FindResult(IQueryable<Activity> activityQuery, FindParams findParams)
+        {
             var count = activityQuery.Count();
             var activityResult = activityQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
@@ -75,14 +97,13 @@ namespace Emergence.Service
             {
                 activities.Add(activity.AsModel());
             }
+
             return new FindResult<Data.Shared.Models.Activity>
             {
                 Count = count,
                 Results = activities
             };
         }
-
-        public async Task RemoveActivityAsync(Data.Shared.Models.Activity activity) => await _activityRepository.RemoveAsync(activity.AsStore());
 
         private IQueryable<Activity> OrderBy(IQueryable<Activity> activityQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {
