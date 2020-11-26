@@ -72,7 +72,7 @@
                 {
                     var photo = activity.Photos?.FirstOrDefault() ?? activity.SpecimenPhotos?.FirstOrDefault();
 
-                    <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo" Single="Single">
+                    <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo">
                         <Content>
                             <div class="col-12">
                                 <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault>

@@ -1,29 +1,52 @@
 @page "/dashboard"
 @using Emergence.Client.Common
 @using Emergence.Client.Pages.Activities
+@using Emergence.Client.Pages.Specimens
 @inject IModalServiceClient ModalServiceClient
 
 <AuthorizeView>
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
     <div class="container">
         <div class="row">
-            <div class="col-xs">
-                <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowActivityModal(0))"><span class="oi oi-plus btn-oi"></span>Activity</button>
-                <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowSpecimenModal(0))"><span class="oi oi-plus btn-oi"></span>Specimen</button>
-                <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowPlantInfoModal(0))"><span class="oi oi-plus btn-oi"></span>Plant Profile</button>
+            <div class="col col-xs">
+                <div class="group">
+                    <label for="quick-add" class="h4">Quick add</label><br />
+                    <div class="row">
+                        <div class="col-lg-2 col-xs">
+                            <button type="button" class="btn btn-primary" style="margin:.25rem 0;" @onclick="@(async () => await ModalServiceClient.ShowActivityModal(0))">
+                            <span class="oi oi-plus btn-oi"></span>Activity</button>
+                        </div>
+                        <div class="col-lg-2 col-xs">
+                            <button type="button" class="btn btn-primary" style="margin:.25rem 0;" @onclick="@(async () => await ModalServiceClient.ShowSpecimenModal(0))">
+                                <span class="oi oi-plus btn-oi"></span>Specimen
+                            </button>
+                        </div>
+                        <div class="col-lg-2 col-xs">
+                            <button type="button" class="btn btn-primary" style="margin:.25rem 0;" @onclick="@(async () => await ModalServiceClient.ShowPlantInfoModal(0))">
+                                <span class="oi oi-plus btn-oi"></span>Plant Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div class="group">
-                    <label for="contacts-activities">Upcoming activities</label>
-                    <ListActivities ShowSearch="false" Upcoming="true" Take="5" Single="true" />
+                    <label for="upcoming-activities" class="h4">Upcoming activities</label>
+                    <ActivitiesSummary ShowSearch="false" Upcoming="true" Take="5" />
                 </div>
             </div>
-            <div class="col-lg-6 col-xs">
+            <div class="col-lg-4 col-xs">
                 <div class="group">
-                    <label for="contacts-activities" class="h4">Activities from my contacts</label>
-                    <ListActivities ShowSearch="false" ContactsOnly="true" Take="5" Single="true" />
+                    <label for="contacts-activities" class="h4">My contacts' activities</label>
+                    <ActivitiesSummary ShowSearch="false" ContactsOnly="true" Take="5" />
+                </div>
+            </div>
+            <div class="col-lg-4 col-xs">
+                <div class="group">
+                    <label for="contacts-activities" class="h4">Recent specimens</label>
+                    <SpecimensSummary ShowSearch="false" Take="5" />
                 </div>
             </div>
         </div>

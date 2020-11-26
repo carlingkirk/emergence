@@ -64,7 +64,7 @@ namespace Emergence.Service
         private IQueryable<Activity> GetActivityQuery(FindParams findParams, Data.Shared.Models.User user, int? specimenId = null)
         {
             var activityQuery = _activityRepository.WhereWithIncludes(a => (!specimenId.HasValue || a.SpecimenId == specimenId) &&
-                                                       (!findParams.ContactsOnly || a.User.Contacts.Any(u => u.UserId == user.Id)) &&
+                                                       (!findParams.ContactsOnly || a.User.Contacts.Any(u => u.ContactUserId == user.Id)) &&
                                                        (findParams.SearchTextQuery == null ||
                                                         EF.Functions.Like(a.Name, findParams.SearchTextQuery) ||
                                                         EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchTextQuery) ||
@@ -77,7 +77,7 @@ namespace Emergence.Service
                                                         .Include(a => a.User));
             activityQuery = activityQuery.CanViewContent(user);
 
-            if (!string.IsNullOrEmpty(findParams.CreatedBy))
+            if (!findParams.ContactsOnly && !string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 activityQuery = activityQuery.Where(a => a.CreatedBy == findParams.CreatedBy);
             }
@@ -105,16 +105,11 @@ namespace Emergence.Service
             };
         }
 
-        private IQueryable<Activity> OrderBy(IQueryable<Activity> activityQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
+        private IQueryable<Activity> OrderBy(IQueryable<Activity> activityQuery, string sortBy = "DateCreated", SortDirection sortDirection = SortDirection.Descending)
         {
             if (sortDirection == SortDirection.None)
             {
                 return activityQuery;
-            }
-
-            if (sortBy == null)
-            {
-                sortBy = "DateCreated";
             }
 
             var activitySorts = new Dictionary<string, Expression<Func<Activity, object>>>

@@ -1,0 +1,42 @@
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions
+@inherits ListActivitiesComponent
+
+@if (List != null)
+{
+    <div class="container">
+        <div class="row">
+            @if (!List.Any())
+            {
+                <span>No activities found</span>
+            }
+            @foreach (var activity in List)
+            {
+                var photo = activity.Photos?.FirstOrDefault() ?? activity.SpecimenPhotos?.FirstOrDefault();
+
+                <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo" CompactView="true">
+                    <Content>
+                        <div class="col-12">
+                            <a href="" @onclick="() => ModalServiceClient.ShowActivityModal(activity.ActivityId)" @onclick:preventDefault>
+                                <span class="link">@(activity.Name ?? "(No name)")</span>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            @if (!activity.Name.Contains(activity.ActivityType.ToFriendlyName()))
+                            {
+                                <span>@activity.ActivityType.ToFriendlyName()</span>
+                            }
+                            <span>@(activity.DisplayDate.HasValue ? " on " +  activity.DisplayDate.Value.ToLocalTime().ToShortDateString() : "")</span>
+                        </div>
+                        @if (!Upcoming)
+                        {
+                        <div class="col-12">
+                            <span>by @activity.User.DisplayName</span>
+                        </div>
+                        }
+                    </Content>
+                </Card>
+            }
+        </div>
+    </div>
+}

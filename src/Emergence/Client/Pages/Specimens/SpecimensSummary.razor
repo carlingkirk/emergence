@@ -1,0 +1,53 @@
+@using Emergence.Client.Components
+@using Emergence.Data.Shared.Extensions
+@using Emergence.Data.Shared;
+@using Emergence.Data.Shared.Models;
+@inherits ListSpecimensComponent
+
+@if (List != null)
+{
+    <div class="container">
+        <div class="row">
+            @if (!List.Any())
+            {
+                <span>No specimens found</span>
+            }
+            @foreach (var specimen in List)
+            {
+                var photo = specimen.Photos?.FirstOrDefault();
+
+                <Card Name="@specimen.Lifeform.ScientificName" ColorSearch="@specimen.Lifeform.CommonName" Photo="@photo" CompactView="true">
+                    <Content>
+                        <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                            <div class="col-12">
+
+                                <span class="link">@specimen.Lifeform.CommonName</span>
+                            </div>
+                            <div class="col-12">
+                                <span style="font-style:italic">@specimen.Lifeform.ScientificName</span>
+                            </div>
+                        </a>
+                        <div class="col-12">
+                            <span>@specimen.InventoryItem.Quantity</span>
+                            <span>@specimen.SpecimenStage.ToFriendlyName()</span>
+                        </div>
+                    </Content>
+                </Card>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    public override async Task<FindResult<Specimen>> GetListAsync(FindParams findParams)
+    {
+        findParams.SortBy = "DateCreated";
+        findParams.SortDirection = SortDirection.Descending;
+        var result = await ApiClient.FindSpecimensAsync(findParams);
+        return new FindResult<Specimen>
+        {
+            Results = result.Results,
+            Count = result.Count
+        };
+    }
+}

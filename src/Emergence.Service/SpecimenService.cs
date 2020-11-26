@@ -85,15 +85,6 @@ namespace Emergence.Service
 
         public async Task RemoveSpecimenAsync(Data.Shared.Models.Specimen specimen) => await _specimenRepository.RemoveAsync(specimen.AsStore());
 
-        private IQueryable<Specimen> CanViewContent(IQueryable<Specimen> specimenQuery, Data.Shared.Models.User user) =>
-            specimenQuery = specimenQuery.Where(c => (c.InventoryItem.Visibility != Visibility.Hidden &&
-                                                      c.InventoryItem.User.ProfileVisibility != Visibility.Hidden) ||
-                                                     (c.InventoryItem.Visibility == Visibility.Contacts &&
-                                                      c.InventoryItem.User.Contacts.Any(c => c.UserId == user.Id) &&
-                                                      c.InventoryItem.User.InventoryItemVisibility != Visibility.Hidden) ||
-                                                     (c.InventoryItem.User.InventoryItemVisibility == Visibility.Contacts &&
-                                                      c.InventoryItem.User.Contacts.Any(c => c.UserId == user.Id)));
-
         private IQueryable<Specimen> OrderBy(IQueryable<Specimen> specimenQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
         {
             if (sortDirection == SortDirection.None)

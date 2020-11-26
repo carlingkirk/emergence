@@ -16,8 +16,6 @@ namespace Emergence.Client.Components
         public bool ContactsOnly { get; set; }
         [Parameter]
         public bool Upcoming { get; set; }
-        [Parameter]
-        public bool Single { get; set; }
         protected static Dictionary<string, string> Headers =>
             new Dictionary<string, string>
             {
