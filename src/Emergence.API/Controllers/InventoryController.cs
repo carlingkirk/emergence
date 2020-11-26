@@ -8,7 +8,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InventoryController : BaseAPIController
+    public class InventoryController : BaseApiController
     {
         private readonly IInventoryService _inventoryService;
         public InventoryController(IInventoryService inventoryService)

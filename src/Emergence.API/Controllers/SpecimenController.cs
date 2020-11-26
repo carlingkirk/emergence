@@ -10,7 +10,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SpecimenController : BaseAPIController
+    public class SpecimenController : BaseApiController
     {
         private readonly ISpecimenService _specimenService;
         private readonly IInventoryService _inventoryService;
@@ -107,7 +107,7 @@ namespace Emergence.API.Controllers
 
             foreach(var photoGroup in photos.GroupBy(p => p.TypeId))
             {
-                var specimen = result.Results.Where(s => s.SpecimenId == photoGroup.Key).FirstOrDefault();
+                var specimen = result.Results.FirstOrDefault(s => s.SpecimenId == photoGroup.Key);
                 if (specimen != null)
                 {
                     specimen.Photos = photoGroup.ToList();

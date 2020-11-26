@@ -8,7 +8,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LifeformController : BaseAPIController
+    public class LifeformController : BaseApiController
     {
         private readonly ILifeformService _lifeformService;
         public LifeformController(ILifeformService lifeformService)

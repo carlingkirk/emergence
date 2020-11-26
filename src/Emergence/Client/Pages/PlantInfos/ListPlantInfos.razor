@@ -108,12 +108,12 @@
                                         <span style="font-style:italic">@plantInfo.Lifeform.ScientificName</span>
                                     </div>
                                 </a>
-                                <div class="col-12">
-                                    @if (plantInfo.Requirements?.ZoneRequirements != null)
-                                    {
-                                        <span>Zones @plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
-                                    }
-                                </div>
+                                @if (!string.IsNullOrEmpty(plantInfo.Requirements?.ZoneRequirements.ToFriendlyString()))
+                                {
+                                    <div class="col-12">
+                                        <span>Zones @plantInfo.Requirements.ZoneRequirements</span>
+                                    </div>
+                                }
                                 <div class="col-12">
                                     <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
                                 </div>

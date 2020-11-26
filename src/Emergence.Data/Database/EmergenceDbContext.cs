@@ -41,11 +41,11 @@ namespace Emergence.Data.Repository
         public virtual DbSet<UserMessage> UserMessages { get; set; }
         public virtual DbSet<DisplayName> DisplayNames { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (IsLoggingEnabled)
             {
-                options.UseLoggerFactory(Logger)
+                optionsBuilder.UseLoggerFactory(Logger)
                 .EnableSensitiveDataLogging(true);
             }
         }

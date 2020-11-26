@@ -10,7 +10,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaxonController : ControllerBase
+    public class TaxonController : BaseApiController
     {
         private readonly ITaxonService _taxonService;
 

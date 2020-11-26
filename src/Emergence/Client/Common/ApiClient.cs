@@ -129,7 +129,7 @@ namespace Emergence.Client.Common
         {
             var result = await _httpClient.DeleteAsync($"/api/specimen/{specimen.SpecimenId}");
 
-            var response = await ReadResult(result);
+            _ = await ReadResult(result);
 
             return true;
         }
@@ -187,7 +187,7 @@ namespace Emergence.Client.Common
         {
             var result = await _httpClient.DeleteAsync($"/api/origin/{origin.OriginId}");
 
-            var response = await ReadResult(result);
+            _ = await ReadResult(result);
 
             return true;
         }
@@ -280,7 +280,7 @@ namespace Emergence.Client.Common
         {
             var result = await _httpClient.DeleteAsync($"/api/activity/{activity.ActivityId}");
 
-            var response = await ReadResult(result);
+            _ = await ReadResult(result);
 
             return true;
         }
@@ -289,7 +289,7 @@ namespace Emergence.Client.Common
         {
             var result = await _httpClient.DeleteAsync($"/api/plantinfo/{plantInfo.PlantInfoId}");
 
-            var response = await ReadResult(result);
+            _ = await ReadResult(result);
 
             return true;
         }
@@ -312,7 +312,7 @@ namespace Emergence.Client.Common
         {
             var result = await _httpClient.DeleteAsync($"/api/usercontact/{userContact.Id}");
 
-            var response = await ReadResult(result);
+            _ = await ReadResult(result);
 
             return true;
         }
@@ -321,7 +321,7 @@ namespace Emergence.Client.Common
         {
             var result = await _httpClient.DeleteAsync($"/api/usercontact/request/{userContactRequest.Id}");
 
-            var response = await ReadResult(result);
+            _ = await ReadResult(result);
 
             return true;
         }
@@ -342,7 +342,7 @@ namespace Emergence.Client.Common
             else
             {
                 var message = await result.Content.ReadAsStringAsync();
-                throw new Exception(result.StatusCode + ": " + message);
+                throw new HttpRequestException(result.StatusCode + ": " + message);
             }
         }
 
@@ -355,7 +355,7 @@ namespace Emergence.Client.Common
             else
             {
                 var message = await result.Content.ReadAsStringAsync();
-                throw new Exception(result.StatusCode + ": " + message);
+                throw new HttpRequestException(result.StatusCode + ": " + message);
             }
         }
     }

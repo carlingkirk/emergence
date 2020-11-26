@@ -11,7 +11,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PhotoController : BaseAPIController
+    public class PhotoController : BaseApiController
     {
         private readonly IPhotoService _photoService;
         private readonly ILocationService _locationService;
@@ -33,7 +33,7 @@ namespace Emergence.API.Controllers
 
             foreach (var photo in photoResult.Where(p => p.Location != null))
             {
-                var location = locationResult.Where(l => l.Latitude == photo.Location.Latitude && l.Longitude == photo.Location.Longitude).FirstOrDefault();
+                var location = locationResult.FirstOrDefault(l => l.Latitude == photo.Location.Latitude && l.Longitude == photo.Location.Longitude);
                 photo.Location = location;
             }
 
@@ -66,15 +66,14 @@ namespace Emergence.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _photoService.RemovePhotoAsync(id, UserId);
+
+            if (result)
             {
-                if (result)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
             }
         }
 

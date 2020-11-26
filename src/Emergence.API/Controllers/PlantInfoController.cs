@@ -10,7 +10,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantInfoController : BaseAPIController
+    public class PlantInfoController : BaseApiController
     {
         private readonly IPlantInfoService _plantInfoService;
         private readonly IOriginService _originService;
@@ -86,7 +86,7 @@ namespace Emergence.API.Controllers
 
             foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
             {
-                var plantInfo = result.Results.Where(p => p.PlantInfoId == photoGroup.Key).FirstOrDefault();
+                var plantInfo = result.Results.FirstOrDefault(p => p.PlantInfoId == photoGroup.Key);
                 if (plantInfo != null)
                 {
                     plantInfo.Photos = photoGroup.ToList();

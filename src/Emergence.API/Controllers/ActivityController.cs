@@ -10,7 +10,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActivityController : BaseAPIController
+    public class ActivityController : BaseApiController
     {
         private readonly IActivityService _activityService;
         private readonly IPhotoService _photoService;

@@ -7,10 +7,10 @@ namespace Emergence.API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class BaseAPIController : ControllerBase
+    public class BaseApiController : ControllerBase
     {
         public string UserId => GetUserId();
-        public BaseAPIController()
+        public BaseApiController()
         {
         }
 

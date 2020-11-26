@@ -10,7 +10,7 @@ namespace Emergence.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserContactController : BaseAPIController
+    public class UserContactController : BaseApiController
     {
         private readonly IUserContactService _userContactService;
         private readonly IUserService _userService;

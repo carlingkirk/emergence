@@ -129,7 +129,7 @@ namespace Emergence.Data.Extensions
             if (!track)
             {
                 source = source.AsNoTracking();
-            };
+            }
 
             await foreach (var entity in source.AsAsyncEnumerable())
             {
@@ -158,7 +158,7 @@ namespace Emergence.Data.Extensions
             if (!track)
             {
                 source = source.AsNoTracking();
-            };
+            }
 
             return source;
         }
