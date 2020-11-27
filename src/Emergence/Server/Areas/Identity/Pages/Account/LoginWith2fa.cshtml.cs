@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Emergence.Data.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -66,7 +64,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = string.IsNullOrEmpty(returnUrl) || returnUrl.Contains("authorize") ? Url.Content("~/dashboard") : returnUrl;
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)

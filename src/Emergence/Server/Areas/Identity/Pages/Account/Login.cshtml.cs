@@ -71,7 +71,7 @@ namespace Emergence.Client.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = string.IsNullOrEmpty(returnUrl) || returnUrl.Contains("authorize") ? Url.Content("~/dashboard") : returnUrl;
 
             if (ModelState.IsValid)
             {
