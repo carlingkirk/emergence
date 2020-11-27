@@ -18,7 +18,7 @@
 
                 <Card Name="@specimen.Lifeform.ScientificName" ColorSearch="@specimen.Lifeform.CommonName" Photo="@photo" CompactView="true">
                     <Content>
-                        <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
+                        <a href="" @onclick="() => ModalServiceClient.ShowSpecimenModal(specimen.SpecimenId)" @onclick:preventDefault>
                             <div class="col-12">
 
                                 <span class="link">@specimen.Lifeform.CommonName</span>

@@ -111,7 +111,7 @@
                                 @if (!string.IsNullOrEmpty(plantInfo.Requirements?.ZoneRequirements.ToFriendlyString()))
                                 {
                                     <div class="col-12">
-                                        <span>Zones @plantInfo.Requirements.ZoneRequirements</span>
+                                        <span>Zones @plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
                                     </div>
                                 }
                                 <div class="col-12">
