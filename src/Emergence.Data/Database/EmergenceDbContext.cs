@@ -35,6 +35,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<Taxon> Taxons { get; set; }
         public virtual DbSet<PlantLocation> PlantLocations { get; set; }
         public virtual DbSet<Synonym> Synonyms { get; set; }
+        public virtual DbSet<PlantSynonym> PlantSynonyms { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<UserContactRequest> UserContactRequests { get; set; }
@@ -64,6 +65,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<Taxon>().HasKey(i => i.Id);
             modelBuilder.Entity<PlantLocation>().HasKey(i => i.Id);
             modelBuilder.Entity<Synonym>().HasKey(i => i.Id);
+            modelBuilder.Entity<PlantSynonym>().HasKey(i => i.Id);
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<UserContact>().HasKey(u => u.Id);
             modelBuilder.Entity<UserContactRequest>().HasKey(u => u.Id);

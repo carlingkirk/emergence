@@ -16,10 +16,14 @@ namespace Emergence.Service
     public class LifeformService : ILifeformService
     {
         private readonly IRepository<Lifeform> _lifeformRepository;
-        public LifeformService(IRepository<Lifeform> lifeformRepository)
+        private readonly IRepository<PlantSynonym> _plantSynonymRepository;
+
+        public LifeformService(IRepository<Lifeform> lifeformRepository, IRepository<PlantSynonym> plantSynonymRepository)
         {
             _lifeformRepository = lifeformRepository;
+            _plantSynonymRepository = plantSynonymRepository;
         }
+
         public async Task<Data.Shared.Models.Lifeform> AddOrUpdateLifeformAsync(Data.Shared.Models.Lifeform lifeform)
         {
             var lifeformResult = await _lifeformRepository.AddOrUpdateAsync(l => l.Id == lifeform.LifeformId, lifeform.AsStore());
@@ -51,9 +55,13 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
         {
-            var lifeformQuery = _lifeformRepository.Where(l => findParams.SearchTextQuery == null ||
-                                                               EF.Functions.Like(l.CommonName, findParams.SearchTextQuery) ||
-                                                               EF.Functions.Like(l.ScientificName, findParams.SearchTextQuery));
+            var lifeformQuery = _lifeformRepository.GetAll().SelectMany(l => l.PlantSynonyms.DefaultIfEmpty(), (l, ps) => new { Lifeform = l, PlantSynonym = ps })
+                                                   .Where(l => findParams.SearchTextQuery == null ||
+                                                          EF.Functions.Like(l.Lifeform.CommonName, findParams.SearchTextQuery) ||
+                                                          EF.Functions.Like(l.Lifeform.ScientificName, findParams.SearchTextQuery) ||
+                                                          EF.Functions.Like(l.PlantSynonym.Synonym, findParams.SearchTextQuery))
+                                                   .Select(l => l.Lifeform);
+
             lifeformQuery = OrderBy(lifeformQuery, findParams.SortBy, findParams.SortDirection);
 
             var count = lifeformQuery.Count();

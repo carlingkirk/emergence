@@ -9,6 +9,7 @@ namespace Emergence.Data
 {
     public interface IRepository<T>
     {
+        IQueryable<T> GetAll();
         IQueryable<T> Where(Expression<Func<T, bool>> predicate, bool track = false);
         IQueryable<T> WhereWithIncludes(Expression<Func<T, bool>> predicate, bool track = false, params Func<IIncludable<T>, IIncludable>[] includes);
         Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool track = false);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
@@ -16,5 +17,7 @@ namespace Emergence.Data.Shared.Stores
         public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
+
+        public IEnumerable<PlantSynonym> PlantSynonyms { get; set; }
     }
 }

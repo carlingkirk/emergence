@@ -18,6 +18,13 @@ namespace Emergence.Data.Repository
             _context = context;
         }
 
+        public IQueryable<T> GetAll()
+        {
+            var entities = _context.Set<T>();
+
+            return entities;
+        }
+
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate, bool track = false)
         {
             var entities = _context.Set<T>().Where(predicate);
@@ -25,7 +32,7 @@ namespace Emergence.Data.Repository
             if (!track)
             {
                 entities = entities.AsNoTracking();
-            };
+            }
 
             return entities;
         }
@@ -37,7 +44,7 @@ namespace Emergence.Data.Repository
             if (!track)
             {
                 entities = entities.AsNoTracking();
-            };
+            }
 
             if (includes != null)
             {
@@ -57,7 +64,7 @@ namespace Emergence.Data.Repository
             if (!track)
             {
                 entities = entities.AsNoTracking();
-            };
+            }
 
             return await entities.FirstOrDefaultAsync();
         }
@@ -77,7 +84,7 @@ namespace Emergence.Data.Repository
             if (!track)
             {
                 entities = entities.AsNoTracking();
-            };
+            }
 
             return await entities.FirstOrDefaultAsync();
         }
@@ -99,7 +106,7 @@ namespace Emergence.Data.Repository
             if (!track)
             {
                 entities = entities.AsNoTracking();
-            };
+            }
 
             await foreach (var entity in entities.AsAsyncEnumerable())
             {
@@ -124,7 +131,7 @@ namespace Emergence.Data.Repository
             if (!track)
             {
                 entities = entities.AsNoTracking();
-            };
+            }
 
             return entities;
         }
