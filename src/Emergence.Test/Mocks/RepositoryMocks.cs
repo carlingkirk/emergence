@@ -133,6 +133,9 @@ namespace Emergence.Test.Mocks
             var mockLifeforms = lifeforms.AsQueryable().BuildMockDbSet().Object;
             var mockLifeformRepo = new Mock<IRepository<Lifeform>>();
 
+            mockLifeformRepo.Setup(p => p.GetAll())
+                .Returns(mockLifeforms.AsQueryable());
+
             mockLifeformRepo.Setup(p => p.GetSomeAsync(It.IsAny<Expression<Func<Lifeform, bool>>>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()))
                 .Returns(mockLifeforms.ToAsyncEnumerable());
 

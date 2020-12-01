@@ -30,6 +30,16 @@ namespace Emergence.Service
             return taxon?.AsModel();
         }
 
+        public async Task<Data.Shared.Models.Taxon> GetTaxonAsync(string genus, string species, string subspecies, string variety, string subvariety, string form)
+        {
+            var taxon = await _taxonRepository.GetAsync(t => t.Genus == genus && t.Species == species &&
+                                                             (subspecies == null || t.Subspecies == subspecies) &&
+                                                             (variety == null || t.Variety == variety) &&
+                                                             (subvariety == null || t.Subvariety == subvariety) &&
+                                                             (form == null || t.Form == form));
+            return taxon?.AsModel();
+        }
+
         public async Task<IEnumerable<Data.Shared.Models.Taxon>> GetTaxonsAsync()
         {
             var taxonResult = _taxonRepository.GetSomeAsync(l => l.Id > 0);
@@ -63,16 +73,6 @@ namespace Emergence.Service
             return taxonResult.AsModel();
         }
 
-        public async Task<Data.Shared.Models.Taxon> GetTaxonAsync(string genus, string species, string subspecies, string variety, string subvariety, string form)
-        {
-            var taxon = await _taxonRepository.GetAsync(t => t.Genus == genus && t.Species == species &&
-                                                             (subspecies == null || t.Subspecies == subspecies) &&
-                                                             (variety == null || t.Variety == variety) &&
-                                                             (subvariety == null || t.Subvariety == subvariety) &&
-                                                             (form == null || t.Form == form));
-            return taxon?.AsModel();
-        }
-
         public async Task<FindResult<Data.Shared.Models.Taxon>> FindTaxons(FindParams<Data.Shared.Models.Taxon> findParams, TaxonRank rank)
         {
             var taxonShape = findParams.Shape;
@@ -102,7 +102,7 @@ namespace Emergence.Service
             }
 
             var result = taxonQuery.GetSome().ToList();
-            var count = result.Count();
+            var count = result.Count;
 
             var taxonsResult = result.Skip(findParams.Skip).Take(findParams.Take);
 

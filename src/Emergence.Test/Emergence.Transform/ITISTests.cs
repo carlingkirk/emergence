@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data;
 using Emergence.Data.External.ITIS;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared;
@@ -11,6 +12,7 @@ using Emergence.Service.Extensions;
 using Emergence.Test.Mocks;
 using Emergence.Transform;
 using FluentAssertions;
+using Moq;
 using Xunit;
 using Stores = Emergence.Data.Shared.Stores;
 
@@ -27,12 +29,12 @@ namespace Emergence.Test.Emergence.Transform
             var result = new List<PlantInfo>();
             itisData.ForEach(i => result.AddRange(transformer.Transform(new List<TaxonomicUnit> { i })));
 
-            result.Where(p => p.ScientificName == "Glandularia quadrangulata").Count().Should().Be(1);
-            result.Where(p => p.Taxon.Subfamily == null).Count().Should().Be(6);
-            result.Where(p => p.Taxon.Species == "cremersii").Count().Should().Be(2);
-            result.Where(p => p.Taxon.Form == "viridifolia").Count().Should().Be(2);
-            result.Where(p => p.Taxon.Subspecies == "purpurea").Count().Should().Be(1);
-            result.Where(p => p.Taxon.Variety == "graminea").Count().Should().Be(1);
+            result.Count(p => p.ScientificName == "Glandularia quadrangulata").Should().Be(1);
+            result.Count(p => p.Taxon.Subfamily == null).Should().Be(6);
+            result.Count(p => p.Taxon.Species == "cremersii").Should().Be(2);
+            result.Count(p => p.Taxon.Form == "viridifolia").Should().Be(2);
+            result.Count(p => p.Taxon.Subspecies == "purpurea").Should().Be(1);
+            result.Count(p => p.Taxon.Variety == "graminea").Should().Be(1);
             result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(3);
             result.SelectMany(p => p.Locations).DistinctBy(l => l.Location.Region).Count().Should().Be(1);
             result.Select(p => p.Origin).Count().Should().Be(6);
@@ -53,10 +55,11 @@ namespace Emergence.Test.Emergence.Transform
             var plantLocationRepository = RepositoryMocks.GetStandardMockPlantLocationRepository(new List<Stores.PlantLocation>());
             var synonymRepository = RepositoryMocks.GetStandardMockSynonymRepository();
             var taxonRepository = RepositoryMocks.GetStandardMockTaxonRepository(new List<Stores.Taxon>());
+            var plantSynonymRepository = new Mock<IRepository<Stores.PlantSynonym>>();
 
             var locationService = new LocationService(locationRepository.Object);
             var originService = new OriginService(originRepository.Object, locationService);
-            var lifeformService = new LifeformService(lifeformRepository.Object);
+            var lifeformService = new LifeformService(lifeformRepository.Object, plantSynonymRepository.Object);
             var plantInfoService = new PlantInfoService(plantInfoRepository.Object, plantLocationRepository.Object);
             var synonymService = new SynonymService(synonymRepository.Object);
             var taxonService = new TaxonService(taxonRepository.Object, synonymService);
@@ -69,12 +72,12 @@ namespace Emergence.Test.Emergence.Transform
 
             var result = await processor.Process(plantInfos);
 
-            result.Where(p => p.ScientificName == "Glandularia quadrangulata").Count().Should().Be(1);
-            result.Where(p => p.Taxon.Subfamily == null).Count().Should().Be(5);
-            result.Where(p => p.Taxon.Species == "cremersii").Count().Should().Be(1);
-            result.Where(p => p.Taxon.Form == "viridifolia").Count().Should().Be(1);
-            result.Where(p => p.Taxon.Subspecies == "purpurea").Count().Should().Be(1);
-            result.Where(p => p.Taxon.Variety == "graminea").Count().Should().Be(1);
+            result.Count(p => p.ScientificName == "Glandularia quadrangulata").Should().Be(1);
+            result.Count(p => p.Taxon.Subfamily == null).Should().Be(5);
+            result.Count(p => p.Taxon.Species == "cremersii").Should().Be(1);
+            result.Count(p => p.Taxon.Form == "viridifolia").Should().Be(1);
+            result.Count(p => p.Taxon.Subspecies == "purpurea").Should().Be(1);
+            result.Count(p => p.Taxon.Variety == "graminea").Should().Be(1);
             result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count().Should().Be(3);
             result.Where(p => p.Locations != null).SelectMany(p => p.Locations).Count(l => l.Status == LocationStatus.Native).Should().Be(3);
             result.Select(p => p.Origin).DistinctBy(o => o.OriginId).Count().Should().Be(5);
@@ -89,7 +92,7 @@ namespace Emergence.Test.Emergence.Transform
             var result = new List<Synonym>();
             itisData.ForEach(i => result.Add(transformer.Transform(i)));
 
-            result.Count().Should().Be(16);
+            result.Count.Should().Be(16);
             result.Count(s => s.Taxon.Kingdom == "Plantae").Should().Be(1);
             result.Count(s => s.Language == "English").Should().Be(10);
             result.Count(s => s.DateUpdated.Year == 2003).Should().Be(3);

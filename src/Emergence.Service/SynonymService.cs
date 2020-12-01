@@ -37,6 +37,17 @@ namespace Emergence.Service
             return synonyms;
         }
 
+        public async Task<IEnumerable<Data.Shared.Models.Synonym>> GetSynonymsAsync(Expression<Func<Synonym, bool>> predicate)
+        {
+            var synonymResult = _synonymRepository.GetSomeAsync(predicate);
+            var synonyms = new List<Data.Shared.Models.Synonym>();
+            await foreach (var synonym in synonymResult)
+            {
+                synonyms.Add(synonym.AsModel());
+            }
+            return synonyms;
+        }
+
         public async Task<IEnumerable<Data.Shared.Models.Synonym>> GetSynonymsFromTaxonsAsync(IEnumerable<int> taxonIds)
         {
             var synonymResult = _synonymRepository.WhereWithIncludes(s => taxonIds.Any(i => i == s.TaxonId), false, s => s.Include(s => s.Taxon)).GetSomeAsync();
@@ -73,17 +84,6 @@ namespace Emergence.Service
                                                                     s => s.Include(s => s.Taxon));
 
             var synonymResult = synonymQuery.GetSomeAsync();
-            var synonyms = new List<Data.Shared.Models.Synonym>();
-            await foreach (var synonym in synonymResult)
-            {
-                synonyms.Add(synonym.AsModel());
-            }
-            return synonyms;
-        }
-
-        public async Task<IEnumerable<Data.Shared.Models.Synonym>> GetSynonymsAsync(Expression<Func<Synonym, bool>> predicate)
-        {
-            var synonymResult = _synonymRepository.GetSomeAsync(predicate);
             var synonyms = new List<Data.Shared.Models.Synonym>();
             await foreach (var synonym in synonymResult)
             {
