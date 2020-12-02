@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Common
 {
-    public abstract class ListComponent<T> : EmergenceComponent, ISortable<T>, ISearchable<T>, IPageable<T> where T : class
+    public abstract class ListComponent<T> : EmergenceComponent, ISortable<T>, ISearchable<T>, IPageable<T>, IFilterable<T> where T : class
     {
         [Inject]
         protected IModalServiceClient ModalServiceClient { get; set; }
@@ -30,7 +30,8 @@ namespace Emergence.Client.Common
         public int Id { get; set; }
         public T Parent { get; set; }
         public ViewItemType ViewItemType { get; set; }
-
+        public bool ShowFilters { get; set; }
+        
         protected ListComponent()
         {
             ShowSearch = true;
@@ -117,5 +118,7 @@ namespace Emergence.Client.Common
             ViewItemType = type;
             Parent = parent;
         }
+
+        public void ToggleFilters() => ShowFilters = !ShowFilters;
     }
 }

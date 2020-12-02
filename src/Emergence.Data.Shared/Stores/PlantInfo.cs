@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
@@ -55,5 +56,6 @@ namespace Emergence.Data.Shared.Stores
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public User User { get; set; }
+        public IEnumerable<PlantLocation> PlantLocations { get; set; }
     }
 }
