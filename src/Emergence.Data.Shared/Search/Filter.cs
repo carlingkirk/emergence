@@ -11,6 +11,7 @@ namespace Emergence.Data.Shared.Search
 
     public class Filter<TValue> : Filter
     {
+        public virtual TypeDiscriminator TypeDiscriminator => TypeDiscriminator.Filter;
         public TValue Value { get; set; }
         public virtual bool IsFiltered() => Value switch
         {
@@ -22,6 +23,7 @@ namespace Emergence.Data.Shared.Search
 
     public class SelectFilter<TValue> : Filter<TValue>
     {
+        public override TypeDiscriminator TypeDiscriminator => TypeDiscriminator.SelectFilter;
         public IEnumerable<TValue> Values { get; set; }
         public override bool IsFiltered() => Values switch
         {
@@ -33,6 +35,7 @@ namespace Emergence.Data.Shared.Search
 
     public class RangeFilter<TValue> : SelectFilter<TValue>
     {
+        public override TypeDiscriminator TypeDiscriminator => TypeDiscriminator.RangeFilter;
         public TValue MinimumValue { get; set; }
         public TValue MaximumValue { get; set; }
 

@@ -7,6 +7,7 @@ using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 using Emergence.Data.Shared.Email;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
@@ -151,6 +152,7 @@ namespace Emergence.Server
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.IgnoreNullValues = true;
+                    opt.JsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<string>());
                 });
             services.AddRazorPages();
         }

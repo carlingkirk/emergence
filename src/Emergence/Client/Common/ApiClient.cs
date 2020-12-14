@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
+using Emergence.Data.Shared.Search;
 
 namespace Emergence.Client.Common
 {
@@ -57,7 +59,10 @@ namespace Emergence.Client.Common
 
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new FilterTypeDiscriminator<string>());
+
+            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams, options: options);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
         }
