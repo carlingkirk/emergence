@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Emergence.Data.Shared.Interfaces;
+using Emergence.Data.Shared.Search;
 
 namespace Emergence.Data.Shared
 {
@@ -20,6 +22,7 @@ namespace Emergence.Data.Shared
         public string CreatedBy { get; set; }
         public bool ContactsOnly { get; set; }
         public string SearchTextQuery => SearchText != null ? "%" + SearchText + "%" : null;
+        public IEnumerable<Filter> Filters { get; set; }
     }
 
     public class FindParams<T> : IFindParams

@@ -1,18 +1,35 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Data.Shared.Search;
-using Stores = Emergence.Data.Shared.Stores;
 
 namespace Emergence.Client.Components
 {
     public class ListPlantInfosComponent : ListComponent<PlantInfo>
     {
-        public IEnumerable<IFilter<Stores.PlantInfo>> Filters { get; set; }
-        public int FilterCount => Filters != null ? Filters.Count(f => f.IsFiltered) : 0;
+        public IEnumerable<Filter> Filters { get; set; }
+        public int FilterCount()
+        {
+            var count = 0;
+            foreach(var filter in Filters)
+            {
+                switch (filter)
+                {
+                    case SelectFilter<PlantInfo> selectFilter:
+                        if (selectFilter.IsFiltered())
+                        {
+                            count++;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return count;
+        }
+
         protected static Dictionary<string, string> Headers =>
             new Dictionary<string, string>
             {
@@ -27,17 +44,20 @@ namespace Emergence.Client.Components
                 { "Spread", "Spread" }
             };
 
-        protected override void OnParametersSet()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnParametersSet();
-            Filters = new List<IFilter<Stores.PlantInfo>>
+            Filters = new List<Filter>
             {
                 new RegionFilter()
             };
+
+            await base.OnInitializedAsync();
         }
 
         public override async Task<FindResult<PlantInfo>> GetListAsync(FindParams findParams)
         {
+            findParams.Filters = Filters;
+
             var result = await ApiClient.FindPlantInfosAsync(findParams);
 
             return new FindResult<PlantInfo>

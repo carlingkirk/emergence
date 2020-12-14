@@ -16,7 +16,7 @@
     }
     <input type="checkbox" class="check-lg" @bind="ListView" id="list-view" />
     <label for="list-view">List View</label>
-    <button type="button" class="btn btn-primary" @onclick="ToggleFilters">@(ShowFilters ? "Hide" : "Show") Filters@(FilterCount > 0 ? $" ({FilterCount})" : "")</button>
+    <button type="button" class="btn btn-primary" @onclick="ToggleFilters">@(ShowFilters ? "Hide" : "Show") Filters@(FilterCount() > 0 ? $" ({FilterCount()})" : "")</button>
     @if (ShowFilters)
     {
         <SearchFilters Filters="Filters" />

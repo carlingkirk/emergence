@@ -1,21 +1,16 @@
 @using Emergence.Data.Shared.Search
-@typeparam T
+
 <div class="container">
     <div class="row">
         @foreach (var filter in Filters)
         {
         <div class="col-lg-4 col-xs">
-            @if (filter.InputType == InputType.Boolean)
-            {
-                var boolFilter = filter as IBooleanFilter<T>;
-                <label for="@boolFilter.Name.ToLower()">@boolFilter.Name</label>
-                <input type="checkbox" name="@boolFilter.Name" @bind="boolFilter.Value" id="@boolFilter.Name.ToLower()" />
-            }
-            else if (filter.InputType == InputType.Select)
+
+            @if (filter.InputType == InputType.Select)
             {
                 if (filter.FilterType == FilterType.String)
                 {
-                    var selectFilter = filter as ISelectFilter<T, string>;
+                    var selectFilter = filter as SelectFilter<string>;
                     <label for="@selectFilter.Name.ToLower()">@selectFilter.Name</label>
                     <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
                         @foreach (var value in selectFilter.Values)
@@ -26,7 +21,7 @@
                 }
                 else if (filter.FilterType == FilterType.Integer)
                 {
-                    var selectFilter = filter as ISelectFilter<T, int>;
+                    var selectFilter = filter as SelectFilter<int>;
                     <label for="@selectFilter.Name.ToLower()">@selectFilter.Name</label>
                     <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
                         @foreach (var value in selectFilter.Values)
@@ -40,7 +35,7 @@
             {
                 if (filter.FilterType == FilterType.String)
                 {
-                    var stringRangeFilter = filter as ISelectRangeFilter<T, string>;
+                    var stringRangeFilter = filter as RangeFilter<string>;
                     <label for="@stringRangeFilter.Name.ToLower()">Min @stringRangeFilter.Name</label>
                     <select @bind="@stringRangeFilter.MinimumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
                         @foreach (var value in stringRangeFilter.Values)
@@ -58,7 +53,7 @@
                 }
                 else if (filter.FilterType == FilterType.Integer)
                 {
-                    var numRangeFilter = filter as ISelectFilter<T, int>;
+                    var numRangeFilter = filter as RangeFilter<int>;
                     <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
                     <select @bind="@numRangeFilter.Value" class="form-control" id="@numRangeFilter.Name.ToLower()">
                         @foreach (var value in numRangeFilter.Values)
@@ -86,5 +81,5 @@
 
 @code {
     [Parameter]
-    public IEnumerable<IFilter<T>> Filters { get; set; }
+    public IEnumerable<Filter> Filters { get; set; }
 }
