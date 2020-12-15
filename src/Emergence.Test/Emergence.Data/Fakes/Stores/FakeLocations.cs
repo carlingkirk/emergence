@@ -18,6 +18,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     StateOrProvince = "GA",
                     PostalCode = "31206",
                     Country = "United States",
+                    Region = "North America",
                     Latitude = 32.8087681,
                     Longitude = -83.7358335
                 }

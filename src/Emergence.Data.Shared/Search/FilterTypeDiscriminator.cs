@@ -68,6 +68,18 @@ namespace Emergence.Data.Shared.Search
                             var maxValue = reader.GetString();
                             ((RangeFilter<TValue>)filter).MinimumValue = maxValue as TValue;
                             break;
+                        case "Name":
+                            var name = reader.GetString();
+                            filter.Name = name;
+                            break;
+                        case "InputType":
+                            var inputType = reader.GetString();
+                            filter.InputType = Enum.Parse<InputType>(inputType);
+                            break;
+                        case "FilterType":
+                            var filterType = reader.GetString();
+                            filter.FilterType = Enum.Parse<FilterType>(filterType);
+                            break;
                     }
                 }
             }

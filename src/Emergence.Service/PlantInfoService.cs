@@ -7,6 +7,7 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,18 @@ namespace Emergence.Service
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
+            }
+
+            foreach(var filter in findParams.Filters)
+            {
+                if (filter.Name == "Location")
+                {
+                    var regionFilter = new RegionFilter((Filter<string>)filter);
+                    if (!string.IsNullOrEmpty(regionFilter.Value))
+                    {
+                        plantInfoQuery = plantInfoQuery.Where(regionFilter.Filter);
+                    }
+                }
             }
 
             plantInfoQuery = plantInfoQuery.CanViewContent(user);

@@ -8,6 +8,14 @@ namespace Emergence.Data.Shared.Search
 {
     public class RegionFilter : SelectFilter<string>
     {
+        public RegionFilter(Filter<string> filter)
+        {
+            Name = filter.Name;
+            InputType = filter.InputType;
+            FilterType = filter.FilterType;
+            Value = filter.Value;
+        }
+
         public RegionFilter()
         {
             Name = "Location";
@@ -33,6 +41,6 @@ namespace Emergence.Data.Shared.Search
             };
         }
 
-        public Expression<Func<PlantInfo, bool>> Filter => p => p.PlantLocations.Any(pl => pl.Location.Region == Value);
+        public Expression<Func<PlantInfo, bool>> Filter => p => p.PlantLocations != null && p.PlantLocations.Any(pl => pl.Location.Region == Value);
     }
 }

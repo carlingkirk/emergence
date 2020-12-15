@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.Data.Fakes.Stores
@@ -13,6 +14,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                 {
                     Id = 1,
                     PlantInfoId = 1,
+                    Location = FakeLocations.Get().First(),
                     LocationId = 1,
                     Status = "Native",
                     CreatedBy = Helpers.UserId,

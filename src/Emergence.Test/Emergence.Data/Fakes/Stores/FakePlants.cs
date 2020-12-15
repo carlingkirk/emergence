@@ -38,7 +38,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.GetContact()
+                    User = FakeUsers.GetContact(),
+                    PlantLocations = FakePlantLocations.Get()
                 },
                 new PlantInfo
                 {
