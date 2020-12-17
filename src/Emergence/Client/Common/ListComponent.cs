@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Search;
 using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Common
@@ -31,7 +32,8 @@ namespace Emergence.Client.Common
         public T Parent { get; set; }
         public ViewItemType ViewItemType { get; set; }
         public bool ShowFilters { get; set; }
-        
+        public IEnumerable<Filter> Filters { get; set; }
+
         protected ListComponent()
         {
             ShowSearch = true;
@@ -120,5 +122,25 @@ namespace Emergence.Client.Common
         }
 
         public void ToggleFilters() => ShowFilters = !ShowFilters;
+
+        public int FilterCount()
+        {
+            var count = 0;
+            foreach (var filter in Filters)
+            {
+                switch (filter)
+                {
+                    case SelectFilter<string> selectFilter:
+                        if (selectFilter.IsFiltered())
+                        {
+                            count++;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return count;
+        }
     }
 }

@@ -16,10 +16,13 @@ namespace Emergence.Client.Common
     public class ApiClient : IApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public ApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _jsonSerializerOptions = new JsonSerializerOptions();
+            _jsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<string>());
         }
 
         public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams)
@@ -59,17 +62,16 @@ namespace Emergence.Client.Common
 
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new FilterTypeDiscriminator<string>());
+            
 
-            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams, options: options);
+            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams, options: _jsonSerializerOptions);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
         }
 
         public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams, options: _jsonSerializerOptions);
 
             return await ReadResult<FindResult<Specimen>>(result);
         }

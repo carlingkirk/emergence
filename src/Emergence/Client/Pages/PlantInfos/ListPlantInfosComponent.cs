@@ -9,27 +9,6 @@ namespace Emergence.Client.Components
 {
     public class ListPlantInfosComponent : ListComponent<PlantInfo>
     {
-        public IEnumerable<Filter> Filters { get; set; }
-        public int FilterCount()
-        {
-            var count = 0;
-            foreach(var filter in Filters)
-            {
-                switch (filter)
-                {
-                    case SelectFilter<PlantInfo> selectFilter:
-                        if (selectFilter.IsFiltered())
-                        {
-                            count++;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return count;
-        }
-
         protected static Dictionary<string, string> Headers =>
             new Dictionary<string, string>
             {
@@ -46,10 +25,7 @@ namespace Emergence.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
-            Filters = new List<Filter>
-            {
-                new RegionFilter()
-            };
+            Filters = FilterList.GetPlantInfoFilters();
 
             await base.OnInitializedAsync();
         }

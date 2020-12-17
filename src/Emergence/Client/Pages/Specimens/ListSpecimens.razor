@@ -20,6 +20,11 @@
     }
     <input type="checkbox" class="check-lg" @bind="ListView" id="list-view" />
     <label for="list-view">List View</label>
+    <button type="button" class="btn btn-primary" @onclick="ToggleFilters">@(ShowFilters ? "Hide" : "Show") Filters@(FilterCount() > 0 ? $" ({FilterCount()})" : "")</button>
+    @if (ShowFilters)
+    {
+        <SearchFilters Filters="Filters" />
+    }
     @if (List != null)
     {
         @if (ListView)
@@ -84,12 +89,12 @@
                     @foreach (var specimen in List)
                     {
                         var photo = specimen.Photos?.FirstOrDefault();
-                        
+
                         <Card Name="@specimen.Lifeform.ScientificName" ColorSearch="@specimen.Lifeform.CommonName" Photo="@photo">
                             <Content>
                                 <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
                                     <div class="col-12">
-                                    
+
                                         <span class="link">@specimen.Lifeform.CommonName</span>
                                     </div>
                                     <div class="col-12">

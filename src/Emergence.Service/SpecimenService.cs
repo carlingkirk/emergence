@@ -7,6 +7,7 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,18 @@ namespace Emergence.Service
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 specimenQuery = specimenQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
+            }
+
+            foreach (var filter in findParams.Filters)
+            {
+                if (filter.Name == "Stage")
+                {
+                    var stageFilter = new StageFilter((Filter<string>)filter);
+                    if (!string.IsNullOrEmpty(stageFilter.Value))
+                    {
+                        specimenQuery = specimenQuery.Where(stageFilter.Filter);
+                    }
+                }
             }
 
             specimenQuery = specimenQuery.CanViewContent(user);

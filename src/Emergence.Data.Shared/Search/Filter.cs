@@ -25,11 +25,11 @@ namespace Emergence.Data.Shared.Search
     {
         public override TypeDiscriminator TypeDiscriminator => TypeDiscriminator.SelectFilter;
         public IEnumerable<TValue> Values { get; set; }
-        public override bool IsFiltered() => Values switch
+        public override bool IsFiltered() => Values != null && Values switch
         {
             string stringValue => !string.IsNullOrEmpty(stringValue),
             int intValue => intValue != 0,
-            _ => false,
+            _ => false
         };
     }
 
