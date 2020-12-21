@@ -29,6 +29,7 @@ namespace Emergence.Data.Shared.Search
         {
             string stringValue => !string.IsNullOrEmpty(stringValue),
             int intValue => intValue != 0,
+            double doubleValue => doubleValue != 0,
             _ => false
         };
     }

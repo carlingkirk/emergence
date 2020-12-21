@@ -1,10 +1,11 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Emergence.Data.Shared.Extensions;
 
 namespace Emergence.Data.Shared.Search
 {
-    public class FilterTypeDiscriminator<TValue> : JsonConverter<Filter> where TValue : class
+    public class FilterTypeDiscriminator<TValue> : JsonConverter<Filter>
     {
         public override bool CanConvert(Type typeToConvert) => typeof(Filter).IsAssignableFrom(typeToConvert);
 
@@ -57,16 +58,13 @@ namespace Emergence.Data.Shared.Search
                     switch (propertyName)
                     {
                         case "Value":
-                            var value = reader.GetString();
-                            filter.Value = value as TValue;
+                            filter.Value = GetValue(reader);
                             break;
                         case "MinimumValue":
-                            var minValue = reader.GetString();
-                            ((RangeFilter<TValue>)filter).MinimumValue = minValue as TValue;
+                            ((RangeFilter<TValue>)filter).MinimumValue = GetValue(reader);
                             break;
                         case "MaximumValue":
-                            var maxValue = reader.GetString();
-                            ((RangeFilter<TValue>)filter).MinimumValue = maxValue as TValue;
+                            ((RangeFilter<TValue>)filter).MaximumValue = GetValue(reader);
                             break;
                         case "Name":
                             var name = reader.GetString();
@@ -91,21 +89,62 @@ namespace Emergence.Data.Shared.Search
         {
             writer.WriteStartObject();
 
-            if (value is Filter<TValue> valueFilter)
+            if (value is RangeFilter<TValue> rangeFilter)
             {
-                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Filter);
-                writer.WriteString("Value", valueFilter.Value as string);
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.RangeFilter);
+                switch (rangeFilter.MinimumValue)
+                {
+                    case string:
+                        writer.WriteString("MinimumValue", rangeFilter.MinimumValue as string);
+                        writer.WriteString("MaximumValue", rangeFilter.MaximumValue as string);
+                        break;
+                    case int:
+                        var minIntValue = BoxingSafeConverter<TValue, int>.Instance.Convert(rangeFilter.MinimumValue);
+                        writer.WriteNumber("MinimumValue", minIntValue);
+
+                        var maxIntValue = BoxingSafeConverter<TValue, int>.Instance.Convert(rangeFilter.MaximumValue);
+                        writer.WriteNumber("MaximumValue", maxIntValue);
+                        break;
+                    case double:
+                        var minDoubleValue = BoxingSafeConverter<TValue, double>.Instance.Convert(rangeFilter.MinimumValue);
+                        writer.WriteNumber("MinimumValue", minDoubleValue);
+
+                        var maxDoubleValue = BoxingSafeConverter<TValue, double>.Instance.Convert(rangeFilter.MaximumValue);
+                        writer.WriteNumber("MaximumValue", maxDoubleValue);
+                        break;
+                    default:
+                        break;
+                }
             }
             else if (value is SelectFilter<TValue> selectFilter)
             {
                 writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.SelectFilter);
-                writer.WriteString("Value", selectFilter.Value as string);
+
+                switch (selectFilter.Value)
+                {
+                    case string:
+                        writer.WriteString("Value", selectFilter.Value as string);
+                        break;
+                    case int:
+                        if (int.TryParse(selectFilter.Value as string, out var intValue))
+                        {
+                            writer.WriteNumber("Value", intValue);
+                        }
+                        break;
+                    case double:
+                        if (double.TryParse(selectFilter.Value as string, out var doubleValue))
+                        {
+                            writer.WriteNumber("Value", doubleValue);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
-            else if (value is RangeFilter<TValue> rangeFilter)
+            else if (value is Filter<TValue> valueFilter)
             {
-                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.RangeFilter);
-                writer.WriteString("MinimumValue", rangeFilter.MinimumValue as string);
-                writer.WriteString("MaximumValue", rangeFilter.MaximumValue as string);
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Filter);
+                writer.WriteString("Value", valueFilter.Value as string);
             }
 
             writer.WriteString("Name", value.Name);
@@ -113,6 +152,27 @@ namespace Emergence.Data.Shared.Search
             writer.WriteString("FilterType", value.FilterType.ToString());
 
             writer.WriteEndObject();
+        }
+
+        private TValue GetValue(Utf8JsonReader reader)
+        {
+            TValue value = default;
+            if (reader.TokenType == JsonTokenType.Number)
+            {
+                if (reader.TryGetDouble(out var doubleValue))
+                {
+                    value = BoxingSafeConverter<double, TValue>.Instance.Convert(doubleValue);
+                }
+                else if (reader.TryGetInt32(out var intValue))
+                {
+                    value = BoxingSafeConverter<int, TValue>.Instance.Convert(intValue);
+                }
+            }
+            else
+            {
+                value = BoxingSafeConverter<string, TValue>.Instance.Convert(reader.GetString());
+            }
+            return value;
         }
     }
 

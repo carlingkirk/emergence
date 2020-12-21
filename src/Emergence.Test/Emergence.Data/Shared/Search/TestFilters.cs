@@ -48,7 +48,7 @@ namespace Emergence.Test.Data.Shared.Search
             {
                 new StageFilter
                 {
-                    Value = "In Ground"
+                    Value = "Seed"
                 }
             };
 
@@ -68,6 +68,39 @@ namespace Emergence.Test.Data.Shared.Search
 
             var specimens = FakeSpecimens.Get().AsQueryable();
             var filteredPlantInfos = specimens.Where(stageFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(2);
+        }
+
+        [Fact]
+        public void TestHeightFilter()
+        {
+            var filters = new List<Filter>
+            {
+                new HeightFilter
+                {
+                    MinimumValue = 1,
+                    MaximumValue = 2
+                }
+            };
+
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new FilterTypeDiscriminator<double>());
+
+            var jsonFilters = JsonSerializer.Serialize(filters, options: options);
+
+            filters = JsonSerializer.Deserialize<List<Filter>>(jsonFilters, options: options);
+
+            var heightFilter = new HeightFilter((RangeFilter<double>)filters.First(f => f.Name == "Height"));
+
+            heightFilter.Should().NotBeNull();
+            heightFilter.FilterType.Should().Be(FilterType.String);
+            heightFilter.InputType.Should().Be(InputType.Select);
+            heightFilter.MinimumValue.Should().Be(1);
+            heightFilter.MaximumValue.Should().Be(2);
+
+            var plantInfos = FakePlantInfos.Get().AsQueryable();
+            var filteredPlantInfos = plantInfos.Where(heightFilter.Filter).ToList();
 
             filteredPlantInfos.Count.Should().Be(2);
         }
