@@ -23,6 +23,7 @@ namespace Emergence.Client.Common
             _httpClient = httpClient;
             _jsonSerializerOptions = new JsonSerializerOptions();
             _jsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<string>());
+            _jsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<double>());
         }
 
         public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams)

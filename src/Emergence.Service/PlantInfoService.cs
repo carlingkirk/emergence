@@ -83,6 +83,14 @@ namespace Emergence.Service
                         plantInfoQuery = plantInfoQuery.Where(regionFilter.Filter);
                     }
                 }
+                else if (filter.Name == "Height")
+                {
+                    var heightFilter = new HeightFilter((RangeFilter<double>)filter);
+                    if (heightFilter.MinimumValue > 0 || heightFilter.MaximumValue > 0)
+                    {
+                        plantInfoQuery = plantInfoQuery.Where(heightFilter.Filter);
+                    }
+                }
             }
 
             plantInfoQuery = plantInfoQuery.CanViewContent(user);

@@ -6,7 +6,8 @@ namespace Emergence.Data.Shared.Search
     {
         public static List<Filter> GetPlantInfoFilters() => new List<Filter>
         {
-            new RegionFilter()
+            new RegionFilter(),
+            new HeightFilter()
         };
 
         public static List<Filter> GetSpecimenFilters() => new List<Filter>

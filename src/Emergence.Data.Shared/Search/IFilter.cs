@@ -47,6 +47,7 @@ namespace Emergence.Data.Shared.Search
     public enum FilterType
     {
         String,
-        Integer
+        Integer,
+        Double
     }
 }

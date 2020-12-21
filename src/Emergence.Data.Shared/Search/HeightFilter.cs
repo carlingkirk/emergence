@@ -19,8 +19,8 @@ namespace Emergence.Data.Shared.Search
         public HeightFilter()
         {
             Name = "Height";
-            InputType = InputType.Select;
-            FilterType = FilterType.String;
+            InputType = InputType.SelectRange;
+            FilterType = FilterType.Double;
             var stageValues = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
             Values = stageValues;
         }
