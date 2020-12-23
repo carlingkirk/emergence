@@ -5,6 +5,7 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
+    [TypeDiscriminator("Height")]
     public class HeightFilter : RangeFilter<double>
     {
         public HeightFilter(RangeFilter<double> filter)

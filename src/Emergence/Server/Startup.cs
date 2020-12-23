@@ -143,6 +143,7 @@ namespace Emergence.Server
             });
 
             services.AddControllersWithViews();
+            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
             services.AddControllers()
                 .AddApplicationPart(Assembly.Load("Emergence.API"))
                 .ConfigureApiBehaviorOptions(opt =>
@@ -152,7 +153,7 @@ namespace Emergence.Server
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.IgnoreNullValues = true;
-                    opt.JsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<string>());
+                    opt.JsonSerializerOptions.Converters.Add(new FilterTypeJsonConverter<Filter>());
                 });
             services.AddRazorPages();
         }

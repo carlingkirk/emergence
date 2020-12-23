@@ -6,6 +6,7 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
+    [TypeDiscriminator("Stage")]
     public class StageFilter : SelectFilter<string>
     {
         public StageFilter(Filter<string> filter)

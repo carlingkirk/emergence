@@ -6,6 +6,7 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
+    [TypeDiscriminator("Region")]
     public class RegionFilter : SelectFilter<string>
     {
         public RegionFilter(Filter<string> filter)

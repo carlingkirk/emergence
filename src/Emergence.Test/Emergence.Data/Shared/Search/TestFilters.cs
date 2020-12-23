@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Reflection;
 using Emergence.Data.Shared.Search;
 using Emergence.Test.Data.Fakes.Stores;
 using FluentAssertions;
@@ -21,12 +21,10 @@ namespace Emergence.Test.Data.Shared.Search
                 }
             };
 
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new FilterTypeDiscriminator<string>());
+            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
 
-            var jsonFilters = JsonSerializer.Serialize(filters, options: options);
-
-            filters = JsonSerializer.Deserialize<List<Filter>>(jsonFilters, options: options);
+            var jsonFilters = FilterSerializer.Serialize(filters);
+            filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
             var regionFilter = new RegionFilter((Filter<string>)filters.First(f => f.Name == "Location"));
 
@@ -52,12 +50,10 @@ namespace Emergence.Test.Data.Shared.Search
                 }
             };
 
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new FilterTypeDiscriminator<string>());
+            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
 
-            var jsonFilters = JsonSerializer.Serialize(filters, options: options);
-
-            filters = JsonSerializer.Deserialize<List<Filter>>(jsonFilters, options: options);
+            var jsonFilters = FilterSerializer.Serialize(filters);
+            filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
             var stageFilter = new StageFilter((Filter<string>)filters.First(f => f.Name == "Stage"));
 
@@ -81,21 +77,22 @@ namespace Emergence.Test.Data.Shared.Search
                 {
                     MinimumValue = 1,
                     MaximumValue = 2
+                },
+                new RegionFilter
+                {
+                    Value = "North America"
                 }
             };
+            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
+            var jsonFilters = FilterSerializer.Serialize(filters);
 
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new FilterTypeDiscriminator<double>());
-
-            var jsonFilters = JsonSerializer.Serialize(filters, options: options);
-
-            filters = JsonSerializer.Deserialize<List<Filter>>(jsonFilters, options: options);
+            filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
             var heightFilter = new HeightFilter((RangeFilter<double>)filters.First(f => f.Name == "Height"));
 
             heightFilter.Should().NotBeNull();
-            heightFilter.FilterType.Should().Be(FilterType.String);
-            heightFilter.InputType.Should().Be(InputType.Select);
+            heightFilter.FilterType.Should().Be(FilterType.Double);
+            heightFilter.InputType.Should().Be(InputType.SelectRange);
             heightFilter.MinimumValue.Should().Be(1);
             heightFilter.MaximumValue.Should().Be(2);
 

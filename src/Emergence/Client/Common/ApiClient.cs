@@ -3,27 +3,21 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
-using Emergence.Data.Shared.Search;
 
 namespace Emergence.Client.Common
 {
     public class ApiClient : IApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public ApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _jsonSerializerOptions = new JsonSerializerOptions();
-            _jsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<string>());
-            _jsonSerializerOptions.Converters.Add(new FilterTypeDiscriminator<double>());
         }
 
         public async Task<FindResult<Activity>> FindActivitiesAsync(FindParams findParams)
@@ -63,16 +57,14 @@ namespace Emergence.Client.Common
 
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
-            
-
-            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams, options: _jsonSerializerOptions);
+            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
         }
 
         public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams, options: _jsonSerializerOptions);
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
 
             return await ReadResult<FindResult<Specimen>>(result);
         }
