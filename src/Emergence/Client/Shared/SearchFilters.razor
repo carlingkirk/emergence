@@ -55,14 +55,14 @@
                 {
                     var numRangeFilter = filter as RangeFilter<int>;
                     <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
-                    <select @bind="@numRangeFilter.Value" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                    <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
                         @foreach (var value in numRangeFilter.Values)
                         {
                             <option value="@value">@value</option>
                         }
                     </select>
                     <label for="@numRangeFilter.Name.ToLower()">Max @numRangeFilter.Name</label>
-                    <select @bind="@numRangeFilter.Value" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                    <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
                         @foreach (var value in numRangeFilter.Values)
                         {
                             <option value="@value">@value</option>
@@ -73,14 +73,14 @@
                 {
                     var numRangeFilter = filter as RangeFilter<double>;
                     <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
-                    <select @bind="@numRangeFilter.Value" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                    <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
                         @foreach (var value in numRangeFilter.Values)
                         {
                             <option value="@value">@value</option>
                         }
                     </select>
                     <label for="@numRangeFilter.Name.ToLower()">Max @numRangeFilter.Name</label>
-                    <select @bind="@numRangeFilter.Value" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                    <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
                         @foreach (var value in numRangeFilter.Values)
                         {
                             <option value="@value">@value</option>

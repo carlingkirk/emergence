@@ -143,7 +143,7 @@ namespace Emergence.Server
             });
 
             services.AddControllersWithViews();
-            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
+            ConverterInfo.BuildConverterInfo(Assembly.Load("Emergence.Data.Shared"));
             services.AddControllers()
                 .AddApplicationPart(Assembly.Load("Emergence.API"))
                 .ConfigureApiBehaviorOptions(opt =>

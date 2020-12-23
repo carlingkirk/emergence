@@ -8,6 +8,7 @@ using BlazorInputFile;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
+using Emergence.Data.Shared.Search;
 
 namespace Emergence.Client.Common
 {
@@ -57,14 +58,14 @@ namespace Emergence.Client.Common
 
         public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
+            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams, options: FilterSerializer.Options);
 
             return await ReadResult<FindResult<PlantInfo>>(result);
         }
 
         public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams, options: FilterSerializer.Options);
 
             return await ReadResult<FindResult<Specimen>>(result);
         }

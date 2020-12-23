@@ -6,7 +6,7 @@ namespace Emergence.Data.Shared.Search
 {
     public static class FilterSerializer
     {
-        private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
+        public static readonly JsonSerializerOptions Options = new JsonSerializerOptions
         {
             WriteIndented = true,
         };

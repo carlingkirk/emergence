@@ -1,10 +1,8 @@
 using System;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Emergence.Client.Common;
-using Emergence.Data.Shared.Search;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +31,6 @@ namespace Emergence.Client
             }).AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
             builder.Services.AddBlazoredModal();
-            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
 
             // Client services
             builder.Services.AddTransient<IModalServiceClient, ModalServiceClient>();
