@@ -101,5 +101,39 @@ namespace Emergence.Test.Data.Shared.Search
 
             filteredPlantInfos.Count.Should().Be(2);
         }
+
+        [Fact]
+        public void TestSpreadFilter()
+        {
+            var filters = new List<Filter>
+            {
+                new SpreadFilter
+                {
+                    MinimumValue = 0.5,
+                    MaximumValue = 2
+                },
+                new RegionFilter
+                {
+                    Value = "North America"
+                }
+            };
+            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
+            var jsonFilters = FilterSerializer.Serialize(filters);
+
+            filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
+
+            var heightFilter = new SpreadFilter((RangeFilter<double>)filters.First(f => f.Name == "Spread"));
+
+            heightFilter.Should().NotBeNull();
+            heightFilter.FilterType.Should().Be(FilterType.Double);
+            heightFilter.InputType.Should().Be(InputType.SelectRange);
+            heightFilter.MinimumValue.Should().Be(0.5);
+            heightFilter.MaximumValue.Should().Be(2);
+
+            var plantInfos = FakePlantInfos.Get().AsQueryable();
+            var filteredPlantInfos = plantInfos.Where(heightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(2);
+        }
     }
 }
