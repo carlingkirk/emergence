@@ -22,8 +22,7 @@ namespace Emergence.Data.Shared.Search
             Name = "Height";
             InputType = InputType.SelectRange;
             FilterType = FilterType.Double;
-            var stageValues = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
-            Values = stageValues;
+            Values = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
         }
 
         public Expression<Func<PlantInfo, bool>> Filter => p => (MinimumValue == 0 || (p.MinimumHeight != null && p.MinimumHeight >= MinimumValue)) &&

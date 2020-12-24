@@ -122,18 +122,73 @@ namespace Emergence.Test.Data.Shared.Search
 
             filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
-            var heightFilter = new SpreadFilter((RangeFilter<double>)filters.First(f => f.Name == "Spread"));
+            var spreadFilter = new SpreadFilter((RangeFilter<double>)filters.First(f => f.Name == "Spread"));
 
-            heightFilter.Should().NotBeNull();
-            heightFilter.FilterType.Should().Be(FilterType.Double);
-            heightFilter.InputType.Should().Be(InputType.SelectRange);
-            heightFilter.MinimumValue.Should().Be(0.5);
-            heightFilter.MaximumValue.Should().Be(2);
+            spreadFilter.Should().NotBeNull();
+            spreadFilter.FilterType.Should().Be(FilterType.Double);
+            spreadFilter.InputType.Should().Be(InputType.SelectRange);
+            spreadFilter.MinimumValue.Should().Be(0.5);
+            spreadFilter.MaximumValue.Should().Be(2);
 
             var plantInfos = FakePlantInfos.Get().AsQueryable();
-            var filteredPlantInfos = plantInfos.Where(heightFilter.Filter).ToList();
+            var filteredPlantInfos = plantInfos.Where(spreadFilter.Filter).ToList();
 
             filteredPlantInfos.Count.Should().Be(2);
+        }
+
+        [Fact]
+        public void TestLightFilter()
+        {
+            var filters = new List<Filter>
+            {
+                new SpreadFilter
+                {
+                    MinimumValue = 0.5,
+                    MaximumValue = 2
+                },
+                new LightFilter
+                {
+                    MinimumValue = "FullShade",
+                    MaximumValue = "PartShade"
+                }
+            };
+            ConverterInfo.BuildConverterInfo(Assembly.GetExecutingAssembly());
+            var jsonFilters = FilterSerializer.Serialize(filters);
+
+            filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
+
+            var lightFilter = new LightFilter((RangeFilter<string>)filters.First(f => f.Name == "Light"));
+
+            lightFilter.Should().NotBeNull();
+            lightFilter.FilterType.Should().Be(FilterType.String);
+            lightFilter.InputType.Should().Be(InputType.SelectRange);
+            lightFilter.MinimumValue.Should().Be("FullShade");
+            lightFilter.MaximumValue.Should().Be("PartShade");
+
+            var plantInfos = FakePlantInfos.Get().AsQueryable();
+            var filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(2);
+
+            lightFilter = new LightFilter(new RangeFilter<string> { MinimumValue = "PartShade", MaximumValue = "FullSun" });
+            filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(3);
+
+            lightFilter = new LightFilter(new RangeFilter<string> { MinimumValue = "", MaximumValue = "FullSun" });
+            filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(3);
+
+            lightFilter = new LightFilter(new RangeFilter<string> { MinimumValue = "FullShade", MaximumValue = "" });
+            filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(3);
+
+            lightFilter = new LightFilter(new RangeFilter<string> { MinimumValue = "", MaximumValue = "FullShade" });
+            filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(1);
         }
     }
 }

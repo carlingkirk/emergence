@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -22,6 +23,7 @@ namespace Emergence.Data.Shared.Search
 
     public class SelectFilter<TValue> : Filter<TValue>
     {
+        [JsonIgnore]
         public IEnumerable<TValue> Values { get; set; }
         public override bool IsFiltered() => Values != null && Values switch
         {

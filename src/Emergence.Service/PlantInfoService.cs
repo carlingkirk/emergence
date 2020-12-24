@@ -73,7 +73,32 @@ namespace Emergence.Service
                 plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
             }
 
-            foreach(var filter in findParams.Filters)
+            plantInfoQuery = FilterBy(plantInfoQuery, findParams.Filters);
+
+            plantInfoQuery = plantInfoQuery.CanViewContent(user);
+
+            plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
+
+            var count = plantInfoQuery.Count();
+
+            var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+
+            var plantInfos = new List<Data.Shared.Models.PlantInfo>();
+            await foreach (var plantInfo in plantInfoResult)
+            {
+                plantInfos.Add(plantInfo.AsModel());
+            }
+
+            return new FindResult<Data.Shared.Models.PlantInfo>
+            {
+                Count = count,
+                Results = plantInfos
+            };
+        }
+
+        private IQueryable<PlantInfo> FilterBy(IQueryable<PlantInfo> plantInfoQuery, IEnumerable<Filter> filters)
+        {
+            foreach (var filter in filters)
             {
                 if (filter.Name == "Location")
                 {
@@ -101,25 +126,7 @@ namespace Emergence.Service
                 }
             }
 
-            plantInfoQuery = plantInfoQuery.CanViewContent(user);
-
-            plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
-
-            var count = plantInfoQuery.Count();
-
-            var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
-
-            var plantInfos = new List<Data.Shared.Models.PlantInfo>();
-            await foreach (var plantInfo in plantInfoResult)
-            {
-                plantInfos.Add(plantInfo.AsModel());
-            }
-
-            return new FindResult<Data.Shared.Models.PlantInfo>
-            {
-                Count = count,
-                Results = plantInfos
-            };
+            return plantInfoQuery;
         }
 
         private IQueryable<PlantInfo> OrderBy(IQueryable<PlantInfo> plantInfoQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
