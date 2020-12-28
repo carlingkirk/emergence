@@ -58,9 +58,9 @@ namespace Emergence.Data.Shared.Search
                     lightValues.Add(maxValue.ToString());
                 }
 
-                if (minValue == LightType.FullShade)
+                if (minValue == LightType.FullShade || minValue == LightType.Unknown)
                 {
-                    if (maxValue == LightType.FullSun)
+                    if (maxValue == LightType.FullSun || maxValue == LightType.Unknown)
                     {
                         lightValues.Add(LightType.PartShade.ToString());
                         lightValues.Add(LightType.PartSun.ToString());

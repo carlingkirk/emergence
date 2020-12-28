@@ -189,6 +189,11 @@ namespace Emergence.Test.Data.Shared.Search
             filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
 
             filteredPlantInfos.Count.Should().Be(1);
+
+            lightFilter = new LightFilter(new RangeFilter<string> { MinimumValue = "FullShade", MaximumValue = "PartSun" });
+            filteredPlantInfos = plantInfos.Where(lightFilter.Filter).ToList();
+
+            filteredPlantInfos.Count.Should().Be(3);
         }
     }
 }
