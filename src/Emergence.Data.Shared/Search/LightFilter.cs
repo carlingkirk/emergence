@@ -37,6 +37,11 @@ namespace Emergence.Data.Shared.Search
         private IEnumerable<string> GetLightValues()
         {
             var lightValues = new List<string>();
+            if (string.IsNullOrEmpty(MinimumValue) && string.IsNullOrEmpty(MaximumValue))
+            {
+                return lightValues;
+            }
+
             if (string.IsNullOrEmpty(MinimumValue))
             {
                 MinimumValue = LightType.Unknown.ToString();

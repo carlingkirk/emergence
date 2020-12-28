@@ -124,6 +124,14 @@ namespace Emergence.Service
                         plantInfoQuery = plantInfoQuery.Where(spreadFilter.Filter);
                     }
                 }
+                else if (filter.Name == "Light")
+                {
+                    var lightFilter = new LightFilter((RangeFilter<string>)filter);
+                    if (!(string.IsNullOrEmpty(lightFilter.MinimumValue) && string.IsNullOrEmpty(lightFilter.MaximumValue)))
+                    {
+                        plantInfoQuery = plantInfoQuery.Where(lightFilter.Filter);
+                    }
+                }
             }
 
             return plantInfoQuery;

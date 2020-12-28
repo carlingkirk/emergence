@@ -6,13 +6,13 @@ namespace Emergence.Data.Shared
     {
         [Description("")]
         Unknown,
-        [Description("Full Sun")]
-        FullSun,
-        [Description("Part Sun")]
-        PartSun,
+        [Description("Full Shade")]
+        FullShade,
         [Description("Part Shade")]
         PartShade,
-        [Description("Full Shade")]
-        FullShade
+        [Description("Part Sun")]
+        PartSun,
+        [Description("Full Sun")]
+        FullSun
     }
 }
