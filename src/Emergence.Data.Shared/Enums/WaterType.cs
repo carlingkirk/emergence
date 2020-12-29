@@ -6,12 +6,12 @@ namespace Emergence.Data.Shared
     {
         [Description("")]
         Unknown,
-        Wet,
-        [Description("Medium Wet")]
-        MediumWet,
-        Medium,
+        Dry,
         [Description("Medium Dry")]
         MediumDry,
-        Dry
+        Medium,
+        [Description("Medium Wet")]
+        MediumWet,
+        Wet
     }
 }
