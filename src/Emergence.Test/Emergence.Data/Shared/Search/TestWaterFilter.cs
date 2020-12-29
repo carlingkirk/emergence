@@ -42,6 +42,13 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
 
         [Theory]
         [InlineData("Dry", "MediumDry", 1)]
+        [InlineData("Dry", "Wet", 3)]
+        [InlineData("Dry", "MediumWet", 3)]
+        [InlineData("", "Medium", 3)]
+        [InlineData("Medium", "", 3)]
+        [InlineData("", "Dry", 1)]
+        [InlineData("Dry", "", 3)]
+        [InlineData("MediumWet", "Wet", 0)]
         public void TestFilter(string minValue, string maxValue, int count)
         {
             var filter = new RangeFilter<string>
