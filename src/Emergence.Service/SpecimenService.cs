@@ -65,14 +65,17 @@ namespace Emergence.Service
                 specimenQuery = specimenQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
             }
 
-            foreach (var filter in findParams.Filters)
+            if (findParams.Filters != null)
             {
-                if (filter.Name == "Stage")
+                foreach (var filter in findParams.Filters)
                 {
-                    var stageFilter = new StageFilter((Filter<string>)filter);
-                    if (!string.IsNullOrEmpty(stageFilter.Value))
+                    if (filter.Name == "Stage")
                     {
-                        specimenQuery = specimenQuery.Where(stageFilter.Filter);
+                        var stageFilter = new StageFilter((Filter<string>)filter);
+                        if (!string.IsNullOrEmpty(stageFilter.Value))
+                        {
+                            specimenQuery = specimenQuery.Where(stageFilter.Filter);
+                        }
                     }
                 }
             }

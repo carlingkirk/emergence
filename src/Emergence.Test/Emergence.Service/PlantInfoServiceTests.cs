@@ -55,7 +55,7 @@ namespace Emergence.Test.API.Services
                 Skip = 0,
                 Take = 10,
                 SortBy = "",
-                SortDirection = SortDirection.None,
+                SortDirection = SortDirection.None
             },
             FakeUsers.GetPublic().AsModel());
 

@@ -98,6 +98,11 @@ namespace Emergence.Service
 
         private IQueryable<PlantInfo> FilterBy(IQueryable<PlantInfo> plantInfoQuery, IEnumerable<Filter> filters)
         {
+            if (filters == null)
+            {
+                return plantInfoQuery;
+            }
+
             foreach (var filter in filters)
             {
                 if (filter.Name == "Location")
