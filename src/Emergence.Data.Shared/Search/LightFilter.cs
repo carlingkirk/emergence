@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Light")]
-    public class LightFilter : RangeFilter<string>
+    public class LightFilter : RangeFilter<string>, IEnumDisplay
     {
         private IEnumerable<string> LightValues { get; set; }
         public LightFilter(RangeFilter<string> filter)
@@ -81,6 +82,19 @@ namespace Emergence.Data.Shared.Search
                 }
             }
             return lightValues;
+        }
+
+        public string DisplayValue(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            else
+            {
+                var lightValue = Enum.Parse<LightType>(value);
+                return lightValue.ToFriendlyName();
+            }
         }
     }
 }
