@@ -8,7 +8,7 @@ using Emergence.Data.Shared.Stores;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Light")]
-    public class LightFilter : RangeFilter<string>, IEnumDisplay
+    public class LightFilter : RangeFilter<string>, IEnumDisplay<string>
     {
         private IEnumerable<string> LightValues { get; set; }
         public LightFilter(RangeFilter<string> filter)

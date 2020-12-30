@@ -10,7 +10,8 @@ namespace Emergence.Data.Shared.Search
             new HeightFilter(),
             new SpreadFilter(),
             new LightFilter(),
-            new WaterFilter()
+            new WaterFilter(),
+            new BloomFilter()
         };
 
         public static List<Filter> GetSpecimenFilters() => new List<Filter>

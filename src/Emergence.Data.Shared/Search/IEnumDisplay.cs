@@ -1,7 +1,7 @@
 namespace Emergence.Data.Shared.Search
 {
-    public interface IEnumDisplay
+    public interface IEnumDisplay<in TValue>
     {
-        public string DisplayValue(string value);
+        public string DisplayValue(TValue value);
     }
 }

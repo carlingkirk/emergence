@@ -145,6 +145,14 @@ namespace Emergence.Service
                         plantInfoQuery = plantInfoQuery.Where(waterFilter.Filter);
                     }
                 }
+                else if (filter.Name == "Bloom")
+                {
+                    var bloomFilter = new BloomFilter((RangeFilter<int>)filter);
+                    if (!(bloomFilter.MinimumValue == 0 && bloomFilter.MaximumValue == 0))
+                    {
+                        plantInfoQuery = plantInfoQuery.Where(bloomFilter.Filter);
+                    }
+                }
             }
 
             return plantInfoQuery;
