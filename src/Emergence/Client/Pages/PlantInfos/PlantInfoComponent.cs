@@ -14,7 +14,6 @@ namespace Emergence.Client.Components
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
         public List<Photo> UploadedPhotos { get; set; }
-        public IEnumerable<Zone> Zones { get; set; }
         public static IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public static IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public static IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
@@ -23,6 +22,9 @@ namespace Emergence.Client.Components
         public static IEnumerable<StratificationType> StratificationTypes => Enum.GetValues(typeof(StratificationType)).Cast<StratificationType>();
         public List<SoilType> ChosenSoilTypes { get; set; }
         public LinkedList<StratificationStage> ChosenStratificationStages { get; set; }
+        public IEnumerable<Zone> Zones { get; set; }
+        public int? MinimumZoneId { get; set; }
+        public int? MaximumZoneId { get; set; }
         public string CommonName => PlantInfo?.CommonName ?? PlantInfo.Lifeform?.CommonName ?? "";
         public string ScientificName => PlantInfo?.ScientificName ?? PlantInfo.Lifeform?.ScientificName ?? "";
         protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (PlantInfo?.CreatedBy == UserId);
@@ -48,6 +50,8 @@ namespace Emergence.Client.Components
 
                 PlantInfo.SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
+                MinimumZoneId = PlantInfo.Requirements.ZoneRequirements?.MinimumZone?.Id;
+                MaximumZoneId = PlantInfo.Requirements.ZoneRequirements?.MaximumZone?.Id;
 
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {

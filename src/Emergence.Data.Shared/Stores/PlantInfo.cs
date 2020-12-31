@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emergence.Data.Shared.Stores
 {
-    public class PlantInfo : IIncludable<PlantInfo>, IIncludable<PlantInfo, Origin>, IIncludable<PlantInfo, Lifeform>, IIncludable<PlantInfo, Taxon>, IAuditable, IVisibile<InventoryItem>
+    public class PlantInfo : IIncludable<PlantInfo, Origin>, IIncludable<PlantInfo, Lifeform>, IIncludable<PlantInfo, Taxon>, IIncludable<PlantInfo, Zone>, IAuditable, IVisibile<InventoryItem>
     {
         public int Id { get; set; }
         public int LifeformId { get; set; }
