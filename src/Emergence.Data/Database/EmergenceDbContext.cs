@@ -41,6 +41,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<UserContactRequest> UserContactRequests { get; set; }
         public virtual DbSet<UserMessage> UserMessages { get; set; }
         public virtual DbSet<DisplayName> DisplayNames { get; set; }
+        public virtual DbSet<Zone> Zones { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -70,6 +71,7 @@ namespace Emergence.Data.Repository
             modelBuilder.Entity<UserContact>().HasKey(u => u.Id);
             modelBuilder.Entity<UserContactRequest>().HasKey(u => u.Id);
             modelBuilder.Entity<UserMessage>().HasKey(u => u.Id);
+            modelBuilder.Entity<Zone>().HasKey(z => z.Id);
             modelBuilder.Entity<DisplayName>().HasNoKey().ToView("DisplayNames").Property(v => v.Name).HasColumnName("Name");
 
             modelBuilder.Entity<User>().HasIndex(u => u.UserId).IsUnique();

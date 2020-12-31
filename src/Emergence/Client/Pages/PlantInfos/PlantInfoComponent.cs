@@ -13,8 +13,6 @@ namespace Emergence.Client.Components
         [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
-        public string MinZone { get; set; }
-        public string MaxZone { get; set; }
         public List<Photo> UploadedPhotos { get; set; }
         public static IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public static IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
@@ -24,6 +22,9 @@ namespace Emergence.Client.Components
         public static IEnumerable<StratificationType> StratificationTypes => Enum.GetValues(typeof(StratificationType)).Cast<StratificationType>();
         public List<SoilType> ChosenSoilTypes { get; set; }
         public LinkedList<StratificationStage> ChosenStratificationStages { get; set; }
+        public IEnumerable<Zone> Zones { get; set; }
+        public int? MinimumZoneId { get; set; }
+        public int? MaximumZoneId { get; set; }
         public string CommonName => PlantInfo?.CommonName ?? PlantInfo.Lifeform?.CommonName ?? "";
         public string ScientificName => PlantInfo?.ScientificName ?? PlantInfo.Lifeform?.ScientificName ?? "";
         protected bool IsOwner => !string.IsNullOrEmpty(UserId) && (PlantInfo?.CreatedBy == UserId);
@@ -32,6 +33,7 @@ namespace Emergence.Client.Components
         {
             await base.OnInitializedAsync();
 
+            Zones = new List<Zone> { new Zone { Id = null, Name = "" } }.Concat(ZoneHelper.GetZones());
             ChosenSoilTypes = new List<SoilType>();
             if (Id > 0 || PlantInfo != null)
             {
@@ -48,9 +50,8 @@ namespace Emergence.Client.Components
 
                 PlantInfo.SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
-
-                MinZone = PlantInfo.Requirements.ZoneRequirements.MinimumZone?.ToFriendlyString();
-                MaxZone = PlantInfo.Requirements.ZoneRequirements.MaximumZone?.ToFriendlyString();
+                MinimumZoneId = PlantInfo.Requirements.ZoneRequirements?.MinimumZone?.Id;
+                MaximumZoneId = PlantInfo.Requirements.ZoneRequirements?.MaximumZone?.Id;
 
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {

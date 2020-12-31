@@ -19,7 +19,7 @@ namespace Emergence.Data.Shared.Models
 
         public string ToFriendlyString()
         {
-            if (MinimumWater != WaterType.Unknown && MinimumWater != WaterType.Unknown)
+            if (MinimumWater != WaterType.Unknown && MaximumWater != WaterType.Unknown)
             {
                 return MinimumWater.ToFriendlyName() + " - " + MaximumWater.ToFriendlyName();
             }
@@ -72,41 +72,19 @@ namespace Emergence.Data.Shared.Models
 
         public string ToFriendlyString()
         {
-            if (!string.IsNullOrEmpty(MinimumZone?.ToFriendlyString()) && !string.IsNullOrEmpty(MaximumZone?.ToFriendlyString()))
+            if (MinimumZone != null && MaximumZone != null)
             {
-                return MinimumZone.ToFriendlyString() + " - " + MaximumZone.ToFriendlyString();
+                return MinimumZone.Name + " - " + MaximumZone.Name;
             }
-            else if (!string.IsNullOrEmpty(MinimumZone?.ToFriendlyString()))
+            else if (MinimumZone != null)
             {
-                return MinimumZone.ToFriendlyString();
+                return MinimumZone.Name;
             }
-            else if (!string.IsNullOrEmpty(MaximumZone?.ToFriendlyString()))
+            else if (MaximumZone != null)
             {
-                return MaximumZone.ToFriendlyString();
+                return MaximumZone.Name;
             }
             return null;
-        }
-    }
-
-    public class Zone
-    {
-        public int Number { get; set; }
-        public string Letter { get; set; }
-
-        public string ToFriendlyString()
-        {
-            if (Number >= 0 && !string.IsNullOrEmpty(Letter))
-            {
-                return Number.ToString() + Letter;
-            }
-            else if (Number >= 0)
-            {
-                return Number.ToString();
-            }
-            else
-            {
-                return null;
-            }
         }
     }
 }

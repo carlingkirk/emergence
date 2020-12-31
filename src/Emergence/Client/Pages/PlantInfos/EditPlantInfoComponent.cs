@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Emergence.Data.Shared;
-using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -33,9 +32,16 @@ namespace Emergence.Client.Components
             PlantInfo.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;
             PlantInfo.Lifeform = PlantInfo.SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
-            PlantInfo.Requirements.ZoneRequirements.MinimumZone = MinZone.ParseZone();
-            PlantInfo.Requirements.ZoneRequirements.MaximumZone = MaxZone.ParseZone();
-            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
+            PlantInfo.Requirements.StratificationStages = ChosenStratificationStages != null && ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
+
+            if (MinimumZoneId != PlantInfo.Requirements.ZoneRequirements?.MinimumZone?.Id)
+            {
+                PlantInfo.Requirements.ZoneRequirements.MinimumZone = Zones.First(z => z.Id == MinimumZoneId);
+            }
+            if (MaximumZoneId != PlantInfo.Requirements.ZoneRequirements?.MaximumZone?.Id)
+            {
+                PlantInfo.Requirements.ZoneRequirements.MaximumZone = Zones.First(z => z.Id == MaximumZoneId);
+            }
 
             PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
 

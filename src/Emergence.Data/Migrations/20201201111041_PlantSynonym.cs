@@ -31,12 +31,12 @@ namespace Emergence.Data.Migrations
                 table: "PlantSynonyms",
                 column: "LifeformId");
 
-            migrationBuilder.Sql("INSERT INTO [dbo].[PlantSynonyms] ([LifeformId],[Synonym])" +
-                                 "SELECT l.id, s.Name" +
-                                 "FROM [Synonyms] s" +
-                                 "left join Taxons t on t.Id = s.TaxonId" +
-                                 "left join Lifeforms l on l.ScientificName = t.Genus + ' ' + t.Species" + 
-                                 "where s.Rank = 'Species' and s.Name = l.CommonName");
+            migrationBuilder.Sql("INSERT INTO [dbo].[PlantSynonyms] ([LifeformId],[Synonym]) " +
+                                 "SELECT l.id, s.Name " +
+                                 "FROM [Synonyms] s " +
+                                 "left join Taxons t on t.Id = s.TaxonId " +
+                                 "left join Lifeforms l on l.ScientificName = t.Genus + ' ' + t.Species " + 
+                                 "where s.Rank = 'Species' and s.Name = l.CommonName ");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder) => migrationBuilder.DropTable(name: "PlantSynonyms");

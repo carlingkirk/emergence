@@ -37,7 +37,8 @@ namespace Emergence.Service
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Origin)
                                                                               .Include(p => p.User)
-                                                                              .Include(p => p.User.Photo));
+                                                                              .Include(p => p.User.Photo)
+                                                                              .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
             plantInfoQuery = plantInfoQuery.CanViewContent(user);
 
             var plantInfo = await plantInfoQuery.FirstOrDefaultAsync();
@@ -67,7 +68,8 @@ namespace Emergence.Service
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
                                                                               .Include(p => p.Origin)
-                                                                              .Include(p => p.User));
+                                                                              .Include(p => p.User)
+                                                                              .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);

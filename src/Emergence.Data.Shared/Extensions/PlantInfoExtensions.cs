@@ -15,18 +15,6 @@ namespace Emergence.Data.Shared.Extensions
                 stratificationStages = JsonConvert.DeserializeObject<List<Models.StratificationStage>>(source.StratificationStages);
             }
 
-            Models.Zone minimumZone = null;
-            Models.Zone maximumZone = null;
-            if (!string.IsNullOrEmpty(source.MinimumZone))
-            {
-                minimumZone = source.MinimumZone.ParseZone();
-            }
-
-            if (!string.IsNullOrEmpty(source.MaximumZone))
-            {
-                maximumZone = source.MaximumZone.ParseZone();
-            }
-
             return new Models.PlantInfo
             {
                 PlantInfoId = source.Id,
@@ -68,8 +56,18 @@ namespace Emergence.Data.Shared.Extensions
                     StratificationStages = stratificationStages,
                     ZoneRequirements = new Models.ZoneRequirements
                     {
-                        MinimumZone = minimumZone,
-                        MaximumZone = maximumZone
+                        MinimumZone = source.MinimumZone != null ? new Models.Zone
+                        {
+                            Id = source.MinimumZone.Id,
+                            Name = source.MinimumZone.Name,
+                            Notes = source.MinimumZone.Notes
+                        } : null,
+                        MaximumZone = source.MaximumZone != null ? new Models.Zone
+                        {
+                            Id = source.MaximumZone.Id,
+                            Name = source.MaximumZone.Name,
+                            Notes = source.MaximumZone.Notes
+                        } : null
                     }
                 },
                 Taxon = source.Taxon != null ? source.Taxon.AsModel() : source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
@@ -103,12 +101,8 @@ namespace Emergence.Data.Shared.Extensions
             MaximumLight = source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MaximumLight.ToString() : null,
             MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater.ToString() : null,
             MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
-            MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone != null
-                ? source.Requirements?.ZoneRequirements?.MinimumZone?.Number + source.Requirements?.ZoneRequirements?.MinimumZone?.Letter ?? ""
-                : null,
-            MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone != null
-                ? source.Requirements?.ZoneRequirements?.MaximumZone?.Number + source.Requirements?.ZoneRequirements?.MaximumZone?.Letter ?? ""
-                : null,
+            MinimumZoneId = source.Requirements?.ZoneRequirements?.MinimumZone?.Id,
+            MaximumZoneId = source.Requirements?.ZoneRequirements?.MaximumZone?.Id,
             StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
             Preferred = source.Preferred,
             TaxonId = source.Taxon?.TaxonId,
