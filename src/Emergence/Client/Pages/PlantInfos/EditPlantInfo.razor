@@ -106,13 +106,23 @@
                             <label for="req-zones-min">Zones</label>
                             <div class="row">
                                 <div class="col-5 range-input">
-                                    <input @bind="@MinZone" type="text" class="form-control" id="req-zones-min" />
+                                    <select @bind="@PlantInfo.Requirements.ZoneRequirements.MinimumZone" type="text" class="form-control" id="req-zone-min">
+                                        @foreach (var zone in Zones)
+                                        {
+                                            <option value="@zone">@(zone.Name)</option>
+                                        }
+                                    </select>
                                 </div>
                                 <div class="col-1 range-separator">
                                     <span>to</span>
                                 </div>
                                 <div class="col-5 range-input">
-                                    <input @bind="@MaxZone" type="text" class="form-control" id="req-zones-max" />
+                                    <select @bind="@PlantInfo.Requirements.ZoneRequirements.MaximumZone" type="text" class="form-control" id="req-zone-max">
+                                        @foreach (var zone in Zones)
+                                        {
+                                            <option value="@zone">@(zone.Name)</option>
+                                        }
+                                    </select>
                                 </div>
                             </div>
                         </div>

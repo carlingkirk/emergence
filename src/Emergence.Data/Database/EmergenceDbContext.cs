@@ -41,6 +41,7 @@ namespace Emergence.Data.Repository
         public virtual DbSet<UserContactRequest> UserContactRequests { get; set; }
         public virtual DbSet<UserMessage> UserMessages { get; set; }
         public virtual DbSet<DisplayName> DisplayNames { get; set; }
+        public virtual DbSet<Zone> Zones { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

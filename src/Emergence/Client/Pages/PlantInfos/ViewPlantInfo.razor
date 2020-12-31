@@ -66,19 +66,16 @@
                     </div>
                 </div>
             }
-            @if (!string.IsNullOrEmpty(MinZone) || !string.IsNullOrEmpty(MaxZone))
-            {
                 <div class="col-lg-4 col-xs">
                     <div>
                         <label for="zones">Zones</label>
                     </div>
                     <div>
                         <span id="zones">
-                            @DisplayRange(MinZone, MaxZone)
+                            @DisplayRange(PlantInfo.Requirements.ZoneRequirements.MinimumZone.Name, PlantInfo.Requirements.ZoneRequirements.MaximumZone.Name)
                         </span>
                     </div>
                 </div>
-            }
             @if (PlantInfo.BloomTime.MinimumBloomTime != Month.Unknown || PlantInfo.BloomTime.MaximumBloomTime != Month.Unknown)
             {
                 <div class="col-lg-4 col-xs">

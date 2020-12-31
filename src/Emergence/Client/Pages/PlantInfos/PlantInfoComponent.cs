@@ -13,9 +13,8 @@ namespace Emergence.Client.Components
         [Parameter]
         public PlantInfo PlantInfo { get; set; }
         public Origin SelectedOrigin { get; set; }
-        public string MinZone { get; set; }
-        public string MaxZone { get; set; }
         public List<Photo> UploadedPhotos { get; set; }
+        public IEnumerable<Zone> Zones { get; set; }
         public static IEnumerable<LightType> LightTypes => Enum.GetValues(typeof(LightType)).Cast<LightType>();
         public static IEnumerable<WaterType> WaterTypes => Enum.GetValues(typeof(WaterType)).Cast<WaterType>();
         public static IEnumerable<SoilType> SoilTypes => Enum.GetValues(typeof(SoilType)).Cast<SoilType>();
@@ -32,6 +31,7 @@ namespace Emergence.Client.Components
         {
             await base.OnInitializedAsync();
 
+            Zones = ZoneHelper.GetZones();
             ChosenSoilTypes = new List<SoilType>();
             if (Id > 0 || PlantInfo != null)
             {
@@ -48,9 +48,6 @@ namespace Emergence.Client.Components
 
                 PlantInfo.SelectedLifeform = PlantInfo.Lifeform;
                 SelectedOrigin = PlantInfo.Origin;
-
-                MinZone = PlantInfo.Requirements.ZoneRequirements.MinimumZone?.ToFriendlyString();
-                MaxZone = PlantInfo.Requirements.ZoneRequirements.MaximumZone?.ToFriendlyString();
 
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {
