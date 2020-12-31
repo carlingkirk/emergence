@@ -17,6 +17,7 @@ namespace Emergence.Service
     {
         private readonly IRepository<Origin> _originRepository;
         private readonly ILocationService _locationService;
+
         public OriginService(IRepository<Origin> originRepository, ILocationService locationService)
         {
             _originRepository = originRepository;
@@ -45,6 +46,14 @@ namespace Emergence.Service
             return origin?.AsModel();
         }
 
+        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId)
+        {
+            var origin = await _originRepository.GetAsync(o => o.ParentOriginId == parentOriginId &&
+                                                               o.ExternalId == externalId &&
+                                                              (altExternalId == null || o.AltExternalId == altExternalId));
+            return origin?.AsModel();
+        }
+
         public async Task<Data.Shared.Models.Origin> AddOrUpdateOriginAsync(Data.Shared.Models.Origin origin, string userId)
         {
             origin.DateModified = DateTime.UtcNow;
@@ -65,14 +74,6 @@ namespace Emergence.Service
             return originResult.AsModel();
         }
 
-        public async Task<Data.Shared.Models.Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId)
-        {
-            var origin = await _originRepository.GetAsync(o => o.ParentOriginId == parentOriginId &&
-                                                               o.ExternalId == externalId &&
-                                                              (altExternalId == null || o.AltExternalId == altExternalId));
-            return origin?.AsModel();
-        }
-
         public async Task<FindResult<Data.Shared.Models.Origin>> FindOrigins(FindParams findParams, Data.Shared.Models.User user)
         {
             var originQuery = _originRepository.WhereWithIncludes(o => findParams.SearchTextQuery == null ||
@@ -83,7 +84,6 @@ namespace Emergence.Service
                                                                        EF.Functions.Like(o.Location.StateOrProvince, findParams.SearchTextQuery),
                                                                        false,
                                                                   o => o.Include(o => o.Location)
-                                                                        .Include(o => o.ParentOrigin)
                                                                         .Include(o => o.User));
 
             originQuery = originQuery.CanViewContent(user);
@@ -91,6 +91,10 @@ namespace Emergence.Service
             if (!string.IsNullOrEmpty(findParams.CreatedBy))
             {
                 originQuery = originQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
+            }
+            else
+            {
+                originQuery = originQuery.Where(s => s.CreatedBy != null);
             }
 
             originQuery = OrderBy(originQuery, findParams.SortBy, findParams.SortDirection);

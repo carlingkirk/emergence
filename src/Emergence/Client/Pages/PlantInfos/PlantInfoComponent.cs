@@ -33,7 +33,7 @@ namespace Emergence.Client.Components
         {
             await base.OnInitializedAsync();
 
-            Zones = ZoneHelper.GetZones();
+            Zones = new List<Zone> { new Zone { Id = null, Name = "" } }.Concat(ZoneHelper.GetZones());
             ChosenSoilTypes = new List<SoilType>();
             if (Id > 0 || PlantInfo != null)
             {
