@@ -117,16 +117,16 @@ namespace Emergence.Service
                 }
                 else if (filter.Name == "Height")
                 {
-                    var heightFilter = new HeightFilter((RangeFilter<double>)filter);
-                    if (heightFilter.MinimumValue > 0 || heightFilter.MaximumValue > 0)
+                    var heightFilter = new HeightFilter((RangeFilter<double?>)filter);
+                    if (heightFilter.MinimumValue.HasValue|| heightFilter.MaximumValue.HasValue)
                     {
                         plantInfoQuery = plantInfoQuery.Where(heightFilter.Filter);
                     }
                 }
                 else if (filter.Name == "Spread")
                 {
-                    var spreadFilter = new SpreadFilter((RangeFilter<double>)filter);
-                    if (spreadFilter.MinimumValue > 0 || spreadFilter.MaximumValue > 0)
+                    var spreadFilter = new SpreadFilter((RangeFilter<double?>)filter);
+                    if (spreadFilter.MinimumValue.HasValue|| spreadFilter.MaximumValue.HasValue)
                     {
                         plantInfoQuery = plantInfoQuery.Where(spreadFilter.Filter);
                     }

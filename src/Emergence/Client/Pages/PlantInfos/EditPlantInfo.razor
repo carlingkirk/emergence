@@ -164,13 +164,8 @@
                                 <div class="col-3 range-input">
                                     <input @bind="@PlantInfo.Height.MaximumHeight" type="text" class="form-control" id="height-max" />
                                 </div>
-                                <div class="col-4 range-input range-input-unit">
-                                    <select @bind="@PlantInfo.Height.Unit" type="text" class="form-control" id="bloom-unit">
-                                        @foreach (var unit in DistanceUnits)
-                                        {
-                                            <option value="@unit">@unit.ToFriendlyName()</option>
-                                        }
-                                    </select>
+                                <div class="col-2 range-input range-input-unit">
+                                    <label>feet</label>
                                 </div>
                             </div>
                         </div>
@@ -186,13 +181,8 @@
                                 <div class="col-3 range-input">
                                     <input @bind="@PlantInfo.Spread.MaximumSpread" type="text" class="form-control" id="spread-max" />
                                 </div>
-                                <div class="col-4 range-input range-input-unit">
-                                    <select @bind="@PlantInfo.Spread.Unit" type="text" class="form-control" id="spread-unit">
-                                        @foreach (var unit in DistanceUnits)
-                                        {
-                                            <option value="@unit">@unit.ToFriendlyName()</option>
-                                        }
-                                    </select>
+                                <div class="col-2 range-input range-input-unit">
+                                    <label>feet</label>
                                 </div>
                             </div>
                         </div>

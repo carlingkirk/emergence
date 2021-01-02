@@ -32,13 +32,13 @@ namespace Emergence.Data.Shared.Extensions
                 {
                     MinimumHeight = source.MinimumHeight,
                     MaximumHeight = source.MaximumHeight,
-                    Unit = !string.IsNullOrEmpty(source.HeightUnit) ? Enum.Parse<DistanceUnit>(source.HeightUnit) : DistanceUnit.Unknown
+                    Unit = source.MinimumHeight.HasValue || source.MaximumHeight.HasValue ? DistanceUnit.Feet : DistanceUnit.Unknown
                 },
                 Spread = new Models.Spread
                 {
                     MinimumSpread = source.MinimumSpread,
                     MaximumSpread = source.MaximumSpread,
-                    Unit = !string.IsNullOrEmpty(source.SpreadUnit) ? Enum.Parse<DistanceUnit>(source.SpreadUnit) : DistanceUnit.Unknown
+                    Unit = source.MinimumSpread.HasValue || source.MaximumSpread.HasValue ? DistanceUnit.Feet : DistanceUnit.Unknown
                 },
                 Requirements = new Models.Requirements
                 {
@@ -93,10 +93,10 @@ namespace Emergence.Data.Shared.Extensions
             MaximumBloomTime = (short?)source.BloomTime?.MaximumBloomTime,
             MinimumHeight = source.Height?.MinimumHeight,
             MaximumHeight = source.Height?.MaximumHeight,
-            HeightUnit = source.Height?.Unit != DistanceUnit.Unknown ? source.Height?.Unit.ToString() : null,
+            HeightUnit = source.Height?.Unit != DistanceUnit.Unknown ? DistanceUnit.Feet.ToString() : null,
             MinimumSpread = source.Spread?.MinimumSpread,
             MaximumSpread = source.Spread?.MaximumSpread,
-            SpreadUnit = source.Spread?.Unit != DistanceUnit.Unknown ? source.Spread?.Unit.ToString() : null,
+            SpreadUnit = source.Spread?.Unit != DistanceUnit.Unknown ? DistanceUnit.Feet.ToString() : null,
             MinimumLight = source.Requirements?.LightRequirements?.MinimumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MinimumLight.ToString() : null,
             MaximumLight = source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MaximumLight.ToString() : null,
             MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater.ToString() : null,

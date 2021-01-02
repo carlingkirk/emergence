@@ -34,6 +34,22 @@ namespace Emergence.Client.Components
             PlantInfo.CreatedBy = UserId;
             PlantInfo.Requirements.StratificationStages = ChosenStratificationStages != null && ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
 
+            if (PlantInfo.Height.MinimumHeight.HasValue || PlantInfo.Height.MaximumHeight.HasValue)
+            {
+                PlantInfo.Height.Unit = DistanceUnit.Feet;
+            }
+            else
+            {
+                PlantInfo.Height.Unit = DistanceUnit.Unknown;
+            }
+            if (PlantInfo.Spread.MinimumSpread.HasValue || PlantInfo.Spread.MaximumSpread.HasValue)
+            {
+                PlantInfo.Spread.Unit = DistanceUnit.Feet;
+            }
+            else
+            {
+                PlantInfo.Spread.Unit = DistanceUnit.Unknown;
+            }
             if (MinimumZoneId != PlantInfo.Requirements.ZoneRequirements?.MinimumZone?.Id)
             {
                 PlantInfo.Requirements.ZoneRequirements.MinimumZone = Zones.First(z => z.Id == MinimumZoneId);

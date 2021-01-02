@@ -161,7 +161,7 @@
                 }
                 else if (filter.FilterType == FilterType.Double)
                 {
-                    var numRangeFilter = filter as RangeFilter<double>;
+                    var numRangeFilter = filter as RangeFilter<double?>;
                     <div class="row">
                         <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
                     </div>
