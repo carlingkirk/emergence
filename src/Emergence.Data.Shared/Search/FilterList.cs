@@ -6,13 +6,13 @@ namespace Emergence.Data.Shared.Search
     {
         public static List<Filter> GetPlantInfoFilters() => new List<Filter>
         {
+            new ZoneFilter(),
             new RegionFilter(),
             new HeightFilter(),
             new SpreadFilter(),
             new LightFilter(),
             new WaterFilter(),
-            new BloomFilter(),
-            new ZoneFilter()
+            new BloomFilter()
         };
 
         public static List<Filter> GetSpecimenFilters() => new List<Filter>

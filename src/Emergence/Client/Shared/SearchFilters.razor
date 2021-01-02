@@ -5,157 +5,187 @@
         @foreach (var filter in Filters)
         {
         <div class="col-lg-4 col-xs">
-
             @if (filter.InputType == InputType.Select)
             {
-                if (filter.FilterType == FilterType.String)
-                {
-                    var selectFilter = filter as SelectFilter<string>;
-                    if (filter is IFilterDisplay<string>)
-                    {
-                        var enumStringFilter = (IFilterDisplay<string>)selectFilter;
-                        <label for="@selectFilter.Name.ToLower()">@selectFilter.Name</label>
-                        <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
-                            @foreach (var value in selectFilter.Values)
-                            {
-                                <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <label for="@selectFilter.Name.ToLower()">@selectFilter.Name</label>
-                        <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
-                            @foreach (var value in selectFilter.Values)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                    }
-                }
-                else if (filter.FilterType == FilterType.Integer)
-                {
-                    var selectFilter = filter as SelectFilter<int>;
-                    if (filter is IFilterDisplay<int>)
-                    {
-                        var displayIntFilter = (IFilterDisplay<int>)selectFilter;
-                        <label for="@selectFilter.Name.ToLower()">@selectFilter.Name</label>
-                        <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
-                            @foreach (var value in selectFilter.Values)
-                            {
-                                <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <label for="@selectFilter.Name.ToLower()">@selectFilter.Name</label>
-                        <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
-                            @foreach (var value in selectFilter.Values)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                    }
-                }
+                <div class="row">
+                    <label for="@filter.Name.ToLower()">@filter.Name</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-11 col-xs" style="padding: 0;">
+                        @if (filter.FilterType == FilterType.String)
+                        {
+                            var selectFilter = filter as SelectFilter<string>;
+                            <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
+                                @if (filter is IFilterDisplay<string>)
+                                {
+                                    var enumStringFilter = (IFilterDisplay<string>)selectFilter;
+                                    @foreach (var value in selectFilter.Values)
+                                    {
+                                        <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var value in selectFilter.Values)
+                                    {
+                                        <option value="@value">@value</option>
+                                    }
+                                }
+                            </select>
+                        }
+                        else if (filter.FilterType == FilterType.Integer)
+                        {
+                            var selectFilter = filter as SelectFilter<int>;
+                            <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
+                                @if (filter is IFilterDisplay<int>)
+                                {
+                                    var displayIntFilter = (IFilterDisplay<int>)selectFilter;
+                                    @foreach (var value in selectFilter.Values)
+                                    {
+                                        <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var value in selectFilter.Values)
+                                    {
+                                        <option value="@value">@value</option>
+                                    }
+                                }
+                            </select>
+                        }
+                    </div>
+                </div>
             }
             else if (filter.InputType == InputType.SelectRange)
             {
                 if (filter.FilterType == FilterType.String)
                 {
                     var stringRangeFilter = filter as RangeFilter<string>;
-                    if (stringRangeFilter is IFilterDisplay<string>)
-                    {
-                        var enumStringFilter = (IFilterDisplay<string>)stringRangeFilter;
+                    <div class="row">
                         <label for="@stringRangeFilter.Name.ToLower()">Min @stringRangeFilter.Name</label>
-                        <select @bind="@stringRangeFilter.MinimumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
-                            @foreach (var value in stringRangeFilter.Values)
-                            {
-                                <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
-                            }
-                        </select>
-                        <label for="@stringRangeFilter.Name.ToLower()">Max @stringRangeFilter.Name</label>
-                        <select @bind="@stringRangeFilter.MaximumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
-                            @foreach (var value in stringRangeFilter.Values)
-                            {
-                                <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <label for="@stringRangeFilter.Name.ToLower()">Min @stringRangeFilter.Name</label>
-                        <select @bind="@stringRangeFilter.MinimumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
-                            @foreach (var value in stringRangeFilter.Values)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                        <label for="@stringRangeFilter.Name.ToLower()">Max @stringRangeFilter.Name</label>
-                        <select @bind="@stringRangeFilter.MaximumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
-                            @foreach (var value in stringRangeFilter.Values)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                    }
+                    </div>
+                    <div class="row">
+                        <div class="col-5 range-input">
+                            <select @bind="@stringRangeFilter.MinimumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
+                                @if (stringRangeFilter is IFilterDisplay<string>)
+                                {
+                                    var enumStringFilter = (IFilterDisplay<string>)stringRangeFilter;
+                                    @foreach (var value in stringRangeFilter.Values)
+                                    {
+                                        <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var value in stringRangeFilter.Values)
+                                    {
+                                        <option value="@value">@value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-1 range-separator">
+                            <span>to</span>
+                        </div>
+                        <div class="col-5 range-input">
+                            <select @bind="@stringRangeFilter.MaximumValue" class="form-control" id="@stringRangeFilter.Name.ToLower()">
+                                @if (stringRangeFilter is IFilterDisplay<string>)
+                                {
+                                    var enumStringFilter = (IFilterDisplay<string>)stringRangeFilter;
+                                    @foreach (var value in stringRangeFilter.Values)
+                                    {
+                                        <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var value in stringRangeFilter.Values)
+                                    {
+                                        <option value="@value">@value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
                 }
                 else if (filter.FilterType == FilterType.Integer)
                 {
                     var numRangeFilter = filter as RangeFilter<int>;
-                    if (numRangeFilter is IFilterDisplay<int>)
-                    {
-                        var enumRangeFilter = (IFilterDisplay<int>)numRangeFilter;
+                    <div class="row">
                         <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
-                        <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                            @foreach (var value in numRangeFilter.Values)
-                            {
-                                <option value="@value">@(enumRangeFilter.DisplayValue(value))</option>
-                            }
-                        </select>
-                        <label for="@numRangeFilter.Name.ToLower()">Max @numRangeFilter.Name</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-5 range-input">
+                            <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                                @if (numRangeFilter is IFilterDisplay<int>)
+                                {
+                                    var displayIntFilter = (IFilterDisplay<int>)numRangeFilter;
+                                    @foreach (var value in numRangeFilter.Values)
+                                    {
+                                        <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var value in numRangeFilter.Values)
+                                    {
+                                        <option value="@value">@value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
                         <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                            @foreach (var value in numRangeFilter.Values)
+                            @if (numRangeFilter is IFilterDisplay<int>)
                             {
-                                <option value="@value">@(enumRangeFilter.DisplayValue(value))</option>
+                                var displayIntFilter = (IFilterDisplay<int>)numRangeFilter;
+                                @foreach (var value in numRangeFilter.Values)
+                                {
+                                    <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
+                                }
+                            }
+                            else
+                            {
+                                @foreach (var value in numRangeFilter.Values)
+                                {
+                                    <option value="@value">@value</option>
+                                }
                             }
                         </select>
-                    }
-                    else
-                    {
-                        <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
-                        <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                            @foreach (var value in numRangeFilter.Values)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                        <label for="@numRangeFilter.Name.ToLower()">Max @numRangeFilter.Name</label>
-                        <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                            @foreach (var value in numRangeFilter.Values)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                    }
+                    </div>
+                </div>
                 }
                 else if (filter.FilterType == FilterType.Double)
                 {
                     var numRangeFilter = filter as RangeFilter<double>;
-                    <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
-                    <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                        @foreach (var value in numRangeFilter.Values)
-                        {
-                            <option value="@value">@value</option>
-                        }
-                    </select>
-                    <label for="@numRangeFilter.Name.ToLower()">Max @numRangeFilter.Name</label>
-                    <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                        @foreach (var value in numRangeFilter.Values)
-                        {
-                            <option value="@value">@value</option>
-                        }
-                    </select>
+                    <div class="row">
+                        <label for="@numRangeFilter.Name.ToLower()">Min @numRangeFilter.Name</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-5 range-input">
+                            <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                                @foreach (var value in numRangeFilter.Values)
+                                {
+                                    <option value="@value">@value</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-1 range-separator">
+                            <span>to</span>
+                        </div>
+                        <div class="col-5 range-input">
+                            <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
+                                @foreach (var value in numRangeFilter.Values)
+                                {
+                                    <option value="@value">@value</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
                 }
             }
             else if (filter.InputType == InputType.Range)
