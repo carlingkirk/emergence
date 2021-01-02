@@ -8,7 +8,7 @@ using Emergence.Data.Shared.Stores;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Bloom")]
-    public class BloomFilter : RangeFilter<int>, IEnumDisplay<int>
+    public class BloomFilter : RangeFilter<int>, IFilterDisplay<int>
     {
         private IEnumerable<int> BloomValues { get; set; }
         public BloomFilter(RangeFilter<int> filter)

@@ -155,6 +155,14 @@ namespace Emergence.Service
                         plantInfoQuery = plantInfoQuery.Where(bloomFilter.Filter);
                     }
                 }
+                else if (filter.Name == "Zone")
+                {
+                    var zoneFilter = new ZoneFilter((SelectFilter<int>)filter);
+                    if (zoneFilter.Value > 0)
+                    {
+                        plantInfoQuery = plantInfoQuery.Where(zoneFilter.Filter);
+                    }
+                }
             }
 
             return plantInfoQuery;
