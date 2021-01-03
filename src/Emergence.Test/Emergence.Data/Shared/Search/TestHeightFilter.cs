@@ -30,7 +30,7 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
 
             filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
-            var heightFilter = new HeightFilter((RangeFilter<double>)filters.First(f => f.Name == "Height"));
+            var heightFilter = new HeightFilter((RangeFilter<double?>)filters.First(f => f.Name == "Height"));
 
             heightFilter.Should().NotBeNull();
             heightFilter.FilterType.Should().Be(FilterType.Double);

@@ -30,7 +30,7 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
 
             filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
-            var spreadFilter = new SpreadFilter((RangeFilter<double>)filters.First(f => f.Name == "Spread"));
+            var spreadFilter = new SpreadFilter((RangeFilter<double?>)filters.First(f => f.Name == "Spread"));
 
             spreadFilter.Should().NotBeNull();
             spreadFilter.FilterType.Should().Be(FilterType.Double);

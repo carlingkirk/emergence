@@ -17,7 +17,7 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
             {
                 new ZoneFilter
                 {
-                    Value = 5
+                    Value = 22
                 }
             };
 
@@ -31,7 +31,7 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
             zoneFilter.Should().NotBeNull();
             zoneFilter.FilterType.Should().Be(FilterType.Integer);
             zoneFilter.InputType.Should().Be(InputType.Select);
-            zoneFilter.Value.Should().Be(5);
+            zoneFilter.Value.Should().Be(22);
 
             var plantInfos = FakePlantInfos.Get().AsQueryable();
             var filteredPlantInfos = plantInfos.Where(zoneFilter.Filter).ToList();
@@ -40,7 +40,7 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
         }
 
         [Theory]
-        [InlineData(7, 3)]
+        [InlineData(7, 2)]
         [InlineData(22, 3)]
         [InlineData(35, 0)]
         [InlineData(13, 3)]
