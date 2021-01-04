@@ -182,8 +182,8 @@ namespace Emergence.Service
 
             var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
             {
-                { "ScientificName", p => p.ScientificName },
-                { "CommonName", p => p.CommonName },
+                { "ScientificName", p => p.Lifeform.ScientificName },
+                { "CommonName", p => p.Lifeform.CommonName },
                 { "Origin", p => p.Origin.Name },
                 { "Zone", p => p.MinimumZone },
                 { "Light", p => p.MinimumLight },
