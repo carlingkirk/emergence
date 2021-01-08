@@ -10,6 +10,6 @@ namespace Emergence.Transform
         Task InitializeLifeforms();
         Task InitializeTaxons();
         Task<PlantInfo> Process(PlantInfo plantInfo);
-        Task<IEnumerable<PlantInfo>> Process(IEnumerable<PlantInfo> plantInfo);
+        Task<IEnumerable<PlantInfo>> Process(IEnumerable<PlantInfo> plantInfos);
     }
 }

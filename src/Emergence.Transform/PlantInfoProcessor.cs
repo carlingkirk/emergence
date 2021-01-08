@@ -119,7 +119,6 @@ namespace Emergence.Transform
 
         public async Task<IEnumerable<PlantInfo>> Process(IEnumerable<PlantInfo> plantInfos)
         {
-            var plantInfoResults = new List<PlantInfo>();
             var newOrigins = new List<Origin>();
             var newPlantInfos = new List<PlantInfo>();
             foreach (var plantInfo in plantInfos)
@@ -227,7 +226,6 @@ namespace Emergence.Transform
                 newPlantInfo.Lifeform = plantInfo.Lifeform;
             }
 
-            var plantLocationsResult = new List<PlantLocation>();
             var plantInfoLocations = plantInfos.Where(p => p.Locations != null && p.Locations.Any())
                                                .SelectMany(p => p.Locations)
                                                .DistinctBy(pl => new { pl.PlantInfo.PlantInfoId, pl.Location.LocationId })
@@ -239,8 +237,7 @@ namespace Emergence.Transform
                 var countries = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
                 var locations = (await _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || regions.Contains(l.Region))).ToList();
 
-                var missingLocations = new List<Location>();
-                missingLocations = plantInfoLocations.GroupJoin(locations,
+                var missingLocations = plantInfoLocations.GroupJoin(locations,
                     pl => new { pl.Location.Region, pl.Location.Country },
                     l => new { l.Region, l.Country },
                     (pl, l) => pl.Location)
@@ -256,12 +253,12 @@ namespace Emergence.Transform
                 var plantLocationsToAdd = new List<PlantLocation>();
                 foreach (var plantInfoLocation in plantInfoLocations)
                 {
-                    var newPlantInfo = newPlantInfos.Where(npl => npl.Origin.OriginId == plantInfoLocation.PlantInfo.Origin.OriginId
-                                                        && npl.Taxon.TaxonId == plantInfoLocation.PlantInfo.Taxon.TaxonId).FirstOrDefault();
+                    var newPlantInfo = newPlantInfos.FirstOrDefault(npl => npl.Origin.OriginId == plantInfoLocation.PlantInfo.Origin.OriginId
+                                                        && npl.Taxon.TaxonId == plantInfoLocation.PlantInfo.Taxon.TaxonId);
                     if (newPlantInfo != null)
                     {
-                        var location = locations.Where(l => l.Country == plantInfoLocation.Location.Country
-                                                            && l.Region == plantInfoLocation.Location.Region).First();
+                        var location = locations.First(l => l.Country == plantInfoLocation.Location.Country
+                                                            && l.Region == plantInfoLocation.Location.Region);
                         plantLocationsToAdd.Add(new PlantLocation
                         {
                             PlantInfo = newPlantInfo,
@@ -273,7 +270,7 @@ namespace Emergence.Transform
 
                 if (plantInfoLocations.Any())
                 {
-                    plantLocationsResult = (await _plantInfoService.AddPlantLocations(plantLocationsToAdd)).ToList();
+                    var plantLocationsResult = (await _plantInfoService.AddPlantLocations(plantLocationsToAdd)).ToList();
 
                     foreach (var newPlantInfo in newPlantInfos)
                     {

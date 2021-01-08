@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Emergence.Data.External.ITIS;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared.Models;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -144,7 +143,9 @@ namespace Emergence.Transform.Runner
                         row++;
                         if (row < startRow)
                         {
+#pragma warning disable S3626 // Jump statements should not be redundant
                             continue;
+#pragma warning restore S3626 // Jump statements should not be redundant
                         }
                         else if (row % batchSize != 0)
                         {
@@ -152,7 +153,7 @@ namespace Emergence.Transform.Runner
                         }
                         else
                         {
-                            //await ProcessSynonyms(transformer, processor, vernaculars);
+                            await ProcessSynonyms(transformer, processor, vernaculars);
                             vernaculars.Clear();
                         }
                     }
