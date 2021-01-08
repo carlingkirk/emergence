@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -162,5 +163,7 @@ namespace Emergence.Data.Extensions
 
             return source;
         }
+
+        public static async Task<IEnumerable<T>> GetAllAsync<T>(this IQueryable<T> source) => await source.ToListAsync();
     }
 }

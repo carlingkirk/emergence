@@ -48,5 +48,27 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.Origin AsSearchModel(this Origin source) => new Search.Models.Origin
+        {
+            Id = source.Id,
+            ParentOrigin = source.ParentOrigin?.AsSearchModel(),
+            Location = source.Location?.AsSearchModel(),
+            Name = source.Name,
+            Description = source.Description,
+            Type = source.Type.ToString(),
+            Latitude = source.Location?.Latitude,
+            Longitude = source.Location?.Longitude,
+            Uri = source.Uri,
+            Authors = source.Authors,
+            ExternalId = source.ExternalId,
+            AltExternalId = source.AltExternalId,
+            Visibility = source.Visibility,
+            User = source.User.AsSearchModel(),
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }

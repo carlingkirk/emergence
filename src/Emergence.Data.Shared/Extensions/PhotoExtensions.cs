@@ -41,5 +41,23 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.Photo AsSearchModel(this Photo source) => new Search.Models.Photo
+        {
+            Id = source.Id,
+            Type = source.Type.ToString(),
+            TypeId = source.TypeId,
+            Filename = source.Filename,
+            BlobPath = source.BlobPath,
+            Location = source.Location?.AsSearchModel(),
+            ContentType = source.ContentType,
+            Height = source.Height,
+            Width = source.Width,
+            DateTaken = source.DateTaken,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }

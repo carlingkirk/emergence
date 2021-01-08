@@ -26,5 +26,15 @@ namespace Emergence.Data.Shared.Extensions
             TaxonId = source.Taxon?.TaxonId ?? source.TaxonId,
             OriginId = source.Origin?.OriginId
         };
+
+        public static Search.Models.Synonym AsSearchModel(this Synonym source) => new Search.Models.Synonym
+        {
+            Id = source.Id,
+            Name = source.Name,
+            Rank = source.Rank,
+            Language = source.Language,
+            DateUpdated = source.DateUpdated,
+            Origin = source.Origin?.AsSearchModel()
+        };
     }
 }

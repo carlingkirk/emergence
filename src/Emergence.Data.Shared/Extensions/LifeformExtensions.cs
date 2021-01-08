@@ -26,5 +26,16 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.Lifeform AsSearchModel(this Stores.Lifeform source) => new Search.Models.Lifeform
+        {
+            Id = source.Id,
+            CommonName = source.CommonName,
+            ScientificName = source.ScientificName,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }

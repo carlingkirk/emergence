@@ -86,6 +86,45 @@ namespace Emergence.Data.Shared.Extensions
             DateModified = source.DateModified
         };
 
+        public static Search.Models.Taxon AsSearchModel(this Taxon source) => new Search.Models.Taxon
+        {
+            Id = source.Id,
+            Kingdom = source.Kingdom,
+            Infrakingdom = source.Infrakingdom,
+            Subkingdom = source.Subkingdom,
+            Phylum = source.Phylum,
+            Subphylum = source.Subphylum,
+            Superclass = source.Superclass,
+            Class = source.Class,
+            Subclass = source.Subclass,
+            Infraclass = source.Infraclass,
+            Superorder = source.Superorder,
+            Order = source.Order,
+            Suborder = source.Suborder,
+            Infraorder = source.Infraorder,
+            Epifamily = source.Epifamily,
+            Superfamily = source.Superfamily,
+            Family = source.Family,
+            Subfamily = source.Subfamily,
+            Supertribe = source.Supertribe,
+            Tribe = source.Tribe,
+            Subtribe = source.Subtribe,
+            GenusHybrid = source.GenusHybrid,
+            Genus = source.Genus,
+            Subgenus = source.Subgenus,
+            Section = source.Section,
+            Hybrid = source.Hybrid,
+            Species = source.Species,
+            Subspecies = source.Subspecies,
+            Variety = source.Variety,
+            Subvariety = source.Subvariety,
+            Form = source.Form,
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
+
         public static Models.Taxon GetTaxon(this IEnumerable<Models.Taxon> source, Taxon taxon) =>
             source.FirstOrDefault(t => t.Kingdom == taxon.Kingdom
                                     && t.Subkingdom == taxon.Subkingdom
@@ -104,6 +143,8 @@ namespace Emergence.Data.Shared.Extensions
 
         public static Models.Taxon Copy(this Models.Taxon source) => new Models.Taxon
         {
+#pragma warning disable CS0618 // Type or member is obsolete
+            // TODO string.Clone
             Kingdom = !string.IsNullOrEmpty(source.Kingdom) ? string.Copy(source.Kingdom) : null,
             Infrakingdom = !string.IsNullOrEmpty(source.Infrakingdom) ? string.Copy(source.Infrakingdom) : null,
             Subkingdom = !string.IsNullOrEmpty(source.Subkingdom) ? string.Copy(source.Subkingdom) : null,
@@ -138,6 +179,7 @@ namespace Emergence.Data.Shared.Extensions
             ModifiedBy = !string.IsNullOrEmpty(source.ModifiedBy) ? string.Copy(source.ModifiedBy) : null,
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
+#pragma warning restore CS0618 // Type or member is obsolete
         };
 
         public static string GetTaxonValue(this Models.Taxon taxon, TaxonRank rank)

@@ -54,5 +54,26 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.User AsSearchModel(this User source) => new Search.Models.User
+        {
+            Id = source.Id,
+            UserId = source.UserId,
+            DisplayName = source.DisplayName,
+            FirstName = source.FirstName,
+            LastName = source.LastName,
+            Bio = source.Bio,
+            Location = source.Location?.AsSearchModel(),
+            Photo = source.Photo?.AsSearchModel(),
+            EmailUpdates = source.EmailUpdates,
+            SocialUpdates = source.SocialUpdates,
+            ProfileVisibility = source.ProfileVisibility,
+            InventoryItemVisibility = source.InventoryItemVisibility,
+            PlantInfoVisibility = source.PlantInfoVisibility,
+            OriginVisibility = source.OriginVisibility,
+            ActivityVisibility = source.ActivityVisibility,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }

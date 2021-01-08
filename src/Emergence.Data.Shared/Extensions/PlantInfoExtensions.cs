@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 using Newtonsoft.Json;
 
@@ -111,6 +112,41 @@ namespace Emergence.Data.Shared.Extensions
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
+            DateModified = source.DateModified
+        };
+
+        public static Search.Models.PlantInfo AsSearchModel(this PlantInfo source, IEnumerable<PlantLocation> plantLocations, IEnumerable<Synonym> synonyms) =>
+            new Search.Models.PlantInfo
+        {
+            Id = source.Id,
+            CommonName = source.CommonName,
+            ScientificName = source.ScientificName,
+            Origin = source.Origin.AsSearchModel(),
+            Lifeform = source.Lifeform.AsSearchModel(),
+            PlantLocations = plantLocations.Select(pl => pl.AsSearchModel()),
+            Synonyms = synonyms.Select(s => s.AsSearchModel()),
+            MinimumBloomTime = source.MinimumBloomTime,
+            MaximumBloomTime = source.MaximumBloomTime,
+            MinimumHeight = source.MinimumHeight,
+            MaximumHeight = source.MaximumHeight,
+            HeightUnit = source.MinimumHeight.HasValue || source.MaximumHeight.HasValue ? DistanceUnit.Feet : DistanceUnit.Unknown,
+            MinimumSpread = source.MinimumSpread,
+            MaximumSpread = source.MaximumSpread,
+            SpreadUnit = source.MinimumSpread.HasValue || source.MaximumSpread.HasValue ? DistanceUnit.Feet : DistanceUnit.Unknown,
+            MinimumLight = !string.IsNullOrEmpty(source.MinimumLight) ? Enum.Parse<LightType>(source.MinimumLight) : LightType.Unknown,
+            MaximumLight = !string.IsNullOrEmpty(source.MaximumLight) ? Enum.Parse<LightType>(source.MaximumLight) : LightType.Unknown,
+            MinimumWater = !string.IsNullOrEmpty(source.MinimumWater) ? Enum.Parse<WaterType>(source.MinimumWater) : WaterType.Unknown,
+            MaximumWater = !string.IsNullOrEmpty(source.MaximumWater) ? Enum.Parse<WaterType>(source.MaximumWater) : WaterType.Unknown,
+            MinimumZone = source.MinimumZone.AsSearchModel(),
+            MaximumZone = source.MaximumZone.AsSearchModel(),
+            StratificationStages = JsonConvert.DeserializeObject<List<Search.Models.StratificationStage>>(source.StratificationStages),
+            Preferred = source.Preferred,
+            Taxon = source.Taxon.AsSearchModel(),
+            Visibility = source.Visibility,
+            User = source.User.AsSearchModel(),
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
+            DateCreated = source.DateCreated,
             DateModified = source.DateModified
         };
     }

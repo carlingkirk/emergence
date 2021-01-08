@@ -28,5 +28,16 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.PlantLocation AsSearchModel(this PlantLocation source) => new Search.Models.PlantLocation
+        {
+            Id = source.Id,
+            Status = Enum.Parse<LocationStatus>(source.Status),
+            Location = source.Location?.AsSearchModel(),
+            CreatedBy = source.CreatedBy,
+            ModifiedBy = source.ModifiedBy,
+            DateCreated = source.DateCreated,
+            DateModified = source.DateModified
+        };
     }
 }
