@@ -59,7 +59,7 @@ namespace Emergence.Data.Shared.Extensions
             Type = source.Type.ToString(),
             Latitude = source.Location?.Latitude,
             Longitude = source.Location?.Longitude,
-            Uri = source.Uri,
+            Uri = source.Uri?.ToString(),
             Authors = source.Authors,
             ExternalId = source.ExternalId,
             AltExternalId = source.AltExternalId,

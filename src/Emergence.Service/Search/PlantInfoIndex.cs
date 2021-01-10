@@ -10,64 +10,86 @@ namespace Emergence.Service.Search
         private readonly ISearchClient<PlantInfo> _searchClient;
         public string IndexName => "plant_infos";
 
+
         public PlantInfoIndex(ISearchClient<PlantInfo> searchClient)
         {
             _searchClient = searchClient;
-            _searchClient.ConfigureClient(IndexName, GetMapping);
+            _searchClient.ConfigureClient(IndexName, GetClrMapping, GetMapping);
         }
 
-        public async Task CreateIndexAsync() => await _searchClient.CreateIndexAsync("plant_infos");
+        private ITypeMapping GetMapping(TypeMappingDescriptor<PlantInfo> mapping) =>
+            mapping.AutoMap()
+            .Properties(pi => pi
+                .Nested<Synonym>(n => n
+                    .Name(nn => nn.Synonyms))
+                .Nested<PlantLocation>(n => n
+                    .Name(nn => nn.PlantLocations))
+            );
+
         public async Task<bool> IndexAsync(PlantInfo document) => await _searchClient.IndexAsync(document);
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<PlantInfo> documents) => await _searchClient.IndexManyAsync(documents);
 
         public async Task<SearchResponse<PlantInfo>> SearchAsync(string search)
         {
-            var response = await _searchClient.SearchAsync(q => q.Bool(qc => qc
-                .Should(q => q
-                  .Match(c => c
-                    .Field(m => m.CommonName)
-                    .Field(m => m.ScientificName)
-                    .Field(m => m.Lifeform.CommonName)
-                    .Field(m => m.Lifeform.ScientificName)
-                    .Query(search)
-                    .Fuzziness(Fuzziness.AutoLength(1, 5))))
-                .Should(q => q.Nested(qc => qc.Path("plantSynyonyms")
-                    .Query(q => q.Term("plantSynyonyms.synonym", search))))), 0, 10);
+            var query = new QueryContainerDescriptor<PlantInfo>();
+            var should = new List<QueryContainer>
+            {
+                query.MultiMatch(mm => mm.Fields(mmf => mmf
+                        .Field(m => m.CommonName)
+                        .Field(m => m.ScientificName)
+                        .Field(m => m.Lifeform.CommonName)
+                        .Field(m => m.Lifeform.ScientificName))
+                        .Query(search)
+                        .Fuzziness(Fuzziness.AutoLength(1, 5))),
+                query.Nested(n => n
+                        .Path(p => p.Synonyms)
+                        .Query(q => q
+                            .Match(sq => sq
+                                .Field("synonyms.name")
+                                .Query(search)
+                                .Fuzziness(Fuzziness.AutoLength(1, 5)))))
+            };
+
+            var response = await _searchClient.SearchAsync(pi => pi
+            .Bool(b => b
+                .Must(m => m
+                    .Bool(mb => mb
+                        .Should(should.ToArray())))), 0, 10);
 
             return response;
         }
 
-        private IClrTypeMapping<PlantInfo> GetMapping(ClrTypeMappingDescriptor<PlantInfo> mapping) =>
+        private IClrTypeMapping<PlantInfo> GetClrMapping(ClrTypeMappingDescriptor<PlantInfo> mapping) =>
             mapping.IndexName(IndexName)
                 .PropertyName(pl => pl.Id, "id")
-                .PropertyName(pl => pl.CommonName, "common_name")
-                .PropertyName(pl => pl.ScientificName, "scientific_name")
+                .PropertyName(pl => pl.CommonName, "commonName")
+                .PropertyName(pl => pl.ScientificName, "scientificName")
                 .PropertyName(pl => pl.Preferred, "preferred")
-                .PropertyName(pl => pl.MinimumBloomTime, "min_bloom")
-                .PropertyName(pl => pl.MaximumBloomTime, "max_bloom")
-                .PropertyName(pl => pl.MinimumHeight, "min_height")
-                .PropertyName(pl => pl.MaximumHeight, "max_height")
-                .PropertyName(pl => pl.HeightUnit, "height_unit")
-                .PropertyName(pl => pl.MinimumSpread, "min_spread")
-                .PropertyName(pl => pl.MaximumSpread, "max_spread")
-                .PropertyName(pl => pl.SpreadUnit, "spread_unit")
-                .PropertyName(pl => pl.MinimumWater, "min_water")
-                .PropertyName(pl => pl.MaximumWater, "max_water")
-                .PropertyName(pl => pl.MinimumLight, "min_light")
-                .PropertyName(pl => pl.MaximumLight, "max_light")
-                .PropertyName(pl => pl.StratificationStages, "stratification_stages")
-                .PropertyName(pl => pl.MinimumZone, "min_zone")
-                .PropertyName(pl => pl.MaximumZone, "max_zone")
+                .PropertyName(pl => pl.MinimumBloomTime, "minBloom")
+                .PropertyName(pl => pl.MaximumBloomTime, "maxBloom")
+                .PropertyName(pl => pl.MinimumHeight, "minHeight")
+                .PropertyName(pl => pl.MaximumHeight, "maxHeight")
+                .PropertyName(pl => pl.HeightUnit, "heightUnit")
+                .PropertyName(pl => pl.MinimumSpread, "minSpread")
+                .PropertyName(pl => pl.MaximumSpread, "maxSpread")
+                .PropertyName(pl => pl.SpreadUnit, "spreadUnit")
+                .PropertyName(pl => pl.MinimumWater, "minWater")
+                .PropertyName(pl => pl.MaximumWater, "maxWater")
+                .PropertyName(pl => pl.MinimumLight, "minLight")
+                .PropertyName(pl => pl.MaximumLight, "maxLight")
+                .PropertyName(pl => pl.StratificationStages, "stratificationStages")
+                .PropertyName(pl => pl.MinimumZone, "minZone")
+                .PropertyName(pl => pl.MaximumZone, "maxZone")
                 .PropertyName(pl => pl.Visibility, "visibility")
-                .PropertyName(pl => pl.CreatedBy, "created_by")
-                .PropertyName(pl => pl.ModifiedBy, "modified_by")
-                .PropertyName(pl => pl.DateCreated, "date_created")
-                .PropertyName(pl => pl.DateModified, "date_modified")
+                .PropertyName(pl => pl.CreatedBy, "createdBy")
+                .PropertyName(pl => pl.ModifiedBy, "modifiedBy")
+                .PropertyName(pl => pl.DateCreated, "dateCreated")
+                .PropertyName(pl => pl.DateModified, "dateModified")
                 .PropertyName(pl => pl.Lifeform, "lifeform")
                 .PropertyName(pl => pl.Origin, "origin")
                 .PropertyName(pl => pl.Taxon, "taxon")
                 .PropertyName(pl => pl.User, "user")
-                .PropertyName(pl => pl.PlantLocations, "plant_locations")
+                .PropertyName(pl => pl.PlantLocations, "plantLocations")
                 .PropertyName(pl => pl.Synonyms, "synonyms");
     }
 

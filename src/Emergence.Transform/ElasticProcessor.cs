@@ -20,7 +20,7 @@ namespace Emergence.Transform
             _plantInfoIndex = plantInfoIndex;
         }
 
-        public async Task Process(int startId, int endId)
+        public async Task<BulkIndexResponse> Process(int startId, int endId)
         {
             var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id >= startId && p.Id <= endId, false,
                                                                         p => p.Include(p => p.Lifeform)
@@ -47,7 +47,7 @@ namespace Emergence.Transform
                 plantInfos.Add(plantInfoKey.AsSearchModel(plantLocations, synonyms));
             }
 
-            await _plantInfoIndex.IndexManyAsync(plantInfos);
+            return await _plantInfoIndex.IndexManyAsync(plantInfos);
         }
     }
 }

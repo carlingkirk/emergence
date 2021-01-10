@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +22,10 @@ namespace Emergence.Service.Search
             var basicCredentials = new BasicAuthenticationCredentials(username, password);
 
             _connectionSettings = new ConnectionSettings(cloudId, basicCredentials);
+            _connectionSettings.DisableDirectStreaming().PrettyJson();
         }
 
-        public async Task ConfigureClient(string indexName, Func<ClrTypeMappingDescriptor<T>, IClrTypeMapping<T>> selector)
+        public async Task ConfigureClient(string indexName, Func<ClrTypeMappingDescriptor<T>, IClrTypeMapping<T>> selector, Func<TypeMappingDescriptor<T>, ITypeMapping> mappingSelector)
         {
             _connectionSettings.DefaultMappingFor<T>(selector);
 
@@ -33,7 +35,8 @@ namespace Emergence.Service.Search
             {
                 throw new UnauthorizedAccessException();
             }
-            await CreateIndexAsync(indexName);
+
+            await CreateIndexAsync(indexName, mappingSelector);
         }
 
         public async Task<SearchResponse<T>> SearchAsync(Func<QueryContainerDescriptor<T>, QueryContainer> query, int skip, int take)
@@ -43,6 +46,9 @@ namespace Emergence.Service.Search
               .Take(take)
               .Skip(skip));
 
+            var body = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
+            Console.WriteLine(body);
+
             return new SearchResponse<T>
             {
                 Documents = response.Documents,
@@ -50,12 +56,12 @@ namespace Emergence.Service.Search
             };
         }
 
-        public async Task CreateIndexAsync(string indexName)
+        private async Task CreateIndexAsync(string indexName, Func<TypeMappingDescriptor<T>, ITypeMapping> mappingSelector)
         {
             var indexExists = await IndexExistsAsync(indexName);
             if (!indexExists)
             {
-                var createIndexResponse = await ElasticClient.Indices.CreateAsync(indexName);
+                var createIndexResponse = await ElasticClient.Indices.CreateAsync(indexName, i => i.Map(mappingSelector));
 
                 if (!createIndexResponse.ApiCall.Success)
                 {
