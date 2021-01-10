@@ -52,7 +52,7 @@ namespace Emergence.Service.Search
             return new SearchResponse<T>
             {
                 Documents = response.Documents,
-                Count = response.Hits.Count
+                Count = response.Total
             };
         }
 
@@ -115,7 +115,7 @@ namespace Emergence.Service.Search
 
     public class SearchResponse<T>
     {
-        public int Count { get; set; }
+        public long Count { get; set; }
         public IEnumerable<T> Documents { get; set; }
     }
 }

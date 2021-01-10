@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Search.Models;
 using Nest;
 
@@ -29,8 +31,9 @@ namespace Emergence.Service.Search
         public async Task<bool> IndexAsync(PlantInfo document) => await _searchClient.IndexAsync(document);
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<PlantInfo> documents) => await _searchClient.IndexManyAsync(documents);
 
-        public async Task<SearchResponse<PlantInfo>> SearchAsync(string search)
+        public async Task<SearchResponse<PlantInfo>> SearchAsync(FindParams findParams)
         {
+            var searchTerm = findParams.SearchText;
             var query = new QueryContainerDescriptor<PlantInfo>();
             var should = new List<QueryContainer>
             {
@@ -39,22 +42,95 @@ namespace Emergence.Service.Search
                         .Field(m => m.ScientificName)
                         .Field(m => m.Lifeform.CommonName)
                         .Field(m => m.Lifeform.ScientificName))
-                        .Query(search)
+                        .Query(searchTerm)
                         .Fuzziness(Fuzziness.AutoLength(1, 5))),
                 query.Nested(n => n
                         .Path(p => p.Synonyms)
                         .Query(q => q
                             .Match(sq => sq
                                 .Field("synonyms.name")
-                                .Query(search)
+                                .Query(searchTerm)
                                 .Fuzziness(Fuzziness.AutoLength(1, 5)))))
             };
 
+            var must = new List<QueryContainer>();
+
+            if (findParams.CreatedBy != null)
+            {
+                must.Add(query.Match(m => m.Field(f => f.CreatedBy).Query(findParams.CreatedBy)));
+            }
+
+            foreach (var filter in findParams.Filters)
+            {
+                if (filter.Name == "Height")
+                {
+                    var heightFilter = new HeightFilter((RangeFilter<double?>)filter);
+
+                    if (heightFilter.MinimumValue.HasValue)
+                    {
+                        must.Add(query.Range(r => r.Field(f => f.MinimumHeight).GreaterThanOrEquals(heightFilter.MinimumValue)));
+                    }
+
+                    if (heightFilter.MaximumValue.HasValue)
+                    {
+                        must.Add(query.Range(r => r.Field(f => f.MaximumHeight).LessThanOrEquals(heightFilter.MaximumValue)));
+                    }
+                }
+
+                //else if (filter.Name == "Location")
+                //{
+                //    var regionFilter = new RegionFilter((Filter<string>)filter);
+                //    if (!string.IsNullOrEmpty(regionFilter.Value))
+                //    {
+                //        should.Add(query.Term(t => t.CreatedBy, findParams.CreatedBy));
+                //    }
+                //}
+                //else if (filter.Name == "Spread")
+                //{
+                //    var spreadFilter = new SpreadFilter((RangeFilter<double?>)filter);
+                //    if (spreadFilter.MinimumValue.HasValue || spreadFilter.MaximumValue.HasValue)
+                //    {
+                //        plantInfoQuery = plantInfoQuery.Where(spreadFilter.Filter);
+                //    }
+                //}
+                //else if (filter.Name == "Light")
+                //{
+                //    var lightFilter = new LightFilter((RangeFilter<string>)filter);
+                //    if (!(string.IsNullOrEmpty(lightFilter.MinimumValue) && string.IsNullOrEmpty(lightFilter.MaximumValue)))
+                //    {
+                //        plantInfoQuery = plantInfoQuery.Where(lightFilter.Filter);
+                //    }
+                //}
+                //else if (filter.Name == "Water")
+                //{
+                //    var waterFilter = new WaterFilter((RangeFilter<string>)filter);
+                //    if (!(string.IsNullOrEmpty(waterFilter.MinimumValue) && string.IsNullOrEmpty(waterFilter.MaximumValue)))
+                //    {
+                //        plantInfoQuery = plantInfoQuery.Where(waterFilter.Filter);
+                //    }
+                //}
+                //else if (filter.Name == "Bloom")
+                //{
+                //    var bloomFilter = new BloomFilter((RangeFilter<int>)filter);
+                //    if (!(bloomFilter.MinimumValue == 0 && bloomFilter.MaximumValue == 0))
+                //    {
+                //        plantInfoQuery = plantInfoQuery.Where(bloomFilter.Filter);
+                //    }
+                //}
+                //else if (filter.Name == "Zone")
+                //{
+                //    var zoneFilter = new ZoneFilter((SelectFilter<int>)filter);
+                //    if (zoneFilter.Value > 0)
+                //    {
+                //        plantInfoQuery = plantInfoQuery.Where(zoneFilter.Filter);
+                //    }
+                //}
+            }
+
             var response = await _searchClient.SearchAsync(pi => pi
             .Bool(b => b
-                .Must(m => m
-                    .Bool(mb => mb
-                        .Should(should.ToArray())))), 0, 10);
+                .Should(should.ToArray())
+                .Must(must.ToArray())), 0, 10);
 
             return response;
         }
@@ -92,6 +168,4 @@ namespace Emergence.Service.Search
                 .PropertyName(pl => pl.PlantLocations, "plantLocations")
                 .PropertyName(pl => pl.Synonyms, "synonyms");
     }
-
-    
 }

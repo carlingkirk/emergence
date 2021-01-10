@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Emergence.Data.Shared;
 
 namespace Emergence.Service.Search
 {
@@ -7,6 +8,6 @@ namespace Emergence.Service.Search
     {
         Task<bool> IndexAsync(T document);
         Task<BulkIndexResponse> IndexManyAsync(IEnumerable<T> documents);
-        Task<SearchResponse<T>> SearchAsync(string search);
+        Task<SearchResponse<T>> SearchAsync(FindParams findParams);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Search.Models;
 using Emergence.Service.Search;
@@ -17,7 +18,7 @@ namespace Emergence.Test.Mocks
                 plantInfos = Data.Fakes.Stores.FakePlantInfos.Get();
             }
             var mockPlantInfoIndex = new Mock<IIndex<PlantInfo>>();
-            mockPlantInfoIndex.Setup(pi => pi.SearchAsync(It.IsAny<string>())).ReturnsAsync(new SearchResponse<PlantInfo>
+            mockPlantInfoIndex.Setup(pi => pi.SearchAsync(It.IsAny<FindParams>())).ReturnsAsync(new SearchResponse<PlantInfo>
             {
                 Count = plantInfos.Count(),
                 Documents = plantInfos.Select(pi => pi.AsSearchModel(null, null))

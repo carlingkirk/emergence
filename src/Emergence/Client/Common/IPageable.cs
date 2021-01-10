@@ -4,6 +4,6 @@ namespace Emergence.Client.Common
     {
         int CurrentPage { get; set; }
         int Take { get; set; }
-        int Count { get; set; }
+        long Count { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Emergence.Client.Shared
         [Parameter]
         public int CurrentPage { get; set; }
         [Parameter]
-        public int Count { get; set; }
+        public long Count { get; set; }
         [Parameter]
         public int Take { get; set; }
         public int TotalPages => (int)Math.Ceiling(Count / (double)Take);

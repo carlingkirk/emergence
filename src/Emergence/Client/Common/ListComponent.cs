@@ -24,7 +24,7 @@ namespace Emergence.Client.Common
         public int CurrentPage { get; set; }
         [Parameter]
         public int Take { get; set; }
-        public int Count { get; set; }
+        public long Count { get; set; }
         public bool ShowPublic { get; set; }
         public bool IsItemLoaded { get; set; }
         public bool ListView { get; set; }

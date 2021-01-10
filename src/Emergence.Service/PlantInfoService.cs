@@ -64,7 +64,7 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams, Data.Shared.Models.User user)
         {
-            var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams.SearchText);
+            var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams);
             var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id);
             var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => plantInfoIds.Contains(p.Id),
                                                                         false,
@@ -74,17 +74,6 @@ namespace Emergence.Service
                                                                               .Include(p => p.User)
                                                                               .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
 
-            //var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchTextQuery == null ||
-            //                                                            EF.Functions.Like(p.CommonName, findParams.SearchTextQuery) ||
-            //                                                            EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
-            //                                                            EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchTextQuery) ||
-            //                                                            EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchTextQuery)),
-            //                                                            false,
-            //                                                            p => p.Include(p => p.Lifeform)
-            //                                                                  .Include(p => p.Taxon)
-            //                                                                  .Include(p => p.Origin)
-            //                                                                  .Include(p => p.User)
-            //                                                                  .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
             //if (!string.IsNullOrEmpty(findParams.CreatedBy))
             //{
             //    plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
