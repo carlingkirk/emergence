@@ -20,6 +20,23 @@ namespace Emergence.Service.Search
         public async Task<bool> IndexAsync(PlantInfo document) => await _searchClient.IndexAsync(document);
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<PlantInfo> documents) => await _searchClient.IndexManyAsync(documents);
 
+        public async Task<SearchResponse<PlantInfo>> SearchAsync(string search)
+        {
+            var response = await _searchClient.SearchAsync(q => q.Bool(qc => qc
+                .Should(q => q
+                  .Match(c => c
+                    .Field(m => m.CommonName)
+                    .Field(m => m.ScientificName)
+                    .Field(m => m.Lifeform.CommonName)
+                    .Field(m => m.Lifeform.ScientificName)
+                    .Query(search)
+                    .Fuzziness(Fuzziness.AutoLength(1, 5))))
+                .Should(q => q.Nested(qc => qc.Path("plantSynyonyms")
+                    .Query(q => q.Term("plantSynyonyms.synonym", search))))), 0, 10);
+
+            return response;
+        }
+
         private IClrTypeMapping<PlantInfo> GetMapping(ClrTypeMappingDescriptor<PlantInfo> mapping) =>
             mapping.IndexName(IndexName)
                 .PropertyName(pl => pl.Id, "id")

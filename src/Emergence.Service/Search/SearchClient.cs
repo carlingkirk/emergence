@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
-using Emergence.Data.Shared.Search.Models;
 using Microsoft.Extensions.Configuration;
 using Nest;
 
@@ -37,22 +36,18 @@ namespace Emergence.Service.Search
             await CreateIndexAsync(indexName);
         }
 
-        public async Task<IEnumerable<PlantInfo>> SearchAsync(string search)
+        public async Task<SearchResponse<T>> SearchAsync(Func<QueryContainerDescriptor<T>, QueryContainer> query, int skip, int take)
         {
-            var response = await ElasticClient.SearchAsync<PlantInfo>(s => s
-              .Query(q => q.Bool(qc => qc
-                .Should(q => q
-                  .Match(c => c
-                    .Field(m => m.CommonName)
-                    .Field(m => m.ScientificName)
-                    .Field(m => m.Lifeform.CommonName)
-                    .Field(m => m.Lifeform.ScientificName)
-                    .Query(search)
-                    .Fuzziness(Fuzziness.AutoLength(1, 5))))
-                .Should(q => q.Nested(qc => qc.Path("plantSynyonyms")
-                    .Query(q => q.Term("plantSynyonyms.synonym", search)))))));
+            var response = await ElasticClient.SearchAsync<T>(s => s
+              .Query(query)
+              .Take(take)
+              .Skip(skip));
 
-            return response.Documents;
+            return new SearchResponse<T>
+            {
+                Documents = response.Documents,
+                Count = response.Hits.Count
+            };
         }
 
         public async Task CreateIndexAsync(string indexName)
@@ -110,5 +105,11 @@ namespace Emergence.Service.Search
         public int Successes { get; set; }
         public int Failures { get; set; }
         public IEnumerable<string> Errors { get; set; }
+    }
+
+    public class SearchResponse<T>
+    {
+        public int Count { get; set; }
+        public IEnumerable<T> Documents { get; set; }
     }
 }

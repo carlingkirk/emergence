@@ -10,7 +10,9 @@ using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
+using Emergence.Service.Search;
 using Microsoft.EntityFrameworkCore;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Service
 {
@@ -18,10 +20,13 @@ namespace Emergence.Service
     {
         private readonly IRepository<PlantInfo> _plantInfoRepository;
         private readonly IRepository<PlantLocation> _plantLocationRepository;
-        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository, IRepository<PlantLocation> plantLocationRepository)
+        private readonly IIndex<SearchModels.PlantInfo> _plantInfoIndex;
+
+        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository, IRepository<PlantLocation> plantLocationRepository, IIndex<SearchModels.PlantInfo> plantInfoIndex)
         {
             _plantInfoRepository = plantInfoRepository;
             _plantLocationRepository = plantLocationRepository;
+            _plantInfoIndex = plantInfoIndex;
         }
 
         public async Task<Data.Shared.Models.PlantInfo> AddOrUpdatePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo)
@@ -59,29 +64,39 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams, Data.Shared.Models.User user)
         {
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchTextQuery == null ||
-                                                                        EF.Functions.Like(p.CommonName, findParams.SearchTextQuery) ||
-                                                                        EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
-                                                                        EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchTextQuery) ||
-                                                                        EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchTextQuery)),
+            var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams.SearchText);
+            var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id);
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => plantInfoIds.Contains(p.Id),
                                                                         false,
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Taxon)
                                                                               .Include(p => p.Origin)
                                                                               .Include(p => p.User)
                                                                               .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
-            if (!string.IsNullOrEmpty(findParams.CreatedBy))
-            {
-                plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
-            }
 
-            plantInfoQuery = FilterBy(plantInfoQuery, findParams.Filters);
+            //var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => (findParams.SearchTextQuery == null ||
+            //                                                            EF.Functions.Like(p.CommonName, findParams.SearchTextQuery) ||
+            //                                                            EF.Functions.Like(p.ScientificName, findParams.SearchTextQuery) ||
+            //                                                            EF.Functions.Like(p.Lifeform.CommonName, findParams.SearchTextQuery) ||
+            //                                                            EF.Functions.Like(p.Lifeform.ScientificName, findParams.SearchTextQuery)),
+            //                                                            false,
+            //                                                            p => p.Include(p => p.Lifeform)
+            //                                                                  .Include(p => p.Taxon)
+            //                                                                  .Include(p => p.Origin)
+            //                                                                  .Include(p => p.User)
+            //                                                                  .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
+            //if (!string.IsNullOrEmpty(findParams.CreatedBy))
+            //{
+            //    plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
+            //}
 
-            plantInfoQuery = plantInfoQuery.CanViewContent(user);
+            //plantInfoQuery = FilterBy(plantInfoQuery, findParams.Filters);
 
-            plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
+            //plantInfoQuery = plantInfoQuery.CanViewContent(user);
 
-            var count = plantInfoQuery.Count();
+            //plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
+
+            //var count = plantInfoQuery.Count();
 
             var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
 
@@ -93,7 +108,7 @@ namespace Emergence.Service
 
             return new FindResult<Data.Shared.Models.PlantInfo>
             {
-                Count = count,
+                Count = plantInfoSearch.Count,
                 Results = plantInfos
             };
         }

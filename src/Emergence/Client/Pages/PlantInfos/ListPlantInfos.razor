@@ -102,7 +102,7 @@
                     {
                         var photo = plantInfo.Photos?.FirstOrDefault();
 
-                        <Card Name="@plantInfo.Lifeform.ScientificName" ColorSearch="@plantInfo.Lifeform.CommonName" Photo="@photo">
+                        <Card Name="@plantInfo.Lifeform.ScientificName" ColorSearch="@(plantInfo.Lifeform.CommonName ?? "green")" Photo="@photo">
                             <Content>
                                 <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
                                     <div class="col-12">
@@ -112,7 +112,7 @@
                                         <span style="font-style:italic">@plantInfo.Lifeform.ScientificName</span>
                                     </div>
                                 </a>
-                                @if (!string.IsNullOrEmpty(plantInfo.Requirements?.ZoneRequirements.ToFriendlyString()))
+                                @if (plantInfo.Requirements?.ZoneRequirements != null)
                                 {
                                     <div class="col-12">
                                         <span>Zones @plantInfo.Requirements.ZoneRequirements.ToFriendlyString()</span>
@@ -122,7 +122,7 @@
                                     <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
                                 </div>
                                 <div class="col-12">
-                                    <span>by @plantInfo.User.DisplayName</span>
+                                    <span>by @(plantInfo.User == null ? "System" : plantInfo.User.DisplayName)</span>
                                 </div>
                             </Content>
                         </Card>

@@ -55,7 +55,7 @@ namespace Emergence.Data.Shared.Extensions
                     },
                     SoilRequirements = null,
                     StratificationStages = stratificationStages,
-                    ZoneRequirements = new Models.ZoneRequirements
+                    ZoneRequirements = (source.MinimumZone != null || source.MaximumZone != null) ? new Models.ZoneRequirements
                     {
                         MinimumZone = source.MinimumZone != null ? new Models.Zone
                         {
@@ -69,7 +69,7 @@ namespace Emergence.Data.Shared.Extensions
                             Name = source.MaximumZone.Name,
                             Notes = source.MaximumZone.Notes
                         } : null
-                    }
+                    } : null
                 },
                 Taxon = source.Taxon != null ? source.Taxon.AsModel() : source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
                 Preferred = source.Preferred,

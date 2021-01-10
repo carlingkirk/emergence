@@ -113,10 +113,8 @@ namespace Emergence.Server
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserContactService, UserContactService>();
             services.AddTransient<IMessageService, MessageService>();
-            services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
-            services.AddTransient<IIndex<SearchModels.PlantInfo>, PlantInfoIndex>();
 
-            //Add repositories
+            // Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
             services.AddScoped(typeof(IRepository<DisplayName>), typeof(Repository<DisplayName>));
             services.AddScoped(typeof(IRepository<Inventory>), typeof(Repository<Inventory>));
@@ -135,6 +133,10 @@ namespace Emergence.Server
             services.AddScoped(typeof(IRepository<UserContact>), typeof(Repository<UserContact>));
             services.AddScoped(typeof(IRepository<UserContactRequest>), typeof(Repository<UserContactRequest>));
             services.AddScoped(typeof(IRepository<UserMessage>), typeof(Repository<UserMessage>));
+
+            // Add search
+            services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
+            services.AddTransient<IIndex<SearchModels.PlantInfo>, PlantInfoIndex>();
 
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

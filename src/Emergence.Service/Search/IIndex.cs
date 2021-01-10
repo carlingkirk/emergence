@@ -8,5 +8,6 @@ namespace Emergence.Service.Search
         Task CreateIndexAsync();
         Task<bool> IndexAsync(T document);
         Task<BulkIndexResponse> IndexManyAsync(IEnumerable<T> documents);
+        Task<SearchResponse<T>> SearchAsync(string search);
     }
 }
