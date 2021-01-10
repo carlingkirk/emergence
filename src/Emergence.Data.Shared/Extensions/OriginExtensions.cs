@@ -64,7 +64,7 @@ namespace Emergence.Data.Shared.Extensions
             ExternalId = source.ExternalId,
             AltExternalId = source.AltExternalId,
             Visibility = source.Visibility,
-            User = source.User.AsSearchModel(),
+            User = source.User?.AsSearchModel(),
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,

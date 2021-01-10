@@ -15,6 +15,7 @@ namespace Emergence.Transform.Runner
     public enum ImporterType
     {
         TextImporter,
-        SqlImporter
+        SqlImporter,
+        EFImporter
     }
 }

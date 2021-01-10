@@ -13,14 +13,14 @@ namespace Emergence.Data.Shared.Search.Models
         public short? MaximumBloomTime { get; set; }
         public double? MinimumHeight { get; set; }
         public double? MaximumHeight { get; set; }
-        public DistanceUnit HeightUnit { get; set; }
+        public DistanceUnit? HeightUnit { get; set; }
         public double? MinimumSpread { get; set; }
         public double? MaximumSpread { get; set; }
-        public DistanceUnit SpreadUnit { get; set; }
-        public WaterType MinimumWater { get; set; }
-        public WaterType MaximumWater { get; set; }
-        public LightType MinimumLight { get; set; }
-        public LightType MaximumLight { get; set; }
+        public DistanceUnit? SpreadUnit { get; set; }
+        public WaterType? MinimumWater { get; set; }
+        public WaterType? MaximumWater { get; set; }
+        public LightType? MinimumLight { get; set; }
+        public LightType? MaximumLight { get; set; }
         public IEnumerable<StratificationStage> StratificationStages { get; set; }
         public Zone MinimumZone { get; set; }
         public Zone MaximumZone { get; set; }

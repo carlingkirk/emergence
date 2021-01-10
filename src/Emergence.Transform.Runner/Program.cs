@@ -5,10 +5,12 @@ using Emergence.Data.Repository;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
+using Emergence.Service.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Transform.Runner
 {
@@ -69,6 +71,8 @@ namespace Emergence.Transform.Runner
             services.AddTransient<IBlobService, BlobService>();
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IExifService, ExifService>();
+            services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
+            services.AddTransient<IIndex<SearchModels.PlantInfo>, PlantInfoIndex>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));
@@ -80,6 +84,7 @@ namespace Emergence.Transform.Runner
             services.AddScoped(typeof(IRepository<Photo>), typeof(Repository<Photo>));
             services.AddScoped(typeof(IRepository<PlantInfo>), typeof(Repository<PlantInfo>));
             services.AddScoped(typeof(IRepository<PlantLocation>), typeof(Repository<PlantLocation>));
+            services.AddScoped(typeof(IRepository<PlantSynonym>), typeof(Repository<PlantSynonym>));
             services.AddScoped(typeof(IRepository<Specimen>), typeof(Repository<Specimen>));
             services.AddScoped(typeof(IRepository<Synonym>), typeof(Repository<Synonym>));
             services.AddScoped(typeof(IRepository<Taxon>), typeof(Repository<Taxon>));

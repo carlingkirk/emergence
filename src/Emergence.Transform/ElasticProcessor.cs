@@ -5,19 +5,20 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
+using Emergence.Service.Search;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Transform
 {
     public class ElasticProcessor
     {
         private readonly IRepository<PlantInfo> _plantInfoRepository;
-        private readonly IRepository<PlantLocation> _plantLocationRepository;
-        public ElasticProcessor(IRepository<PlantInfo> plantInfoRepository, IRepository<PlantLocation> plantLocationRepository)
+        private readonly IIndex<SearchModels.PlantInfo> _plantInfoIndex;
+        public ElasticProcessor(IRepository<PlantInfo> plantInfoRepository, IIndex<SearchModels.PlantInfo> plantInfoIndex)
         {
             _plantInfoRepository = plantInfoRepository;
-            _plantLocationRepository = plantLocationRepository;
+            _plantInfoIndex = plantInfoIndex;
         }
-
 
         public async Task Process(int startId, int endId)
         {
@@ -37,13 +38,16 @@ namespace Emergence.Transform
 
             var plantInfoResult = await plantInfoQuery.GetAllAsync();
 
-            var plantInfos = new List<Emergence.Data.Shared.Search.Models.PlantInfo>();
+            var plantInfos = new List<SearchModels.PlantInfo>();
             foreach (var plantInfo in plantInfoResult.GroupBy(p => p.Id))
             {
+                var plantInfoKey = plantInfo.First();
                 var plantLocations = plantInfo.SelectMany(p => p.PlantLocations);
-                var synonyms = plantInfo.SelectMany(p => p.Taxon.Synonyms);
-                plantInfos.Add(plantInfo.First().AsSearchModel(plantLocations, synonyms));
+                var synonyms = plantInfoKey.Taxon != null ? plantInfo.SelectMany(p => p.Taxon?.Synonyms) : null;
+                plantInfos.Add(plantInfoKey.AsSearchModel(plantLocations, synonyms));
             }
+
+            await _plantInfoIndex.IndexManyAsync(plantInfos);
         }
     }
 }

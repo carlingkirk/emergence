@@ -11,6 +11,7 @@ using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
+using Emergence.Service.Search;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Server
 {
@@ -111,6 +113,8 @@ namespace Emergence.Server
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserContactService, UserContactService>();
             services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
+            services.AddTransient<IIndex<SearchModels.PlantInfo>, PlantInfoIndex>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));

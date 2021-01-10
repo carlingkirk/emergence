@@ -163,6 +163,12 @@ namespace Emergence.Transform.Runner
                         vernaculars.Clear();
                     }
                 }
+                else if (importer.Type == ImporterType.EFImporter && importer.ImportModel == "PlantInfo")
+                {
+                    var processor = _importTransformOrchestrator.GetElasticProcessor;
+                    await processor.Process(109063, 109073);
+                    await processor.Process(89970, 89975);
+                }
             }
         }
 

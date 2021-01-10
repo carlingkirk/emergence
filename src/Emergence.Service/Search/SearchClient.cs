@@ -1,26 +1,45 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Elasticsearch.Net;
 using Emergence.Data.Shared.Search.Models;
 using Microsoft.Extensions.Configuration;
 using Nest;
 
 namespace Emergence.Service.Search
 {
-    public class SearchClient
+    public class SearchClient<T> : ISearchClient<T> where T : class
     {
-        private ElasticClient Client { get; set; }
+        private ElasticClient ElasticClient;
+        private readonly ConnectionSettings _connectionSettings;
 
         public SearchClient(IConfiguration configuration)
         {
-            var node = new Uri(configuration["ElasticEndpoint"]);
-            var settings = new ConnectionSettings(node);
-            Client = new ElasticClient(settings);
+            var cloudId = configuration["ElasticCloudId"];
+            var username = configuration["ElasticUsername"];
+            var password = configuration["ElasticPassword"];
+            var basicCredentials = new BasicAuthenticationCredentials(username, password);
+
+            _connectionSettings = new ConnectionSettings(cloudId, basicCredentials);
+        }
+
+        public async Task ConfigureClient(string indexName, Func<ClrTypeMappingDescriptor<T>, IClrTypeMapping<T>> selector)
+        {
+            _connectionSettings.DefaultMappingFor<T>(selector);
+
+            ElasticClient = new ElasticClient(_connectionSettings);
+            var auth = await ElasticClient.Security.AuthenticateAsync();
+            if (!auth.IsValid)
+            {
+                throw new UnauthorizedAccessException();
+            }
+            await CreateIndexAsync(indexName);
         }
 
         public async Task<IEnumerable<PlantInfo>> SearchAsync(string search)
         {
-            var response = await Client.SearchAsync<PlantInfo>(s => s
+            var response = await ElasticClient.SearchAsync<PlantInfo>(s => s
               .Query(q => q.Bool(qc => qc
                 .Should(q => q
                   .Match(c => c
@@ -36,9 +55,23 @@ namespace Emergence.Service.Search
             return response.Documents;
         }
 
-        public async Task<bool> SaveAsync(PlantInfo plantInfo)
+        public async Task CreateIndexAsync(string indexName)
         {
-            var response = await Client.IndexDocumentAsync(plantInfo);
+            var indexExists = await IndexExistsAsync(indexName);
+            if (!indexExists)
+            {
+                var createIndexResponse = await ElasticClient.Indices.CreateAsync(indexName);
+
+                if (!createIndexResponse.ApiCall.Success)
+                {
+                    throw createIndexResponse.ApiCall.OriginalException;
+                }
+            }
+        }
+
+        public async Task<bool> IndexAsync(T document)
+        {
+            var response = await ElasticClient.IndexDocumentAsync(document);
             var result = true;
 
             if (!response.IsValid)
@@ -49,21 +82,33 @@ namespace Emergence.Service.Search
             return result;
         }
 
-        public async Task<bool> SaveManyAsync(IEnumerable<PlantInfo> plantInfos)
+        public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<T> documents)
         {
-            var indexManyResponse = await Client.IndexManyAsync(plantInfos);
-            var result = true;
+            var response = new BulkIndexResponse();
+            var indexManyResponse = await ElasticClient.IndexManyAsync(documents);
+            response.Successes = indexManyResponse.Items.Count(i => i.IsValid);
+            response.Failures = indexManyResponse.Items.Count(i => !i.IsValid);
 
             if (indexManyResponse.Errors)
             {
-                foreach (var item in indexManyResponse.ItemsWithErrors)
-                {
-                    //log
-                }
-
-                result = false;
+                response.Errors = indexManyResponse.ItemsWithErrors.Select(i => $"{i.Operation}: {i.Status} - {i.Result} for {i.Index}");
             }
-            return result;
+
+            return response;
         }
+
+        private async Task<bool> IndexExistsAsync(string name)
+        {
+            var aliasResponse = await ElasticClient.Indices.ExistsAsync(name);
+
+            return aliasResponse.Exists;
+        }
+    }
+
+    public class BulkIndexResponse
+    {
+        public int Successes { get; set; }
+        public int Failures { get; set; }
+        public IEnumerable<string> Errors { get; set; }
     }
 }
