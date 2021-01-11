@@ -35,29 +35,30 @@ namespace Emergence.Service.Search
         {
             var searchTerm = findParams.SearchText;
             var query = new QueryContainerDescriptor<PlantInfo>();
-            var should = new List<QueryContainer>
-            {
-                query.MultiMatch(mm => mm.Fields(mmf => mmf
-                        .Field(m => m.CommonName)
-                        .Field(m => m.ScientificName)
-                        .Field(m => m.Lifeform.CommonName)
-                        .Field(m => m.Lifeform.ScientificName))
-                        .Query(searchTerm)
-                        .Fuzziness(Fuzziness.AutoLength(1, 5))),
-                query.Nested(n => n
-                        .Path(p => p.Synonyms)
-                        .Query(q => q
-                            .Match(sq => sq
-                                .Field("synonyms.name")
-                                .Query(searchTerm)
-                                .Fuzziness(Fuzziness.AutoLength(1, 5)))))
-            };
+            var musts = new List<QueryContainer>();
+            var shoulds = new List<QueryContainer>();
 
-            var must = new List<QueryContainer>();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => mmf
+                            .Field(m => m.CommonName)
+                            .Field(m => m.ScientificName)
+                            .Field(m => m.Lifeform.CommonName)
+                            .Field(m => m.Lifeform.ScientificName))
+                            .Query(searchTerm)
+                            .Fuzziness(Fuzziness.AutoLength(1, 5))));
+                shoulds.Add(query.Nested(n => n
+                            .Path(p => p.Synonyms)
+                            .Query(q => q
+                                .Match(sq => sq
+                                    .Field("synonyms.name")
+                                    .Query(searchTerm)
+                                    .Fuzziness(Fuzziness.AutoLength(1, 5))))));
+            }
 
             if (findParams.CreatedBy != null)
             {
-                must.Add(query.Match(m => m.Field(f => f.CreatedBy).Query(findParams.CreatedBy)));
+                musts.Add(query.Match(m => m.Field(f => f.CreatedBy).Query(findParams.CreatedBy)));
             }
 
             foreach (var filter in findParams.Filters)
@@ -68,23 +69,28 @@ namespace Emergence.Service.Search
 
                     if (heightFilter.MinimumValue.HasValue)
                     {
-                        must.Add(query.Range(r => r.Field(f => f.MinimumHeight).GreaterThanOrEquals(heightFilter.MinimumValue)));
+                        musts.Add(query.Range(r => r.Field(f => f.MinimumHeight).GreaterThanOrEquals(heightFilter.MinimumValue)));
                     }
 
                     if (heightFilter.MaximumValue.HasValue)
                     {
-                        must.Add(query.Range(r => r.Field(f => f.MaximumHeight).LessThanOrEquals(heightFilter.MaximumValue)));
+                        musts.Add(query.Range(r => r.Field(f => f.MaximumHeight).LessThanOrEquals(heightFilter.MaximumValue)));
                     }
                 }
-
-                //else if (filter.Name == "Location")
-                //{
-                //    var regionFilter = new RegionFilter((Filter<string>)filter);
-                //    if (!string.IsNullOrEmpty(regionFilter.Value))
-                //    {
-                //        should.Add(query.Term(t => t.CreatedBy, findParams.CreatedBy));
-                //    }
-                //}
+                else if (filter.Name == "Location")
+                {
+                    var regionFilter = new RegionFilter((Filter<string>)filter);
+                    if (!string.IsNullOrEmpty(regionFilter.Value))
+                    {
+                        musts.Add(query.Nested(n => n
+                            .Path(p => p.PlantLocations)
+                                .Query(q => q
+                                    .Match(sq => sq
+                                        .Field("plantLocations.location.region")
+                                        .Query(regionFilter.Value)
+                                        .Fuzziness(Fuzziness.AutoLength(1, 5))))));
+                    }
+                }
                 //else if (filter.Name == "Spread")
                 //{
                 //    var spreadFilter = new SpreadFilter((RangeFilter<double?>)filter);
@@ -129,8 +135,8 @@ namespace Emergence.Service.Search
 
             var response = await _searchClient.SearchAsync(pi => pi
             .Bool(b => b
-                .Should(should.ToArray())
-                .Must(must.ToArray())), 0, 10);
+                .Should(shoulds.ToArray())
+                .Must(musts.ToArray())), 0, 10);
 
             return response;
         }
