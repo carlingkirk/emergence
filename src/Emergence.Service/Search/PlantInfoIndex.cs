@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
@@ -91,22 +92,36 @@ namespace Emergence.Service.Search
                                         .Fuzziness(Fuzziness.AutoLength(1, 5))))));
                     }
                 }
-                //else if (filter.Name == "Spread")
-                //{
-                //    var spreadFilter = new SpreadFilter((RangeFilter<double?>)filter);
-                //    if (spreadFilter.MinimumValue.HasValue || spreadFilter.MaximumValue.HasValue)
-                //    {
-                //        plantInfoQuery = plantInfoQuery.Where(spreadFilter.Filter);
-                //    }
-                //}
-                //else if (filter.Name == "Light")
-                //{
-                //    var lightFilter = new LightFilter((RangeFilter<string>)filter);
-                //    if (!(string.IsNullOrEmpty(lightFilter.MinimumValue) && string.IsNullOrEmpty(lightFilter.MaximumValue)))
-                //    {
-                //        plantInfoQuery = plantInfoQuery.Where(lightFilter.Filter);
-                //    }
-                //}
+                else if (filter.Name == "Spread")
+                {
+                    var spreadFilter = new SpreadFilter((RangeFilter<double?>)filter);
+                    if (spreadFilter.MinimumValue.HasValue)
+                    {
+                        musts.Add(query.Range(r => r.Field(f => f.MinimumSpread).GreaterThanOrEquals(spreadFilter.MinimumValue)));
+                    }
+
+                    if (spreadFilter.MaximumValue.HasValue)
+                    {
+                        musts.Add(query.Range(r => r.Field(f => f.MaximumSpread).LessThanOrEquals(spreadFilter.MaximumValue)));
+                    }
+                }
+                else if (filter.Name == "Light")
+                {
+                    var lightFilter = new LightFilter((RangeFilter<string>)filter);
+                    if (!string.IsNullOrEmpty(lightFilter.MinimumValue))
+                    {
+                        var minLightValue = (double)Enum.Parse<LightType>(lightFilter.MinimumValue);
+                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumLight).GreaterThanOrEquals(minLightValue)) ||
+                                                               !s.Exists(e => e.Field(f => f.MinimumLight)))));
+                    }
+
+                    if (!string.IsNullOrEmpty(lightFilter.MaximumValue))
+                    {
+                        var maxLightValue = (double)Enum.Parse<LightType>(lightFilter.MaximumValue);
+                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumLight).LessThanOrEquals(maxLightValue)) ||
+                                                               !s.Exists(e => e.Field(f => f.MaximumLight)))));
+                    }
+                }
                 //else if (filter.Name == "Water")
                 //{
                 //    var waterFilter = new WaterFilter((RangeFilter<string>)filter);
