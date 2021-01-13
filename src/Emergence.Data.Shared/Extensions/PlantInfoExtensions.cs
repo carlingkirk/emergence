@@ -111,13 +111,6 @@ namespace Emergence.Data.Shared.Extensions
                 source.Requirements.LightRequirements.MaximumLight = source.Requirements.LightRequirements.MinimumLight;
             }
 
-            if (source.BloomTime.MinimumBloomTime != Month.Unknown && source.BloomTime.MaximumBloomTime != Month.Unknown &&
-                source.BloomTime.MinimumBloomTime >= source.BloomTime.MaximumBloomTime)
-            {
-                source.BloomTime.MinimumBloomTime = source.BloomTime.MaximumBloomTime;
-                source.BloomTime.MaximumBloomTime = source.BloomTime.MinimumBloomTime;
-            }
-
             if (source.Requirements?.ZoneRequirements?.MinimumZone != null && source.Requirements?.ZoneRequirements?.MaximumZone != null &&
                 source.Requirements.ZoneRequirements.MinimumZone.Id >= source.Requirements.ZoneRequirements.MaximumZone.Id)
             {
