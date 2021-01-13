@@ -163,7 +163,6 @@ namespace Emergence.Service.Search
                             // client sent in months that span two years
                             musts.Add(query.Bool(b => b.Should(s => (s.Range(r => r.Field(f => f.MinimumBloomTime).GreaterThanOrEquals(bloomFilter.MinimumValue)) &&
                                                                      !s.Exists(e => e.Field(f => f.MaximumBloomTime))) ||
-                                                                     // Min or max less than max
                                                                     (s.Range(r => r.Field(f => f.MaximumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue)) ||
                                                                      s.Range(r => r.Field(f => f.MinimumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue))))));
                         }
