@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Search;
@@ -195,10 +196,44 @@ namespace Emergence.Service.Search
                 }
             }
 
-            var response = await _searchClient.SearchAsync(pi => pi
-            .Bool(b => b
-                .Should(shoulds.ToArray())
-                .Must(musts.ToArray())), 0, 10);
+            var searchDescriptor = new SearchDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())
+                        .Must(musts.ToArray())));
+
+            if (findParams.SortDirection != SortDirection.None)
+            {
+                if (findParams.SortBy == null)
+                {
+                    findParams.SortBy = "DateCreated";
+                }
+
+                var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
+                {
+                    { "ScientificName", p => p.Lifeform.ScientificName.Suffix("keyword") },
+                    { "CommonName", p => p.Lifeform.CommonName.Suffix("keyword") },
+                    { "Origin", p => p.Origin.Name.Suffix("keyword") },
+                    { "Zone", p => p.MinimumZone.Id },
+                    { "Light", p => p.MinimumLight },
+                    { "Water", p => p.MinimumWater },
+                    { "BloomTime", p => p.MinimumBloomTime },
+                    { "Height", p => p.MinimumHeight },
+                    { "Spread", p => p.MinimumSpread },
+                    { "DateCreated", p => p.DateCreated }
+                };
+
+                if (findParams.SortDirection == SortDirection.Ascending)
+                {
+                    searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Ascending()));
+                }
+                else
+                {
+                    searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Descending()));
+                }
+            }
+
+            var response = await _searchClient.SearchAsync(pi => searchDescriptor);
 
             return response;
         }

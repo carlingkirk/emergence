@@ -39,12 +39,9 @@ namespace Emergence.Service.Search
             await CreateIndexAsync(indexName, mappingSelector);
         }
 
-        public async Task<SearchResponse<T>> SearchAsync(Func<QueryContainerDescriptor<T>, QueryContainer> query, int skip, int take)
+        public async Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> search)
         {
-            var response = await ElasticClient.SearchAsync<T>(s => s
-              .Query(query)
-              .Take(take)
-              .Skip(skip));
+            var response = await ElasticClient.SearchAsync(search);
 
             var body = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
             Console.WriteLine(body);

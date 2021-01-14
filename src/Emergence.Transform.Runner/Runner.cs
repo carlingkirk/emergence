@@ -182,6 +182,15 @@ namespace Emergence.Transform.Runner
                     }
 
                     Console.WriteLine(response.Successes);
+
+                    response = await processor.Process(157231, 157243);
+
+                    if (response.Failures > 0)
+                    {
+                        Console.WriteLine(response.Failures);
+                    }
+
+                    Console.WriteLine(response.Successes);
                 }
             }
         }

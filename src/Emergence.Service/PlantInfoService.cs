@@ -65,7 +65,7 @@ namespace Emergence.Service
         public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams, Data.Shared.Models.User user)
         {
             var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams);
-            var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id);
+            var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id).ToArray();
             var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => plantInfoIds.Contains(p.Id),
                                                                         false,
                                                                         p => p.Include(p => p.Lifeform)
@@ -98,7 +98,7 @@ namespace Emergence.Service
             return new FindResult<Data.Shared.Models.PlantInfo>
             {
                 Count = plantInfoSearch.Count,
-                Results = plantInfos
+                Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList()
             };
         }
 
