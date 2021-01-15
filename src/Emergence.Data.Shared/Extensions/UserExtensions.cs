@@ -1,3 +1,4 @@
+using System.Linq;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Extensions
@@ -73,7 +74,8 @@ namespace Emergence.Data.Shared.Extensions
             OriginVisibility = source.OriginVisibility,
             ActivityVisibility = source.ActivityVisibility,
             DateCreated = source.DateCreated,
-            DateModified = source.DateModified
+            DateModified = source.DateModified,
+            ContactIds = source.Contacts?.Select(c => c.Id)
         };
     }
 }

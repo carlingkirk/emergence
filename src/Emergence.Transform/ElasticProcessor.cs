@@ -33,6 +33,7 @@ namespace Emergence.Transform
                                                                               .Include(p => p.Origin.Location)
                                                                               .Include(p => p.User)
                                                                               .Include(p => p.User.Photo)
+                                                                              .Include(p => p.User.Contacts)
                                                                               .Include(p => p.MinimumZone)
                                                                               .Include(p => p.MaximumZone));
 
@@ -42,8 +43,14 @@ namespace Emergence.Transform
             foreach (var plantInfo in plantInfoResult.GroupBy(p => p.Id))
             {
                 var plantInfoKey = plantInfo.First();
-                var plantLocations = plantInfo.SelectMany(p => p.PlantLocations);
-                var synonyms = plantInfoKey.Taxon != null ? plantInfo.SelectMany(p => p.Taxon?.Synonyms) : null;
+                var plantLocations = plantInfo.SelectMany(p => p.PlantLocations).ToList();
+                var synonyms = plantInfoKey.Taxon != null ? plantInfo.SelectMany(p => p.Taxon?.Synonyms).ToList() : null;
+                if (plantInfoKey.User != null && plantInfoKey.User.Contacts != null)
+                {
+                    var contacts = plantInfo.SelectMany(p => p.User.Contacts).ToList();
+                    plantInfoKey.User.Contacts = contacts;
+                }
+                
                 plantInfos.Add(plantInfoKey.AsSearchModel(plantLocations, synonyms));
             }
 

@@ -33,12 +33,12 @@ namespace Emergence.Service.Search
         public async Task<bool> IndexAsync(PlantInfo document) => await _searchClient.IndexAsync(document);
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<PlantInfo> documents) => await _searchClient.IndexManyAsync(documents);
 
-        public async Task<SearchResponse<PlantInfo>> SearchAsync(FindParams findParams)
+        public async Task<SearchResponse<PlantInfo>> SearchAsync(FindParams findParams, Data.Shared.Models.User user)
         {
             var searchTerm = findParams.SearchText;
-            var query = new QueryContainerDescriptor<PlantInfo>();
-            var musts = new List<QueryContainer>();
+            var musts = GetFilters(findParams);
             var shoulds = new List<QueryContainer>();
+            var query = new QueryContainerDescriptor<PlantInfo>();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -57,6 +57,83 @@ namespace Emergence.Service.Search
                                     .Query(searchTerm)
                                     .Fuzziness(Fuzziness.AutoLength(1, 5))))));
             }
+
+            musts.Add(query.Bool(b => b
+                            .Should(s => s.Term(t => t.Visibility, Visibility.Public) ||
+                                         s.Term(t => t.User.Id, user.Id) ||
+                                        // Not hidden
+                                        (!(s.Term(t => t.Visibility, Visibility.Hidden) ||
+                                           (s.Term(t => t.Visibility, Visibility.Inherit) &&
+                                            s.Term(t => t.User.PlantInfoVisibility, Visibility.Hidden)) ||
+                                           (s.Term(t => t.User.PlantInfoVisibility, Visibility.Inherit) &&
+                                            s.Term(t => t.User.ProfileVisibility, Visibility.Hidden))) &&
+                                        // Inherited
+                                           ((s.Term(t => t.Visibility, Visibility.Inherit) &&
+                                             (s.Term(t => t.User.PlantInfoVisibility, Visibility.Public) ||
+                                             (s.Term(t => t.User.PlantInfoVisibility, Visibility.Inherit) &&
+                                              s.Term(t => t.User.ProfileVisibility, Visibility.Public)) ||
+                                             (s.Term(t => t.User.PlantInfoVisibility, Visibility.Contacts) &&
+                                              s.Term(t => t.User.ContactIds, user.Id)
+                                              //s.Nested(t => t
+                                              //  .Path(p => p.User.ContactIds)
+                                              //      .Query(q => q
+                                              //          .Bool(b => b.Must(m => m.Term(t => t.User.ContactIds, user.Id)))))
+                                              ))) ||
+                                        // Contacts
+                                           (s.Term(t => t.Visibility, Visibility.Contacts) &&
+                                            s.Term(t => t.User.ContactIds, user.Id)
+                                            //s.Nested(t => t
+                                            //    .Path(p => p.User.ContactIds)
+                                            //        .Query(q => q
+                                            //            .Bool(b => b.Must(m => m.Term(t => t.User.ContactIds, user.Id)))))
+                                            ))))));
+
+            var searchDescriptor = new SearchDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())
+                        .Must(musts.ToArray())));
+
+            if (findParams.SortDirection != SortDirection.None)
+            {
+                if (findParams.SortBy == null)
+                {
+                    findParams.SortBy = "DateCreated";
+                }
+
+                var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
+                {
+                    { "ScientificName", p => p.Lifeform.ScientificName.Suffix("keyword") },
+                    { "CommonName", p => p.Lifeform.CommonName.Suffix("keyword") },
+                    { "Origin", p => p.Origin.Name.Suffix("keyword") },
+                    { "Zone", p => p.MinimumZone.Id },
+                    { "Light", p => p.MinimumLight },
+                    { "Water", p => p.MinimumWater },
+                    { "BloomTime", p => p.MinimumBloomTime },
+                    { "Height", p => p.MinimumHeight },
+                    { "Spread", p => p.MinimumSpread },
+                    { "DateCreated", p => p.DateCreated }
+                };
+
+                if (findParams.SortDirection == SortDirection.Ascending)
+                {
+                    searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Ascending()));
+                }
+                else
+                {
+                    searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Descending()));
+                }
+            }
+
+            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take));
+
+            return response;
+        }
+
+        private List<QueryContainer> GetFilters(FindParams findParams)
+        {
+            var musts = new List<QueryContainer>();
+            var query = new QueryContainerDescriptor<PlantInfo>();
 
             if (findParams.CreatedBy != null)
             {
@@ -189,53 +266,14 @@ namespace Emergence.Service.Search
                     if (zoneFilter.Value > 0)
                     {
                         musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumZone.Id).GreaterThanOrEquals(zoneFilter.Value)) ||
-                                                               !s.Exists(e => e.Field(f => f.MinimumWater)))));
-                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumWater).LessThanOrEquals(zoneFilter.Value)) ||
-                                                               !s.Exists(e => e.Field(f => f.MaximumWater)))));
+                                                               !s.Exists(e => e.Field(f => f.MinimumZone)))));
+                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumZone.Id).LessThanOrEquals(zoneFilter.Value)) ||
+                                                               !s.Exists(e => e.Field(f => f.MaximumZone)))));
                     }
                 }
             }
 
-            var searchDescriptor = new SearchDescriptor<PlantInfo>()
-                .Query(q => q
-                    .Bool(b => b
-                        .Should(shoulds.ToArray())
-                        .Must(musts.ToArray())));
-
-            if (findParams.SortDirection != SortDirection.None)
-            {
-                if (findParams.SortBy == null)
-                {
-                    findParams.SortBy = "DateCreated";
-                }
-
-                var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
-                {
-                    { "ScientificName", p => p.Lifeform.ScientificName.Suffix("keyword") },
-                    { "CommonName", p => p.Lifeform.CommonName.Suffix("keyword") },
-                    { "Origin", p => p.Origin.Name.Suffix("keyword") },
-                    { "Zone", p => p.MinimumZone.Id },
-                    { "Light", p => p.MinimumLight },
-                    { "Water", p => p.MinimumWater },
-                    { "BloomTime", p => p.MinimumBloomTime },
-                    { "Height", p => p.MinimumHeight },
-                    { "Spread", p => p.MinimumSpread },
-                    { "DateCreated", p => p.DateCreated }
-                };
-
-                if (findParams.SortDirection == SortDirection.Ascending)
-                {
-                    searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Ascending()));
-                }
-                else
-                {
-                    searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Descending()));
-                }
-            }
-
-            var response = await _searchClient.SearchAsync(pi => searchDescriptor);
-
-            return response;
+            return musts;
         }
 
         private IClrTypeMapping<PlantInfo> GetClrMapping(ClrTypeMappingDescriptor<PlantInfo> mapping) =>

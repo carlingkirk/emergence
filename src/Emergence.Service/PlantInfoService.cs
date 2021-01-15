@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Emergence.Service.Search;
@@ -64,7 +62,7 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams, Data.Shared.Models.User user)
         {
-            var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams);
+            var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams, user);
             var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id).ToArray();
             var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => plantInfoIds.Contains(p.Id),
                                                                         false,
@@ -74,20 +72,9 @@ namespace Emergence.Service
                                                                               .Include(p => p.User)
                                                                               .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
 
-            //if (!string.IsNullOrEmpty(findParams.CreatedBy))
-            //{
-            //    plantInfoQuery = plantInfoQuery.Where(p => p.CreatedBy == findParams.CreatedBy);
-            //}
+            plantInfoQuery = plantInfoQuery.CanViewContent(user);
 
-            //plantInfoQuery = FilterBy(plantInfoQuery, findParams.Filters);
-
-            //plantInfoQuery = plantInfoQuery.CanViewContent(user);
-
-            //plantInfoQuery = OrderBy(plantInfoQuery, findParams.SortBy, findParams.SortDirection);
-
-            //var count = plantInfoQuery.Count();
-
-            var plantInfoResult = plantInfoQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+            var plantInfoResult = plantInfoQuery.GetSomeAsync(track: false);
 
             var plantInfos = new List<Data.Shared.Models.PlantInfo>();
             await foreach (var plantInfo in plantInfoResult)
@@ -100,114 +87,6 @@ namespace Emergence.Service
                 Count = plantInfoSearch.Count,
                 Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList()
             };
-        }
-
-        private IQueryable<PlantInfo> FilterBy(IQueryable<PlantInfo> plantInfoQuery, IEnumerable<Filter> filters)
-        {
-            if (filters == null)
-            {
-                return plantInfoQuery;
-            }
-
-            foreach (var filter in filters)
-            {
-                if (filter.Name == "Location")
-                {
-                    var regionFilter = new RegionFilter((Filter<string>)filter);
-                    if (!string.IsNullOrEmpty(regionFilter.Value))
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(regionFilter.Filter);
-                    }
-                }
-                else if (filter.Name == "Height")
-                {
-                    var heightFilter = new HeightFilter((RangeFilter<double?>)filter);
-                    if (heightFilter.MinimumValue.HasValue|| heightFilter.MaximumValue.HasValue)
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(heightFilter.Filter);
-                    }
-                }
-                else if (filter.Name == "Spread")
-                {
-                    var spreadFilter = new SpreadFilter((RangeFilter<double?>)filter);
-                    if (spreadFilter.MinimumValue.HasValue|| spreadFilter.MaximumValue.HasValue)
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(spreadFilter.Filter);
-                    }
-                }
-                else if (filter.Name == "Light")
-                {
-                    var lightFilter = new LightFilter((RangeFilter<string>)filter);
-                    if (!(string.IsNullOrEmpty(lightFilter.MinimumValue) && string.IsNullOrEmpty(lightFilter.MaximumValue)))
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(lightFilter.Filter);
-                    }
-                }
-                else if (filter.Name == "Water")
-                {
-                    var waterFilter = new WaterFilter((RangeFilter<string>)filter);
-                    if (!(string.IsNullOrEmpty(waterFilter.MinimumValue) && string.IsNullOrEmpty(waterFilter.MaximumValue)))
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(waterFilter.Filter);
-                    }
-                }
-                else if (filter.Name == "Bloom")
-                {
-                    var bloomFilter = new BloomFilter((RangeFilter<int>)filter);
-                    if (!(bloomFilter.MinimumValue == 0 && bloomFilter.MaximumValue == 0))
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(bloomFilter.Filter);
-                    }
-                }
-                else if (filter.Name == "Zone")
-                {
-                    var zoneFilter = new ZoneFilter((SelectFilter<int>)filter);
-                    if (zoneFilter.Value > 0)
-                    {
-                        plantInfoQuery = plantInfoQuery.Where(zoneFilter.Filter);
-                    }
-                }
-            }
-
-            return plantInfoQuery;
-        }
-
-        private IQueryable<PlantInfo> OrderBy(IQueryable<PlantInfo> plantInfoQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
-        {
-            if (sortDirection == SortDirection.None)
-            {
-                return plantInfoQuery;
-            }
-
-            if (sortBy == null)
-            {
-                sortBy = "DateCreated";
-            }
-
-            var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
-            {
-                { "ScientificName", p => p.Lifeform.ScientificName },
-                { "CommonName", p => p.Lifeform.CommonName },
-                { "Origin", p => p.Origin.Name },
-                { "Zone", p => p.MinimumZone },
-                { "Light", p => p.MinimumLight },
-                { "Water", p => p.MinimumWater },
-                { "BloomTime", p => p.MinimumBloomTime },
-                { "Height", p => p.MinimumHeight },
-                { "Spread", p => p.MinimumSpread },
-                { "DateCreated", p => p.DateCreated }
-            };
-
-            if (sortDirection == SortDirection.Descending)
-            {
-                plantInfoQuery = plantInfoQuery.WithOrder(p => p.OrderByDescending(plantInfoSorts[sortBy]));
-            }
-            else
-            {
-                plantInfoQuery = plantInfoQuery.WithOrder(p => p.OrderBy(plantInfoSorts[sortBy]));
-            }
-
-            return plantInfoQuery;
         }
 
         public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> AddPlantInfosAsync(IEnumerable<Data.Shared.Models.PlantInfo> plantInfos)

@@ -8,6 +8,6 @@ namespace Emergence.Service.Search
     {
         Task<bool> IndexAsync(T document);
         Task<BulkIndexResponse> IndexManyAsync(IEnumerable<T> documents);
-        Task<SearchResponse<T>> SearchAsync(FindParams findParams);
+        Task<SearchResponse<T>> SearchAsync(FindParams findParams, Data.Shared.Models.User user);
     }
 }

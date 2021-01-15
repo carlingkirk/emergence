@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Emergence.Data.Shared.Search.Models
 {
@@ -23,5 +24,6 @@ namespace Emergence.Data.Shared.Search.Models
         public DateTime? DateModified { get; set; }
         public Photo Photo { get; set; }
         public Location Location { get; set; }
+        public IEnumerable<int> ContactIds { get; set; }
     }
 }
