@@ -90,7 +90,7 @@ namespace Emergence.Data.Shared.Extensions
                                           c.User.Contacts.Any(c => c.ContactUserId == user.Id)))));
 
         public static IQueryable<PlantInfo> CanViewContent(this IQueryable<PlantInfo> content, Models.User user) =>
-            content = content.Where(c => c.UserId == user.Id || c.Visibility == Visibility.Public ||
+            content = content.Where(c => c.User == null || c.UserId == user.Id || c.Visibility == Visibility.Public ||
                                          // Not hidden
                                          (!(c.Visibility == Visibility.Hidden ||
                                             (c.Visibility == Visibility.Inherit &&
