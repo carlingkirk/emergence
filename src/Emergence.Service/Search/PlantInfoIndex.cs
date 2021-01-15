@@ -265,10 +265,12 @@ namespace Emergence.Service.Search
                     var zoneFilter = new ZoneFilter((SelectFilter<int>)filter);
                     if (zoneFilter.Value > 0)
                     {
-                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumZone.Id).GreaterThanOrEquals(zoneFilter.Value)) ||
-                                                               !s.Exists(e => e.Field(f => f.MinimumZone)))));
-                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumZone.Id).LessThanOrEquals(zoneFilter.Value)) ||
-                                                               !s.Exists(e => e.Field(f => f.MaximumZone)))));
+                        musts.Add(query.Bool(b => b.Should(s => (s.Exists(e => e.Field(f => f.MinimumZone)) ||
+                                                                 s.Exists(e => e.Field(f => f.MaximumZone))) &&
+                                                                (s.Range(r => r.Field(f => f.MinimumZone.Id).LessThanOrEquals(zoneFilter.Value)) ||
+                                                                 !s.Exists(e => e.Field(f => f.MinimumZone))) &&
+                                                                (s.Range(r => r.Field(f => f.MaximumZone.Id).GreaterThanOrEquals(zoneFilter.Value)) ||
+                                                                 !s.Exists(e => e.Field(f => f.MaximumZone))))));
                     }
                 }
             }
