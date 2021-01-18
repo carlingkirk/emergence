@@ -46,8 +46,34 @@ namespace Emergence.Service.Search
             var body = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
             Console.WriteLine(body);
 
+            var aggregations = new List<AggregationResult<T>>();
+
+            foreach (var aggregation in response.Aggregations)
+            {
+                var singleBucket = aggregation.Value as SingleBucketAggregate;
+                
+                foreach(var bucket in singleBucket)
+                {
+                    var bucketValues = bucket.Value as BucketAggregate;
+                    var bucketResults = new Dictionary<string, long?>();
+                    // Process values
+                    foreach (var bucketValue in bucketValues.Items)
+                    {
+                        var keyedBucket = bucketValue as KeyedBucket<object>;
+                        bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
+                    }
+
+                    aggregations.Add(new AggregationResult<T>
+                    {
+                        Name = aggregation.Key,
+                        Values = bucketResults
+                    });
+                }
+            }
+
             return new SearchResponse<T>
             {
+                Aggregations = aggregations,
                 Documents = response.Documents,
                 Count = response.Total
             };
@@ -114,5 +140,12 @@ namespace Emergence.Service.Search
     {
         public long Count { get; set; }
         public IEnumerable<T> Documents { get; set; }
+        public IEnumerable<AggregationResult<T>> Aggregations { get; set; }
+    }
+
+    public class AggregationResult<T>
+    {
+        public string Name { get; set; }
+        public Dictionary<string, long?> Values { get; set; }
     }
 }

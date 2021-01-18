@@ -58,35 +58,7 @@ namespace Emergence.Service.Search
                                     .Fuzziness(Fuzziness.AutoLength(1, 5))))));
             }
 
-            musts.Add(query.Bool(b => b
-                            .Should(s => s.Term(t => t.Visibility, Visibility.Public) ||
-                                         s.Term(t => t.User.Id, user.Id) ||
-                                        // Not hidden
-                                        (!(s.Term(t => t.Visibility, Visibility.Hidden) ||
-                                           (s.Term(t => t.Visibility, Visibility.Inherit) &&
-                                            s.Term(t => t.User.PlantInfoVisibility, Visibility.Hidden)) ||
-                                           (s.Term(t => t.User.PlantInfoVisibility, Visibility.Inherit) &&
-                                            s.Term(t => t.User.ProfileVisibility, Visibility.Hidden))) &&
-                                        // Inherited
-                                           ((s.Term(t => t.Visibility, Visibility.Inherit) &&
-                                             (s.Term(t => t.User.PlantInfoVisibility, Visibility.Public) ||
-                                             (s.Term(t => t.User.PlantInfoVisibility, Visibility.Inherit) &&
-                                              s.Term(t => t.User.ProfileVisibility, Visibility.Public)) ||
-                                             (s.Term(t => t.User.PlantInfoVisibility, Visibility.Contacts) &&
-                                              s.Term(t => t.User.ContactIds, user.Id)
-                                              //s.Nested(t => t
-                                              //  .Path(p => p.User.ContactIds)
-                                              //      .Query(q => q
-                                              //          .Bool(b => b.Must(m => m.Term(t => t.User.ContactIds, user.Id)))))
-                                              ))) ||
-                                        // Contacts
-                                           (s.Term(t => t.Visibility, Visibility.Contacts) &&
-                                            s.Term(t => t.User.ContactIds, user.Id)
-                                            //s.Nested(t => t
-                                            //    .Path(p => p.User.ContactIds)
-                                            //        .Query(q => q
-                                            //            .Bool(b => b.Must(m => m.Term(t => t.User.ContactIds, user.Id)))))
-                                            ))))));
+            musts.Add(FilterByVisibility(query, user));
 
             var searchDescriptor = new SearchDescriptor<PlantInfo>()
                 .Query(q => q
@@ -94,6 +66,7 @@ namespace Emergence.Service.Search
                         .Should(shoulds.ToArray())
                         .Must(musts.ToArray())));
 
+            // Sort
             if (findParams.SortDirection != SortDirection.None)
             {
                 if (findParams.SortBy == null)
@@ -101,19 +74,7 @@ namespace Emergence.Service.Search
                     findParams.SortBy = "DateCreated";
                 }
 
-                var plantInfoSorts = new Dictionary<string, Expression<Func<PlantInfo, object>>>
-                {
-                    { "ScientificName", p => p.Lifeform.ScientificName.Suffix("keyword") },
-                    { "CommonName", p => p.Lifeform.CommonName.Suffix("keyword") },
-                    { "Origin", p => p.Origin.Name.Suffix("keyword") },
-                    { "Zone", p => p.MinimumZone.Id },
-                    { "Light", p => p.MinimumLight },
-                    { "Water", p => p.MinimumWater },
-                    { "BloomTime", p => p.MinimumBloomTime },
-                    { "Height", p => p.MinimumHeight },
-                    { "Spread", p => p.MinimumSpread },
-                    { "DateCreated", p => p.DateCreated }
-                };
+                var plantInfoSorts = GetPlantInfoSorts();
 
                 if (findParams.SortDirection == SortDirection.Ascending)
                 {
@@ -124,6 +85,9 @@ namespace Emergence.Service.Search
                     searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Descending()));
                 }
             }
+
+            // Aggregations
+            searchDescriptor.Aggregations(a => a.Nested("Region", n => n.Path("plantLocations").Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
 
             var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take));
 
@@ -277,6 +241,41 @@ namespace Emergence.Service.Search
 
             return musts;
         }
+
+        private QueryContainer FilterByVisibility(QueryContainerDescriptor<PlantInfo> query, Data.Shared.Models.User user) =>
+            query.Bool(b => b
+                    .Should(s => s.Term(t => t.Visibility, Visibility.Public) ||
+                                    s.Term(t => t.User.Id, user.Id) ||
+                                // Not hidden
+                                (!(s.Term(t => t.Visibility, Visibility.Hidden) ||
+                                    (s.Term(t => t.Visibility, Visibility.Inherit) &&
+                                    s.Term(t => t.User.PlantInfoVisibility, Visibility.Hidden)) ||
+                                    (s.Term(t => t.User.PlantInfoVisibility, Visibility.Inherit) &&
+                                    s.Term(t => t.User.ProfileVisibility, Visibility.Hidden))) &&
+                                    // Inherited
+                                    ((s.Term(t => t.Visibility, Visibility.Inherit) &&
+                                        (s.Term(t => t.User.PlantInfoVisibility, Visibility.Public) ||
+                                        (s.Term(t => t.User.PlantInfoVisibility, Visibility.Inherit) &&
+                                        s.Term(t => t.User.ProfileVisibility, Visibility.Public)) ||
+                                        (s.Term(t => t.User.PlantInfoVisibility, Visibility.Contacts) &&
+                                        s.Term(t => t.User.ContactIds, user.Id)))) ||
+                                    // Contacts
+                                    (s.Term(t => t.Visibility, Visibility.Contacts) &&
+                                    s.Term(t => t.User.ContactIds, user.Id))))));
+
+        private Dictionary<string, Expression<Func<PlantInfo, object>>> GetPlantInfoSorts() => new Dictionary<string, Expression<Func<PlantInfo, object>>>
+        {
+            { "ScientificName", p => p.Lifeform.ScientificName.Suffix("keyword") },
+            { "CommonName", p => p.Lifeform.CommonName.Suffix("keyword") },
+            { "Origin", p => p.Origin.Name.Suffix("keyword") },
+            { "Zone", p => p.MinimumZone.Id },
+            { "Light", p => p.MinimumLight },
+            { "Water", p => p.MinimumWater },
+            { "BloomTime", p => p.MinimumBloomTime },
+            { "Height", p => p.MinimumHeight },
+            { "Spread", p => p.MinimumSpread },
+            { "DateCreated", p => p.DateCreated }
+        };
 
         private IClrTypeMapping<PlantInfo> GetClrMapping(ClrTypeMappingDescriptor<PlantInfo> mapping) =>
             mapping.IndexName(IndexName)
