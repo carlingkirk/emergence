@@ -7,7 +7,7 @@ using Emergence.Data.Shared.Stores;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Region")]
-    public class RegionFilter : SelectFilter<string>
+    public class RegionFilter : SelectFilter<string>, IFilterDisplay<string>
     {
         public RegionFilter(Filter<string> filter)
         {
@@ -19,7 +19,7 @@ namespace Emergence.Data.Shared.Search
 
         public RegionFilter()
         {
-            Name = "Location";
+            Name = "Region";
             InputType = InputType.Select;
             FilterType = FilterType.String;
             Values = new List<string>
@@ -43,5 +43,17 @@ namespace Emergence.Data.Shared.Search
         }
 
         public Expression<Func<PlantInfo, bool>> Filter => p => p.PlantLocations != null && p.PlantLocations.Any(pl => pl.Location.Region == Value);
+
+        public string DisplayValue(string value, long? count = null)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            else
+            {
+                return $"{value} ({count})";
+            }
+        }
     }
 }

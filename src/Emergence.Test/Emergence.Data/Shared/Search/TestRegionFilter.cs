@@ -26,7 +26,7 @@ namespace Emergence.Test.Emergence.Data.Shared.Search
             var jsonFilters = FilterSerializer.Serialize(filters);
             filters = FilterSerializer.Deserialize<List<Filter>>(jsonFilters);
 
-            var regionFilter = new RegionFilter((Filter<string>)filters.First(f => f.Name == "Location"));
+            var regionFilter = new RegionFilter((Filter<string>)filters.First(f => f.Name == "Region"));
 
             regionFilter.Should().NotBeNull();
             regionFilter.FilterType.Should().Be(FilterType.String);

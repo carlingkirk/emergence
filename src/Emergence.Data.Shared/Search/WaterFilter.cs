@@ -101,7 +101,7 @@ namespace Emergence.Data.Shared.Search
             return waterValues;
         }
 
-        public string DisplayValue(string value)
+        public string DisplayValue(string value, long? count = null)
         {
             if (string.IsNullOrEmpty(value))
             {

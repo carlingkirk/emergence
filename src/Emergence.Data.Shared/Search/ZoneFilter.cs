@@ -28,6 +28,6 @@ namespace Emergence.Data.Shared.Search
             p.MinimumZone != null && p.MinimumZone.Id <= Value &&
             p.MaximumZone != null && p.MaximumZone.Id >= Value;
 
-        public string DisplayValue(int value) => ZoneHelper.GetZones().First(z => z.Id == value).Name;
+        public string DisplayValue(int value, long? count = null) => ZoneHelper.GetZones().First(z => z.Id == value).Name;
     }
 }

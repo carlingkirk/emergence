@@ -6,6 +6,7 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
 using Emergence.Service.Search;
@@ -82,10 +83,18 @@ namespace Emergence.Service
                 plantInfos.Add(plantInfo.AsModel());
             }
 
+            var filters = FilterList.GetPlantInfoFilters();
+            foreach (var aggregation in plantInfoSearch.Aggregations)
+            {
+                var filter = filters.Where(f => f.Name == aggregation.Name).First() as SelectFilter<string>;
+                filter.FacetValues = aggregation.Values;
+            }
+
             return new FindResult<Data.Shared.Models.PlantInfo>
             {
                 Count = plantInfoSearch.Count,
-                Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList()
+                Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList(),
+                Filters = filters
             };
         }
 

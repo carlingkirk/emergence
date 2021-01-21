@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Emergence.Data.Shared.Search;
 
 namespace Emergence.Data.Shared
 {
@@ -6,5 +7,6 @@ namespace Emergence.Data.Shared
     {
         public long Count { get; set; }
         public IEnumerable<T> Results { get; set; }
+        public IEnumerable<Filter> Filters { get; set; }
     }
 }

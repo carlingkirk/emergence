@@ -23,9 +23,8 @@ namespace Emergence.Data.Shared.Search
 
     public class SelectFilter<TValue> : Filter<TValue>
     {
-        [JsonIgnore]
-        public IEnumerable<TValue> Values { get; set; }
-        public override bool IsFiltered() => Values != null && Values switch
+        public IDictionary<TValue, long?> FacetValues { get; set; }
+        public override bool IsFiltered() => FacetValues != null && FacetValues switch
         {
             string stringValue => !string.IsNullOrEmpty(stringValue),
             int intValue => intValue != 0,

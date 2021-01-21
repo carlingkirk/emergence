@@ -39,7 +39,8 @@ namespace Emergence.Client.Components
             return new FindResult<PlantInfo>
             {
                 Results = result.Results,
-                Count = result.Count
+                Count = result.Count,
+                Filters = result.Filters
             };
         }
     }

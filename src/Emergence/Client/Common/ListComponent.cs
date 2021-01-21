@@ -68,6 +68,7 @@ namespace Emergence.Client.Common
 
             List = result.Results;
             Count = result.Count;
+            Filters = result.Filters;
         }
 
         public async Task SearchAsync()
