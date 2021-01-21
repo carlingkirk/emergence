@@ -19,9 +19,9 @@ namespace Emergence.Service
     {
         private readonly IRepository<PlantInfo> _plantInfoRepository;
         private readonly IRepository<PlantLocation> _plantLocationRepository;
-        private readonly IIndex<SearchModels.PlantInfo> _plantInfoIndex;
+        private readonly IIndex<SearchModels.PlantInfo, Data.Shared.Models.PlantInfo> _plantInfoIndex;
 
-        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository, IRepository<PlantLocation> plantLocationRepository, IIndex<SearchModels.PlantInfo> plantInfoIndex)
+        public PlantInfoService(IRepository<PlantInfo> plantInfoRepository, IRepository<PlantLocation> plantLocationRepository, IIndex<SearchModels.PlantInfo, Data.Shared.Models.PlantInfo> plantInfoIndex)
         {
             _plantInfoRepository = plantInfoRepository;
             _plantLocationRepository = plantLocationRepository;
@@ -61,7 +61,7 @@ namespace Emergence.Service
             return plantInfo?.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.PlantInfo>> FindPlantInfos(FindParams findParams, Data.Shared.Models.User user)
+        public async Task<PlantInfoFindResult> FindPlantInfos(PlantInfoFindParams findParams, Data.Shared.Models.User user)
         {
             var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams, user);
             var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id).ToArray();
@@ -83,14 +83,26 @@ namespace Emergence.Service
                 plantInfos.Add(plantInfo.AsModel());
             }
 
-            var filters = FilterList.GetPlantInfoFilters();
-            foreach (var aggregation in plantInfoSearch.Aggregations)
+            if (findParams.Filters == null)
             {
-                var filter = filters.Where(f => f.Name == aggregation.Name).First() as SelectFilter<string>;
-                filter.FacetValues = aggregation.Values;
+                findParams.Filters = new PlantInfoFilters();
             }
 
-            return new FindResult<Data.Shared.Models.PlantInfo>
+            var filters = findParams.Filters as PlantInfoFilters;
+
+            foreach (var aggregation in plantInfoSearch.Aggregations)
+            {
+                if (aggregation.Name == "Region")
+                {
+                    var filter = filters.RegionFilter;
+                    if (aggregation.Values.Count > 0)
+                    {
+                        filter.FacetValues = aggregation.Values;
+                    }
+                }
+            }
+
+            return new PlantInfoFindResult
             {
                 Count = plantInfoSearch.Count,
                 Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList(),

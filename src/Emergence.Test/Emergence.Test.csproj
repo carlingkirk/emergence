@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Emergence.API\" />
+    <Folder Include="Emergence.Data\Shared\Search\" />
   </ItemGroup>
 
 </Project>

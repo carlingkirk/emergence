@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using BlazorInputFile;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Models;
-using Emergence.Data.Shared.Search;
 
 namespace Emergence.Client.Common
 {
@@ -56,16 +56,16 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Origin>>(result);
         }
 
-        public async Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams)
+        public async Task<PlantInfoFindResult> FindPlantInfosAsync(PlantInfoFindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams, options: FilterSerializer.Options);
+            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/find", findParams);
 
-            return await ReadResult<FindResult<PlantInfo>>(result);
+            return await ReadResult<PlantInfoFindResult>(result);
         }
 
         public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
         {
-            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams, options: FilterSerializer.Options);
+            var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
 
             return await ReadResult<FindResult<Specimen>>(result);
         }
@@ -334,11 +334,12 @@ namespace Emergence.Client.Common
             return await ReadResult<UserMessage>(result);
         }
 
-        private async Task<T> ReadResult<T>(HttpResponseMessage result)
+        private async Task<T> ReadResult<T>(HttpResponseMessage result, JsonSerializerOptions options = null)
         {
             if (result.IsSuccessStatusCode)
             {
-                return await result.Content.ReadFromJsonAsync<T>();
+                var response = await result.Content.ReadFromJsonAsync<T>(options);
+                return response;
             }
             else
             {

@@ -13,8 +13,8 @@ namespace Emergence.Transform
     public class ElasticProcessor
     {
         private readonly IRepository<PlantInfo> _plantInfoRepository;
-        private readonly IIndex<SearchModels.PlantInfo> _plantInfoIndex;
-        public ElasticProcessor(IRepository<PlantInfo> plantInfoRepository, IIndex<SearchModels.PlantInfo> plantInfoIndex)
+        private readonly IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> _plantInfoIndex;
+        public ElasticProcessor(IRepository<PlantInfo> plantInfoRepository, IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> plantInfoIndex)
         {
             _plantInfoRepository = plantInfoRepository;
             _plantInfoIndex = plantInfoIndex;
@@ -50,7 +50,7 @@ namespace Emergence.Transform
                     var contacts = plantInfo.SelectMany(p => p.User.Contacts).ToList();
                     plantInfoKey.User.Contacts = contacts;
                 }
-                
+
                 plantInfos.Add(plantInfoKey.AsSearchModel(plantLocations, synonyms));
             }
 

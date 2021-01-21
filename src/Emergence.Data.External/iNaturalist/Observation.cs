@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Emergence.Data.External.iNaturalist
 {
+#pragma warning disable IDE1006 // Naming Styles
     public class Observation
     {
         public bool? out_of_range { get; set; }
@@ -162,4 +163,5 @@ namespace Emergence.Data.External.iNaturalist
         public string uuid { get; set; }
         public Photo photo { get; set; }
     }
+#pragma warning restore IDE1006 // Naming Styles
 }

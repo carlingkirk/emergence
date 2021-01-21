@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
@@ -22,11 +23,12 @@ namespace Emergence.Data.Shared.Search
             Name = "Stage";
             InputType = InputType.Select;
             FilterType = FilterType.String;
-            var stageValues = new List<string> { "" };
-            stageValues.AddRange(Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>().Select(s => s.ToString()));
-            Values = stageValues;
+            var values = new List<string> { "" };
+            values.AddRange(Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>().Select(s => s.ToString()));
+            FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
 
+        [JsonIgnore]
         public Expression<Func<Specimen, bool>> Filter => s => s.SpecimenStage != null && s.SpecimenStage == Value;
     }
 }

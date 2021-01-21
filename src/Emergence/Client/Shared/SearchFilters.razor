@@ -14,19 +14,19 @@
                     <div class="col-lg-11 col-xs" style="padding: 0;">
                         @if (filter.FilterType == FilterType.String)
                         {
-                            var selectFilter = filter as SelectFilter<string>;
+                            var selectFilter = (SelectFilter<string>)filter;
                             <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
-                                @if (filter is IFilterDisplay<string>)
+                                @if (selectFilter is IFilterDisplay<string>)
                                 {
                                     var enumStringFilter = (IFilterDisplay<string>)selectFilter;
-                                    @foreach (var value in selectFilter.Values)
+                                    @foreach (var value in selectFilter.FacetValues)
                                     {
-                                        <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
+                                        <option value="@value">@(enumStringFilter.DisplayValue(value.Key, value.Value))</option>
                                     }
                                 }
                                 else
                                 {
-                                    @foreach (var value in selectFilter.Values)
+                                    @foreach (var value in selectFilter.FacetValues)
                                     {
                                         <option value="@value">@value</option>
                                     }
@@ -37,17 +37,17 @@
                         {
                             var selectFilter = filter as SelectFilter<int>;
                             <select @bind="@selectFilter.Value" class="form-control" id="@selectFilter.Name.ToLower()">
-                                @if (filter is IFilterDisplay<int>)
+                                @if (selectFilter is IFilterDisplay<int>)
                                 {
                                     var displayIntFilter = (IFilterDisplay<int>)selectFilter;
-                                    @foreach (var value in selectFilter.Values)
+                                    @foreach (var value in selectFilter.FacetValues)
                                     {
-                                        <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
+                                        <option value="@value">@(displayIntFilter.DisplayValue(value.Key, value.Value))</option>
                                     }
                                 }
                                 else
                                 {
-                                    @foreach (var value in selectFilter.Values)
+                                    @foreach (var value in selectFilter.FacetValues)
                                     {
                                         <option value="@value">@value</option>
                                     }
@@ -71,14 +71,14 @@
                                 @if (stringRangeFilter is IFilterDisplay<string>)
                                 {
                                     var enumStringFilter = (IFilterDisplay<string>)stringRangeFilter;
-                                    @foreach (var value in stringRangeFilter.Values)
+                                    @foreach (var value in stringRangeFilter.FacetValues)
                                     {
-                                        <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
+                                        <option value="@value">@(enumStringFilter.DisplayValue(value.Key, value.Value))</option>
                                     }
                                 }
                                 else
                                 {
-                                    @foreach (var value in stringRangeFilter.Values)
+                                    @foreach (var value in stringRangeFilter.FacetValues)
                                     {
                                         <option value="@value">@value</option>
                                     }
@@ -93,14 +93,14 @@
                                 @if (stringRangeFilter is IFilterDisplay<string>)
                                 {
                                     var enumStringFilter = (IFilterDisplay<string>)stringRangeFilter;
-                                    @foreach (var value in stringRangeFilter.Values)
+                                    @foreach (var value in stringRangeFilter.FacetValues)
                                     {
-                                        <option value="@value">@(enumStringFilter.DisplayValue(value))</option>
+                                        <option value="@value">@(enumStringFilter.DisplayValue(value.Key, value.Value))</option>
                                     }
                                 }
                                 else
                                 {
-                                    @foreach (var value in stringRangeFilter.Values)
+                                    @foreach (var value in stringRangeFilter.FacetValues)
                                     {
                                         <option value="@value">@value</option>
                                     }
@@ -121,14 +121,14 @@
                                 @if (numRangeFilter is IFilterDisplay<int>)
                                 {
                                     var displayIntFilter = (IFilterDisplay<int>)numRangeFilter;
-                                    @foreach (var value in numRangeFilter.Values)
+                                    @foreach (var value in numRangeFilter.FacetValues)
                                     {
-                                        <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
+                                        <option value="@value">@(displayIntFilter.DisplayValue(value.Key, value.Value))</option>
                                     }
                                 }
                                 else
                                 {
-                                    @foreach (var value in numRangeFilter.Values)
+                                    @foreach (var value in numRangeFilter.FacetValues)
                                     {
                                         <option value="@value">@value</option>
                                     }
@@ -143,14 +143,14 @@
                             @if (numRangeFilter is IFilterDisplay<int>)
                             {
                                 var displayIntFilter = (IFilterDisplay<int>)numRangeFilter;
-                                @foreach (var value in numRangeFilter.Values)
+                                @foreach (var value in numRangeFilter.FacetValues)
                                 {
-                                    <option value="@value">@(displayIntFilter.DisplayValue(value))</option>
+                                    <option value="@value">@(displayIntFilter.DisplayValue(value.Key, value.Value))</option>
                                 }
                             }
                             else
                             {
-                                @foreach (var value in numRangeFilter.Values)
+                                @foreach (var value in numRangeFilter.FacetValues)
                                 {
                                     <option value="@value">@value</option>
                                 }
@@ -168,7 +168,7 @@
                     <div class="row">
                         <div class="col-5 range-input">
                             <select @bind="@numRangeFilter.MinimumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                                @foreach (var value in numRangeFilter.Values)
+                                @foreach (var value in numRangeFilter.FacetValues)
                                 {
                                     <option value="@value">@value</option>
                                 }
@@ -179,7 +179,7 @@
                         </div>
                         <div class="col-5 range-input">
                             <select @bind="@numRangeFilter.MaximumValue" class="form-control" id="@numRangeFilter.Name.ToLower()">
-                                @foreach (var value in numRangeFilter.Values)
+                                @foreach (var value in numRangeFilter.FacetValues)
                                 {
                                     <option value="@value">@value</option>
                                 }

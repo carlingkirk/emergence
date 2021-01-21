@@ -76,7 +76,7 @@ namespace Emergence.API.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<PlantInfo>> FindPlantInfos(FindParams findParams)
+        public async Task<PlantInfoFindResult> FindPlantInfos(PlantInfoFindParams findParams)
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _plantInfoService.FindPlantInfos(findParams, user);

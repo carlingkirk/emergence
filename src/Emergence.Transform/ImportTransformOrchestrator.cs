@@ -16,11 +16,11 @@ namespace Emergence.Transform
         private readonly ISynonymService _synonymService;
         private readonly IRepository<PlantInfo> _plantInfoRepository;
         private readonly ISearchClient<SearchModels.PlantInfo> _searchClient;
-        private readonly IIndex<SearchModels.PlantInfo> _plantInfoIndex;
+        private readonly IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> _plantInfoIndex;
 
         public ImportTransformOrchestrator(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService,
             ILocationService locationService, ITaxonService taxonService, ISynonymService synonymService, IRepository<PlantInfo> plantInfoRepository,
-            ISearchClient<SearchModels.PlantInfo> searchClient, IIndex<SearchModels.PlantInfo> plantInfoIndex)
+            ISearchClient<SearchModels.PlantInfo> searchClient, IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> plantInfoIndex)
         {
             _lifeformService = lifeformService;
             _originService = originService;

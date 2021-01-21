@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
-using Emergence.Data.Shared.Search;
 
 namespace Emergence.Client.Components
 {
@@ -22,16 +21,8 @@ namespace Emergence.Client.Components
                 { "", "" }
             };
 
-        protected override async Task OnInitializedAsync()
-        {
-            Filters = FilterList.GetSpecimenFilters();
-
-            await base.OnInitializedAsync();
-        }
-
         public override async Task<FindResult<Specimen>> GetListAsync(FindParams findParams)
         {
-            findParams.Filters = Filters;
             var result = await ApiClient.FindSpecimensAsync(findParams);
             return new FindResult<Specimen>
             {

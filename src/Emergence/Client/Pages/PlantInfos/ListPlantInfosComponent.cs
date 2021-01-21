@@ -9,6 +9,8 @@ namespace Emergence.Client.Components
 {
     public class ListPlantInfosComponent : ListComponent<PlantInfo>
     {
+        public PlantInfoFilters PlantInfoFilters { get; set; }
+
         protected static Dictionary<string, string> Headers =>
             new Dictionary<string, string>
             {
@@ -23,24 +25,26 @@ namespace Emergence.Client.Components
                 { "Spread", "Spread" }
             };
 
-        protected override async Task OnInitializedAsync()
-        {
-            Filters = FilterList.GetPlantInfoFilters();
-
-            await base.OnInitializedAsync();
-        }
-
         public override async Task<FindResult<PlantInfo>> GetListAsync(FindParams findParams)
         {
-            findParams.Filters = Filters;
+            var findPlantInfoParams = new PlantInfoFindParams
+            {
+                SearchText = findParams.SearchText,
+                Skip = findParams.Skip,
+                Take = findParams.Take,
+                SortBy = findParams.SortBy,
+                SortDirection = findParams.SortDirection,
+                Filters = PlantInfoFilters
+            };
 
-            var result = await ApiClient.FindPlantInfosAsync(findParams);
+            var result = await ApiClient.FindPlantInfosAsync(findPlantInfoParams);
 
-            return new FindResult<PlantInfo>
+            PlantInfoFilters = result.Filters;
+
+            return new PlantInfoFindResult
             {
                 Results = result.Results,
-                Count = result.Count,
-                Filters = result.Filters
+                Count = result.Count
             };
         }
     }

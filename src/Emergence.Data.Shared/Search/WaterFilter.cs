@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 
@@ -28,9 +29,10 @@ namespace Emergence.Data.Shared.Search
             FilterType = FilterType.String;
             var values = new List<string> { "" };
             values.AddRange(Enum.GetValues(typeof(WaterType)).Cast<WaterType>().Where(l => l != WaterType.Unknown).Select(s => s.ToString()));
-            Values = values;
+            FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
 
+        [JsonIgnore]
         public Expression<Func<PlantInfo, bool>> Filter => p =>
             (p.MinimumWater != null && WaterValues.Contains(p.MinimumWater)) ||
             (p.MaximumWater != null && WaterValues.Contains(p.MaximumWater));

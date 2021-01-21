@@ -17,7 +17,7 @@ namespace Emergence.Client.Common
         Task<FindResult<UserMessage>> FindSentMessagesAsync(FindParams findParams);
         Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams);
         Task<FindResult<Origin>> FindOriginsAsync(FindParams findParams);
-        Task<FindResult<PlantInfo>> FindPlantInfosAsync(FindParams findParams);
+        Task<PlantInfoFindResult> FindPlantInfosAsync(PlantInfoFindParams findParams);
         Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams);
         Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank);
         Task<FindResult<UserContact>> FindContactsAsync(FindParams findParams);

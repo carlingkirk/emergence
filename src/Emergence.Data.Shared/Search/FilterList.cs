@@ -1,23 +1,35 @@
-using System.Collections.Generic;
+using Emergence.Data.Shared.Models;
 
 namespace Emergence.Data.Shared.Search
 {
-    public static class FilterList
+    public interface IFilterList<T>
     {
-        public static List<Filter> GetPlantInfoFilters() => new List<Filter>
-        {
-            new ZoneFilter(),
-            new RegionFilter(),
-            new HeightFilter(),
-            new SpreadFilter(),
-            new LightFilter(),
-            new WaterFilter(),
-            new BloomFilter()
-        };
+    }
 
-        public static List<Filter> GetSpecimenFilters() => new List<Filter>
+    public class PlantInfoFilters : IFilterList<PlantInfo>
+    {
+        public PlantInfoFilters()
         {
-            new StageFilter()
-        };
+            ZoneFilter = new ZoneFilter();
+            RegionFilter = new RegionFilter();
+            HeightFilter = new HeightFilter();
+            SpreadFilter = new SpreadFilter();
+            LightFilter = new LightFilter();
+            WaterFilter = new WaterFilter();
+            BloomFilter = new BloomFilter();
+        }
+
+        public ZoneFilter ZoneFilter { get; set; }
+        public RegionFilter RegionFilter { get; set; }
+        public HeightFilter HeightFilter { get; set; }
+        public SpreadFilter SpreadFilter { get; set; }
+        public LightFilter LightFilter { get; set; }
+        public WaterFilter WaterFilter { get; set; }
+        public BloomFilter BloomFilter { get; set; }
+    }
+
+    public class SpecimenFilters : IFilterList<Specimen>
+    {
+        public StageFilter StageFilter { get; set; }
     }
 }

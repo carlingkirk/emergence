@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
@@ -22,7 +23,7 @@ namespace Emergence.Data.Shared.Search
             Name = "Region";
             InputType = InputType.Select;
             FilterType = FilterType.String;
-            Values = new List<string>
+            FacetValues = new List<string>
             {
                 "",
                 "Africa",
@@ -39,9 +40,10 @@ namespace Emergence.Data.Shared.Search
                 "South America",
                 "Southern Asia",
                 "Western Atlantic Ocean"
-            };
+            }.ToDictionary(m => m, c => (long?)0L);
         }
 
+        [JsonIgnore]
         public Expression<Func<PlantInfo, bool>> Filter => p => p.PlantLocations != null && p.PlantLocations.Any(pl => pl.Location.Region == Value);
 
         public string DisplayValue(string value, long? count = null)

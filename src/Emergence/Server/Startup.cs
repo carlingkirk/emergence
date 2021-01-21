@@ -7,7 +7,6 @@ using Emergence.Data;
 using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 using Emergence.Data.Shared.Email;
-using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
@@ -136,7 +135,7 @@ namespace Emergence.Server
 
             // Add search
             services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
-            services.AddTransient<IIndex<SearchModels.PlantInfo>, PlantInfoIndex>();
+            services.AddTransient<IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo>, PlantInfoIndex>();
 
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -149,7 +148,6 @@ namespace Emergence.Server
             });
 
             services.AddControllersWithViews();
-            ConverterInfo.BuildConverterInfo(Assembly.Load("Emergence.Data.Shared"));
             services.AddControllers()
                 .AddApplicationPart(Assembly.Load("Emergence.API"))
                 .ConfigureApiBehaviorOptions(opt =>
@@ -159,7 +157,6 @@ namespace Emergence.Server
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.IgnoreNullValues = true;
-                    opt.JsonSerializerOptions.Converters.Add(new FilterTypeJsonConverter<Filter>());
                 });
             services.AddRazorPages();
         }

@@ -11,6 +11,7 @@ using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
 using Xunit;
+using Models = Emergence.Data.Shared.Models;
 using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Test.API.Services
@@ -19,7 +20,7 @@ namespace Emergence.Test.API.Services
     {
         private readonly Mock<IRepository<PlantInfo>> _mockPlantInfoRepository;
         private readonly Mock<IRepository<PlantLocation>> _mockPlantLocationRepository;
-        private readonly Mock<IIndex<SearchModels.PlantInfo>> _mockPlantInfoIndex;
+        private readonly Mock<IIndex<SearchModels.PlantInfo, Models.PlantInfo>> _mockPlantInfoIndex;
 
         public PlantInfoServiceTests()
         {
@@ -53,7 +54,7 @@ namespace Emergence.Test.API.Services
         {
             var plantInfoService = new PlantInfoService(_mockPlantInfoRepository.Object, _mockPlantLocationRepository.Object, _mockPlantInfoIndex.Object);
 
-            var plantInfoResult = await plantInfoService.FindPlantInfos(new FindParams
+            var plantInfoResult = await plantInfoService.FindPlantInfos(new PlantInfoFindParams
             {
                 SearchText = "Liatris spicata",
                 Skip = 0,
