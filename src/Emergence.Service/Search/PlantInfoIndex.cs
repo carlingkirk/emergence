@@ -147,14 +147,16 @@ namespace Emergence.Service.Search
                 {
                     var minLightValue = (double)Enum.Parse<LightType>(lightFilter.MinimumValue);
                     musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumLight).GreaterThanOrEquals(minLightValue)) ||
-                                                           !s.Exists(e => e.Field(f => f.MinimumLight)))));
+                                                           (!s.Exists(e => e.Field(f => f.MinimumLight)) &&
+                                                             s.Exists(e => e.Field(f => f.MaximumLight))))));
                 }
 
                 if (!string.IsNullOrEmpty(lightFilter.MaximumValue))
                 {
                     var maxLightValue = (double)Enum.Parse<LightType>(lightFilter.MaximumValue);
                     musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumLight).LessThanOrEquals(maxLightValue)) ||
-                                                           !s.Exists(e => e.Field(f => f.MaximumLight)))));
+                                                           (!s.Exists(e => e.Field(f => f.MaximumLight)) &&
+                                                             s.Exists(e => e.Field(f => f.MinimumLight))))));
                 }
 
                 var waterFilter = filters.WaterFilter;
@@ -162,14 +164,16 @@ namespace Emergence.Service.Search
                 {
                     var minWaterValue = (double)Enum.Parse<WaterType>(waterFilter.MinimumValue);
                     musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumWater).GreaterThanOrEquals(minWaterValue)) ||
-                                                           !s.Exists(e => e.Field(f => f.MinimumWater)))));
+                                                           (!s.Exists(e => e.Field(f => f.MinimumWater)) &&
+                                                             s.Exists(e => e.Field(f => f.MaximumWater))))));
                 }
 
                 if (!string.IsNullOrEmpty(waterFilter.MaximumValue))
                 {
                     var maxWaterValue = (double)Enum.Parse<WaterType>(waterFilter.MaximumValue);
                     musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumWater).LessThanOrEquals(maxWaterValue)) ||
-                                                           !s.Exists(e => e.Field(f => f.MaximumWater)))));
+                                                           (!s.Exists(e => e.Field(f => f.MaximumWater)) &&
+                                                             s.Exists(e => e.Field(f => f.MinimumWater))))));
                 }
 
                 var bloomFilter = filters.BloomFilter;
@@ -203,13 +207,15 @@ namespace Emergence.Service.Search
                     if (bloomFilter.MinimumValue > 0)
                     {
                         musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumBloomTime).GreaterThanOrEquals(bloomFilter.MinimumValue)) ||
-                                                                !s.Exists(e => e.Field(f => f.MinimumBloomTime)))));
+                                                                (!s.Exists(e => e.Field(f => f.MinimumBloomTime)) &&
+                                                                  s.Exists(e => e.Field(f => f.MaximumBloomTime))))));
                     }
 
                     if (bloomFilter.MaximumValue > 0)
                     {
                         musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue)) ||
-                                                            !s.Exists(e => e.Field(f => f.MaximumBloomTime)))));
+                                                                (!s.Exists(e => e.Field(f => f.MaximumBloomTime)) &&
+                                                                  s.Exists(e => e.Field(f => f.MinimumBloomTime))))));
                     }
                 }
 
