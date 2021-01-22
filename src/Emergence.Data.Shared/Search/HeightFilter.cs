@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.Json.Serialization;
-using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -27,8 +23,5 @@ namespace Emergence.Data.Shared.Search
             var values = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
-        [JsonIgnore]
-        public Expression<Func<PlantInfo, bool>> Filter => p => (MinimumValue == 0 || (p.MinimumHeight != null && p.MinimumHeight >= MinimumValue)) &&
-                                                                (MaximumValue == 0 || (p.MaximumHeight != null && p.MaximumHeight <= MaximumValue));
     }
 }

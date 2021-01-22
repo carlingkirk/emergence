@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.Json.Serialization;
-using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -43,9 +39,6 @@ namespace Emergence.Data.Shared.Search
             }.ToDictionary(m => m, c => (long?)0L);
         }
 
-        [JsonIgnore]
-        public Expression<Func<PlantInfo, bool>> Filter => p => p.PlantLocations != null && p.PlantLocations.Any(pl => pl.Location.Region == Value);
-
         public string DisplayValue(string value, long? count = null)
         {
             if (string.IsNullOrEmpty(value))
@@ -54,7 +47,7 @@ namespace Emergence.Data.Shared.Search
             }
             else
             {
-                return $"{value} ({count})";
+                return count != null ? $"{value} ({count})" : $"{value}";
             }
         }
     }

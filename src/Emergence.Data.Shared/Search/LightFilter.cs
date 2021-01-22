@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.Json.Serialization;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -31,11 +28,6 @@ namespace Emergence.Data.Shared.Search
             values.AddRange(Enum.GetValues(typeof(LightType)).Cast<LightType>().Where(l => l != LightType.Unknown).Select(s => s.ToString()));
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
-
-        [JsonIgnore]
-        public Expression<Func<PlantInfo, bool>> Filter => p =>
-            (p.MinimumLight != null && LightValues.Contains(p.MinimumLight)) ||
-            (p.MaximumLight != null && LightValues.Contains(p.MaximumLight));
 
         private IEnumerable<string> GetLightValues()
         {

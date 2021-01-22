@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.Json.Serialization;
 using Emergence.Data.Shared.Extensions;
-using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -30,11 +26,6 @@ namespace Emergence.Data.Shared.Search
             var values = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
-
-        [JsonIgnore]
-        public Expression<Func<PlantInfo, bool>> Filter => p =>
-            (p.MinimumBloomTime.HasValue && MinimumValue > 0 && BloomValues.Contains(p.MinimumBloomTime.Value)) ||
-            (p.MaximumBloomTime.HasValue && MaximumValue > 0 && BloomValues.Contains(p.MaximumBloomTime.Value));
 
         private IEnumerable<int> GetBloomValues()
         {

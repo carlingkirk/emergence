@@ -34,7 +34,8 @@ namespace Emergence.Client.Components
                 Take = findParams.Take,
                 SortBy = findParams.SortBy,
                 SortDirection = findParams.SortDirection,
-                Filters = PlantInfoFilters
+                Filters = PlantInfoFilters,
+                CreatedBy = findParams.CreatedBy
             };
 
             var result = await ApiClient.FindPlantInfosAsync(findPlantInfoParams);
