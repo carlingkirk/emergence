@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service;
+using Emergence.Service.Search;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
@@ -13,18 +14,18 @@ namespace Emergence.Test.API.Services
     public class LifeformServiceTests
     {
         private readonly Mock<IRepository<Lifeform>> _mockLifeformRepository;
-        private readonly Mock<IRepository<PlantSynonym>> _mockPlantSynonymRepository;
+        private readonly Mock<PlantInfoIndex> _mockLifeformIndex;
 
         public LifeformServiceTests()
         {
             _mockLifeformRepository = RepositoryMocks.GetStandardMockLifeformRepository();
-            _mockPlantSynonymRepository = new Mock<IRepository<PlantSynonym>>();
+            _mockLifeformIndex = SearchMocks.GetStandardMockLifeformIndex();
         }
 
         [Fact]
         public async Task TestGetLifeformAsync()
         {
-            var lifeformsService = new LifeformService(_mockLifeformRepository.Object, _mockPlantSynonymRepository.Object);
+            var lifeformsService = new LifeformService(_mockLifeformRepository.Object, _mockLifeformIndex.Object);
             var lifeforms = await lifeformsService.GetLifeformAsync(1);
 
             lifeforms.Should().NotBeNull("it exists");
@@ -33,7 +34,7 @@ namespace Emergence.Test.API.Services
         [Fact]
         public async Task TestGetLifeformsAsync()
         {
-            var lifeformService = new LifeformService(_mockLifeformRepository.Object, _mockPlantSynonymRepository.Object);
+            var lifeformService = new LifeformService(_mockLifeformRepository.Object, _mockLifeformIndex.Object);
             var lifeforms = await lifeformService.GetLifeformsAsync();
 
             lifeforms.Should().NotBeNull("it exists");

@@ -27,5 +27,21 @@ namespace Emergence.Test.Mocks
 
             return mockPlantInfoIndex;
         }
+
+        public static Mock<PlantInfoIndex> GetStandardMockLifeformIndex(IEnumerable<Stores.Lifeform> lifeforms = null)
+        {
+            if (lifeforms == null)
+            {
+                lifeforms = Data.Fakes.Stores.FakeLifeforms.Get();
+            }
+            var mockLifeformIndex = new Mock<PlantInfoIndex>();
+            mockLifeformIndex.Setup(pi => pi.SearchLifeformsAsync(It.IsAny<FindParams<Models.Lifeform>>())).ReturnsAsync(new SearchResponse<Lifeform>
+            {
+                Count = lifeforms.Count(),
+                Documents = lifeforms.Select(l => l.AsSearchModel())
+            });
+
+            return mockLifeformIndex;
+        }
     }
 }

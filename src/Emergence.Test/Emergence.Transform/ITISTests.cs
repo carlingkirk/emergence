@@ -57,10 +57,11 @@ namespace Emergence.Test.Emergence.Transform
             var taxonRepository = RepositoryMocks.GetStandardMockTaxonRepository(new List<Stores.Taxon>());
             var plantSynonymRepository = new Mock<IRepository<Stores.PlantSynonym>>();
             var plantInfoIndex = SearchMocks.GetStandardMockPlantInfoIndex();
+            var lifeformIndex = SearchMocks.GetStandardMockLifeformIndex();
 
             var locationService = new LocationService(locationRepository.Object);
             var originService = new OriginService(originRepository.Object, locationService);
-            var lifeformService = new LifeformService(lifeformRepository.Object, plantSynonymRepository.Object);
+            var lifeformService = new LifeformService(lifeformRepository.Object, lifeformIndex.Object);
             var plantInfoService = new PlantInfoService(plantInfoRepository.Object, plantLocationRepository.Object, plantInfoIndex.Object);
             var synonymService = new SynonymService(synonymRepository.Object);
             var taxonService = new TaxonService(taxonRepository.Object, synonymService);

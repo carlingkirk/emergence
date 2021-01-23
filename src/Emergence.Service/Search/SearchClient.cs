@@ -25,7 +25,8 @@ namespace Emergence.Service.Search
             _connectionSettings.DisableDirectStreaming().PrettyJson();
         }
 
-        public async Task ConfigureClient(string indexName, Func<ClrTypeMappingDescriptor<T>, IClrTypeMapping<T>> selector, Func<TypeMappingDescriptor<T>, ITypeMapping> mappingSelector)
+        public async Task ConfigureClient(string indexName, string alias, Func<ClrTypeMappingDescriptor<T>, IClrTypeMapping<T>> selector, Func<TypeMappingDescriptor<T>, ITypeMapping> mappingSelector,
+            Func<IndexSettingsDescriptor, IPromise<IndexSettings>> settingSelector)
         {
             _connectionSettings.DefaultMappingFor<T>(selector);
 
@@ -36,7 +37,7 @@ namespace Emergence.Service.Search
                 throw new UnauthorizedAccessException();
             }
 
-            await CreateIndexAsync(indexName, mappingSelector);
+            await CreateIndexAsync(indexName, alias, mappingSelector, settingSelector);
         }
 
         public async Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> search)
@@ -51,8 +52,8 @@ namespace Emergence.Service.Search
             foreach (var aggregation in response.Aggregations)
             {
                 var singleBucket = aggregation.Value as SingleBucketAggregate;
-                
-                foreach(var bucket in singleBucket)
+
+                foreach (var bucket in singleBucket)
                 {
                     var bucketValues = bucket.Value as BucketAggregate;
                     var bucketResults = new Dictionary<string, long?>();
@@ -79,12 +80,14 @@ namespace Emergence.Service.Search
             };
         }
 
-        private async Task CreateIndexAsync(string indexName, Func<TypeMappingDescriptor<T>, ITypeMapping> mappingSelector)
+        private async Task CreateIndexAsync(string indexName, string alias, Func<TypeMappingDescriptor<T>, ITypeMapping> mappingSelector, Func<IndexSettingsDescriptor, IPromise<IndexSettings>> settingSelector)
         {
             var indexExists = await IndexExistsAsync(indexName);
             if (!indexExists)
             {
-                var createIndexResponse = await ElasticClient.Indices.CreateAsync(indexName, i => i.Map(mappingSelector));
+                var createIndexResponse = await ElasticClient.Indices.CreateAsync(indexName, i => i.Settings(settingSelector).Map(mappingSelector).Aliases(a => a.Alias(alias)));
+                var body = Encoding.UTF8.GetString(createIndexResponse.ApiCall.RequestBodyInBytes);
+                Console.WriteLine(body);
 
                 if (!createIndexResponse.ApiCall.Success)
                 {

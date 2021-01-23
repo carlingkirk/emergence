@@ -9,19 +9,21 @@ using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
+using Emergence.Service.Search;
 using Microsoft.EntityFrameworkCore;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Service
 {
     public class LifeformService : ILifeformService
     {
         private readonly IRepository<Lifeform> _lifeformRepository;
-        private readonly IRepository<PlantSynonym> _plantSynonymRepository;
+        private readonly IIndex<SearchModels.PlantInfo, Data.Shared.Models.PlantInfo> _plantInfoIndex;
 
-        public LifeformService(IRepository<Lifeform> lifeformRepository, IRepository<PlantSynonym> plantSynonymRepository)
+        public LifeformService(IRepository<Lifeform> lifeformRepository, IIndex<SearchModels.PlantInfo, Data.Shared.Models.PlantInfo> plantInfoIndex)
         {
             _lifeformRepository = lifeformRepository;
-            _plantSynonymRepository = plantSynonymRepository;
+            _plantInfoIndex = plantInfoIndex;
         }
 
         public async Task<Data.Shared.Models.Lifeform> AddOrUpdateLifeformAsync(Data.Shared.Models.Lifeform lifeform)
@@ -55,14 +57,18 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
         {
-            var lifeformQuery = _lifeformRepository.WhereWithIncludes(l => findParams.SearchTextQuery == null ||
-                                                          EF.Functions.Like(l.CommonName, findParams.SearchTextQuery) ||
-                                                          EF.Functions.Like(l.ScientificName, findParams.SearchTextQuery));
+            var lifeformIndex = _plantInfoIndex as PlantInfoIndex;
+            var lifeformSearch = await lifeformIndex.SearchLifeformsAsync(new FindParams<Data.Shared.Models.Lifeform>
+            {
+                CreatedBy = findParams.CreatedBy,
+                SearchText = findParams.SearchText,
+                Skip = findParams.Skip,
+                Take = findParams.Take
+            });
 
-            lifeformQuery = OrderBy(lifeformQuery, findParams.SortBy, findParams.SortDirection);
-
-            var count = lifeformQuery.Count();
-            var lifeformResult = lifeformQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+            var lifeformIds = lifeformSearch.Documents.Select(p => p.Id).ToArray();
+            var lifeformQuery = _lifeformRepository.Where(l => lifeformIds.Contains(l.Id), false);
+            var lifeformResult = lifeformQuery.GetSomeAsync(track: false);
 
             var lifeforms = new List<Data.Shared.Models.Lifeform>();
             await foreach (var lifeform in lifeformResult)
@@ -73,7 +79,7 @@ namespace Emergence.Service
             return new FindResult<Data.Shared.Models.Lifeform>
             {
                 Results = lifeforms,
-                Count = count
+                Count = lifeformSearch.Count
             };
         }
 
