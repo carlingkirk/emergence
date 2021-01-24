@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Stores;
 
@@ -39,7 +40,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
                     User = FakeUsers.GetContact(),
-                    PlantLocations = FakePlantLocations.Get()
+                    PlantLocations = FakePlantLocations.Get(),
+                    Lifeform = FakeLifeforms.Get().First()
                 },
                 new PlantInfo
                 {
@@ -69,7 +71,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ModifiedBy = Helpers.UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.GetPublic()
+                    User = FakeUsers.GetPublic(),
+                    Lifeform = FakeLifeforms.Get().Skip(1).First()
                 },
                 new PlantInfo
                 {
@@ -99,7 +102,8 @@ namespace Emergence.Test.Data.Fakes.Stores
                     ModifiedBy = FakeUsers.GetPrivate().UserId,
                     DateCreated = Helpers.Today.AddDays(Helpers.GetRandom()),
                     DateModified = Helpers.Today.AddHours(1).AddMinutes(5),
-                    User = FakeUsers.GetPrivate()
+                    User = FakeUsers.GetPrivate(),
+                    Lifeform = FakeLifeforms.Get().First()
                 }
             };
             return plantInfos;

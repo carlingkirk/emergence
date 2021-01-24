@@ -18,12 +18,12 @@ namespace Emergence.Service
     public class LifeformService : ILifeformService
     {
         private readonly IRepository<Lifeform> _lifeformRepository;
-        private readonly IIndex<SearchModels.PlantInfo, Data.Shared.Models.PlantInfo> _plantInfoIndex;
+        private readonly IIndex<SearchModels.Lifeform, Data.Shared.Models.Lifeform> _lifeformIndex;
 
-        public LifeformService(IRepository<Lifeform> lifeformRepository, IIndex<SearchModels.PlantInfo, Data.Shared.Models.PlantInfo> plantInfoIndex)
+        public LifeformService(IRepository<Lifeform> lifeformRepository, IIndex<SearchModels.Lifeform, Data.Shared.Models.Lifeform> lifeformIndex)
         {
             _lifeformRepository = lifeformRepository;
-            _plantInfoIndex = plantInfoIndex;
+            _lifeformIndex = lifeformIndex;
         }
 
         public async Task<Data.Shared.Models.Lifeform> AddOrUpdateLifeformAsync(Data.Shared.Models.Lifeform lifeform)
@@ -57,14 +57,13 @@ namespace Emergence.Service
 
         public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
         {
-            var lifeformIndex = _plantInfoIndex as PlantInfoIndex;
-            var lifeformSearch = await lifeformIndex.SearchLifeformsAsync(new FindParams<Data.Shared.Models.Lifeform>
+            var lifeformSearch = await _lifeformIndex.SearchAsync(new FindParams<Data.Shared.Models.Lifeform>
             {
                 CreatedBy = findParams.CreatedBy,
                 SearchText = findParams.SearchText,
                 Skip = findParams.Skip,
                 Take = findParams.Take
-            });
+            }, null);
 
             var lifeformIds = lifeformSearch.Documents.Select(p => p.Id).ToArray();
             var lifeformQuery = _lifeformRepository.Where(l => lifeformIds.Contains(l.Id), false);

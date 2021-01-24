@@ -1,20 +1,22 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data;
-using Emergence.Data.Shared.Stores;
+using Emergence.Data.Shared.Search.Models;
 using Emergence.Service;
 using Emergence.Service.Search;
 using Emergence.Test.Mocks;
 using FluentAssertions;
 using Moq;
 using Xunit;
+using Models = Emergence.Data.Shared.Models;
+using Stores = Emergence.Data.Shared.Stores;
 
 namespace Emergence.Test.API.Services
 {
     public class LifeformServiceTests
     {
-        private readonly Mock<IRepository<Lifeform>> _mockLifeformRepository;
-        private readonly Mock<PlantInfoIndex> _mockLifeformIndex;
+        private readonly Mock<IRepository<Stores.Lifeform>> _mockLifeformRepository;
+        private readonly Mock<IIndex<Lifeform, Models.Lifeform>> _mockLifeformIndex;
 
         public LifeformServiceTests()
         {

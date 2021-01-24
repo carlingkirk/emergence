@@ -65,8 +65,8 @@ namespace Emergence.Test.API.Services
             FakeUsers.GetPublic().AsModel());
 
             plantInfoResult.Results.Should().NotBeNull("it exists");
-            plantInfoResult.Count.Should().Be(3);
-            plantInfoResult.Results.Should().HaveCount(3);
+            plantInfoResult.Count.Should().Be(2);
+            plantInfoResult.Results.Should().HaveCount(2);
         }
     }
 }

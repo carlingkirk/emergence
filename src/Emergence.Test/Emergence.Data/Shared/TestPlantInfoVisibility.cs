@@ -28,7 +28,8 @@ namespace Emergence.Test.Data.Shared
                 new PlantInfo
                 {
                     Id = 1,
-                    Visibility = Visibility.Hidden
+                    Visibility = Visibility.Hidden,
+                    User = new User()
                 }
             }.AsQueryable();
 

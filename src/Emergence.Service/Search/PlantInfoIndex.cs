@@ -9,7 +9,7 @@ using Nest;
 
 namespace Emergence.Service.Search
 {
-    public class PlantInfoIndex : IIndex<PlantInfo, Data.Shared.Models.PlantInfo>
+    public class PlantInfoIndex : IIndex<PlantInfo, Data.Shared.Models.PlantInfo>, IIndex<Lifeform, Data.Shared.Models.Lifeform>
     {
         private readonly ISearchClient<PlantInfo> _searchClient;
         public string IndexName => "plant_infos_01";
@@ -109,7 +109,7 @@ namespace Emergence.Service.Search
             return response;
         }
 
-        public async Task<SearchResponse<Lifeform>> SearchLifeformsAsync(FindParams<Data.Shared.Models.Lifeform> findParams)
+        public async Task<SearchResponse<Lifeform>> SearchAsync(FindParams<Data.Shared.Models.Lifeform> findParams, Data.Shared.Models.User user)
         {
             var searchTerm = findParams.SearchText;
             var shoulds = new List<QueryContainer>();
@@ -365,5 +365,8 @@ namespace Emergence.Service.Search
                 .PropertyName(pl => pl.User, "user")
                 .PropertyName(pl => pl.PlantLocations, "plantLocations")
                 .PropertyName(pl => pl.Synonyms, "synonyms");
+
+        public Task<bool> IndexAsync(Lifeform document) => throw new NotSupportedException();
+        public Task<BulkIndexResponse> IndexManyAsync(IEnumerable<Lifeform> documents) => throw new NotSupportedException();
     }
 }
