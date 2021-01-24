@@ -73,6 +73,7 @@ namespace Emergence.Transform.Runner
             services.AddTransient<IExifService, ExifService>();
             services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
             services.AddSingleton<IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo>, PlantInfoIndex>();
+            services.AddTransient<IIndex<SearchModels.Lifeform, Emergence.Data.Shared.Models.Lifeform>, PlantInfoIndex>();
 
             //Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));

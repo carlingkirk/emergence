@@ -300,8 +300,9 @@ namespace Emergence.Service.Search
 
         private QueryContainer FilterByVisibility(QueryContainerDescriptor<PlantInfo> query, Data.Shared.Models.User user) =>
             query.Bool(b => b
-                    .Should(s => s.Term(t => t.Visibility, Visibility.Public) ||
-                                    s.Term(t => t.User.Id, user.Id) ||
+                    .Should(s => !s.Exists(t => t.Field(f => f.User)) ||
+                                 s.Term(t => t.Visibility, Visibility.Public) ||
+                                 s.Term(t => t.User.Id, user.Id) ||
                                 // Not hidden
                                 (!(s.Term(t => t.Visibility, Visibility.Hidden) ||
                                     (s.Term(t => t.Visibility, Visibility.Inherit) &&
