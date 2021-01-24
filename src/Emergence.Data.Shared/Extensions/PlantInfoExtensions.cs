@@ -87,28 +87,40 @@ namespace Emergence.Data.Shared.Extensions
         {
             if (source.Height?.MinimumHeight != null && source.Height.MaximumHeight != null && source.Height.MinimumHeight >= source.Height.MaximumHeight)
             {
-                source.Height.MinimumHeight = source.Height.MaximumHeight;
-                source.Height.MaximumHeight = source.Height.MinimumHeight;
+                var minHeight = source.Height.MinimumHeight;
+                var maxHeight = source.Height.MaximumHeight;
+
+                source.Height.MinimumHeight = maxHeight;
+                source.Height.MaximumHeight = minHeight;
             }
 
             if (source.Spread?.MinimumSpread != null && source.Spread?.MaximumSpread != null && source.Spread.MinimumSpread >= source.Spread.MaximumSpread)
             {
-                source.Spread.MinimumSpread = source.Spread.MaximumSpread;
-                source.Spread.MaximumSpread = source.Spread.MinimumSpread;
+                var minSpread = source.Spread.MinimumSpread;
+                var maxSpread = source.Spread.MaximumSpread;
+
+                source.Spread.MinimumSpread = maxSpread;
+                source.Spread.MaximumSpread = minSpread;
             }
 
-            if (source.Requirements?.WaterRequirements?.MinimumWater != null && source.Requirements?.WaterRequirements?.MaximumWater != null &&
+            if (source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown && source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown &&
                 source.Requirements.WaterRequirements.MinimumWater >= source.Requirements.WaterRequirements.MaximumWater)
             {
-                source.Requirements.WaterRequirements.MinimumWater = source.Requirements.WaterRequirements.MaximumWater;
-                source.Requirements.WaterRequirements.MaximumWater = source.Requirements.WaterRequirements.MinimumWater;
+                var minWater = source.Requirements.WaterRequirements.MinimumWater;
+                var maxWater = source.Requirements.WaterRequirements.MaximumWater;
+
+                source.Requirements.WaterRequirements.MinimumWater = maxWater;
+                source.Requirements.WaterRequirements.MaximumWater = minWater;
             }
 
-            if (source.Requirements?.LightRequirements?.MinimumLight != null && source.Requirements?.LightRequirements?.MaximumLight != null &&
+            if (source.Requirements?.LightRequirements?.MinimumLight != LightType.Unknown && source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown &&
                 source.Requirements.LightRequirements.MinimumLight >= source.Requirements.LightRequirements.MaximumLight)
             {
-                source.Requirements.LightRequirements.MinimumLight = source.Requirements.LightRequirements.MaximumLight;
-                source.Requirements.LightRequirements.MaximumLight = source.Requirements.LightRequirements.MinimumLight;
+                var minLight = source.Requirements.LightRequirements.MinimumLight;
+                var maxLight = source.Requirements.LightRequirements.MaximumLight;
+
+                source.Requirements.LightRequirements.MinimumLight = maxLight;
+                source.Requirements.LightRequirements.MaximumLight = minLight;
             }
 
             if (source.Requirements?.ZoneRequirements?.MinimumZone != null && source.Requirements?.ZoneRequirements?.MaximumZone != null &&

@@ -166,31 +166,27 @@ namespace Emergence.Transform.Runner
                 else if (importer.Type == ImporterType.EFImporter && importer.ImportModel == "PlantInfo")
                 {
                     var processor = _importTransformOrchestrator.GetElasticProcessor;
-                    var response = await processor.Process(109063, 109073);
-                    if (response.Failures > 0)
+                    var finished = false;
+                    var counter = 100000;
+                    var counterEnd = 1000000;
+
+                    while (!finished && counter < counterEnd)
                     {
-                        Console.WriteLine(response.Failures);
+                        var response = await processor.Process(counter, counter + 1000);
+
+                        Console.WriteLine($"Successes: {response.Successes} / Failures: {response.Failures}");
+
+                        if (response.Failures > 0)
+                        {
+                            throw new Exception("Errors! Noooooo!");
+                        }
+                        else if (response.Successes == 0)
+                        {
+                            finished = true;
+                        }
+
+                        counter += 1000;
                     }
-
-                    Console.WriteLine(response.Successes);
-
-                    response = await processor.Process(89970, 89975);
-
-                    if (response.Failures > 0)
-                    {
-                        Console.WriteLine(response.Failures);
-                    }
-
-                    Console.WriteLine(response.Successes);
-
-                    response = await processor.Process(157231, 157243);
-
-                    if (response.Failures > 0)
-                    {
-                        Console.WriteLine(response.Failures);
-                    }
-
-                    Console.WriteLine(response.Successes);
                 }
             }
         }

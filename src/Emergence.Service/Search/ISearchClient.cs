@@ -11,6 +11,6 @@ namespace Emergence.Service.Search
             Func<IndexSettingsDescriptor, IPromise<IndexSettings>> settingSelector);
         Task<bool> IndexAsync(T document);
         Task<BulkIndexResponse> IndexManyAsync(IEnumerable<T> documents);
-        Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> search);
+        Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> searchSelector, Func<CountDescriptor<T>, ICountRequest> countSelector);
     }
 }

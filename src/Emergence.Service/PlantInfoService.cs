@@ -32,6 +32,16 @@ namespace Emergence.Service
         {
             plantInfo.DateModified = DateTime.UtcNow;
             var plantInfoResult = await _plantInfoRepository.AddOrUpdateAsync(l => l.Id == plantInfo.PlantInfoId, plantInfo.AsStore());
+            if (plantInfoResult != null)
+            {
+                var plantInfoLifeform = await _plantInfoRepository.GetWithIncludesAsync(p => p.Id == plantInfoResult.Id, false,
+                                                                                  p => p.Include(p => p.Lifeform)
+                                                                                        .Include(p => p.Origin)
+                                                                                        .Include(p => p.User)
+                                                                                        .Include(p => p.User.Photo)
+                                                                                        .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
+                await _plantInfoIndex.IndexAsync(plantInfoLifeform.AsSearchModel(null, null));
+            }
             return plantInfoResult.AsModel();
         }
 

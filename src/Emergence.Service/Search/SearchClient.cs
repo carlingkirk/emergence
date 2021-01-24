@@ -40,9 +40,9 @@ namespace Emergence.Service.Search
             await CreateIndexAsync(indexName, alias, mappingSelector, settingSelector);
         }
 
-        public async Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> search)
+        public async Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> searchSelector, Func<CountDescriptor<T>, ICountRequest> countSelector)
         {
-            var response = await ElasticClient.SearchAsync(search);
+            var response = await ElasticClient.SearchAsync(searchSelector);
 
             var body = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
             Console.WriteLine(body);
@@ -72,11 +72,13 @@ namespace Emergence.Service.Search
                 }
             }
 
+            var countResponse = await ElasticClient.CountAsync<T>(countSelector);
+
             return new SearchResponse<T>
             {
                 Aggregations = aggregations,
                 Documents = response.Documents,
-                Count = response.Total
+                Count = countResponse.Count
             };
         }
 

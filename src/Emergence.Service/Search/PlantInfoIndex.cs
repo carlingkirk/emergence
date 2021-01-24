@@ -81,6 +81,12 @@ namespace Emergence.Service.Search
                         .Should(shoulds.ToArray())
                         .Must(musts.ToArray())));
 
+            var countDescriptor = new CountDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())
+                        .Must(musts.ToArray())));
+
             // Sort
             if (findParams.SortDirection != SortDirection.None)
             {
@@ -104,7 +110,8 @@ namespace Emergence.Service.Search
             // Aggregations
             searchDescriptor.Aggregations(a => a.Nested("Region", n => n.Path("plantLocations").Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
 
-            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take));
+
+            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
 
             return response;
         }
@@ -141,7 +148,12 @@ namespace Emergence.Service.Search
                     .Bool(b => b
                         .Should(shoulds.ToArray())));
 
-            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take));
+            var countDescriptor = new CountDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())));
+
+            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
 
             return new SearchResponse<Lifeform>
             {

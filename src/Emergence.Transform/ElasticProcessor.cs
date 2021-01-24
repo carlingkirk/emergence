@@ -22,7 +22,7 @@ namespace Emergence.Transform
 
         public async Task<BulkIndexResponse> Process(int startId, int endId)
         {
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id >= startId && p.Id <= endId, false,
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Id >= startId && p.Id < endId, false,
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Lifeform.PlantSynonyms)
                                                                               .Include(p => p.PlantLocations)
@@ -38,6 +38,10 @@ namespace Emergence.Transform
                                                                               .Include(p => p.MaximumZone));
 
             var plantInfoResult = await plantInfoQuery.GetAllAsync();
+            if (plantInfoResult.Count() == 0)
+            {
+                return new BulkIndexResponse { Successes = 0, Failures = 0 };
+            }
 
             var plantInfos = new List<SearchModels.PlantInfo>();
             foreach (var plantInfo in plantInfoResult.GroupBy(p => p.Id))
