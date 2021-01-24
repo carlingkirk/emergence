@@ -88,7 +88,7 @@ namespace Emergence.Service
                 findParams.Filters = new PlantInfoFilters();
             }
 
-            var filters = findParams.Filters;
+            var filters = new PlantInfoFilters();
             if (plantInfoSearch.Aggregations != null)
             {
                 foreach (var aggregation in plantInfoSearch.Aggregations)
@@ -96,12 +96,9 @@ namespace Emergence.Service
                     if (aggregation.Name == "Region")
                     {
                         var filter = filters.RegionFilter;
-                        if (aggregation.Values.Count > 0)
-                        {
-                            var values = aggregation.Values;
-                            values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                            filter.FacetValues = values;
-                        }
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        filter.FacetValues = values;
                     }
                 }
             }
