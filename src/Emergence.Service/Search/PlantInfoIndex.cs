@@ -23,8 +23,8 @@ namespace Emergence.Service.Search
             _searchClient.ConfigureClient(IndexName, Alias, GetClrMapping, GetMapping, GetSetting);
         }
 
-        private IPromise<IndexSettings> GetSetting(IndexSettingsDescriptor mapping) =>
-            mapping.Analysis(a => a
+        private IPromise<IndexSettings> GetSetting(IndexSettingsDescriptor setting) =>
+            setting.Analysis(a => a
                 .Analyzers(azs => azs.Custom(NameAnalyzer, c => c.Tokenizer(NameTokenizer).Filters("lowercase")))
                 .Tokenizers(t => t.EdgeNGram(NameTokenizer, ng => ng.MinGram(3).MaxGram(20).TokenChars(new[] { TokenChar.Letter }))));
 
@@ -38,8 +38,7 @@ namespace Emergence.Service.Search
             .Text(t => t.Name(n => n.CommonName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
             .Text(t => t.Name(n => n.ScientificName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
             .Text(t => t.Name("lifeform.commonName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
-            .Text(t => t.Name("lifeform.scientificName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
-            );
+            .Text(t => t.Name("lifeform.scientificName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer)))));
 
         public async Task<bool> IndexAsync(PlantInfo document) => await _searchClient.IndexAsync(document);
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<PlantInfo> documents) => await _searchClient.IndexManyAsync(documents);

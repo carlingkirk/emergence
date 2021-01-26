@@ -34,5 +34,19 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.Specimen AsSearchModel(this Specimen source) =>
+            new Search.Models.Specimen
+            {
+                Id = source.Id,
+                SpecimenStage = Enum.Parse<SpecimenStage>(source.SpecimenStage),
+                InventoryItem = source.InventoryItem?.AsSearchModel(),
+                Lifeform = source.Lifeform?.AsSearchModel(),
+                ParentSpecimen = source.ParentSpecimen?.AsSearchModel(),
+                CreatedBy = source.CreatedBy,
+                ModifiedBy = source.ModifiedBy,
+                DateCreated = source.DateCreated,
+                DateModified = source.DateModified
+            };
     }
 }

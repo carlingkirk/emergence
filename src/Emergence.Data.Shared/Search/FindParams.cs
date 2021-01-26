@@ -55,4 +55,17 @@ namespace Emergence.Data.Shared
 
         public PlantInfoFilters Filters { get; set; }
     }
+
+    public class SpecimenFindParams : FindParams<Specimen>, IFindParams
+    {
+        public SpecimenFindParams()
+        {
+            Skip = 0;
+            Take = 10;
+            SortBy = null;
+            SortDirection = SortDirection.Ascending;
+        }
+
+        public SpecimenFilters Filters { get; set; }
+    }
 }

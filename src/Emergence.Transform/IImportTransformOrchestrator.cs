@@ -4,6 +4,7 @@ namespace Emergence.Transform
     {
         PlantInfoProcessor GetPlantInfoProcessor { get; }
         SynonymProcessor GetSynonymProcessor { get; }
-        ElasticProcessor GetElasticProcessor { get; }
+        ElasticPlantInfoProcessor GetElasticPlantInfoProcessor { get; }
+        ElasticSpecimenProcessor GetElasticSpecimenProcessor { get; }
     }
 }

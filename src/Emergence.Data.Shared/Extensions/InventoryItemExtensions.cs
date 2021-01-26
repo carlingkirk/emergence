@@ -41,5 +41,24 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static Search.Models.InventoryItem AsSearchModel(this InventoryItem source) =>
+            new Search.Models.InventoryItem
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Inventory = source.Inventory?.AsSearchModel(),
+                ItemType = Enum.Parse<ItemType>(source.ItemType),
+                Status = Enum.Parse<ItemStatus>(source.Status),
+                Quantity = source.Quantity,
+                DateAcquired = source.DateAcquired,
+                Visibility = source.Visibility,
+                User = source.User?.AsSearchModel(),
+                Origin = source.Origin?.AsSearchModel(),
+                CreatedBy = source.CreatedBy,
+                ModifiedBy = source.ModifiedBy,
+                DateCreated = source.DateCreated,
+                DateModified = source.DateModified
+            };
     }
 }

@@ -10,11 +10,12 @@ using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Transform
 {
-    public class ElasticProcessor
+    public class ElasticPlantInfoProcessor : IElasticProcessor<PlantInfo>
     {
         private readonly IRepository<PlantInfo> _plantInfoRepository;
         private readonly IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> _plantInfoIndex;
-        public ElasticProcessor(IRepository<PlantInfo> plantInfoRepository, IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> plantInfoIndex)
+
+        public ElasticPlantInfoProcessor(IRepository<PlantInfo> plantInfoRepository, IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo> plantInfoIndex)
         {
             _plantInfoRepository = plantInfoRepository;
             _plantInfoIndex = plantInfoIndex;
