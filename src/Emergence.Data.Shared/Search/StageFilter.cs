@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.Json.Serialization;
-using Emergence.Data.Shared.Stores;
+using Emergence.Data.Shared.Extensions;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -28,7 +26,17 @@ namespace Emergence.Data.Shared.Search
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
 
-        [JsonIgnore]
-        public Expression<Func<Specimen, bool>> Filter => s => s.SpecimenStage != null && s.SpecimenStage == Value;
+        public string DisplayValue(string value, long? count = null)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            else
+            {
+                var stageValue = Enum.Parse<SpecimenStage>(value);
+                return count != null ? $"{stageValue.ToFriendlyName()} ({count})" : $"{stageValue.ToFriendlyName()}";
+            }
+        }
     }
 }

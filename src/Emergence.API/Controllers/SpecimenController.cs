@@ -97,7 +97,7 @@ namespace Emergence.API.Controllers
 
         [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<Specimen>> FindSpecimens(FindParams findParams)
+        public async Task<SpecimenFindResult> FindSpecimens(SpecimenFindParams findParams)
         {
             var user = await _userService.GetIdentifyingUser(UserId);
             var result = await _specimenService.FindSpecimens(findParams, user);
@@ -105,7 +105,7 @@ namespace Emergence.API.Controllers
             var typeIds = result.Results.Select(s => s.SpecimenId).ToList();
             var photos = await _photoService.GetPhotosByTypeAsync(PhotoType.Specimen, typeIds);
 
-            foreach(var photoGroup in photos.GroupBy(p => p.TypeId))
+            foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
             {
                 var specimen = result.Results.FirstOrDefault(s => s.SpecimenId == photoGroup.Key);
                 if (specimen != null)

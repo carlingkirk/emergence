@@ -41,9 +41,22 @@
 @code {
     public override async Task<FindResult<Specimen>> GetListAsync(FindParams findParams)
     {
-        findParams.SortBy = "DateCreated";
-        findParams.SortDirection = SortDirection.Descending;
-        var result = await ApiClient.FindSpecimensAsync(findParams);
+        var findSpecimenParams = new SpecimenFindParams
+        {
+            SearchText = findParams.SearchText,
+            UseNGrams = false,
+            Skip = findParams.Skip,
+            Take = findParams.Take,
+            SortBy = findParams.SortBy,
+            SortDirection = findParams.SortDirection,
+            Filters = SpecimenFilters,
+            CreatedBy = findParams.CreatedBy
+        };
+
+        findSpecimenParams.SortBy = "DateCreated";
+        findSpecimenParams.SortDirection = SortDirection.Descending;
+
+        var result = await ApiClient.FindSpecimensAsync(findSpecimenParams);
         return new FindResult<Specimen>
         {
             Results = result.Results,

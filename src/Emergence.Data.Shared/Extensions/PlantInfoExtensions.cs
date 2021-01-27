@@ -103,7 +103,8 @@ namespace Emergence.Data.Shared.Extensions
                 source.Spread.MaximumSpread = minSpread;
             }
 
-            if (source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown && source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown &&
+            if (source.Requirements?.WaterRequirements != null && source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown &&
+                source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown &&
                 source.Requirements.WaterRequirements.MinimumWater >= source.Requirements.WaterRequirements.MaximumWater)
             {
                 var minWater = source.Requirements.WaterRequirements.MinimumWater;
@@ -113,7 +114,8 @@ namespace Emergence.Data.Shared.Extensions
                 source.Requirements.WaterRequirements.MaximumWater = minWater;
             }
 
-            if (source.Requirements?.LightRequirements?.MinimumLight != LightType.Unknown && source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown &&
+            if (source.Requirements?.LightRequirements != null && source.Requirements?.LightRequirements?.MinimumLight != LightType.Unknown &&
+                source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown &&
                 source.Requirements.LightRequirements.MinimumLight >= source.Requirements.LightRequirements.MaximumLight)
             {
                 var minLight = source.Requirements.LightRequirements.MinimumLight;
@@ -123,7 +125,7 @@ namespace Emergence.Data.Shared.Extensions
                 source.Requirements.LightRequirements.MaximumLight = minLight;
             }
 
-            if (source.Requirements?.ZoneRequirements?.MinimumZone != null && source.Requirements?.ZoneRequirements?.MaximumZone != null &&
+            if (source.Requirements?.ZoneRequirements != null && source.Requirements?.ZoneRequirements?.MinimumZone != null && source.Requirements?.ZoneRequirements?.MaximumZone != null &&
                 source.Requirements.ZoneRequirements.MinimumZone.Id >= source.Requirements.ZoneRequirements.MaximumZone.Id)
             {
                 var minZone = source.Requirements.ZoneRequirements.MinimumZone;

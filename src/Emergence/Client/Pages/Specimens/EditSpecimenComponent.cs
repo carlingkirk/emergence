@@ -80,9 +80,10 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Lifeform>> FindLifeformsAsync(string searchText)
         {
-            var result = await ApiClient.FindLifeformsAsync(new FindParams
+            var result = await ApiClient.FindLifeformsAsync(new FindParams<Lifeform>
             {
                 SearchText = searchText,
+                UseNGrams = true,
                 Skip = 0,
                 Take = 10,
                 SortBy = "ScientificName",

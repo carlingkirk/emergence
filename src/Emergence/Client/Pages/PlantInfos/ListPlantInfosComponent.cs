@@ -30,6 +30,7 @@ namespace Emergence.Client.Components
             var findPlantInfoParams = new PlantInfoFindParams
             {
                 SearchText = findParams.SearchText,
+                UseNGrams = false,
                 Skip = findParams.Skip,
                 Take = findParams.Take,
                 SortBy = findParams.SortBy,

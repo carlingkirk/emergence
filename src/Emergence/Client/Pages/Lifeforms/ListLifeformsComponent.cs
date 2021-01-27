@@ -9,7 +9,14 @@ namespace Emergence.Client.Components
     {
         public override async Task<FindResult<Lifeform>> GetListAsync(FindParams findParams)
         {
-            var result = await ApiClient.FindLifeformsAsync(findParams);
+            var lifeformFindParams = new FindParams<Lifeform>
+            {
+                CreatedBy = findParams.CreatedBy,
+                SearchText = findParams.SearchText,
+                Skip = findParams.Skip,
+                Take = findParams.Take
+            };
+            var result = await ApiClient.FindLifeformsAsync(lifeformFindParams);
 
             return new FindResult<Lifeform>
             {

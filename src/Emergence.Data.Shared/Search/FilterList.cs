@@ -30,6 +30,11 @@ namespace Emergence.Data.Shared.Search
 
     public class SpecimenFilters : IFilterList<Specimen>
     {
+        public SpecimenFilters()
+        {
+            StageFilter = new StageFilter();
+        }
+
         public StageFilter StageFilter { get; set; }
     }
 }

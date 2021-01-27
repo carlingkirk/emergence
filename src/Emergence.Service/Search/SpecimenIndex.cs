@@ -55,9 +55,18 @@ namespace Emergence.Service.Search
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => mmf
-                            .Field(m => m.Name)
-                            .Field("name.nameSearch"))
+                var fields = new FieldsDescriptor<Specimen>();
+
+                fields = fields.Field(f => f.Name)
+                        .Field(f => f.Lifeform.CommonName)
+                        .Field(f => f.Lifeform.ScientificName);
+
+                if (findParams.UseNGrams)
+                {
+                    fields = fields.Field("name.nameSearch");
+                }
+
+                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => fields)
                             .Query(searchTerm)
                             .Fuzziness(Fuzziness.AutoLength(1, 5))));
             }
@@ -98,7 +107,6 @@ namespace Emergence.Service.Search
 
             // Aggregations
             searchDescriptor.Aggregations(a => a.Terms("Stage", t => t.Field(f => f.SpecimenStage)));
-
 
             var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
 

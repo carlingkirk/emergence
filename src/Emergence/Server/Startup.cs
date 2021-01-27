@@ -135,8 +135,10 @@ namespace Emergence.Server
 
             // Add search
             services.AddTransient<ISearchClient<SearchModels.PlantInfo>, SearchClient<SearchModels.PlantInfo>>();
+            services.AddTransient<ISearchClient<SearchModels.Specimen>, SearchClient<SearchModels.Specimen>>();
             services.AddTransient<IIndex<SearchModels.PlantInfo, Emergence.Data.Shared.Models.PlantInfo>, PlantInfoIndex>();
             services.AddTransient<IIndex<SearchModels.Lifeform, Emergence.Data.Shared.Models.Lifeform>, PlantInfoIndex>();
+            services.AddTransient<IIndex<SearchModels.Specimen, Emergence.Data.Shared.Models.Specimen>, SpecimenIndex>();
 
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

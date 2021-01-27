@@ -42,7 +42,7 @@ namespace Emergence.Client.Common
             return await ReadResult<FindResult<Activity>>(result);
         }
 
-        public async Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams findParams)
+        public async Task<FindResult<Lifeform>> FindLifeformsAsync(FindParams<Lifeform> findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/lifeform/find", findParams);
 
@@ -63,11 +63,11 @@ namespace Emergence.Client.Common
             return await ReadResult<PlantInfoFindResult>(result);
         }
 
-        public async Task<FindResult<Specimen>> FindSpecimensAsync(FindParams findParams)
+        public async Task<SpecimenFindResult> FindSpecimensAsync(SpecimenFindParams findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);
 
-            return await ReadResult<FindResult<Specimen>>(result);
+            return await ReadResult<SpecimenFindResult>(result);
         }
 
         public async Task<FindResult<Taxon>> FindTaxonsAsync(FindParams<Taxon> findParams, TaxonRank rank)

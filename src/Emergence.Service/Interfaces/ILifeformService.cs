@@ -11,6 +11,6 @@ namespace Emergence.Service.Interfaces
         Task<Lifeform> GetLifeformByScientificNameAsync(string scientificName);
         Task<IEnumerable<Lifeform>> GetLifeformsAsync();
         Task<Lifeform> AddOrUpdateLifeformAsync(Lifeform lifeform);
-        Task<FindResult<Lifeform>> FindLifeforms(FindParams findParams);
+        Task<FindResult<Lifeform>> FindLifeforms(FindParams<Lifeform> findParams);
     }
 }

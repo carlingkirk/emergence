@@ -35,6 +35,7 @@ namespace Emergence.Data.Shared
         }
         public T Shape { get; set; }
 
+        public bool UseNGrams { get; set; }
         public string SearchText { get; set; }
         public int Skip { get; set; }
         public int Take { get; set; }

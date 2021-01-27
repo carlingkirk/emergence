@@ -136,9 +136,10 @@ namespace Emergence.Client.Components
 
         protected async Task<IEnumerable<Specimen>> FindSpecimensAsync(string searchText)
         {
-            var specimenResult = await ApiClient.FindSpecimensAsync(new FindParams
+            var specimenResult = await ApiClient.FindSpecimensAsync(new SpecimenFindParams
             {
                 SearchText = searchText,
+                UseNGrams = true,
                 Skip = 0,
                 Take = 10,
                 SortBy = "ScientificName",
@@ -147,9 +148,10 @@ namespace Emergence.Client.Components
 
             var specimens = specimenResult.Results.ToList();
 
-            var result = await ApiClient.FindLifeformsAsync(new FindParams
+            var result = await ApiClient.FindLifeformsAsync(new FindParams<Lifeform>
             {
                 SearchText = searchText,
+                UseNGrams = true,
                 Skip = 0,
                 Take = 3 + (10 - specimens.Count),
                 SortBy = "ScientificName",

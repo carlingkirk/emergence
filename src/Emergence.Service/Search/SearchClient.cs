@@ -51,14 +51,31 @@ namespace Emergence.Service.Search
 
             foreach (var aggregation in response.Aggregations)
             {
-                var singleBucket = aggregation.Value as SingleBucketAggregate;
-
-                foreach (var bucket in singleBucket)
+                if (aggregation.Value is SingleBucketAggregate singleBucket)
                 {
-                    var bucketValues = bucket.Value as BucketAggregate;
+                    foreach (var bucket in singleBucket)
+                    {
+                        var bucketValues = bucket.Value as BucketAggregate;
+                        var bucketResults = new Dictionary<string, long?>();
+                        // Process values
+                        foreach (var bucketValue in bucketValues.Items)
+                        {
+                            var keyedBucket = bucketValue as KeyedBucket<object>;
+                            bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
+                        }
+
+                        aggregations.Add(new AggregationResult<T>
+                        {
+                            Name = aggregation.Key,
+                            Values = bucketResults
+                        });
+                    }
+                }
+                else if (aggregation.Value is BucketAggregate bucket)
+                {
                     var bucketResults = new Dictionary<string, long?>();
                     // Process values
-                    foreach (var bucketValue in bucketValues.Items)
+                    foreach (var bucketValue in bucket.Items)
                     {
                         var keyedBucket = bucketValue as KeyedBucket<object>;
                         bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);

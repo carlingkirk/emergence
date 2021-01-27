@@ -52,15 +52,22 @@ namespace Emergence.Service.Search
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => mmf
-                            .Field(m => m.CommonName)
-                            .Field(m => m.ScientificName)
-                            .Field(m => m.Lifeform.CommonName)
-                            .Field(m => m.Lifeform.ScientificName)
-                            .Field("commonName.nameSearch")
+                var fields = new FieldsDescriptor<PlantInfo>();
+
+                fields = fields.Field(m => m.CommonName)
+                        .Field(m => m.ScientificName)
+                        .Field(m => m.Lifeform.CommonName)
+                        .Field(m => m.Lifeform.ScientificName);
+
+                if (findParams.UseNGrams)
+                {
+                    fields = fields.Field("commonName.nameSearch")
                             .Field("scientificName.nameSearch")
                             .Field("lifeform.commonName.nameSearch")
-                            .Field("lifeform.scientificName.nameSearch"))
+                            .Field("lifeform.scientificName.nameSearch");
+                }
+
+                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => fields)
                             .Query(searchTerm)
                             .Fuzziness(Fuzziness.AutoLength(1, 5))));
                 shoulds.Add(query.Nested(n => n

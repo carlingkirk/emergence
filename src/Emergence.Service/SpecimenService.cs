@@ -7,19 +7,24 @@ using Emergence.Data;
 using Emergence.Data.Extensions;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Stores;
 using Emergence.Service.Interfaces;
+using Emergence.Service.Search;
 using Microsoft.EntityFrameworkCore;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Service
 {
     public class SpecimenService : ISpecimenService
     {
         private readonly IRepository<Specimen> _specimenRepository;
+        private readonly IIndex<SearchModels.Specimen, Data.Shared.Models.Specimen> _specimenIndex;
 
-        public SpecimenService(IRepository<Specimen> specimenRepository)
+        public SpecimenService(IRepository<Specimen> specimenRepository, IIndex<SearchModels.Specimen, Data.Shared.Models.Specimen> specimenIndex)
         {
             _specimenRepository = specimenRepository;
+            _specimenIndex = specimenIndex;
         }
 
         public async Task<Data.Shared.Models.Specimen> AddOrUpdateAsync(Data.Shared.Models.Specimen specimen, string userId)
@@ -45,12 +50,11 @@ namespace Emergence.Service
             return specimen?.AsModel();
         }
 
-        public async Task<FindResult<Data.Shared.Models.Specimen>> FindSpecimens(FindParams findParams, Data.Shared.Models.User user)
+        public async Task<SpecimenFindResult> FindSpecimens(SpecimenFindParams findParams, Data.Shared.Models.User user)
         {
-            var specimenQuery = _specimenRepository.WhereWithIncludes(s => (findParams.SearchTextQuery == null ||
-                                                                           EF.Functions.Like(s.InventoryItem.Name, findParams.SearchTextQuery) ||
-                                                                           EF.Functions.Like(s.Lifeform.CommonName, findParams.SearchTextQuery) ||
-                                                                           EF.Functions.Like(s.Lifeform.ScientificName, findParams.SearchTextQuery)),
+            var specimenSearch = await _specimenIndex.SearchAsync(findParams, user);
+            var specimenIds = specimenSearch.Documents.Select(p => p.Id).ToArray();
+            var specimenQuery = _specimenRepository.WhereWithIncludes(s => specimenIds.Contains(s.Id),
                                                                            false,
                                                                            s => s.Include(s => s.InventoryItem)
                                                                                  .Include(s => s.InventoryItem.Inventory)
@@ -58,44 +62,36 @@ namespace Emergence.Service
                                                                                  .Include(s => s.InventoryItem.User)
                                                                                  .Include(s => s.Lifeform));
 
-
-            if (!string.IsNullOrEmpty(findParams.CreatedBy))
-            {
-                specimenQuery = specimenQuery.Where(s => s.CreatedBy == findParams.CreatedBy);
-            }
-
-            // TODO filters
-            //if (findParams.Filters != null)
-            //{
-            //    foreach (var filter in findParams.Filters)
-            //    {
-            //        if (filter.Name == "Stage")
-            //        {
-            //            var stageFilter = new StageFilter((Filter<string>)filter);
-            //            if (!string.IsNullOrEmpty(stageFilter.Value))
-            //            {
-            //                specimenQuery = specimenQuery.Where(stageFilter.Filter);
-            //            }
-            //        }
-            //    }
-            //}
-
             specimenQuery = specimenQuery.CanViewContent(user);
 
-            specimenQuery = OrderBy(specimenQuery, findParams.SortBy, findParams.SortDirection);
-
-            var count = specimenQuery.Count();
-            var specimenResult = specimenQuery.GetSomeAsync(skip: findParams.Skip, take: findParams.Take, track: false);
+            var specimenResult = specimenQuery.GetSomeAsync(track: false);
 
             var specimens = new List<Data.Shared.Models.Specimen>();
             await foreach (var specimen in specimenResult)
             {
                 specimens.Add(specimen.AsModel());
             }
-            return new FindResult<Data.Shared.Models.Specimen>
+
+            var filters = new SpecimenFilters();
+            if (specimenSearch.Aggregations != null)
+            {
+                foreach (var aggregation in specimenSearch.Aggregations)
+                {
+                    if (aggregation.Name == "Stage")
+                    {
+                        var filter = filters.StageFilter;
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        filter.FacetValues = values;
+                    }
+                }
+            }
+
+            return new SpecimenFindResult
             {
                 Results = specimens,
-                Count = count
+                Count = specimenSearch.Count,
+                Filters = filters
             };
         }
 

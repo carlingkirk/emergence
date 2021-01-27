@@ -44,5 +44,22 @@ namespace Emergence.Test.Mocks
 
             return mockLifeformIndex;
         }
+
+        public static Mock<IIndex<Specimen, Models.Specimen>> GetStandardMockSpecimenIndex(IEnumerable<Stores.Specimen> specimens = null)
+        {
+            if (specimens == null)
+            {
+                specimens = Data.Fakes.Stores.FakeSpecimens.Get();
+            }
+            var mockSpecimenIndex = new Mock<IIndex<Specimen, Models.Specimen>>();
+            mockSpecimenIndex.Setup(pi => pi.SearchAsync(It.IsAny<FindParams<Models.Specimen>>(), It.IsAny<Models.User>()))
+                .ReturnsAsync((SpecimenFindParams findParams, Models.User user) => new SearchResponse<Specimen>
+                {
+                    Count = specimens.AsQueryable().CanViewContent(user).Count(),
+                    Documents = specimens.AsQueryable().CanViewContent(user).Select(s => s.AsSearchModel())
+                });
+
+            return mockSpecimenIndex;
+        }
     }
 }

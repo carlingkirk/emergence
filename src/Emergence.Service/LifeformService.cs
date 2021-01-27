@@ -55,15 +55,9 @@ namespace Emergence.Service
             return lifeforms;
         }
 
-        public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams findParams)
+        public async Task<FindResult<Data.Shared.Models.Lifeform>> FindLifeforms(FindParams<Data.Shared.Models.Lifeform> findParams)
         {
-            var lifeformSearch = await _lifeformIndex.SearchAsync(new FindParams<Data.Shared.Models.Lifeform>
-            {
-                CreatedBy = findParams.CreatedBy,
-                SearchText = findParams.SearchText,
-                Skip = findParams.Skip,
-                Take = findParams.Take
-            }, null);
+            var lifeformSearch = await _lifeformIndex.SearchAsync(findParams, null);
 
             var lifeformIds = lifeformSearch.Documents.Select(p => p.Id).ToArray();
             var lifeformQuery = _lifeformRepository.Where(l => lifeformIds.Contains(l.Id), false);

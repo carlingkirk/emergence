@@ -14,4 +14,9 @@ namespace Emergence.Data.Shared
     {
         public PlantInfoFilters Filters { get; set; }
     }
+
+    public class SpecimenFindResult : FindResult<Specimen>
+    {
+        public SpecimenFilters Filters { get; set; }
+    }
 }

@@ -1,5 +1,25 @@
-﻿<h3>SpecimenSearchFilters</h3>
+<div class="container">
+    <div class="row">
+        @*Stage*@
+        <div class="col-lg-2 col-xs">
+            <div class="row">
+                <label for="@Filters.StageFilter.Name.ToLower()">@Filters.StageFilter.Name</label>
+            </div>
+            <div class="row">
+                <div class="col-lg-11 col-xs" style="padding: 0;">
+                    <select @bind="@Filters.StageFilter.Value" class="form-control" id="@Filters.StageFilter.Name.ToLower()">
+                        @foreach (var value in Filters.StageFilter.FacetValues)
+                        {
+                            <option value="@value.Key">@(Filters.StageFilter.DisplayValue(value.Key, value.Value))</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-
+    [Parameter]
+    public Data.Shared.Search.SpecimenFilters Filters { get; set; }
 }

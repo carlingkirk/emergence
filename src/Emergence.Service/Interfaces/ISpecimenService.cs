@@ -8,7 +8,7 @@ namespace Emergence.Service.Interfaces
     {
         Task<Specimen> GetSpecimenAsync(int specimenId, User user);
         Task<Specimen> AddOrUpdateAsync(Specimen specimen, string userId);
-        Task<FindResult<Specimen>> FindSpecimens(FindParams findParams, User user);
+        Task<SpecimenFindResult> FindSpecimens(SpecimenFindParams findParams, User user);
         Task RemoveSpecimenAsync(Specimen specimen);
     }
 }

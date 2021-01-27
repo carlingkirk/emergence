@@ -26,7 +26,7 @@ namespace Emergence.API.Controllers
 
         [HttpPost]
         [Route("Find")]
-        public async Task<FindResult<Lifeform>> FindLifeforms(FindParams findParams)
+        public async Task<FindResult<Lifeform>> FindLifeforms(FindParams<Lifeform> findParams)
         {
             var result = await _lifeformService.FindLifeforms(findParams);
             return result;
