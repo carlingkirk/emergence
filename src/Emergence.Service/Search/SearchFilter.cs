@@ -13,13 +13,8 @@ namespace Emergence.Service.Search
             Field = field;
         }
 
-        public QueryContainer GetSearchFilter(object value) =>
-            new QueryContainerDescriptor<T>().Terms(t => t
-                .Field(Field)
-                .Terms(value));
-
-        public virtual AggregationContainerDescriptor<T> ToAggregationContainerDescriptor() =>
-            new AggregationContainerDescriptor<T>()
+        public virtual AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor) =>
+            aggregationDescriptor
                 .Terms(Name, t => t
                     .Field(Field));
     }
@@ -32,13 +27,48 @@ namespace Emergence.Service.Search
         {
             Path = path;
         }
+    }
 
-        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor() =>
-            new AggregationContainerDescriptor<T>()
-                .Nested(Name, n => n
+    public class NestedSearchValueFilter<T, TValue> : NestedSearchFilter<T> where T : class
+    {
+        public NestedSearchValueFilter(string name, string field, string path, TValue value) : base(name, field, path)
+        {
+            Value = value;
+        }
+
+        public TValue Value { get; set; }
+
+        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor)
+        {
+            if (string.IsNullOrEmpty(Value?.ToString()))
+            {
+                return aggregationDescriptor
+                    .Nested(Name, n => n
                     .Path(Path)
-                    .Aggregations(ca => ca
-                        .Terms(Name, t => t
-                            .Field(Path + "." + Field))));
+                        .Aggregations(a => a
+                            .Terms(Name, t => t.Field(Path + "." + Field))));
+            }
+            else
+            {
+                // filter on region
+                return aggregationDescriptor
+                    .Filter(Name, f => f.Filter(f => f
+                        .Nested(n => n.Path(Path).Query(q => q.Term(Path + "." + Field, Value.ToString()))))
+                    .Aggregations(a => a
+                        .Terms(Name, t => t.Field(Path + "." + Field))));
+            }
+        }
+    }
+
+    public class NestedSearchRangeFilter<T, TValue> : NestedSearchFilter<T> where T : class
+    {
+        public NestedSearchRangeFilter(string name, string field, string path, TValue minValue, TValue maxValue) : base(name, field, path)
+        {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+
+        public TValue MinValue { get; set; }
+        public TValue MaxValue { get; set; }
     }
 }

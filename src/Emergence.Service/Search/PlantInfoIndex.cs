@@ -49,7 +49,6 @@ namespace Emergence.Service.Search
             var searchTerm = findParams.SearchText;
             var shoulds = new List<QueryContainer>();
             var query = new QueryContainerDescriptor<PlantInfo>();
-            var filter = new QueryContainerDescriptor<PlantInfo>();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -84,9 +83,6 @@ namespace Emergence.Service.Search
                     .Bool(b => b
                         .Should(shoulds.ToArray())
                         .Must(musts.ToArray()).MinimumShouldMatch(string.IsNullOrEmpty(searchTerm) ? 0 : 1)));
-            //.PostFilter(pf => pf
-            //    .Bool(b => b
-            //        .Must(musts.ToArray())));
 
             var countDescriptor = new CountDescriptor<PlantInfo>()
                 .Query(q => q
@@ -109,24 +105,21 @@ namespace Emergence.Service.Search
                 }
             }
 
-            // Aggregations
-            //var aggs = new AggregationContainerDescriptor<PlantInfo>();
-            //aggs = aggs.ToAggregationDescriptor(musts, new NestedSearchFilter<PlantInfo>(plantInfoFindParams.Filters.RegionFilter.Name, "plantLocations.location.region.keyword", "plantLocations"));
-
-            //searchDescriptor.Aggregations(a => aggs);
-
-            if (string.IsNullOrEmpty(plantInfoFindParams.Filters.RegionFilter.Value))
+            var aggregations = new AggregationContainerDescriptor<PlantInfo>();
+            var searchFilters = new List<SearchFilter<PlantInfo>>
             {
-                searchDescriptor.Aggregations(a => a.Nested("Region", n => n.Path("plantLocations").Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
-            }
-            else
+                new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword" ,"plantLocations", plantInfoFindParams.Filters.RegionFilter.Value)
+            };
+
+            foreach (var filter in searchFilters)
             {
-                // filter on region
-                searchDescriptor.Aggregations(a => a
-                    .Filter("Region", f => f.Filter(f => f
-                        .Nested(n => n.Path("plantLocations").Query(q => q.Term("plantLocations.location.region.keyword", plantInfoFindParams.Filters.RegionFilter.Value))))
-                    .Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
+                if (filter is NestedSearchValueFilter<PlantInfo, string> nestedFilter)
+                {
+                    aggregations = nestedFilter.ToAggregationContainerDescriptor(aggregations);
+                }
             }
+
+            searchDescriptor.Aggregations(a => aggregations);
 
             var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
 
