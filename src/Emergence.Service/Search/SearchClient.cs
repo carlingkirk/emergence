@@ -45,55 +45,14 @@ namespace Emergence.Service.Search
             var response = await ElasticClient.SearchAsync(searchSelector);
 
             var body = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
+
             Console.WriteLine(body);
-
-            var aggregations = new List<AggregationResult<T>>();
-
-            foreach (var aggregation in response.Aggregations)
-            {
-                if (aggregation.Value is SingleBucketAggregate singleBucket)
-                {
-                    foreach (var bucket in singleBucket)
-                    {
-                        var bucketValues = bucket.Value as BucketAggregate;
-                        var bucketResults = new Dictionary<string, long?>();
-                        // Process values
-                        foreach (var bucketValue in bucketValues.Items)
-                        {
-                            var keyedBucket = bucketValue as KeyedBucket<object>;
-                            bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
-                        }
-
-                        aggregations.Add(new AggregationResult<T>
-                        {
-                            Name = aggregation.Key,
-                            Values = bucketResults
-                        });
-                    }
-                }
-                else if (aggregation.Value is BucketAggregate bucket)
-                {
-                    var bucketResults = new Dictionary<string, long?>();
-                    // Process values
-                    foreach (var bucketValue in bucket.Items)
-                    {
-                        var keyedBucket = bucketValue as KeyedBucket<object>;
-                        bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
-                    }
-
-                    aggregations.Add(new AggregationResult<T>
-                    {
-                        Name = aggregation.Key,
-                        Values = bucketResults
-                    });
-                }
-            }
 
             var countResponse = await ElasticClient.CountAsync<T>(countSelector);
 
             return new SearchResponse<T>
             {
-                Aggregations = aggregations,
+                Aggregations = response.Aggregations,
                 Documents = response.Documents,
                 Count = countResponse.Count
             };
@@ -162,7 +121,8 @@ namespace Emergence.Service.Search
     {
         public long Count { get; set; }
         public IEnumerable<T> Documents { get; set; }
-        public IEnumerable<AggregationResult<T>> Aggregations { get; set; }
+        public AggregateDictionary Aggregations { get; set; }
+        public IEnumerable<AggregationResult<T>> AggregationResult { get; set; }
     }
 
     public class AggregationResult<T>

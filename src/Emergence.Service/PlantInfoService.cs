@@ -73,6 +73,11 @@ namespace Emergence.Service
 
         public async Task<PlantInfoFindResult> FindPlantInfos(PlantInfoFindParams findParams, Data.Shared.Models.User user)
         {
+            if (findParams.Filters == null)
+            {
+                findParams.Filters = new PlantInfoFilters();
+            }
+
             var plantInfoSearch = await _plantInfoIndex.SearchAsync(findParams, user);
             var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id).ToArray();
             var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => plantInfoIds.Contains(p.Id),
@@ -93,19 +98,13 @@ namespace Emergence.Service
                 plantInfos.Add(plantInfo.AsModel());
             }
 
-            if (findParams.Filters == null)
-            {
-                findParams.Filters = new PlantInfoFilters();
-            }
-
-            var filters = new PlantInfoFilters();
             if (plantInfoSearch.Aggregations != null)
             {
-                foreach (var aggregation in plantInfoSearch.Aggregations)
+                foreach (var aggregation in plantInfoSearch.AggregationResult)
                 {
                     if (aggregation.Name == "Region")
                     {
-                        var filter = filters.RegionFilter;
+                        var filter = findParams.Filters.RegionFilter;
                         var values = aggregation.Values;
                         values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
                         filter.FacetValues = values;
@@ -117,7 +116,7 @@ namespace Emergence.Service
             {
                 Count = plantInfoSearch.Count,
                 Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList(),
-                Filters = filters
+                Filters = findParams.Filters
             };
         }
 

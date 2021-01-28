@@ -45,10 +45,11 @@ namespace Emergence.Service.Search
 
         public async Task<SearchResponse<PlantInfo>> SearchAsync(FindParams<Data.Shared.Models.PlantInfo> findParams, Data.Shared.Models.User user)
         {
+            var plantInfoFindParams = findParams as PlantInfoFindParams;
             var searchTerm = findParams.SearchText;
-            var musts = GetFilters(findParams);
             var shoulds = new List<QueryContainer>();
             var query = new QueryContainerDescriptor<PlantInfo>();
+            var filter = new QueryContainerDescriptor<PlantInfo>();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -57,50 +58,45 @@ namespace Emergence.Service.Search
                 fields = fields.Field(m => m.CommonName)
                         .Field(m => m.ScientificName)
                         .Field(m => m.Lifeform.CommonName)
-                        .Field(m => m.Lifeform.ScientificName);
-
-                if (findParams.UseNGrams)
-                {
-                    fields = fields.Field("commonName.nameSearch")
-                            .Field("scientificName.nameSearch")
-                            .Field("lifeform.commonName.nameSearch")
-                            .Field("lifeform.scientificName.nameSearch");
-                }
+                        .Field(m => m.Lifeform.ScientificName)
+                        .Field("commonName.nameSearch")
+                        .Field("scientificName.nameSearch")
+                        .Field("lifeform.commonName.nameSearch")
+                        .Field("lifeform.scientificName.nameSearch");
 
                 shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => fields)
                             .Query(searchTerm)
-                            .Fuzziness(Fuzziness.AutoLength(1, 5))));
+                            .Fuzziness(Fuzziness.AutoLength(1, 3))));
                 shoulds.Add(query.Nested(n => n
                             .Path(p => p.Synonyms)
                             .Query(q => q
                                 .Match(sq => sq
                                     .Field("synonyms.name")
                                     .Query(searchTerm)
-                                    .Fuzziness(Fuzziness.AutoLength(1, 5))))));
+                                    .Fuzziness(Fuzziness.AutoLength(1, 3))))));
             }
 
+            var musts = GetFilters(plantInfoFindParams);
             musts.Add(FilterByVisibility(query, user));
 
             var searchDescriptor = new SearchDescriptor<PlantInfo>()
                 .Query(q => q
                     .Bool(b => b
                         .Should(shoulds.ToArray())
-                        .Must(musts.ToArray())));
+                        .Must(musts.ToArray()).MinimumShouldMatch(string.IsNullOrEmpty(searchTerm) ? 0 : 1)));
+            //.PostFilter(pf => pf
+            //    .Bool(b => b
+            //        .Must(musts.ToArray())));
 
             var countDescriptor = new CountDescriptor<PlantInfo>()
                 .Query(q => q
                     .Bool(b => b
                         .Should(shoulds.ToArray())
-                        .Must(musts.ToArray())));
+                        .Must(musts.ToArray()).MinimumShouldMatch(string.IsNullOrEmpty(searchTerm) ? 0 : 1)));
 
             // Sort
-            if (findParams.SortDirection != SortDirection.None)
+            if (findParams.SortDirection != SortDirection.None && findParams.SortBy != null)
             {
-                if (findParams.SortBy == null)
-                {
-                    findParams.SortBy = "DateCreated";
-                }
-
                 var plantInfoSorts = GetPlantInfoSorts();
 
                 if (findParams.SortDirection == SortDirection.Ascending)
@@ -114,12 +110,92 @@ namespace Emergence.Service.Search
             }
 
             // Aggregations
-            searchDescriptor.Aggregations(a => a.Nested("Region", n => n.Path("plantLocations").Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
+            //var aggs = new AggregationContainerDescriptor<PlantInfo>();
+            //aggs = aggs.ToAggregationDescriptor(musts, new NestedSearchFilter<PlantInfo>(plantInfoFindParams.Filters.RegionFilter.Name, "plantLocations.location.region.keyword", "plantLocations"));
 
+            //searchDescriptor.Aggregations(a => aggs);
+
+            if (string.IsNullOrEmpty(plantInfoFindParams.Filters.RegionFilter.Value))
+            {
+                searchDescriptor.Aggregations(a => a.Nested("Region", n => n.Path("plantLocations").Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
+            }
+            else
+            {
+                // filter on region
+                searchDescriptor.Aggregations(a => a
+                    .Filter("Region", f => f.Filter(f => f
+                        .Nested(n => n.Path("plantLocations").Query(q => q.Term("plantLocations.location.region.keyword", plantInfoFindParams.Filters.RegionFilter.Value))))
+                    .Aggregations(a => a.Terms("Region", t => t.Field("plantLocations.location.region.keyword")))));
+            }
 
             var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
 
+            response.AggregationResult = ProcessAggregations(response, plantInfoFindParams);
+
             return response;
+        }
+
+        private IEnumerable<AggregationResult<PlantInfo>> ProcessAggregations(SearchResponse<PlantInfo> response, PlantInfoFindParams plantInfoFindParams)
+        {
+            var aggregations = new List<AggregationResult<PlantInfo>>();
+
+            foreach (var aggregation in response.Aggregations)
+            {
+                var bucketAggregations = new List<AggregationResult<PlantInfo>>();
+                if (aggregation.Value is SingleBucketAggregate singleBucket)
+                {
+                    foreach (var bucket in singleBucket)
+                    {
+                        if (bucket.Value is BucketAggregate bucketValues)
+                        {
+                            var bucketResults = new Dictionary<string, long?>();
+                            // Process values
+                            foreach (var bucketValue in bucketValues.Items)
+                            {
+                                var keyedBucket = bucketValue as KeyedBucket<object>;
+                                bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
+                            }
+
+                            if (bucketResults.Any())
+                            {
+                                bucketAggregations.Add(new AggregationResult<PlantInfo>
+                                {
+                                    Name = aggregation.Key,
+                                    Values = bucketResults
+                                });
+                            }
+                        }
+                    }
+                    if (!bucketAggregations.Any() && singleBucket.DocCount > 0)
+                    {
+                        bucketAggregations.Add(new AggregationResult<PlantInfo>
+                        {
+                            Name = aggregation.Key,
+                            Values = new Dictionary<string, long?> { { plantInfoFindParams.Filters.RegionFilter.Value, singleBucket.DocCount } }
+                        });
+                    }
+
+                    aggregations.AddRange(bucketAggregations);
+                }
+                else if (aggregation.Value is BucketAggregate bucket)
+                {
+                    var bucketResults = new Dictionary<string, long?>();
+                    // Process values
+                    foreach (var bucketValue in bucket.Items)
+                    {
+                        var keyedBucket = bucketValue as KeyedBucket<object>;
+                        bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
+                    }
+
+                    bucketAggregations.Add(new AggregationResult<PlantInfo>
+                    {
+                        Name = aggregation.Key,
+                        Values = bucketResults
+                    });
+                }
+            }
+
+            return aggregations;
         }
 
         public async Task<SearchResponse<Lifeform>> SearchAsync(FindParams<Data.Shared.Models.Lifeform> findParams, Data.Shared.Models.User user)
@@ -175,19 +251,19 @@ namespace Emergence.Service.Search
             };
         }
 
-        private List<QueryContainer> GetFilters(FindParams<Data.Shared.Models.PlantInfo> findParams)
+        private List<QueryContainer> GetFilters(PlantInfoFindParams findParams)
         {
             var musts = new List<QueryContainer>();
             var query = new QueryContainerDescriptor<PlantInfo>();
-            var plantInfoFindParams = findParams as PlantInfoFindParams;
+
             if (findParams.CreatedBy != null)
             {
                 musts.Add(query.Match(m => m.Field(f => f.CreatedBy).Query(findParams.CreatedBy)));
             }
 
-            if (plantInfoFindParams.Filters != null)
+            if (findParams.Filters != null)
             {
-                var filters = plantInfoFindParams.Filters;
+                var filters = findParams.Filters;
 
                 var heightFilter = filters.HeightFilter;
 
@@ -318,7 +394,7 @@ namespace Emergence.Service.Search
 
         private QueryContainer FilterByVisibility(QueryContainerDescriptor<PlantInfo> query, Data.Shared.Models.User user) =>
             query.Bool(b => b
-                    .Should(s => !s.Exists(t => t.Field(f => f.User)) ||
+                    .Filter(s => !s.Exists(t => t.Field(f => f.User)) ||
                                  s.Term(t => t.Visibility, Visibility.Public) ||
                                  s.Term(t => t.User.Id, user.Id) ||
                                 // Not hidden

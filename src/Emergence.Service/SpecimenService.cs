@@ -75,7 +75,7 @@ namespace Emergence.Service
             var filters = new SpecimenFilters();
             if (specimenSearch.Aggregations != null)
             {
-                foreach (var aggregation in specimenSearch.Aggregations)
+                foreach (var aggregation in specimenSearch.AggregationResult)
                 {
                     if (aggregation.Name == "Stage")
                     {
