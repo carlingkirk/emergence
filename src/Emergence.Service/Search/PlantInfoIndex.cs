@@ -117,6 +117,10 @@ namespace Emergence.Service.Search
                 {
                     aggregations = nestedFilter.ToAggregationContainerDescriptor(aggregations);
                 }
+                else if (filter is SearchRangeFilter<PlantInfo> searchRangeFilter)
+                {
+                    aggregations = searchRangeFilter.ToAggregationContainerDescriptor(aggregations);
+                }
             }
 
             searchDescriptor.Aggregations(a => aggregations);
