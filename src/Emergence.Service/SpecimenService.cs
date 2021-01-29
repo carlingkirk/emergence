@@ -52,6 +52,11 @@ namespace Emergence.Service
 
         public async Task<SpecimenFindResult> FindSpecimens(SpecimenFindParams findParams, Data.Shared.Models.User user)
         {
+            if (findParams.Filters == null)
+            {
+                findParams.Filters = new SpecimenFilters();
+            }
+
             var specimenSearch = await _specimenIndex.SearchAsync(findParams, user);
             var specimenIds = specimenSearch.Documents.Select(p => p.Id).ToArray();
             var specimenQuery = _specimenRepository.WhereWithIncludes(s => specimenIds.Contains(s.Id),

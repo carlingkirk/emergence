@@ -23,24 +23,8 @@ namespace Emergence.Service.Search
             _searchClient.ConfigureClient(IndexName, Alias, GetClrMapping, GetMapping, GetSetting);
         }
 
-        private IPromise<IndexSettings> GetSetting(IndexSettingsDescriptor setting) =>
-            setting.Analysis(a => a
-                .Analyzers(azs => azs.Custom(NameAnalyzer, c => c.Tokenizer(NameTokenizer).Filters("lowercase")))
-                .Tokenizers(t => t.EdgeNGram(NameTokenizer, ng => ng.MinGram(3).MaxGram(20).TokenChars(new[] { TokenChar.Letter }))));
-
-        private ITypeMapping GetMapping(TypeMappingDescriptor<PlantInfo> mapping) =>
-            mapping.AutoMap()
-            .Properties(pi => pi
-                .Nested<Synonym>(n => n
-                    .Name(nn => nn.Synonyms))
-                .Nested<PlantLocation>(n => n
-                    .Name(nn => nn.PlantLocations))
-            .Text(t => t.Name(n => n.CommonName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
-            .Text(t => t.Name(n => n.ScientificName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
-            .Text(t => t.Name("lifeform.commonName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
-            .Text(t => t.Name("lifeform.scientificName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer)))));
-
         public async Task<bool> IndexAsync(PlantInfo document) => await _searchClient.IndexAsync(document);
+
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<PlantInfo> documents) => await _searchClient.IndexManyAsync(documents);
 
         public async Task<SearchResponse<PlantInfo>> SearchAsync(FindParams<Data.Shared.Models.PlantInfo> findParams, Data.Shared.Models.User user)
@@ -132,6 +116,59 @@ namespace Emergence.Service.Search
             return response;
         }
 
+        public async Task<SearchResponse<Lifeform>> SearchAsync(FindParams<Data.Shared.Models.Lifeform> findParams, Data.Shared.Models.User user)
+        {
+            var searchTerm = findParams.SearchText;
+            var shoulds = new List<QueryContainer>();
+            var query = new QueryContainerDescriptor<PlantInfo>();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => mmf
+                            .Field(m => m.CommonName)
+                            .Field(m => m.ScientificName)
+                            .Field(m => m.Lifeform.CommonName)
+                            .Field(m => m.Lifeform.ScientificName)
+                            .Field("commonName.nameSearch")
+                            .Field("scientificName.nameSearch")
+                            .Field("lifeform.commonName.nameSearch")
+                            .Field("lifeform.scientificName.nameSearch"))
+                            .Query(searchTerm)));
+                shoulds.Add(query.Nested(n => n
+                            .Path(p => p.Synonyms)
+                            .Query(q => q
+                                .Match(sq => sq
+                                    .Field("synonyms.name")
+                                    .Query(searchTerm)))));
+            }
+
+            var searchDescriptor = new SearchDescriptor<PlantInfo>()
+                .Source(s => s.Includes(i => i.Field(p => p.Lifeform)))
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())));
+
+            var countDescriptor = new CountDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())));
+
+            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
+
+            return new SearchResponse<Lifeform>
+            {
+                Count = response.Count,
+                Documents = response.Documents.Select(d =>
+                    new Lifeform
+                    {
+                        Id = d.Lifeform.Id,
+                        CommonName = d.Lifeform.CommonName,
+                        ScientificName = d.Lifeform.ScientificName,
+                    }).ToList(),
+                Aggregations = null
+            };
+        }
+
         private IEnumerable<AggregationResult<PlantInfo>> ProcessAggregations(SearchResponse<PlantInfo> response, PlantInfoFindParams plantInfoFindParams)
         {
             var aggregations = new List<AggregationResult<PlantInfo>>();
@@ -189,63 +226,12 @@ namespace Emergence.Service.Search
                         Name = aggregation.Key,
                         Values = bucketResults
                     });
+
+                    aggregations.AddRange(bucketAggregations);
                 }
             }
 
             return aggregations;
-        }
-
-        public async Task<SearchResponse<Lifeform>> SearchAsync(FindParams<Data.Shared.Models.Lifeform> findParams, Data.Shared.Models.User user)
-        {
-            var searchTerm = findParams.SearchText;
-            var shoulds = new List<QueryContainer>();
-            var query = new QueryContainerDescriptor<PlantInfo>();
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => mmf
-                            .Field(m => m.CommonName)
-                            .Field(m => m.ScientificName)
-                            .Field(m => m.Lifeform.CommonName)
-                            .Field(m => m.Lifeform.ScientificName)
-                            .Field("commonName.nameSearch")
-                            .Field("scientificName.nameSearch")
-                            .Field("lifeform.commonName.nameSearch")
-                            .Field("lifeform.scientificName.nameSearch"))
-                            .Query(searchTerm)));
-                shoulds.Add(query.Nested(n => n
-                            .Path(p => p.Synonyms)
-                            .Query(q => q
-                                .Match(sq => sq
-                                    .Field("synonyms.name")
-                                    .Query(searchTerm)))));
-            }
-
-            var searchDescriptor = new SearchDescriptor<PlantInfo>()
-                .Source(s => s.Includes(i => i.Field(p => p.Lifeform)))
-                .Query(q => q
-                    .Bool(b => b
-                        .Should(shoulds.ToArray())));
-
-            var countDescriptor = new CountDescriptor<PlantInfo>()
-                .Query(q => q
-                    .Bool(b => b
-                        .Should(shoulds.ToArray())));
-
-            var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
-
-            return new SearchResponse<Lifeform>
-            {
-                Count = response.Count,
-                Documents = response.Documents.Select(d =>
-                    new Lifeform
-                    {
-                        Id = d.Lifeform.Id,
-                        CommonName = d.Lifeform.CommonName,
-                        ScientificName = d.Lifeform.ScientificName,
-                    }).ToList(),
-                Aggregations = null
-            };
         }
 
         private List<QueryContainer> GetFilters(PlantInfoFindParams findParams)
@@ -424,6 +410,23 @@ namespace Emergence.Service.Search
             { "Spread", p => p.MinimumSpread },
             { "DateCreated", p => p.DateCreated }
         };
+
+        private IPromise<IndexSettings> GetSetting(IndexSettingsDescriptor setting) =>
+            setting.Analysis(a => a
+                .Analyzers(azs => azs.Custom(NameAnalyzer, c => c.Tokenizer(NameTokenizer).Filters("lowercase")))
+                .Tokenizers(t => t.EdgeNGram(NameTokenizer, ng => ng.MinGram(3).MaxGram(20).TokenChars(new[] { TokenChar.Letter }))));
+
+        private ITypeMapping GetMapping(TypeMappingDescriptor<PlantInfo> mapping) =>
+            mapping.AutoMap()
+            .Properties(pi => pi
+                .Nested<Synonym>(n => n
+                    .Name(nn => nn.Synonyms))
+                .Nested<PlantLocation>(n => n
+                    .Name(nn => nn.PlantLocations))
+            .Text(t => t.Name(n => n.CommonName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
+            .Text(t => t.Name(n => n.ScientificName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
+            .Text(t => t.Name("lifeform.commonName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
+            .Text(t => t.Name("lifeform.scientificName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer)))));
 
         private IClrTypeMapping<PlantInfo> GetClrMapping(ClrTypeMappingDescriptor<PlantInfo> mapping) =>
             mapping.IndexName(IndexName)

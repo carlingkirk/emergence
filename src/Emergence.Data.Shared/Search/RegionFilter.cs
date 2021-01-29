@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Region")]
@@ -16,6 +18,10 @@ namespace Emergence.Data.Shared.Search
             Name = "Region";
             InputType = InputType.Select;
             FilterType = FilterType.String;
+            FacetValues = new Dictionary<string, long?>
+            {
+                { "", null }
+            };
         }
 
         public string DisplayValue(string value, long? count = null)
