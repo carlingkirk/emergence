@@ -168,8 +168,100 @@ namespace Emergence.Data.Shared.Extensions
             };
         }
 
-        public static Search.Models.PlantInfo AsSearchModel(this PlantInfo source, IEnumerable<PlantLocation> plantLocations, IEnumerable<Synonym> synonyms) =>
-            new Search.Models.PlantInfo
+        public static Search.Models.PlantInfo AsSearchModel(this PlantInfo source, IEnumerable<PlantLocation> plantLocations, IEnumerable<Synonym> synonyms)
+        {
+            var bloomTimes = new List<Month>();
+            if (source.MinimumBloomTime > 0 && source.MaximumBloomTime > 0)
+            {
+                for (var i = source.MinimumBloomTime; i <= source.MaximumBloomTime; i++)
+                {
+                    bloomTimes.Add((Month)i);
+                }
+            }
+            else
+            {
+                if (source.MinimumBloomTime > 0)
+                {
+                    bloomTimes.Add((Month)source.MinimumBloomTime);
+                }
+                if (source.MaximumBloomTime > 0 && source.MinimumBloomTime != source.MaximumBloomTime)
+                {
+                    bloomTimes.Add((Month)source.MaximumBloomTime);
+                }
+            }
+
+            var waterTypes = new List<WaterType>();
+
+            if (!string.IsNullOrEmpty(source.MinimumWater) && !string.IsNullOrEmpty(source.MaximumWater))
+            {
+                var minWater = Enum.Parse<WaterType>(source.MinimumWater);
+                var maxWater = Enum.Parse<WaterType>(source.MaximumWater);
+                for (var i = minWater; i <= maxWater; i++)
+                {
+                    waterTypes.Add(i);
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(source.MinimumWater))
+                {
+                    var minWater = Enum.Parse<WaterType>(source.MinimumWater);
+                    waterTypes.Add(minWater);
+                }
+                if (!string.IsNullOrEmpty(source.MaximumWater) && source.MinimumWater != source.MaximumWater)
+                {
+                    var maxWater = Enum.Parse<WaterType>(source.MaximumWater);
+                    waterTypes.Add(maxWater);
+                }
+            }
+
+            var lightTypes = new List<LightType>();
+
+            if (!string.IsNullOrEmpty(source.MinimumLight) && !string.IsNullOrEmpty(source.MaximumLight))
+            {
+                var minLight = Enum.Parse<LightType>(source.MinimumLight);
+                var maxLight = Enum.Parse<LightType>(source.MaximumLight);
+                for (var i = minLight; i <= maxLight; i++)
+                {
+                    lightTypes.Add(i);
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(source.MinimumLight))
+                {
+                    var minLight = Enum.Parse<LightType>(source.MinimumLight);
+                    lightTypes.Add(minLight);
+                }
+                if (!string.IsNullOrEmpty(source.MaximumLight) && source.MinimumLight != source.MaximumLight)
+                {
+                    var maxLight = Enum.Parse<LightType>(source.MaximumLight);
+                    lightTypes.Add(maxLight);
+                }
+            }
+
+            var zones = new List<Search.Models.Zone>();
+            var allZones = ZoneHelper.GetZones();
+            if (source.MinimumZone != null && source.MaximumZone != null)
+            {
+                for (var i = source.MinimumZone.Id; i <= source.MaximumZone.Id; i++)
+                {
+                    zones.Add(allZones.First(z => z.Id == i).AsSearchModel());
+                }
+            }
+            else
+            {
+                if (source.MinimumZone != null)
+                {
+                    zones.Add(source.MinimumZone.AsSearchModel());
+                }
+                if (source.MaximumZone != null && source.MinimumZone.Id != source.MaximumZone.Id)
+                {
+                    zones.Add(source.MaximumZone.AsSearchModel());
+                }
+            }
+
+            return new Search.Models.PlantInfo
             {
                 Id = source.Id,
                 CommonName = source.CommonName,
@@ -180,6 +272,7 @@ namespace Emergence.Data.Shared.Extensions
                 Synonyms = synonyms?.Select(s => s.AsSearchModel()),
                 MinimumBloomTime = source.MinimumBloomTime,
                 MaximumBloomTime = source.MaximumBloomTime,
+                BloomTimes = bloomTimes,
                 MinimumHeight = source.MinimumHeight,
                 MaximumHeight = source.MaximumHeight,
                 HeightUnit = source.MinimumHeight.HasValue || source.MaximumHeight.HasValue ? DistanceUnit.Feet : null,
@@ -188,10 +281,13 @@ namespace Emergence.Data.Shared.Extensions
                 SpreadUnit = source.MinimumSpread.HasValue || source.MaximumSpread.HasValue ? DistanceUnit.Feet : null,
                 MinimumLight = !string.IsNullOrEmpty(source.MinimumLight) ? Enum.Parse<LightType>(source.MinimumLight) : null,
                 MaximumLight = !string.IsNullOrEmpty(source.MaximumLight) ? Enum.Parse<LightType>(source.MaximumLight) : null,
+                LightTypes = lightTypes,
                 MinimumWater = !string.IsNullOrEmpty(source.MinimumWater) ? Enum.Parse<WaterType>(source.MinimumWater) : null,
                 MaximumWater = !string.IsNullOrEmpty(source.MaximumWater) ? Enum.Parse<WaterType>(source.MaximumWater) : null,
+                WaterTypes = waterTypes,
                 MinimumZone = source.MinimumZone?.AsSearchModel(),
                 MaximumZone = source.MaximumZone?.AsSearchModel(),
+                Zones = zones,
                 StratificationStages = source.StratificationStages != null ? JsonConvert.DeserializeObject<List<Search.Models.StratificationStage>>(source.StratificationStages) : null,
                 Preferred = source.Preferred,
                 Taxon = source.Taxon?.AsSearchModel(),
@@ -202,5 +298,6 @@ namespace Emergence.Data.Shared.Extensions
                 DateCreated = source.DateCreated,
                 DateModified = source.DateModified
             };
+        }
     }
 }

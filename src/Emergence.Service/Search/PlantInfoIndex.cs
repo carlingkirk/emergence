@@ -12,7 +12,7 @@ namespace Emergence.Service.Search
     public class PlantInfoIndex : IIndex<PlantInfo, Data.Shared.Models.PlantInfo>, IIndex<Lifeform, Data.Shared.Models.Lifeform>
     {
         private readonly ISearchClient<PlantInfo> _searchClient;
-        public string IndexName => "plant_infos_01";
+        public string IndexName => "plant_infos_02";
         public string Alias => "plant_infos";
         public string NameTokenizer => "name_tokenizer";
         public string NameAnalyzer => "name_analyzer";
@@ -423,6 +423,8 @@ namespace Emergence.Service.Search
                     .Name(nn => nn.Synonyms))
                 .Nested<PlantLocation>(n => n
                     .Name(nn => nn.PlantLocations))
+                .Nested<Zone>(n => n
+                    .Name(nn => nn.Zones))
             .Text(t => t.Name(n => n.CommonName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
             .Text(t => t.Name(n => n.ScientificName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
             .Text(t => t.Name("lifeform.commonName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
@@ -434,6 +436,7 @@ namespace Emergence.Service.Search
                 .PropertyName(pl => pl.CommonName, "commonName")
                 .PropertyName(pl => pl.ScientificName, "scientificName")
                 .PropertyName(pl => pl.Preferred, "preferred")
+                .PropertyName(pl => pl.BloomTimes, "bloomTimes")
                 .PropertyName(pl => pl.MinimumBloomTime, "minBloom")
                 .PropertyName(pl => pl.MaximumBloomTime, "maxBloom")
                 .PropertyName(pl => pl.MinimumHeight, "minHeight")
@@ -442,11 +445,14 @@ namespace Emergence.Service.Search
                 .PropertyName(pl => pl.MinimumSpread, "minSpread")
                 .PropertyName(pl => pl.MaximumSpread, "maxSpread")
                 .PropertyName(pl => pl.SpreadUnit, "spreadUnit")
+                .PropertyName(pl => pl.WaterTypes, "waterTypes")
                 .PropertyName(pl => pl.MinimumWater, "minWater")
                 .PropertyName(pl => pl.MaximumWater, "maxWater")
+                .PropertyName(pl => pl.LightTypes, "lightTypes")
                 .PropertyName(pl => pl.MinimumLight, "minLight")
                 .PropertyName(pl => pl.MaximumLight, "maxLight")
                 .PropertyName(pl => pl.StratificationStages, "stratificationStages")
+                .PropertyName(pl => pl.Zones, "zones")
                 .PropertyName(pl => pl.MinimumZone, "minZone")
                 .PropertyName(pl => pl.MaximumZone, "maxZone")
                 .PropertyName(pl => pl.Visibility, "visibility")
