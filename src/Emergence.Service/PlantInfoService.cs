@@ -109,6 +109,34 @@ namespace Emergence.Service
                         values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
                         filter.FacetValues = values;
                     }
+                    else if (aggregation.Name == "Water")
+                    {
+                        var filter = findParams.Filters.WaterFilter;
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        filter.FacetValues = values;
+                    }
+                    else if (aggregation.Name == "Light")
+                    {
+                        var filter = findParams.Filters.LightFilter;
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        filter.FacetValues = values;
+                    }
+                    else if (aggregation.Name == "Zone")
+                    {
+                        var filter = findParams.Filters.ZoneFilter;
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        filter.FacetValues = values;
+                    }
+                    else if (aggregation.Name == "Bloom")
+                    {
+                        var filter = findParams.Filters.BloomFilter;
+                        var values = aggregation.Values.ToDictionary(k => int.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key.ToString(), v => v.Value);
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        filter.FacetValues = values;
+                    }
                 }
             }
 

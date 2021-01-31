@@ -166,27 +166,29 @@ namespace Emergence.Transform.Runner
                 else if (importer.Type == ImporterType.EFImporter && importer.ImportModel == "PlantInfo")
                 {
                     var processor = _importTransformOrchestrator.GetElasticPlantInfoProcessor;
-                    var finished = false;
-                    var counter = 100000;
-                    var counterEnd = 1000000;
+                    var response = await processor.ProcessSome();
+                    Console.WriteLine($"Successes: {response.Successes} / Failures: {response.Failures}");
+                    //var finished = false;
+                    //var counter = 100000;
+                    //var counterEnd = 1000000;
 
-                    while (!finished && counter < counterEnd)
-                    {
-                        var response = await processor.Process(counter, counter + 1000);
+                    //while (!finished && counter < counterEnd)
+                    //{
+                    //    var response = await processor.Process(counter, counter + 1000);
 
-                        Console.WriteLine($"Successes: {response.Successes} / Failures: {response.Failures}");
+                    //    Console.WriteLine($"Successes: {response.Successes} / Failures: {response.Failures}");
 
-                        if (response.Failures > 0)
-                        {
-                            throw new Exception("Errors! Noooooo!");
-                        }
-                        else if (response.Successes == 0)
-                        {
-                            finished = true;
-                        }
+                    //    if (response.Failures > 0)
+                    //    {
+                    //        throw new Exception("Errors! Noooooo!");
+                    //    }
+                    //    else if (response.Successes == 0)
+                    //    {
+                    //        finished = true;
+                    //    }
 
-                        counter += 1000;
-                    }
+                    //    counter += 1000;
+                    //}
                 }
                 else if (importer.Type == ImporterType.EFImporter && importer.ImportModel == "Specimen")
                 {

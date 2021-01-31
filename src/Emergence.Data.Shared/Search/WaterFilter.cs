@@ -103,8 +103,8 @@ namespace Emergence.Data.Shared.Search
             }
             else
             {
-                var lightValue = Enum.Parse<WaterType>(value);
-                return lightValue.ToFriendlyName();
+                var waterValue = Enum.Parse<WaterType>(value);
+                return count != null ? $"{waterValue.ToFriendlyName()} ({count})" : $"{waterValue.ToFriendlyName()}";
             }
         }
     }

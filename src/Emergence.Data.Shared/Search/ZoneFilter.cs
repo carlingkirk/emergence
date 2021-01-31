@@ -4,18 +4,29 @@ using Emergence.Data.Shared.Stores;
 
 namespace Emergence.Data.Shared.Search
 {
-    public class ZoneFilter : Filter
+    public class ZoneFilter : Filter, IFilterDisplay<string>
     {
-        public IDictionary<int, long?> FacetValues { get; set; }
+        public IDictionary<string, long?> FacetValues { get; set; }
         public int Value { get; set; }
         public ZoneFilter()
         {
             Name = "Zone";
             InputType = InputType.Select;
             FilterType = FilterType.Integer;
-            FacetValues = ZoneHelper.GetZones().Select(z => z.Id).ToDictionary(m => m, c => (long?)0L);
+            FacetValues = ZoneHelper.GetZones().Select(z => z.Id).ToDictionary(m => m.ToString(), c => (long?)0L);
         }
 
-        public string DisplayValue(int value, long? count = null) => ZoneHelper.GetZones().First(z => z.Id == value).Name;
+        public string DisplayValue(string value, long? count = null)
+        {
+            if (int.TryParse(value, out var zoneId))
+            {
+                var zone = ZoneHelper.GetZones().First(z => z.Id == zoneId).Name;
+                return count != null ? $"{zone} ({count})" : $"{zone}";
+            }
+            else
+            {
+                return value.ToString();
+            }
+        }
     }
 }

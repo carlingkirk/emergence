@@ -87,7 +87,7 @@ namespace Emergence.Data.Shared.Search
             else
             {
                 var lightValue = Enum.Parse<LightType>(value);
-                return lightValue.ToFriendlyName();
+                return count != null ? $"{lightValue.ToFriendlyName()} ({count})" : $"{lightValue.ToFriendlyName()}";
             }
         }
     }

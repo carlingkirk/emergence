@@ -92,7 +92,11 @@ namespace Emergence.Service.Search
             var aggregations = new AggregationContainerDescriptor<PlantInfo>();
             var searchFilters = new List<SearchFilter<PlantInfo>>
             {
-                new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword" ,"plantLocations", plantInfoFindParams.Filters.RegionFilter.Value)
+                new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword" ,"plantLocations", plantInfoFindParams.Filters.RegionFilter.Value),
+                new SearchValuesFilter<PlantInfo, string>("Water", "waterTypes", plantInfoFindParams.Filters.WaterFilter.MinimumValue, plantInfoFindParams.Filters.WaterFilter.MaximumValue),
+                new SearchValuesFilter<PlantInfo, string>("Light", "lightTypes", plantInfoFindParams.Filters.LightFilter.MinimumValue, plantInfoFindParams.Filters.LightFilter.MaximumValue),
+                new SearchValuesFilter<PlantInfo, string>("Bloom", "bloomTimes", plantInfoFindParams.Filters.BloomFilter.MinimumValue?.ToString(), plantInfoFindParams.Filters.BloomFilter.MaximumValue?.ToString()),
+                new NestedSearchValueFilter<PlantInfo, string>("Zone", "id", "zones", plantInfoFindParams.Filters.ZoneFilter.Value.ToString())
             };
 
             foreach (var filter in searchFilters)
@@ -104,6 +108,14 @@ namespace Emergence.Service.Search
                 else if (filter is SearchRangeFilter<PlantInfo> searchRangeFilter)
                 {
                     aggregations = searchRangeFilter.ToAggregationContainerDescriptor(aggregations);
+                }
+                else if (filter is SearchValuesFilter<PlantInfo, string> searchValuesFilter)
+                {
+                    aggregations = searchValuesFilter.ToAggregationContainerDescriptor(aggregations);
+                }
+                else if (filter is SearchValueFilter<PlantInfo, string> searchValueFilter)
+                {
+                    aggregations = searchValueFilter.ToAggregationContainerDescriptor(aggregations);
                 }
             }
 
@@ -195,7 +207,7 @@ namespace Emergence.Service.Search
                                 bucketAggregations.Add(new AggregationResult<PlantInfo>
                                 {
                                     Name = aggregation.Key,
-                                    Values = bucketResults
+                                    Values = bucketResults.OrderBy(v => v.Key).ToDictionary(k => k.Key, v => v.Value)
                                 });
                             }
                         }
@@ -224,7 +236,7 @@ namespace Emergence.Service.Search
                     bucketAggregations.Add(new AggregationResult<PlantInfo>
                     {
                         Name = aggregation.Key,
-                        Values = bucketResults
+                        Values = bucketResults.OrderBy(v => v.Key).ToDictionary(k => k.Key, v => v.Value)
                     });
 
                     aggregations.AddRange(bucketAggregations);
@@ -260,18 +272,6 @@ namespace Emergence.Service.Search
                     musts.Add(query.Range(r => r.Field(f => f.MaximumHeight).LessThanOrEquals(heightFilter.MaximumValue)));
                 }
 
-                var regionFilter = filters.RegionFilter;
-                if (!string.IsNullOrEmpty(regionFilter.Value))
-                {
-                    musts.Add(query.Nested(n => n
-                        .Path(p => p.PlantLocations)
-                            .Query(q => q
-                                .Match(sq => sq
-                                    .Field("plantLocations.location.region")
-                                    .Query(regionFilter.Value)
-                                    .Fuzziness(Fuzziness.AutoLength(1, 5))))));
-                }
-
                 var spreadFilter = filters.SpreadFilter;
                 if (spreadFilter.MinimumValue > 0)
                 {
@@ -283,92 +283,34 @@ namespace Emergence.Service.Search
                     musts.Add(query.Range(r => r.Field(f => f.MaximumSpread).LessThanOrEquals(spreadFilter.MaximumValue)));
                 }
 
-                var lightFilter = filters.LightFilter;
-                if (!string.IsNullOrEmpty(lightFilter.MinimumValue))
+                var regionFilter = new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword", "plantLocations", filters.RegionFilter.Value);
+                if (!string.IsNullOrEmpty(regionFilter.Value))
                 {
-                    var minLightValue = (double)Enum.Parse<LightType>(lightFilter.MinimumValue);
-                    musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumLight).GreaterThanOrEquals(minLightValue)) ||
-                                                           (!s.Exists(e => e.Field(f => f.MinimumLight)) &&
-                                                             s.Exists(e => e.Field(f => f.MaximumLight))))));
+                    musts.Add(query.Bool(b => b.Should(s => regionFilter.ToFilter(s))));
                 }
 
-                if (!string.IsNullOrEmpty(lightFilter.MaximumValue))
+                var lightFilter = new SearchValuesFilter<PlantInfo, string>("Light", "lightTypes", filters.LightFilter.MinimumValue, filters.LightFilter.MaximumValue);
+                if (!string.IsNullOrEmpty(lightFilter.MinValue) || !string.IsNullOrEmpty(lightFilter.MaxValue))
                 {
-                    var maxLightValue = (double)Enum.Parse<LightType>(lightFilter.MaximumValue);
-                    musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumLight).LessThanOrEquals(maxLightValue)) ||
-                                                           (!s.Exists(e => e.Field(f => f.MaximumLight)) &&
-                                                             s.Exists(e => e.Field(f => f.MinimumLight))))));
+                    musts.Add(query.Bool(b => b.Should(s => lightFilter.ToFilter(s))));
                 }
 
-                var waterFilter = filters.WaterFilter;
-                if (!string.IsNullOrEmpty(waterFilter.MinimumValue))
+                var waterFilter = new SearchValuesFilter<PlantInfo, string>("Water", "waterTypes", filters.WaterFilter.MinimumValue, filters.WaterFilter.MaximumValue);
+                if (!string.IsNullOrEmpty(waterFilter.MinValue) || !string.IsNullOrEmpty(waterFilter.MaxValue))
                 {
-                    var minWaterValue = (double)Enum.Parse<WaterType>(waterFilter.MinimumValue);
-                    musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumWater).GreaterThanOrEquals(minWaterValue)) ||
-                                                           (!s.Exists(e => e.Field(f => f.MinimumWater)) &&
-                                                             s.Exists(e => e.Field(f => f.MaximumWater))))));
+                    musts.Add(query.Bool(b => b.Should(s => waterFilter.ToFilter(s))));
                 }
 
-                if (!string.IsNullOrEmpty(waterFilter.MaximumValue))
+                var bloomFilter = new SearchValuesFilter<PlantInfo, string>("Bloom", "bloomTimes", filters.BloomFilter.MinimumValue?.ToString(), filters.BloomFilter.MaximumValue?.ToString());
+                if (!string.IsNullOrEmpty(bloomFilter.MinValue) || !string.IsNullOrEmpty(bloomFilter.MaxValue))
                 {
-                    var maxWaterValue = (double)Enum.Parse<WaterType>(waterFilter.MaximumValue);
-                    musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumWater).LessThanOrEquals(maxWaterValue)) ||
-                                                           (!s.Exists(e => e.Field(f => f.MaximumWater)) &&
-                                                             s.Exists(e => e.Field(f => f.MinimumWater))))));
+                    musts.Add(query.Bool(b => b.Should(s => bloomFilter.ToFilter(s))));
                 }
 
-                var bloomFilter = filters.BloomFilter;
-
-                if (bloomFilter.MinimumValue > 0 && bloomFilter.MaximumValue > 0)
+                var zoneFilter = new NestedSearchValueFilter<PlantInfo, string>("Zone", "id", "zones", filters.ZoneFilter.Value.ToString());
+                if (!string.IsNullOrEmpty(zoneFilter.Value))
                 {
-                    if (bloomFilter.MaximumValue >= bloomFilter.MinimumValue)
-                    {
-                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumBloomTime)
-                                                                    .LessThanOrEquals(bloomFilter.MaximumValue)
-                                                                    .GreaterThanOrEquals(bloomFilter.MinimumValue)) ||
-                                                                s.Range(r => r.Field(f => f.MaximumBloomTime)
-                                                                    .LessThanOrEquals(bloomFilter.MaximumValue)
-                                                                    .GreaterThanOrEquals(bloomFilter.MinimumValue)) ||
-                                                                (s.Range(r => r.Field(f => f.MinimumBloomTime).GreaterThanOrEquals(bloomFilter.MinimumValue)) &&
-                                                                 !s.Exists(e => e.Field(f => f.MaximumBloomTime))) ||
-                                                                (s.Range(r => r.Field(f => f.MaximumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue)) &&
-                                                                 !s.Exists(e => e.Field(f => f.MinimumBloomTime))))));
-                    }
-                    else
-                    {
-                        // client sent in months that span two years
-                        musts.Add(query.Bool(b => b.Should(s => (s.Range(r => r.Field(f => f.MinimumBloomTime).GreaterThanOrEquals(bloomFilter.MinimumValue)) &&
-                                                                 !s.Exists(e => e.Field(f => f.MaximumBloomTime))) ||
-                                                                (s.Range(r => r.Field(f => f.MaximumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue)) ||
-                                                                 s.Range(r => r.Field(f => f.MinimumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue))))));
-                    }
-                }
-                else
-                {
-                    if (bloomFilter.MinimumValue > 0)
-                    {
-                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MinimumBloomTime).GreaterThanOrEquals(bloomFilter.MinimumValue)) ||
-                                                                (!s.Exists(e => e.Field(f => f.MinimumBloomTime)) &&
-                                                                  s.Exists(e => e.Field(f => f.MaximumBloomTime))))));
-                    }
-
-                    if (bloomFilter.MaximumValue > 0)
-                    {
-                        musts.Add(query.Bool(b => b.Should(s => s.Range(r => r.Field(f => f.MaximumBloomTime).LessThanOrEquals(bloomFilter.MaximumValue)) ||
-                                                                (!s.Exists(e => e.Field(f => f.MaximumBloomTime)) &&
-                                                                  s.Exists(e => e.Field(f => f.MinimumBloomTime))))));
-                    }
-                }
-
-                var zoneFilter = filters.ZoneFilter;
-                if (zoneFilter.Value > 0)
-                {
-                    musts.Add(query.Bool(b => b.Should(s => (s.Exists(e => e.Field(f => f.MinimumZone)) ||
-                                                             s.Exists(e => e.Field(f => f.MaximumZone))) &&
-                                                            (s.Range(r => r.Field(f => f.MinimumZone.Id).LessThanOrEquals(zoneFilter.Value)) ||
-                                                             !s.Exists(e => e.Field(f => f.MinimumZone))) &&
-                                                            (s.Range(r => r.Field(f => f.MaximumZone.Id).GreaterThanOrEquals(zoneFilter.Value)) ||
-                                                             !s.Exists(e => e.Field(f => f.MaximumZone))))));
+                    musts.Add(query.Bool(b => b.Should(s => zoneFilter.ToFilter(s))));
                 }
             }
 
@@ -377,7 +319,7 @@ namespace Emergence.Service.Search
 
         private QueryContainer FilterByVisibility(QueryContainerDescriptor<PlantInfo> query, Data.Shared.Models.User user) =>
             query.Bool(b => b
-                    .Filter(s => !s.Exists(t => t.Field(f => f.User)) ||
+                    .Must(s => !s.Exists(t => t.Field(f => f.User)) ||
                                  s.Term(t => t.Visibility, Visibility.Public) ||
                                  s.Term(t => t.User.Id, user.Id) ||
                                 // Not hidden
