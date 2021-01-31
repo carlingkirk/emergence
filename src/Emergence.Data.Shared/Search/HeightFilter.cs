@@ -4,8 +4,9 @@ using System.Linq;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Height")]
-    public class HeightFilter : RangeFilter<double>
+    public class HeightFilter : SelectRangeFilter<double>, IFilterDisplay<double>
     {
+        public IEnumerable<double> Values { get; set; }
         public HeightFilter(RangeFilter<double> filter)
         {
             Name = filter.Name;
@@ -20,13 +21,14 @@ namespace Emergence.Data.Shared.Search
             Name = "Height";
             InputType = InputType.SelectRange;
             FilterType = FilterType.Double;
-            var values = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
-            FacetValues = values.ToDictionary(m => m, c => (long?)0L);
+            Values = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
+            MinFacetValues = Values.ToDictionary(m => m, c => (long?)0L);
+            MaxFacetValues = Values.ToDictionary(m => m, c => (long?)0L);
         }
 
         public string DisplayValue(double value, long? count = null)
         {
-            if (value > 0)
+            if (value == 0)
             {
                 return value.ToString();
             }
@@ -36,4 +38,12 @@ namespace Emergence.Data.Shared.Search
             }
         }
     }
+
+    public class SearchRange<T>
+    {
+        public string Name { get; set; }
+        public T MinValue { get; set; }
+        public T MaxValue { get; set; }
+    }
+
 }

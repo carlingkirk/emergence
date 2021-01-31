@@ -137,6 +137,30 @@ namespace Emergence.Service
                         values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
                         filter.FacetValues = values;
                     }
+                    else if (aggregation.Name == "MinSpread")
+                    {
+                        var filter = findParams.Filters.SpreadFilter;
+                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+                        filter.MinFacetValues = values;
+                    }
+                    else if (aggregation.Name == "MaxSpread")
+                    {
+                        var filter = findParams.Filters.SpreadFilter;
+                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+                        filter.MaxFacetValues = values;
+                    }
+                    else if (aggregation.Name == "MinHeight")
+                    {
+                        var filter = findParams.Filters.HeightFilter;
+                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+                        filter.MinFacetValues = values;
+                    }
+                    else if (aggregation.Name == "MaxHeight")
+                    {
+                        var filter = findParams.Filters.HeightFilter;
+                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+                        filter.MaxFacetValues = values;
+                    }
                 }
             }
 

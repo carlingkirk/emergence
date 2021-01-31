@@ -40,9 +40,9 @@
             <div class="row">
                 <div class="col-5 range-input">
                     <select @bind="@Filters.HeightFilter.MinimumValue" class="form-control" id="@Filters.HeightFilter.Name.ToLower()">
-                        @foreach (var value in Filters.HeightFilter.FacetValues)
+                        @foreach (var value in Filters.HeightFilter.MinFacetValues)
                         {
-                            <option value="@value.Key">@(value.Key)</option>
+                            <option value="@value.Key">@(Filters.HeightFilter.DisplayValue(value.Key, value.Value))</option>
                         }
                     </select>
                 </div>
@@ -51,9 +51,9 @@
                 </div>
                 <div class="col-5 range-input">
                     <select @bind="@Filters.HeightFilter.MaximumValue" class="form-control" id="@Filters.HeightFilter.Name.ToLower()">
-                        @foreach (var value in Filters.HeightFilter.FacetValues)
+                        @foreach (var value in Filters.HeightFilter.MaxFacetValues)
                         {
-                            <option value="@value.Key">@(value.Key)</option>
+                            <option value="@value.Key">@(Filters.HeightFilter.DisplayValue(value.Key, value.Value))</option>
                         }
                     </select>
                 </div>
@@ -67,9 +67,9 @@
             <div class="row">
                 <div class="col-5 range-input">
                     <select @bind="@Filters.SpreadFilter.MinimumValue" class="form-control" id="@Filters.SpreadFilter.Name.ToLower()">
-                        @foreach (var value in Filters.SpreadFilter.FacetValues)
+                        @foreach (var value in Filters.SpreadFilter.MinFacetValues)
                         {
-                            <option value="@value.Key">@(value.Key)</option>
+                            <option value="@value.Key">@(Filters.SpreadFilter.DisplayValue(value.Key, value.Value))</option>
                         }
                     </select>
                 </div>
@@ -78,9 +78,9 @@
                 </div>
                 <div class="col-5 range-input">
                     <select @bind="@Filters.SpreadFilter.MaximumValue" class="form-control" id="@Filters.SpreadFilter.Name.ToLower()">
-                        @foreach (var value in Filters.SpreadFilter.FacetValues)
+                        @foreach (var value in Filters.SpreadFilter.MaxFacetValues)
                         {
-                            <option value="@value.Key">@(value.Key)</option>
+                            <option value="@value.Key">@(Filters.SpreadFilter.DisplayValue(value.Key, value.Value))</option>
                         }
                     </select>
                 </div>

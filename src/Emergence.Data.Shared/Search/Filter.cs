@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -25,6 +24,19 @@ namespace Emergence.Data.Shared.Search
     {
         public IDictionary<TValue, long?> FacetValues { get; set; }
         public override bool IsFiltered() => FacetValues != null && FacetValues switch
+        {
+            string stringValue => !string.IsNullOrEmpty(stringValue),
+            int intValue => intValue != 0,
+            double doubleValue => doubleValue != 0,
+            _ => false
+        };
+    }
+
+    public class SelectRangeFilter<TValue> : RangeFilter<TValue>
+    {
+        public IDictionary<TValue, long?> MinFacetValues { get; set; }
+        public IDictionary<TValue, long?> MaxFacetValues { get; set; }
+        public override bool IsFiltered() => MinFacetValues != null && MinFacetValues switch
         {
             string stringValue => !string.IsNullOrEmpty(stringValue),
             int intValue => intValue != 0,

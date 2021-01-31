@@ -98,7 +98,7 @@ namespace Emergence.Service.Search
                 {
                     aggregations = nestedFilter.ToAggregationContainerDescriptor(aggregations);
                 }
-                else if (filter is SearchRangeFilter<Specimen> searchRangeFilter)
+                else if (filter is SearchRangeFilter<Specimen, double> searchRangeFilter)
                 {
                     aggregations = searchRangeFilter.ToAggregationContainerDescriptor(aggregations);
                 }
@@ -109,9 +109,6 @@ namespace Emergence.Service.Search
             }
 
             searchDescriptor.Aggregations(a => aggregations);
-
-            //// Aggregations
-            //searchDescriptor.Aggregations(a => a.Terms("Stage", t => t.Field(f => f.SpecimenStage)));
 
             var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);
 

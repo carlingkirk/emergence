@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nest;
 
 namespace Emergence.Service.Search
@@ -21,38 +21,85 @@ namespace Emergence.Service.Search
                     .Field(Field));
     }
 
-    public class SearchRangeFilter<T> : SearchFilter<T> where T : class
+    public class SearchRangeFilter<T, TValue> : SearchFilter<T> where T : class
     {
         public string MinField { get; set; }
         public string MaxField { get; set; }
-        public IEnumerable<int> Values { get; set; }
+        public IEnumerable<TValue> Values { get; set; }
+        public string Value { get; set; }
+        public TValue MinValue { get; set; }
+        public TValue MaxValue { get; set; }
 
-        public SearchRangeFilter(string name, string minField, string maxField, IEnumerable<int> values, string field = null) : base(name, field)
+        public SearchRangeFilter(string name, string minField, string maxField, IEnumerable<TValue> values, TValue minValue, TValue maxValue, string field = null) : base(name, field)
         {
             Name = name;
             MinField = minField;
             MaxField = maxField;
             Values = values;
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+
+        public QueryContainer ToFilter(QueryContainerDescriptor<T> queryContainerDescriptor)
+        {
+            QueryContainer query = null;
+
+            if ((MinValue != null && !string.IsNullOrEmpty(MinValue?.ToString())) || (MaxValue != null && !string.IsNullOrEmpty(MaxValue.ToString())))
+            {
+                var hasMin = double.TryParse(MinValue?.ToString(), out var minValue) && minValue > 0;
+                var hasMax = double.TryParse(MaxValue?.ToString(), out var maxValue) && maxValue > 0;
+
+                if (hasMin && minValue > 0 && hasMax && maxValue > 0)
+                {
+                    return queryContainerDescriptor.Bool(b => b.Must(m => (m.Exists(e => e.Field(MinField)) || m.Exists(e => e.Field(MaxField))) &&
+                                                                        (m.Range(r => r.Field(MinField).GreaterThanOrEquals(minValue)) ||
+                                                                        (!m.Exists(e => e.Field(MinField)) &&
+                                                                        (m.Range(r => r.Field(MaxField).LessThanOrEquals(maxValue)) ||
+                                                                         !m.Exists(e => e.Field(MaxField)))))));
+                }
+                else
+                {
+                    if (hasMin && minValue > 0)
+                    {
+                        return queryContainerDescriptor.Bool(b => b.Must(m => m.Range(r => r.Field(MinField).GreaterThanOrEquals(minValue))));
+                    }
+                    else if (hasMax && maxValue > 0)
+                    {
+                        return queryContainerDescriptor.Bool(b => b.Must(m => m.Range(r => r.Field(MaxField).LessThanOrEquals(maxValue))));
+                    }
+                }
+            }
+
+            return query;
         }
 
         public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor)
         {
-            var values = Values.ToArray();
-
-            for (var i = 0; i < values.Length; i++)
+            var fromRanges = new List<Func<AggregationRangeDescriptor, IAggregationRange>>();
+            var toRanges = new List<Func<AggregationRangeDescriptor, IAggregationRange>>();
+            foreach (var valueOption in Values)
             {
-                if (i + 1 <= values.Length)
+                var value = double.Parse(valueOption.ToString());
+                fromRanges.Add(r =>
                 {
-                    aggregationDescriptor.Filters(Name, ff => ff
-                        .NamedFilters(nf => nf
-                            .Filter(i.ToString(),
-                                    f => (f.Exists(e => e.Field(MinField)) || f.Exists(e => e.Field(MaxField))) &&
-                                         (f.Range(r => r.Field(MinField).LessThanOrEquals(i)) ||
-                                          (!f.Exists(e => e.Field(MinField)) &&
-                                          (f.Range(r => r.Field(MaxField).GreaterThanOrEquals(i)) ||
-                                           !f.Exists(e => e.Field(MaxField))))))));
-                }
+                    r.From(value)
+                    .To(9999)
+                     .Key(value.ToString());
+
+                    return r;
+                });
+                toRanges.Add(r =>
+                {
+                    r.From(0)
+                     .To(value)
+                     .Key(value.ToString());
+
+                    return r;
+                });
             }
+
+            aggregationDescriptor.Range("Min" + Name, r => r.Field(MinField).Ranges(fromRanges.ToArray()));
+            aggregationDescriptor.Range("Max" + Name, r => r.Field(MaxField).Ranges(toRanges.ToArray()));
 
             return aggregationDescriptor;
         }

@@ -4,8 +4,10 @@ using System.Linq;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Spread")]
-    public class SpreadFilter : RangeFilter<double>, IFilterDisplay<double>
+    public class SpreadFilter : SelectRangeFilter<double>, IFilterDisplay<double>
     {
+        public IEnumerable<double> Values { get; set; }
+
         public SpreadFilter(RangeFilter<double> filter)
         {
             Name = filter.Name;
@@ -20,13 +22,14 @@ namespace Emergence.Data.Shared.Search
             Name = "Spread";
             InputType = InputType.SelectRange;
             FilterType = FilterType.Double;
-            var values = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
-            FacetValues = values.ToDictionary(m => m, c => (long?)0L);
+            Values = new List<double> { 0, .5, 1, 2, 3, 5, 8, 10, 15, 30, 50, 100 };
+            MinFacetValues = Values.ToDictionary(m => m, c => (long?)0L);
+            MaxFacetValues = Values.ToDictionary(m => m, c => (long?)0L);
         }
 
         public string DisplayValue(double value, long? count = null)
         {
-            if (value > 0)
+            if (value == 0)
             {
                 return value.ToString();
             }
