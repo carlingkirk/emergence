@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data.Shared;
+using Emergence.Data.Shared.Search;
 using Emergence.Data.Shared.Search.Models;
 using Nest;
 
@@ -65,7 +66,7 @@ namespace Emergence.Service.Search
                 new SearchValuesFilter<PlantInfo, string>("Water", "waterTypes", plantInfoFindParams.Filters.WaterFilter.MinimumValue, plantInfoFindParams.Filters.WaterFilter.MaximumValue),
                 new SearchValuesFilter<PlantInfo, string>("Light", "lightTypes", plantInfoFindParams.Filters.LightFilter.MinimumValue, plantInfoFindParams.Filters.LightFilter.MaximumValue),
                 new SearchValuesFilter<PlantInfo, string>("Bloom", "bloomTimes", plantInfoFindParams.Filters.BloomFilter.MinimumValue?.ToString(), plantInfoFindParams.Filters.BloomFilter.MaximumValue?.ToString()),
-                new NestedSearchValueFilter<PlantInfo, string>("Zone", "id", "zones", plantInfoFindParams.Filters.ZoneFilter.Value.ToString()),
+                new NestedSearchValueFilter<PlantInfo, string>("Zone", "id", "zones", plantInfoFindParams.Filters.ZoneFilter.Value?.ToString()),
                 new SearchRangeFilter<PlantInfo, double>("Height", "minHeight","maxHeight", plantInfoFindParams.Filters.HeightFilter.Values, plantInfoFindParams.Filters.HeightFilter.Value, plantInfoFindParams.Filters.HeightFilter.MaximumValue),
                 new SearchRangeFilter<PlantInfo, double>("Spread", "minSpread","maxSpread", plantInfoFindParams.Filters.SpreadFilter.Values, plantInfoFindParams.Filters.SpreadFilter.Value, plantInfoFindParams.Filters.SpreadFilter.MaximumValue)
             };
@@ -217,10 +218,11 @@ namespace Emergence.Service.Search
                     }
                     if (!bucketAggregations.Any() && singleBucket.DocCount > 0)
                     {
+                        var filter = PlantInfoFindParams.GetFilter(aggregation.Key, plantInfoFindParams) as Filter<string>;
                         bucketAggregations.Add(new AggregationResult<PlantInfo>
                         {
                             Name = aggregation.Key,
-                            Values = new Dictionary<string, long?> { { plantInfoFindParams.Filters.RegionFilter.Value, singleBucket.DocCount } }
+                            Values = new Dictionary<string, long?> { { filter.Value, singleBucket.DocCount } }
                         });
                     }
 

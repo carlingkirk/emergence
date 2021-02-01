@@ -102,64 +102,37 @@ namespace Emergence.Service
             {
                 foreach (var aggregation in plantInfoSearch.AggregationResult)
                 {
-                    if (aggregation.Name == "Region")
+                    var filter = PlantInfoFindParams.GetFilter(aggregation.Name, findParams);
+
+                    if (filter is SelectFilter<string> selectFilter)
                     {
-                        var filter = findParams.Filters.RegionFilter;
                         var values = aggregation.Values;
                         values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        filter.FacetValues = values;
+                        selectFilter.FacetValues = values;
                     }
-                    else if (aggregation.Name == "Water")
+                    if (filter is SelectRangeFilter<double> selectRangeFilter)
                     {
-                        var filter = findParams.Filters.WaterFilter;
+                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+                        if (aggregation.Name.Contains("Min"))
+                        {
+                            selectRangeFilter.MinFacetValues = values;
+                        }
+                        else
+                        {
+                            selectRangeFilter.MaxFacetValues = values;
+                        }
+                    }
+                    if (filter is RangeFilter<string> rangeFilter)
+                    {
                         var values = aggregation.Values;
+                        if (aggregation.Name == "Bloom")
+                        {
+                            values = aggregation.Values.ToDictionary(k => int.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key.ToString(), v => v.Value);
+                        }
+
                         values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        filter.FacetValues = values;
-                    }
-                    else if (aggregation.Name == "Light")
-                    {
-                        var filter = findParams.Filters.LightFilter;
-                        var values = aggregation.Values;
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        filter.FacetValues = values;
-                    }
-                    else if (aggregation.Name == "Zone")
-                    {
-                        var filter = findParams.Filters.ZoneFilter;
-                        var values = aggregation.Values;
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        filter.FacetValues = values;
-                    }
-                    else if (aggregation.Name == "Bloom")
-                    {
-                        var filter = findParams.Filters.BloomFilter;
-                        var values = aggregation.Values.ToDictionary(k => int.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key.ToString(), v => v.Value);
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        filter.FacetValues = values;
-                    }
-                    else if (aggregation.Name == "MinSpread")
-                    {
-                        var filter = findParams.Filters.SpreadFilter;
-                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
-                        filter.MinFacetValues = values;
-                    }
-                    else if (aggregation.Name == "MaxSpread")
-                    {
-                        var filter = findParams.Filters.SpreadFilter;
-                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
-                        filter.MaxFacetValues = values;
-                    }
-                    else if (aggregation.Name == "MinHeight")
-                    {
-                        var filter = findParams.Filters.HeightFilter;
-                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
-                        filter.MinFacetValues = values;
-                    }
-                    else if (aggregation.Name == "MaxHeight")
-                    {
-                        var filter = findParams.Filters.HeightFilter;
-                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
-                        filter.MaxFacetValues = values;
+
+                        rangeFilter.FacetValues = values;
                     }
                 }
             }

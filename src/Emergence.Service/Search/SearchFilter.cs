@@ -262,10 +262,7 @@ namespace Emergence.Service.Search
                 return queryContainerDescriptor.Nested(n => n
                         .Path(Path)
                             .Query(q => q
-                                .Match(sq => sq
-                                    .Field(Field)
-                                    .Query(Value.ToString())
-                                    .Fuzziness(Fuzziness.AutoLength(1, 5)))));
+                                .Term(Path + "." + Field, Value.ToString())));
             }
 
             return query;
@@ -287,9 +284,11 @@ namespace Emergence.Service.Search
             {
                 return aggregationDescriptor
                     .Filter(Name, f => f.Filter(f => f
-                        .Nested(n => n.Path(Path).Query(q => q.Term(Path + "." + Field, Value.ToString()))))
+                        .Nested(n => n.Path(Path)
+                            .Query(q => q.Term(Path + "." + Field, Value.ToString()))))
                     .Aggregations(a => a
-                        .Terms(Name, t => t.Field(Path + "." + Field))));
+                        .Nested(Name, n => n.Path(Path))
+                            .Terms(Name, t => t.Field(Path + "." + Field))));
             }
         }
     }

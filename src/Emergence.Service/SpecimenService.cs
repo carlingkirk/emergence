@@ -77,17 +77,50 @@ namespace Emergence.Service
                 specimens.Add(specimen.AsModel());
             }
 
-            var filters = new SpecimenFilters();
             if (specimenSearch.Aggregations != null)
             {
                 foreach (var aggregation in specimenSearch.AggregationResult)
                 {
                     if (aggregation.Name == "Stage")
                     {
-                        var filter = filters.StageFilter;
+                        var filter = findParams.Filters.StageFilter;
                         var values = aggregation.Values;
                         values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
                         filter.FacetValues = values;
+                    }
+                }
+            }
+
+            if (specimenSearch.Aggregations != null)
+            {
+                foreach (var aggregation in specimenSearch.AggregationResult)
+                {
+                    var filter = SpecimenFindParams.GetFilter(aggregation.Name, findParams);
+
+                    if (filter is SelectFilter<string> selectFilter)
+                    {
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        selectFilter.FacetValues = values;
+                    }
+                    if (filter is SelectRangeFilter<double> selectRangeFilter)
+                    {
+                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+                        if (aggregation.Name.Contains("Min"))
+                        {
+                            selectRangeFilter.MinFacetValues = values;
+                        }
+                        else
+                        {
+                            selectRangeFilter.MaxFacetValues = values;
+                        }
+                    }
+                    if (filter is RangeFilter<string> rangeFilter)
+                    {
+                        var values = aggregation.Values;
+                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+
+                        rangeFilter.FacetValues = values;
                     }
                 }
             }
@@ -96,7 +129,7 @@ namespace Emergence.Service
             {
                 Results = specimens,
                 Count = specimenSearch.Count,
-                Filters = filters
+                Filters = findParams.Filters
             };
         }
 
