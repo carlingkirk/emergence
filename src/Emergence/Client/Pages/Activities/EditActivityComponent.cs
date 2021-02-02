@@ -107,7 +107,7 @@ namespace Emergence.Client.Components
 
             if (BlazoredModal != null)
             {
-                await BlazoredModal.CloseAsync(ModalResult.Ok(Activity));
+                await BlazoredModal.Close(ModalResult.Ok(Activity));
             }
             else
             {
