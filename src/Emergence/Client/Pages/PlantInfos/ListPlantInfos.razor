@@ -122,7 +122,14 @@
                                     <span>@plantInfo.Requirements.LightRequirements.ToFriendlyString()</span>
                                 </div>
                                 <div class="col-12">
-                                    <span>by @(plantInfo.User == null ? "System" : plantInfo.User.DisplayName)</span>
+                                    @if (plantInfo.User == null)
+                                    {
+                                        <span>from @(plantInfo.Origin.Name.Substring(0,20))</span>
+                                    }
+                                    else
+                                    {
+                                        <span>by @(plantInfo.User.DisplayName)</span>
+                                    }
                                 </div>
                             </Content>
                         </Card>

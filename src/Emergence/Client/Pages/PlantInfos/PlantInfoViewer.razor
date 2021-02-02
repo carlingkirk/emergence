@@ -1,5 +1,8 @@
 @page "/plantinfo/{Id:int}"
 @using Emergence.Client.Components
+@using Emergence.Data.Shared.Models
+@using Emergence.Data.Shared.Extensions
+@inject IModalServiceClient ModalServiceClient
 
 @inherits PlantInfoComponent
 
@@ -43,6 +46,13 @@
     {
         <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
         <button type="button" class="btn btn-primary" @onclick="async () => await RemovePlantInfo()">Delete</button>
+    }
+    @if (!IsEditing && !string.IsNullOrEmpty(UserId))
+    {
+        <button type="button" class="btn btn-primary" style="margin:.25rem 0;"
+                @onclick="@(async () => await ModalServiceClient.ShowPlantInfoModal(PlantInfo.Clone(UserId), true))">
+            <span class="oi oi-plus btn-oi"></span>Clone
+        </button>
     }
 </div>
 

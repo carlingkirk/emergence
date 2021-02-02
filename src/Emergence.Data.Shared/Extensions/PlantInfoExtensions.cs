@@ -299,5 +299,27 @@ namespace Emergence.Data.Shared.Extensions
                 DateModified = source.DateModified
             };
         }
+
+        public static Models.PlantInfo Clone(this Models.PlantInfo plantInfo, string userId) => new Models.PlantInfo
+        {
+            PlantInfoId = 0,
+            Lifeform = plantInfo.Lifeform,
+            LifeformId = plantInfo.LifeformId,
+            ScientificName = plantInfo.ScientificName,
+            CommonName = plantInfo.CommonName,
+            BloomTime = plantInfo.BloomTime,
+            Height = plantInfo.Height,
+            Spread = plantInfo.Spread,
+            Requirements = plantInfo.Requirements,
+            Visibility = Visibility.Inherit,
+            UserId = null,
+            CreatedBy = userId,
+            DateCreated = DateTime.UtcNow,
+            Taxon = plantInfo.Taxon,
+            Origin = null,
+            Locations = plantInfo.Locations,
+            Photos = null,
+            User = null
+        };
     }
 }

@@ -4,6 +4,7 @@ using Emergence.Data.Shared;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emergence.API.Controllers
@@ -27,11 +28,13 @@ namespace Emergence.API.Controllers
         [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
         public async Task<User> Get(string userId) => await _userService.GetUserAsync(userId);
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("get")]
         public async Task<User> Get(int? id, string name)
         {
             var viewingUser = await _userService.GetIdentifyingUser(UserId);
+
             User user;
             if (id.HasValue)
             {

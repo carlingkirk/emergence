@@ -15,21 +15,24 @@
                 <span class="font-italic">@User.DisplayName</span>
             </div>
             <div class="col-lg-4 col-xs" style="text-align: right;">
-                @if (string.Equals(User.UserId, UserId, StringComparison.OrdinalIgnoreCase))
+                @if (IsAuthenticated)
                 {
-                    <span class="text-body">Your profile</span>
-                }
-                else if (User.IsViewerContact)
-                {
-                    <span class="text-body">You are a contact</span>
-                }
-                else if (User.IsViewerContactRequested)
-                {
-                    <span class="text-body">Contact request sent</span>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-primary" @onclick="AddContactRequestAsync"><span class="oi oi-plus btn-oi"></span>Contact</button>
+                    @if (string.Equals(User.UserId, UserId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="text-body">Your profile</span>
+                    }
+                    else if (User.IsViewerContact)
+                    {
+                        <span class="text-body">You are a contact</span>
+                    }
+                    else if (User.IsViewerContactRequested)
+                    {
+                        <span class="text-body">Contact request sent</span>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="AddContactRequestAsync"><span class="oi oi-plus btn-oi"></span>Contact</button>
+                    }
                 }
             </div>
         </div>
@@ -100,19 +103,23 @@
             }
         </div>
     </div>
-    @if (!string.IsNullOrEmpty(User.UserId))
-    {
-        <div class="group">
-            <div class="row">
-                <div class="form-group">
-                    <div class="col">
+    <div class="group">
+        <div class="row">
+            <div class="form-group">
+                <div class="col">
+                    @if (!string.IsNullOrEmpty(User.UserId) && IsAuthenticated)
+                    {
                         <label for="specimens">@(User.DisplayName)'s Specimens</label>
                         <ListSpecimens ForUserId="@User.UserId.ToString()" LinkRelations="false" />
-                    </div>
+                    }
+                    else
+                    {
+                        <p><a href="authentication/login">Login</a> to see @User.DisplayName's specimens</p>
+                    }
                 </div>
             </div>
         </div>
-    }
+    </div>
 }
 
 @code {

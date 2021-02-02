@@ -66,6 +66,8 @@
                     </div>
                 </div>
             }
+            @if (PlantInfo.Requirements.ZoneRequirements?.MinimumZone != null || PlantInfo.Requirements.ZoneRequirements?.MaximumZone != null)
+            { 
                 <div class="col-lg-4 col-xs">
                     <div>
                         <label for="zones">Zones</label>
@@ -76,6 +78,7 @@
                         </span>
                     </div>
                 </div>
+            }
             @if (PlantInfo.BloomTime.MinimumBloomTime != Month.Unknown || PlantInfo.BloomTime.MaximumBloomTime != Month.Unknown)
             {
                 <div class="col-lg-4 col-xs">

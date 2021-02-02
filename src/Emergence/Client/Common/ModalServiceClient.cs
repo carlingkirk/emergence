@@ -77,11 +77,12 @@ namespace Emergence.Client.Common
             return await modal.Result;
         }
 
-        public async Task<ModalResult> ShowPlantInfoModal(PlantInfo plantInfo)
+        public async Task<ModalResult> ShowPlantInfoModal(PlantInfo plantInfo, bool isEditing = false)
         {
             var modalParams = new ModalParameters();
             modalParams.Add("PlantInfo", plantInfo);
             modalParams.Add("IsModal", true);
+            modalParams.Add("IsEditing", isEditing);
 
             var modal = _modalService.Show<PlantInfoViewer>("Plant Profile", modalParams, DefaultModalOptions);
             return await modal.Result;
