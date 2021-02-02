@@ -42,7 +42,7 @@
     <button type="submit" class="btn btn-primary">Send</button>
     @if (BlazoredModal != null)
     {
-        <button type="button" @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+        <button type="button" @onclick="async () => await BlazoredModal.CancelAsync()" class="btn btn-secondary">Cancel</button>
     }
     else
     {
@@ -64,7 +64,7 @@
 
         if (BlazoredModal != null)
         {
-            await BlazoredModal.Close(ModalResult.Ok(message));
+            await BlazoredModal.CloseAsync(ModalResult.Ok(message));
         }
         else
         {

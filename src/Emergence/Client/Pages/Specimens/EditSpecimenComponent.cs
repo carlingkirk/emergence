@@ -44,7 +44,7 @@ namespace Emergence.Client.Components
 
             if (BlazoredModal != null)
             {
-                await BlazoredModal.Close(ModalResult.Ok(Specimen));
+                await BlazoredModal.CloseAsync(ModalResult.Ok(Specimen));
             }
             else
             {
