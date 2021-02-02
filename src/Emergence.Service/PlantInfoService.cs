@@ -107,7 +107,10 @@ namespace Emergence.Service
                     if (filter is SelectFilter<string> selectFilter)
                     {
                         var values = aggregation.Values;
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        if (!values.Any(v => v.Key == "0"))
+                        {
+                            values = values.Prepend(new KeyValuePair<string, long?>("0", null)).ToDictionary(k => k.Key, v => v.Value);
+                        }
                         selectFilter.FacetValues = values;
                     }
                     if (filter is SelectRangeFilter<double> selectRangeFilter)
@@ -129,9 +132,10 @@ namespace Emergence.Service
                         {
                             values = aggregation.Values.ToDictionary(k => int.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key.ToString(), v => v.Value);
                         }
-
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-
+                        if (!values.Any(v => v.Key == "0"))
+                        {
+                            values = values.Prepend(new KeyValuePair<string, long?>("0", null)).ToDictionary(k => k.Key, v => v.Value);
+                        }
                         rangeFilter.FacetValues = values;
                     }
                 }

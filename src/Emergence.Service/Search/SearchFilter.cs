@@ -128,22 +128,10 @@ namespace Emergence.Service.Search
             return query;
         }
 
-        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor)
-        {
-            if (string.IsNullOrEmpty(Value?.ToString()))
-            {
-                return aggregationDescriptor
+        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor) =>
+            aggregationDescriptor
                  .Terms(Name, t => t
                      .Field(Field));
-            }
-            else
-            {
-                return aggregationDescriptor
-                    .Filter(Name, f => f.Filter(ff => ff.Term(Name, Value)))
-                 .Terms(Name, t => t
-                     .Field(Field));
-            }
-        }
     }
 
     public class SearchValuesFilter<T, TValue> : SearchFilter<T> where T : class
@@ -268,28 +256,11 @@ namespace Emergence.Service.Search
             return query;
         }
 
-        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor)
-        {
-            var isNumber = int.TryParse(Value?.ToString(), out var value);
-
-            if ((isNumber && value == 0) || string.IsNullOrEmpty(Value?.ToString()))
-            {
-                return aggregationDescriptor
-                    .Nested(Name, n => n
-                    .Path(Path)
-                        .Aggregations(a => a
-                            .Terms(Name, t => t.Field(Path + "." + Field))));
-            }
-            else
-            {
-                return aggregationDescriptor
-                    .Filter(Name, f => f.Filter(f => f
-                        .Nested(n => n.Path(Path)
-                            .Query(q => q.Term(Path + "." + Field, Value.ToString()))))
+        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor) =>
+            aggregationDescriptor
+                .Nested(Name, n => n
+                .Path(Path)
                     .Aggregations(a => a
-                        .Nested(Name, n => n.Path(Path))
-                            .Terms(Name, t => t.Field(Path + "." + Field))));
-            }
-        }
+                        .Terms(Name, t => t.Field(Path + "." + Field))));
     }
 }

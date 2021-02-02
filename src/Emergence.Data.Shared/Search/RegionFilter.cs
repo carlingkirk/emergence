@@ -18,10 +18,7 @@ namespace Emergence.Data.Shared.Search
             Name = "Region";
             InputType = InputType.Select;
             FilterType = FilterType.String;
-            FacetValues = new Dictionary<string, long?>
-            {
-                { "", null }
-            };
+            FacetValues = new Dictionary<string, long?>();
         }
 
         public string DisplayValue(string value, long? count = null)
@@ -29,6 +26,10 @@ namespace Emergence.Data.Shared.Search
             if (string.IsNullOrEmpty(value))
             {
                 return value;
+            }
+            else if (value == "0")
+            {
+                return string.Empty;
             }
             else
             {

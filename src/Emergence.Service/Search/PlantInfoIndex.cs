@@ -216,13 +216,13 @@ namespace Emergence.Service.Search
                             }
                         }
                     }
-                    if (!bucketAggregations.Any() && singleBucket.DocCount > 0)
+                    if (!bucketAggregations.Any())
                     {
                         var filter = PlantInfoFindParams.GetFilter(aggregation.Key, plantInfoFindParams) as Filter<string>;
                         bucketAggregations.Add(new AggregationResult<PlantInfo>
                         {
                             Name = aggregation.Key,
-                            Values = new Dictionary<string, long?> { { filter.Value, singleBucket.DocCount } }
+                            Values = new Dictionary<string, long?> { { filter.Value ?? "0", singleBucket.DocCount } }
                         });
                     }
 

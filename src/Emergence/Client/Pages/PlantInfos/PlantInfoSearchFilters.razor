@@ -1,175 +1,176 @@
-<div class="container">
-    <div class="row">
-        @*Zone*@
-        <div class="col-lg-2 col-xs">
-            <div class="row">
-                <label for="@Filters.ZoneFilter.Name.ToLower()">@Filters.ZoneFilter.Name</label>
-            </div>
-            <div class="row">
-                <div class="col-lg-11 col-xs" style="padding: 0;">
-                    <select @bind="@Filters.ZoneFilter.Value" class="form-control" id="@Filters.ZoneFilter.Name.ToLower()">
-                        @foreach (var value in Filters.ZoneFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.ZoneFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+<EditForm Model="@Filters">
+    <div class="container">
+        <div class="row">
+            @*Zone*@
+            <div class="col-lg-2 col-xs">
+                <div class="row">
+                    <label for="@Filters.ZoneFilter.Name.ToLower()">@Filters.ZoneFilter.Name</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-11 col-xs" style="padding: 0;">
+                        <select @bind="@Filters.ZoneFilter.Value" class="form-control" id="@Filters.ZoneFilter.Name.ToLower()">
+                            @foreach (var value in Filters.ZoneFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.ZoneFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
-         </div>
-        @*Region*@
-        <div class="col-lg-3 col-xs">
-            <div class="row">
-                <label for="@Filters.RegionFilter.Name.ToLower()">@Filters.RegionFilter.Name</label>
-            </div>
-            <div class="row">
-                <div class="col-lg-11 col-xs" style="padding: 0;">
-                    <select @bind="@Filters.RegionFilter.Value" class="form-control" id="@Filters.RegionFilter.Name.ToLower()">
-                        @foreach (var value in Filters.RegionFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.RegionFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+            @*Region*@
+            <div class="col-lg-3 col-xs">
+                <div class="row">
+                    <label for="@Filters.RegionFilter.Name.ToLower()">@Filters.RegionFilter.Name</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-11 col-xs" style="padding: 0;">
+                        <select @bind="@Filters.RegionFilter.Value" class="form-control" id="@Filters.RegionFilter.Name.ToLower()">
+                            @foreach (var value in Filters.RegionFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.RegionFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        @*Height*@
-        <div class="col-lg-3 col-xs">
-            <div class="row">
-                <label for="@Filters.HeightFilter.Name.ToLower()">@Filters.HeightFilter.Name (ft)</label>
-            </div>
-            <div class="row">
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.HeightFilter.MinimumValue" class="form-control" id="@Filters.HeightFilter.Name.ToLower()">
-                        @foreach (var value in Filters.HeightFilter.MinFacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.HeightFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+            @*Height*@
+            <div class="col-lg-3 col-xs">
+                <div class="row">
+                    <label for="@Filters.HeightFilter.Name.ToLower()">@Filters.HeightFilter.Name (ft)</label>
                 </div>
-                <div class="col-1 range-separator">
-                    <span>to</span>
-                </div>
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.HeightFilter.MaximumValue" class="form-control" id="@Filters.HeightFilter.Name.ToLower()">
-                        @foreach (var value in Filters.HeightFilter.MaxFacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.HeightFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
-                </div>
-            </div>
-        </div>
-        @*Spread*@
-        <div class="col-lg-3 col-xs">
-            <div class="row">
-                <label for="@Filters.SpreadFilter.Name.ToLower()">@Filters.SpreadFilter.Name (ft)</label>
-            </div>
-            <div class="row">
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.SpreadFilter.MinimumValue" class="form-control" id="@Filters.SpreadFilter.Name.ToLower()">
-                        @foreach (var value in Filters.SpreadFilter.MinFacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.SpreadFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-1 range-separator">
-                    <span>to</span>
-                </div>
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.SpreadFilter.MaximumValue" class="form-control" id="@Filters.SpreadFilter.Name.ToLower()">
-                        @foreach (var value in Filters.SpreadFilter.MaxFacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.SpreadFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+                <div class="row">
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.HeightFilter.MinimumValue" class="form-control" id="@Filters.HeightFilter.Name.ToLower()">
+                            @foreach (var value in Filters.HeightFilter.MinFacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.HeightFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.HeightFilter.MaximumValue" class="form-control" id="@Filters.HeightFilter.Name.ToLower()">
+                            @foreach (var value in Filters.HeightFilter.MaxFacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.HeightFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        @*Light*@
-        <div class="col-lg-4 col-xs">
-            <div class="row">
-                <label for="@Filters.LightFilter.Name.ToLower()">@Filters.LightFilter.Name</label>
-            </div>
-            <div class="row">
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.LightFilter.MinimumValue" class="form-control" id="@Filters.LightFilter.Name.ToLower()">
-                        @foreach (var value in Filters.LightFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.LightFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+            @*Spread*@
+            <div class="col-lg-3 col-xs">
+                <div class="row">
+                    <label for="@Filters.SpreadFilter.Name.ToLower()">@Filters.SpreadFilter.Name (ft)</label>
                 </div>
-                <div class="col-1 range-separator">
-                    <span>to</span>
-                </div>
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.LightFilter.MaximumValue" class="form-control" id="@Filters.LightFilter.Name.ToLower()">
-                        @foreach (var value in Filters.LightFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.LightFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
-                </div>
-            </div>
-        </div>
-        @*Water*@
-        <div class="col-lg-4 col-xs">
-            <div class="row">
-                <label for="@Filters.WaterFilter.Name.ToLower()">@Filters.WaterFilter.Name</label>
-            </div>
-            <div class="row">
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.WaterFilter.MinimumValue" class="form-control" id="@Filters.WaterFilter.Name.ToLower()">
-                        @foreach (var value in Filters.WaterFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.WaterFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-1 range-separator">
-                    <span>to</span>
-                </div>
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.WaterFilter.MaximumValue" class="form-control" id="@Filters.WaterFilter.Name.ToLower()">
-                        @foreach (var value in Filters.WaterFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.WaterFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+                <div class="row">
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.SpreadFilter.MinimumValue" class="form-control" id="@Filters.SpreadFilter.Name.ToLower()">
+                            @foreach (var value in Filters.SpreadFilter.MinFacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.SpreadFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.SpreadFilter.MaximumValue" class="form-control" id="@Filters.SpreadFilter.Name.ToLower()">
+                            @foreach (var value in Filters.SpreadFilter.MaxFacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.SpreadFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        @*Bloom*@
-        <div class="col-lg-3 col-xs">
-            <div class="row">
-                <label for="@Filters.BloomFilter.Name.ToLower()">@Filters.BloomFilter.Name</label>
+            @*Light*@
+            <div class="col-lg-4 col-xs">
+                <div class="row">
+                    <label for="@Filters.LightFilter.Name.ToLower()">@Filters.LightFilter.Name</label>
+                </div>
+                <div class="row">
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.LightFilter.MinimumValue" class="form-control" id="@Filters.LightFilter.Name.ToLower()">
+                            @foreach (var value in Filters.LightFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.LightFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.LightFilter.MaximumValue" class="form-control" id="@Filters.LightFilter.Name.ToLower()">
+                            @foreach (var value in Filters.LightFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.LightFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.BloomFilter.MinimumValue" class="form-control" id="@Filters.BloomFilter.Name.ToLower()">
-                        @foreach (var value in Filters.BloomFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.BloomFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+            @*Water*@
+            <div class="col-lg-4 col-xs">
+                <div class="row">
+                    <label for="@Filters.WaterFilter.Name.ToLower()">@Filters.WaterFilter.Name</label>
                 </div>
-                <div class="col-1 range-separator">
-                    <span>to</span>
+                <div class="row">
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.WaterFilter.MinimumValue" class="form-control" id="@Filters.WaterFilter.Name.ToLower()">
+                            @foreach (var value in Filters.WaterFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.WaterFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.WaterFilter.MaximumValue" class="form-control" id="@Filters.WaterFilter.Name.ToLower()">
+                            @foreach (var value in Filters.WaterFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.WaterFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="col-5 range-input">
-                    <select @bind="@Filters.BloomFilter.MaximumValue" class="form-control" id="@Filters.BloomFilter.Name.ToLower()">
-                        @foreach (var value in Filters.BloomFilter.FacetValues)
-                        {
-                            <option value="@value.Key">@(Filters.BloomFilter.DisplayValue(value.Key, value.Value))</option>
-                        }
-                    </select>
+            </div>
+            @*Bloom*@
+            <div class="col-lg-3 col-xs">
+                <div class="row">
+                    <label for="@Filters.BloomFilter.Name.ToLower()">@Filters.BloomFilter.Name</label>
+                </div>
+                <div class="row">
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.BloomFilter.MinimumValue" class="form-control" id="@Filters.BloomFilter.Name.ToLower()">
+                            @foreach (var value in Filters.BloomFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.BloomFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
+                        <select @bind="@Filters.BloomFilter.MaximumValue" class="form-control" id="@Filters.BloomFilter.Name.ToLower()">
+                            @foreach (var value in Filters.BloomFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.BloomFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+</EditForm>
 
 @code {
     [Parameter]

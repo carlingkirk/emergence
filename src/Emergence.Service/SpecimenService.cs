@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Emergence.Data;
 using Emergence.Data.Extensions;
@@ -134,41 +133,5 @@ namespace Emergence.Service
         }
 
         public async Task RemoveSpecimenAsync(Data.Shared.Models.Specimen specimen) => await _specimenRepository.RemoveAsync(specimen.AsStore());
-
-        private IQueryable<Specimen> OrderBy(IQueryable<Specimen> specimenQuery, string sortBy = null, SortDirection sortDirection = SortDirection.None)
-        {
-            if (sortDirection == SortDirection.None)
-            {
-                return specimenQuery;
-            }
-
-            if (sortBy == null)
-            {
-                sortBy = "DateCreated";
-            }
-
-            var specimenSorts = new Dictionary<string, Expression<Func<Specimen, object>>>
-            {
-                { "ScientificName", s => s.Lifeform.ScientificName },
-                { "CommonName", s => s.Lifeform.CommonName },
-                { "Quantity", s => s.InventoryItem.Quantity },
-                { "Stage", s => s.SpecimenStage },
-                { "Status", s => s.InventoryItem.Status },
-                { "DateAcquired", s => s.InventoryItem.DateAcquired },
-                { "Origin", s => s.InventoryItem.Origin },
-                { "DateCreated", s => s.DateCreated }
-            };
-
-            if (sortDirection == SortDirection.Descending)
-            {
-                specimenQuery = specimenQuery.WithOrder(p => p.OrderByDescending(specimenSorts[sortBy]));
-            }
-            else
-            {
-                specimenQuery = specimenQuery.WithOrder(p => p.OrderBy(specimenSorts[sortBy]));
-            }
-
-            return specimenQuery;
-        }
     }
 }

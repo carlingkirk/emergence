@@ -17,8 +17,15 @@ namespace Emergence.Data.Shared.Search
         {
             if (int.TryParse(value, out var zoneId))
             {
-                var zone = ZoneHelper.GetZones().First(z => z.Id == zoneId).Name;
-                return count != null ? $"{zone} ({count})" : $"{zone}";
+                if (zoneId > 0)
+                {
+                    var zone = ZoneHelper.GetZones().First(z => z.Id == zoneId).Name;
+                    return count != null ? $"{zone} ({count})" : $"{zone}";
+                }
+                else
+                {
+                    return "";
+                }
             }
             else
             {
