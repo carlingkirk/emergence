@@ -180,13 +180,14 @@ namespace Emergence.Client.Components
         {
             if (string.IsNullOrEmpty(Activity.Name))
             {
+                var name = SelectedSpecimen?.Lifeform?.ScientificName ?? SelectedSpecimen.Name ?? "";
                 if (Activity.ActivityType != ActivityType.Custom)
                 {
-                    Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
+                    Activity.Name = Activity.ActivityType.ToFriendlyName() + ": " + name;
                 }
                 else
                 {
-                    Activity.Name = Activity.CustomActivityType + ": " + SelectedSpecimen?.Lifeform?.ScientificName ?? "";
+                    Activity.Name = Activity.CustomActivityType + ": " + name;
                 }
             }
         }

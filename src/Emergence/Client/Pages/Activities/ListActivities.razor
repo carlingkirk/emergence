@@ -72,18 +72,18 @@
                 {
                     var photo = activity.Photos?.FirstOrDefault() ?? activity.SpecimenPhotos?.FirstOrDefault();
 
-                    <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo">
+                    <Card Name="@activity.Name" ColorSearch="@(activity.Specimen.Lifeform?.CommonName ?? activity.Specimen.Name)" Photo="@photo">
                         <Content>
                             <div class="col-12">
                                 <a href="" @onclick="() => LoadInfo(ViewItemType.Activity, activity.ActivityId)" @onclick:preventDefault>
                                 <span class="link">@(activity.Name ?? "(No name)")</span>
                                 </a>
                             </div>
-                            @if (!activity.Name.Contains(activity.Specimen.Lifeform.ScientificName))
+                            @if (activity.Specimen.Lifeform?.ScientificName != null && !activity.Name.Contains(activity.Specimen.Lifeform?.ScientificName))
                             {
-                            <div class="col-12">
-                                <span>@activity.Specimen?.Lifeform?.ScientificName</span>
-                            </div>
+                                <div class="col-12">
+                                    <span>@activity.Specimen.Lifeform?.ScientificName</span>
+                                </div>
                             }
                             <div class="col-12">
                                 @if (!activity.Name.Contains(activity.ActivityType.ToFriendlyName()))

@@ -29,13 +29,14 @@ namespace Emergence.Client.Components
                 Specimen.DateModified = DateTime.UtcNow;
             }
 
-            Specimen.InventoryItem.Origin = SelectedOrigin;
             if (SelectedLifeform != null)
             {
-                Specimen.Lifeform = SelectedLifeform;
+                Specimen.Lifeform = SelectedLifeform.LifeformId > 0 ? SelectedLifeform : null;
             }
 
             PopulateInventoryItemName();
+
+            Specimen.InventoryItem.Origin = SelectedOrigin;
             Specimen.InventoryItem.Name = Specimen.Name;
             Specimen.InventoryItem.Quantity = Specimen.Quantity;
             Specimen.Photos = UploadedPhotos.Any() ? UploadedPhotos : null;

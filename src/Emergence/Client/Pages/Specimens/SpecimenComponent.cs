@@ -88,8 +88,8 @@ namespace Emergence.Client.Components
         protected UserMessage GetMessage() => new UserMessage
         {
             User = Specimen.InventoryItem.User,
-            Subject = "Re: " + Specimen.Lifeform.CommonName + " " + Specimen.Lifeform.ScientificName,
-            MessageBody = $"Regarding your {Specimen.Lifeform.ScientificName} at {NavigationManager.BaseUri + "specimen/" + Specimen.SpecimenId},\r\n"
+            Subject = "Re: " + (Specimen.Lifeform?.CommonName ?? Specimen.Name) + " " + Specimen.Lifeform?.ScientificName,
+            MessageBody = $"Regarding your {Specimen.Lifeform?.CommonName ?? Specimen.Name} at {NavigationManager.BaseUri + "specimen/" + Specimen.SpecimenId},\r\n"
         };
     }
 }

@@ -108,6 +108,13 @@ namespace Emergence.Service.Search
 
             return aliasResponse.Exists;
         }
+
+        public async Task<bool> RemoveAsync(string id)
+        {
+            var response = await ElasticClient.DeleteAsync(new DocumentPath<T>(new Id(id)));
+
+            return response.IsValid;
+        }
     }
 
     public class BulkIndexResponse

@@ -31,7 +31,7 @@
                 }
                 else if (Activity.Specimen?.SpecimenId == 0 && Activity.Specimen?.Lifeform != null)
                 {
-                    <span class="link" @onclick="async () => await ModalServiceClient.ShowSpecimenModal(Activity.Specimen.SpecimenId)">@(Activity.Specimen.Lifeform.CommonName)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
+                    <span class="link" @onclick="async () => await ModalServiceClient.ShowSpecimenModal(Activity.Specimen.SpecimenId)">@(Activity.Specimen.Lifeform?.CommonName ?? Activity.Specimen.Name)</span><span>&nbsp;</span><span class="text-body font-italic">@(Activity.Specimen.Lifeform.ScientificName)</span>
                 }
             </div>
         </div>

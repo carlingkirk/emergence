@@ -14,7 +14,7 @@
             {
                 var photo = activity.Photos?.FirstOrDefault() ?? activity.SpecimenPhotos?.FirstOrDefault();
 
-                <Card Name="@activity.Name" ColorSearch="@activity.Specimen.Lifeform.CommonName" Photo="@photo" CompactView="true">
+                <Card Name="@activity.Name" ColorSearch="@(activity.Specimen.Lifeform?.CommonName ?? activity.Specimen.Name)" Photo="@photo" CompactView="true">
                     <Content>
                         <div class="col-12">
                             <a href="" @onclick="() => ModalServiceClient.ShowActivityModal(activity.ActivityId)" @onclick:preventDefault>

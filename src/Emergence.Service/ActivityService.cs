@@ -68,8 +68,8 @@ namespace Emergence.Service
                                                        (findParams.SearchTextQuery == null ||
                                                         EF.Functions.Like(a.Name, findParams.SearchTextQuery) ||
                                                         EF.Functions.Like(a.Specimen.InventoryItem.Name, findParams.SearchTextQuery) ||
-                                                        EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchTextQuery) ||
-                                                        EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchTextQuery)),
+                                                        (a.Specimen.Lifeform != null && EF.Functions.Like(a.Specimen.Lifeform.CommonName, findParams.SearchTextQuery)) ||
+                                                        (a.Specimen.Lifeform != null && EF.Functions.Like(a.Specimen.Lifeform.ScientificName, findParams.SearchTextQuery))),
                                                   false,
                                                   a => a.Include(a => a.Specimen)
                                                         .Include(a => a.Specimen.InventoryItem)
@@ -115,7 +115,7 @@ namespace Emergence.Service
             var activitySorts = new Dictionary<string, Expression<Func<Activity, object>>>
             {
                 { "Name", a => a.Name },
-                { "ScientificName", a => a.Specimen.Lifeform.ScientificName },
+                { "ScientificName", a => a.Specimen.Lifeform != null ? a.Specimen.Lifeform.ScientificName : "" },
                 { "ActivityType", a => a.ActivityType },
                 { "DateOccured", a => a.DateOccurred },
                 { "DateScheduled", a => a.DateScheduled },

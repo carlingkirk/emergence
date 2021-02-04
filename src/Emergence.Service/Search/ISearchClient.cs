@@ -12,5 +12,6 @@ namespace Emergence.Service.Search
         Task<bool> IndexAsync(T document);
         Task<BulkIndexResponse> IndexManyAsync(IEnumerable<T> documents);
         Task<SearchResponse<T>> SearchAsync(Func<SearchDescriptor<T>, ISearchRequest> searchSelector, Func<CountDescriptor<T>, ICountRequest> countSelector);
+        Task<bool> RemoveAsync(string id);
     }
 }

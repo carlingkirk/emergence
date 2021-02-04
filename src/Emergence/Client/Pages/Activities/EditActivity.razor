@@ -44,8 +44,8 @@
                             {
                             <a href="" @onclick="@(async () => { await AddSpecimenAsync((Specimen)specimen); })" @onclick:preventDefault>
                                 <span>Add new </span>
-                                <span class="text-body">@(specimen.Lifeform.CommonName) </span>
-                                <span class="text-body font-italic">@(specimen.Lifeform.ScientificName) </span>
+                                <span class="text-body">@(specimen.Lifeform?.CommonName ?? specimen.Name) </span>
+                                <span class="text-body font-italic">@(specimen.Lifeform?.ScientificName) </span>
                             </a>
                             }
                             else if (specimen.InventoryItem != null)

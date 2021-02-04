@@ -185,6 +185,11 @@ namespace Emergence.Service.Search
             };
         }
 
+        public async Task<bool> RemoveAsync(string id) => await _searchClient.RemoveAsync(id);
+
+        public Task<bool> IndexAsync(Lifeform document) => throw new NotSupportedException();
+        public Task<BulkIndexResponse> IndexManyAsync(IEnumerable<Lifeform> documents) => throw new NotSupportedException();
+
         private IEnumerable<AggregationResult<PlantInfo>> ProcessAggregations(SearchResponse<PlantInfo> response, PlantInfoFindParams plantInfoFindParams)
         {
             var aggregations = new List<AggregationResult<PlantInfo>>();
@@ -385,8 +390,5 @@ namespace Emergence.Service.Search
                 .PropertyName(pl => pl.User, "user")
                 .PropertyName(pl => pl.PlantLocations, "plantLocations")
                 .PropertyName(pl => pl.Synonyms, "synonyms");
-
-        public Task<bool> IndexAsync(Lifeform document) => throw new NotSupportedException();
-        public Task<BulkIndexResponse> IndexManyAsync(IEnumerable<Lifeform> documents) => throw new NotSupportedException();
     }
 }

@@ -161,6 +161,21 @@ namespace Emergence.Service
             return plantLocationsResult.Select(o => o.AsModel());
         }
 
-        public async Task<bool> RemovePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo) => await _plantInfoRepository.RemoveAsync(plantInfo.AsStore());
+        public async Task<bool> RemovePlantInfoAsync(Data.Shared.Models.PlantInfo plantInfo)
+        {
+            var result = await _plantInfoRepository.RemoveAsync(plantInfo.AsStore());
+
+            if (result)
+            {
+                var indexResult = await _plantInfoIndex.RemoveAsync(plantInfo.PlantInfoId.ToString());
+
+                if (!indexResult)
+                {
+                    Console.WriteLine($"Unable to remove document for plantinfo Id: {plantInfo.PlantInfoId}");
+                }
+            }
+
+            return result;
+        }
     }
 }

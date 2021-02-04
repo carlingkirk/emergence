@@ -42,7 +42,7 @@
                             <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault><span class="link">@specimen.Lifeform.ScientificName</span></a>
                         </td>
                         <td>
-                            <span>@specimen.Lifeform.CommonName</span>
+                            <span>@(specimen.Lifeform?.CommonName ?? specimen.Name)</span>
                         </td>
                         <td>
                             <span>@specimen.InventoryItem.Quantity</span>
@@ -90,15 +90,15 @@
                     {
                         var photo = specimen.Photos?.FirstOrDefault();
 
-                        <Card Name="@specimen.Lifeform.ScientificName" ColorSearch="@specimen.Lifeform.CommonName" Photo="@photo">
+                        <Card Name="@(specimen.Lifeform?.ScientificName ?? specimen.Name)" ColorSearch="@(specimen.Lifeform?.CommonName ?? specimen.Name)" Photo="@photo">
                             <Content>
                                 <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault>
                                     <div class="col-12">
 
-                                        <span class="link">@specimen.Lifeform.CommonName</span>
+                                        <span class="link">@(specimen.Lifeform?.CommonName ?? specimen.Name)</span>
                                     </div>
                                     <div class="col-12">
-                                        <span style="font-style:italic">@specimen.Lifeform.ScientificName</span>
+                                        <span style="font-style:italic">@specimen.Lifeform?.ScientificName</span>
                                     </div>
                                 </a>
                                 <div class="col-12">

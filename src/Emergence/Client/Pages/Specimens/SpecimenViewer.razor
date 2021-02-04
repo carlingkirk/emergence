@@ -11,9 +11,10 @@
         <button type="button" class="btn btn-primary" @onclick="Back">Back</button>
     }
     <span class="title">Specimen: </span>
-    @if (SelectedLifeform != null && (!string.IsNullOrEmpty(SelectedLifeform.ScientificName) || !string.IsNullOrEmpty(SelectedLifeform.CommonName)))
+    @if (Specimen != null && Specimen.SpecimenId > 0)
     {
-        <span>@SelectedLifeform.CommonName</span><span class="font-italic"> (@SelectedLifeform.ScientificName)</span>
+        <span>@(Specimen.Lifeform?.CommonName ?? SelectedLifeform?.CommonName ?? Specimen.Name)</span>
+        <span class="font-italic"> (@(Specimen.Lifeform?.ScientificName ?? SelectedLifeform?.ScientificName))</span>
     }
     else
     {

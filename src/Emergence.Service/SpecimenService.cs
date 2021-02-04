@@ -30,6 +30,17 @@ namespace Emergence.Service
         {
             var specimenResult = await _specimenRepository.AddOrUpdateAsync(s => s.Id == specimen.SpecimenId, specimen.AsStore());
 
+            if (specimenResult != null)
+            {
+                var searchSpecimen = await _specimenRepository.GetWithIncludesAsync(s => s.Id == specimenResult.Id, false,
+                                                                        s => s.Include(s => s.InventoryItem)
+                                                                              .Include(s => s.InventoryItem.Inventory)
+                                                                              .Include(s => s.InventoryItem.Origin)
+                                                                              .Include(s => s.Lifeform)
+                                                                              .Include(s => s.InventoryItem.User)
+                                                                              .Include(s => s.InventoryItem.User.Photo));
+                await _specimenIndex.IndexAsync(searchSpecimen.AsSearchModel());
+            }
             return specimenResult.AsModel();
         }
 
@@ -132,6 +143,18 @@ namespace Emergence.Service
             };
         }
 
-        public async Task RemoveSpecimenAsync(Data.Shared.Models.Specimen specimen) => await _specimenRepository.RemoveAsync(specimen.AsStore());
+        public async Task RemoveSpecimenAsync(Data.Shared.Models.Specimen specimen)
+        {
+            var result = await _specimenRepository.RemoveAsync(specimen.AsStore());
+            if (result)
+            {
+                var indexResult = await _specimenIndex.RemoveAsync(specimen.SpecimenId.ToString());
+
+                if (!indexResult)
+                {
+                    Console.WriteLine($"Unable to remove document for specimen Id: {specimen.SpecimenId}");
+                }
+            }
+        }
     }
 }

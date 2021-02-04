@@ -10,6 +10,7 @@ namespace Emergence.Data.Shared.Extensions
             SpecimenId = source.Id,
             SpecimenStage = Enum.Parse<SpecimenStage>(source.SpecimenStage),
             InventoryItem = source.InventoryItem != null ? source.InventoryItem.AsModel() : new Models.InventoryItem { InventoryItemId = source.InventoryItemId },
+            Name = source.InventoryItem?.Name,
             Lifeform = source.Lifeform != null ? source.Lifeform.AsModel() : source.LifeformId.HasValue ? new Models.Lifeform { LifeformId = source.LifeformId.Value } : null,
             PlantInfo = source.PlantInfo != null ? source.PlantInfo.AsModel() : source.PlantInfoId.HasValue ? new Models.PlantInfo { PlantInfoId = source.PlantInfoId.Value } : null,
             ParentSpecimen = source.ParentSpecimen != null ?
@@ -43,6 +44,7 @@ namespace Emergence.Data.Shared.Extensions
                 InventoryItem = source.InventoryItem?.AsSearchModel(),
                 Lifeform = source.Lifeform?.AsSearchModel(),
                 ParentSpecimen = source.ParentSpecimen?.AsSearchModel(),
+                Name = source.InventoryItem.Name,
                 CreatedBy = source.CreatedBy,
                 ModifiedBy = source.ModifiedBy,
                 DateCreated = source.DateCreated,

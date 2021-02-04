@@ -26,6 +26,7 @@ namespace Emergence.Service.Search
         public async Task<bool> IndexAsync(Specimen document) => await _searchClient.IndexAsync(document);
 
         public async Task<BulkIndexResponse> IndexManyAsync(IEnumerable<Specimen> documents) => await _searchClient.IndexManyAsync(documents);
+
         public async Task<SearchResponse<Specimen>> SearchAsync(FindParams<Data.Shared.Models.Specimen> findParams, Data.Shared.Models.User user)
         {
             var specimenFindParams = findParams as SpecimenFindParams;
@@ -116,6 +117,8 @@ namespace Emergence.Service.Search
 
             return response;
         }
+
+        public async Task<bool> RemoveAsync(string id) => await _searchClient.RemoveAsync(id);
 
         private IEnumerable<AggregationResult<Specimen>> ProcessAggregations(SearchResponse<Specimen> response, SpecimenFindParams specimenFindParams)
         {
