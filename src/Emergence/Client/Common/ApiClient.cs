@@ -235,6 +235,13 @@ namespace Emergence.Client.Common
             }
         }
 
+        public async Task<Photo> AddExternalPhotoAsync(string url, PhotoType type)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"/api/photo/{type}/addexternal", new Photo { ExternalUrl = url });
+
+            return await ReadResult<Photo>(result);
+        }
+
         public async Task<IEnumerable<Photo>> GetPhotosAsync(PhotoType type, int id)
         {
             var result = await _httpClient.GetAsync($"/api/photo/{type}/{id}");

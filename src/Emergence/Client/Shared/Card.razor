@@ -8,11 +8,20 @@
                 <div>
                     @if (Photo != null)
                     {
-                        <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(Photo, Name)" @onclick:preventDefault>
-                            <img srcset="@(Photo.ThumbnailUri) 1x" src="@(Photo.OriginalUri)"
-                                 onerror="this.onerror=null;this.srcset='';this.src='@(Photo.OriginalUri)'" alt="Uploaded photo of @(Photo.Type)"
-                                 class="card-img contain" />
-                        </a>
+                        @if (string.IsNullOrEmpty(Photo.ExternalUrl))
+                        {
+                            <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(Photo, Name)" @onclick:preventDefault>
+                                <img srcset="@(Photo.ThumbnailUri) 1x" src="@(Photo.OriginalUri)"
+                                     onerror="this.onerror=null;this.srcset='';this.src='@(Photo.OriginalUri)'" alt="Uploaded photo of @(Photo.Type)"
+                                     class="card-img contain" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(Photo, Name)" @onclick:preventDefault>
+                                <img src="@(Photo.ExternalUrl)" alt="Uploaded photo of @(Photo.Type)" class="card-img contain" />
+                            </a>
+                        }
                     }
                     else
                     {

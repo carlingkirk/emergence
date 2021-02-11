@@ -9,6 +9,7 @@ namespace Emergence.Data.Shared.Search.Models
         public int? TypeId { get; set; }
         public string Filename { get; set; }
         public string BlobPath { get; set; }
+        public string ExternalUrl { get; set; }
         public string ContentType { get; set; }
         public int? Width { get; set; }
         public int? Height { get; set; }

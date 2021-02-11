@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,6 +60,17 @@ namespace Emergence.API.Controllers
                 return await _photoService.AddOrUpdatePhotoAsync(photoResult);
             }
             return null;
+        }
+
+        [HttpPost]
+        [Route("{type}/AddExternal")]
+        public async Task<Photo> AddExternal(Photo photo, PhotoType type)
+        {
+            photo.CreatedBy = UserId;
+            photo.DateCreated = DateTime.UtcNow;
+            photo.Type = type;
+
+            return await _photoService.AddOrUpdatePhotoAsync(photo);
         }
 
         [HttpDelete]

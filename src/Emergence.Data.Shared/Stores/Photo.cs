@@ -14,6 +14,8 @@ namespace Emergence.Data.Shared.Stores
         public string Filename { get; set; }
         [StringLength(500)]
         public string BlobPath { get; set; }
+        [StringLength(500)]
+        public string ExternalUrl { get; set; }
         [StringLength(100)]
         public string ContentType { get; set; }
         public int? Width { get; set; }
