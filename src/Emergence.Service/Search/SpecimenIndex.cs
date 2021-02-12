@@ -68,22 +68,25 @@ namespace Emergence.Service.Search
                         .Must(musts.ToArray()).MinimumShouldMatch(string.IsNullOrEmpty(searchTerm) ? 0 : 1)));
 
             // Sort
-            if (findParams.SortDirection != SortDirection.None)
+            var specimenSorts = GetSpecimenSorts();
+            if (string.IsNullOrEmpty(findParams.SearchText))
+            {
+                searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts["DateModified"]).Descending()).Field(f => f.Field(specimenSorts["DateCreated"]).Descending()));
+            }
+            else if (findParams.SortDirection != SortDirection.None)
             {
                 if (findParams.SortBy == null)
                 {
                     findParams.SortBy = "DateCreated";
                 }
 
-                var inventorySorts = GetInvetorySorts();
-
                 if (findParams.SortDirection == SortDirection.Ascending)
                 {
-                    searchDescriptor.Sort(s => s.Field(f => f.Field(inventorySorts[findParams.SortBy]).Ascending()));
+                    searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts[findParams.SortBy]).Ascending()));
                 }
                 else
                 {
-                    searchDescriptor.Sort(s => s.Field(f => f.Field(inventorySorts[findParams.SortBy]).Descending()));
+                    searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts[findParams.SortBy]).Descending()));
                 }
             }
 
@@ -185,7 +188,7 @@ namespace Emergence.Service.Search
             return aggregations;
         }
 
-        private Dictionary<string, Expression<Func<Specimen, object>>> GetInvetorySorts() => new Dictionary<string, Expression<Func<Specimen, object>>>
+        private Dictionary<string, Expression<Func<Specimen, object>>> GetSpecimenSorts() => new Dictionary<string, Expression<Func<Specimen, object>>>
         {
             { "ScientificName", s => s.Lifeform.ScientificName.Suffix("keyword") },
             { "CommonName", s => s.Lifeform.CommonName.Suffix("keyword") },
@@ -194,7 +197,8 @@ namespace Emergence.Service.Search
             { "Status", s => s.InventoryItem.Status },
             { "DateAcquired", s => s.InventoryItem.DateAcquired },
             { "Origin", s => s.InventoryItem.Origin },
-            { "DateCreated", s => s.DateCreated }
+            { "DateCreated", s => s.DateCreated },
+            { "DateModified", s => s.DateModified }
         };
 
         private QueryContainer FilterByVisibility(QueryContainerDescriptor<Specimen> query, Data.Shared.Models.User user) =>

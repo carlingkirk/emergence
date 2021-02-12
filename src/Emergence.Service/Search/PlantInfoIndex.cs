@@ -111,10 +111,13 @@ namespace Emergence.Service.Search
             searchDescriptor.Aggregations(a => aggregations);
 
             // Sort
-            if (findParams.SortDirection != SortDirection.None && findParams.SortBy != null)
+            var plantInfoSorts = GetPlantInfoSorts();
+            if (string.IsNullOrEmpty(findParams.SearchText))
             {
-                var plantInfoSorts = GetPlantInfoSorts();
-
+                searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts["DateModified"]).Descending()).Field(f => f.Field(plantInfoSorts["DateCreated"]).Descending()));
+            }
+            else if (findParams.SortDirection != SortDirection.None && findParams.SortBy != null)
+            {
                 if (findParams.SortDirection == SortDirection.Ascending)
                 {
                     searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Ascending()));
@@ -332,7 +335,8 @@ namespace Emergence.Service.Search
             { "BloomTime", p => p.MinimumBloomTime },
             { "Height", p => p.MinimumHeight },
             { "Spread", p => p.MinimumSpread },
-            { "DateCreated", p => p.DateCreated }
+            { "DateCreated", p => p.DateCreated },
+            { "DateModified", p => p.DateModified }
         };
 
         private IPromise<IndexSettings> GetSetting(IndexSettingsDescriptor setting) =>
