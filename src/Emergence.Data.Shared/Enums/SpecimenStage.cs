@@ -10,6 +10,7 @@ namespace Emergence.Data.Shared
         Ordered,
         Stratification,
         Germination,
+        Dormant,
         Growing,
         [Description("In Ground")]
         InGround,

@@ -26,22 +26,24 @@
         @foreach (var photo in UploadedPhotos)
         {
             <div class="col-lg-2 col-xs">
-                <div class="col">
                     @if (string.IsNullOrEmpty(photo.ExternalUrl))
                     {
                         <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
                             <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
                                  onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
-                                 style="max-width:300px;" />
+                                 class="viewer-img" />
                         </a>
                     }
                     else
                     {
                         <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
-                            <img src="@(photo.ExternalUrl)" alt="Uploaded photo of @(photo.Type)" style="max-width:300px;" />
+                            <img src="@(photo.ExternalUrl)" @onerror="@(() => { photo.UrlBroken = true; })" alt="Uploaded photo of @(photo.Type)" class="viewer-img" />
                         </a>
+                        @if (photo.UrlBroken)
+                        {
+                            <span>The URL is not accessible. Please try another URL or upload an image.</span>
+                        }
                     }
-                </div>
                 <div class="col">
                     <button type="button" class="btn btn-sm btn-secondary" style="margin-top:.25rem;" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
                 </div>

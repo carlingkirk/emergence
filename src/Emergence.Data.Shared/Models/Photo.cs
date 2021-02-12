@@ -21,6 +21,7 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateModified { get; set; }
         public Location Location { get; set; }
         public string BlobPathRoot { get; set; }
+        public bool UrlBroken { get; set; }
         public string OriginalUri =>
             !string.IsNullOrEmpty(BlobPathRoot) && !string.IsNullOrEmpty(BlobPath) && !string.IsNullOrEmpty(Filename)
                 ? BlobPathRoot + BlobPath + "/" + Filename : null;

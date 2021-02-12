@@ -15,23 +15,18 @@
         @if (string.IsNullOrEmpty(photo.ExternalUrl))
         {
             <div class="col-lg-2 col-xs">
-                <div class="col">
-                    <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
-                        <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)"
-                             onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)"
-                             style="max-width:300px;" />
-                    </a>
-                </div>
+                <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
+                    <img srcset="@(photo.LargeUri) 3x, @(photo.MediumUri) 2x, @(photo.ThumbnailUri) 1x" src="@(photo.OriginalUri)" class="viewer-img"
+                         onerror="this.onerror=null;this.srcset='';this.src='@(photo.OriginalUri)'" alt="Uploaded photo of @(photo.Type)" />
+                </a>
             </div>
         }
         else
         {
             <div class="col-lg-2 col-xs">
-                <div class="col">
-                    <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
-                        <img src="@(photo.ExternalUrl)" alt="Uploaded photo of @(photo.Type)" style="max-width:300px;" />
-                    </a>
-                </div>
+                <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
+                    <img src="@(photo.ExternalUrl)" alt="Uploaded photo of @(photo.Type)" class="viewer-img" />
+                </a>
             </div>
         }
     }

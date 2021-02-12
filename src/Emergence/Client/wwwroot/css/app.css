@@ -375,3 +375,10 @@ li.active > .nav-link {
 .tab-pane > .group {
     margin: 0;
 }
+
+/* Images */
+
+.viewer-img {
+  max-width: 100%;
+  object-fit: none;
+}
