@@ -10,12 +10,12 @@ namespace Emergence.Data.Shared
         Ordered,
         Stratification,
         Germination,
-        Dormant,
         Growing,
         [Description("In Ground")]
         InGround,
         Blooming,
         Diseased,
-        Deceased
+        Deceased,
+        Dormant
     }
 }
