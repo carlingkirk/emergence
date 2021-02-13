@@ -53,9 +53,10 @@ namespace Emergence.Client.Components
                 MinimumZoneId = PlantInfo.Requirements.ZoneRequirements?.MinimumZone?.Id;
                 MaximumZoneId = PlantInfo.Requirements.ZoneRequirements?.MaximumZone?.Id;
 
+                ChosenStratificationStages = new LinkedList<StratificationStage>();
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {
-                    ChosenStratificationStages = new LinkedList<StratificationStage>();
+
                     PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>
                     {
                         ChosenStratificationStages.AddLast(s);
