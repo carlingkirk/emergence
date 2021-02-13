@@ -33,6 +33,7 @@ namespace Emergence.Client.Components
             PlantInfo.Lifeform = PlantInfo.SelectedLifeform;
             PlantInfo.CreatedBy = UserId;
             PlantInfo.Requirements.StratificationStages = ChosenStratificationStages != null && ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
+            PlantInfo.WildlifeEffects = ChosenWildlifeEffects != null && ChosenWildlifeEffects.Any() ? ChosenWildlifeEffects.ToList() : null;
 
             if (PlantInfo.Height.MinimumHeight.HasValue || PlantInfo.Height.MaximumHeight.HasValue)
             {

@@ -64,11 +64,21 @@ namespace Emergence.Client.Components
                         ChosenStratificationStages.AddLast(s);
                     });
                 }
+
+                if (PlantInfo.WildlifeEffects != null)
+                {
+                    ChosenWildlifeEffects = new List<WildlifeEffect>();
+                    PlantInfo.WildlifeEffects.ToList().ForEach(we =>
+                    {
+                        ChosenWildlifeEffects.Add(we);
+                    });
+                }
             }
             else
             {
                 IsEditing = true;
                 ChosenStratificationStages = new LinkedList<StratificationStage>();
+                ChosenWildlifeEffects = new List<WildlifeEffect>();
                 PlantInfo = new PlantInfo
                 {
                     Origin = null,

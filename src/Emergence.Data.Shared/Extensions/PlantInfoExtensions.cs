@@ -78,6 +78,7 @@ namespace Emergence.Data.Shared.Extensions
                     } : null
                 },
                 Taxon = source.Taxon != null ? source.Taxon.AsModel() : source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
+                Locations = source.PlantLocations?.Select(pl => pl.AsModel()),
                 Preferred = source.Preferred,
                 Visibility = source.Visibility,
                 WildlifeEffects = wildlifeEffects,
@@ -278,7 +279,7 @@ namespace Emergence.Data.Shared.Extensions
                 ScientificName = source.ScientificName,
                 Origin = source.Origin?.AsSearchModel(),
                 Lifeform = source.Lifeform.AsSearchModel(),
-                PlantLocations = plantLocations?.Select(pl => pl.AsSearchModel()),
+                PlantLocations = source.PlantLocations?.Select(pl => pl.AsSearchModel()),
                 Synonyms = synonyms?.Select(s => s.AsSearchModel()),
                 MinimumBloomTime = source.MinimumBloomTime,
                 MaximumBloomTime = source.MaximumBloomTime,

@@ -232,8 +232,8 @@
                     <div class="row">
                         <div class="col">
                             <label for="wildlife-effects">Wildlife effects</label>
-                            <div class="@(AnyStratificationStages() ? "d-none" : "")">
-                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                            <div class="@(AnyWildlifeEffects() ? "d-none" : "")">
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddWildlifeEffect())"><span class="oi oi-plus"></span></button>
                             </div>
                             @if (ChosenWildlifeEffects != null)
                             {
