@@ -20,6 +20,7 @@ namespace Emergence.Data.Shared.Models
         public Specimen ParentSpecimen { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
+        public string Notes { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

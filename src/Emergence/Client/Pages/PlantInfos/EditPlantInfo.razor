@@ -229,6 +229,52 @@
                             }
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="wildlife-effects">Wildlife effects</label>
+                            <div class="@(AnyStratificationStages() ? "d-none" : "")">
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddStratificationStage())"><span class="oi oi-plus"></span></button>
+                            </div>
+                            @if (ChosenWildlifeEffects != null)
+                            {
+                                var key = 0;
+                                @foreach (var effect in ChosenWildlifeEffects)
+                                {
+                                    var firstRow = key == 0;
+                                    var lastRow = ChosenWildlifeEffects.Count == key;
+                                    <div class="row">
+                                        <div class="col-md-2 col-3">
+                                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => RemoveWildlifeEffect(effect))"><span class="oi oi-minus"></span></button>
+                                        </div>
+                                        <div class="col-md-2 col-3">
+                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("wildlife", key.ToString())">Type</label>
+                                            <select @bind="@effect.Wildlife" class="form-control" id="@GetElementId("wildlife", key.ToString())">
+                                                @foreach (var wildlife in WildlifeTypes)
+                                                {
+                                                    <option value="@wildlife">@(wildlife.ToString())</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("effect", key.ToString())">Effect</label>
+                                            <select @bind="@effect.Effect" class="form-control" id="@GetElementId("effect", key.ToString())">
+                                                @foreach (var effectType in Effects)
+                                                {
+                                                    <option value="@effectType">@(effectType.ToString())</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="@(lastRow ? "row" : "d-none")">
+                                        <div class="col-1">
+                                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddWildlifeEffect())"><span class="oi oi-plus"></span></button>
+                                        </div>
+                                    </div>
+                                    key++;
+                                }
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -197,6 +197,7 @@ namespace Emergence.Service.Search
             { "Status", s => s.InventoryItem.Status },
             { "DateAcquired", s => s.InventoryItem.DateAcquired },
             { "Origin", s => s.InventoryItem.Origin },
+            { "Notes", s => s.Notes },
             { "DateCreated", s => s.DateCreated },
             { "DateModified", s => s.DateModified }
         };
@@ -264,6 +265,7 @@ namespace Emergence.Service.Search
                 .PropertyName(s => s.Name, "name")
                 .PropertyName(s => s.Quantity, "quantity")
                 .PropertyName(s => s.InventoryItem, "inventoryItem")
+                .PropertyName(s => s.Notes, "notes")
                 .PropertyName(s => s.CreatedBy, "createdBy")
                 .PropertyName(s => s.ModifiedBy, "modifiedBy")
                 .PropertyName(s => s.DateCreated, "dateCreated")

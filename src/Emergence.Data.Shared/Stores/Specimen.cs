@@ -15,6 +15,7 @@ namespace Emergence.Data.Shared.Stores
         public InventoryItem InventoryItem { get; set; }
         public PlantInfo PlantInfo { get; set; }
         public Specimen ParentSpecimen { get; set; }
+        public string Notes { get; set; }
         [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]

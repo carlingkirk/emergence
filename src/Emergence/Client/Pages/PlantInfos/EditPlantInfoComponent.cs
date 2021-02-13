@@ -121,6 +121,18 @@ namespace Emergence.Client.Components
             }
         }
 
+        protected void AddWildlifeEffect(WildlifeEffect wildlifeEffect = null)
+        {
+            if (wildlifeEffect == null)
+            {
+                wildlifeEffect = new WildlifeEffect();
+            }
+
+            ChosenWildlifeEffects.Add(wildlifeEffect);
+        }
+
+        protected void RemoveWildlifeEffect(WildlifeEffect wildlifeEffect) => _ = ChosenWildlifeEffects.Remove(wildlifeEffect);
+
         protected void MoveStratificationStage(int oldStep, int newStep)
         {
             // if I move step 2 to step 3

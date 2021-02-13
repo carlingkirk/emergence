@@ -42,6 +42,9 @@ namespace Emergence.Test.Data.Shared.Models
             plantInfoSearch.LightTypes.Any(l => l == SharedModels.LightType.PartShade).Should().BeTrue();
             plantInfoSearch.LightTypes.Any(l => l == SharedModels.LightType.PartSun).Should().BeTrue();
             plantInfoSearch.LightTypes.Any(l => l == SharedModels.LightType.FullSun).Should().BeTrue();
+            plantInfoSearch.WildlifeEffects.Count(we => we.Wildlife == SharedModels.Wildlife.Bees).Should().Be(1);
+            plantInfoSearch.WildlifeEffects.Count(we => we.Effect == SharedModels.Effect.Food).Should().Be(1);
+            plantInfoSearch.Notes.Contains("feather");
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Emergence.Data.Shared.Extensions
             ParentSpecimen = source.ParentSpecimen != null ?
                 source.ParentSpecimen.AsModel() : source.ParentSpecimenId.HasValue ?
                     new Models.Specimen { SpecimenId = source.ParentSpecimenId.Value } : null,
+            Quantity = source.InventoryItem.Quantity,
+            Notes = source.Notes,
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated,
@@ -45,6 +47,8 @@ namespace Emergence.Data.Shared.Extensions
                 Lifeform = source.Lifeform?.AsSearchModel(),
                 ParentSpecimen = source.ParentSpecimen?.AsSearchModel(),
                 Name = source.InventoryItem.Name,
+                Quantity = source.InventoryItem.Quantity,
+                Notes = source.Notes,
                 CreatedBy = source.CreatedBy,
                 ModifiedBy = source.ModifiedBy,
                 DateCreated = source.DateCreated,

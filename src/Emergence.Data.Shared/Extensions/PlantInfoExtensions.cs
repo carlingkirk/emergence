@@ -16,6 +16,12 @@ namespace Emergence.Data.Shared.Extensions
                 stratificationStages = JsonConvert.DeserializeObject<List<Models.StratificationStage>>(source.StratificationStages);
             }
 
+            List<Models.WildlifeEffect> wildlifeEffects = null;
+            if (!string.IsNullOrEmpty(source.WildlifeEffects))
+            {
+                wildlifeEffects = JsonConvert.DeserializeObject<List<Models.WildlifeEffect>>(source.WildlifeEffects);
+            }
+
             return new Models.PlantInfo
             {
                 PlantInfoId = source.Id,
@@ -74,6 +80,8 @@ namespace Emergence.Data.Shared.Extensions
                 Taxon = source.Taxon != null ? source.Taxon.AsModel() : source.TaxonId.HasValue ? new Models.Taxon { TaxonId = source.TaxonId.Value } : null,
                 Preferred = source.Preferred,
                 Visibility = source.Visibility,
+                WildlifeEffects = wildlifeEffects,
+                Notes = source.Notes,
                 UserId = source.UserId,
                 User = source.User?.AsSummaryModel(),
                 CreatedBy = source.CreatedBy,
@@ -159,6 +167,8 @@ namespace Emergence.Data.Shared.Extensions
                 StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
                 Preferred = source.Preferred,
                 TaxonId = source.Taxon?.TaxonId,
+                WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.SerializeObject(source.WildlifeEffects) : null,
+                Notes = source.Notes,
                 Visibility = source.Visibility,
                 UserId = source.UserId,
                 CreatedBy = source.CreatedBy,
@@ -291,6 +301,8 @@ namespace Emergence.Data.Shared.Extensions
                 StratificationStages = source.StratificationStages != null ? JsonConvert.DeserializeObject<List<Search.Models.StratificationStage>>(source.StratificationStages) : null,
                 Preferred = source.Preferred,
                 Taxon = source.Taxon?.AsSearchModel(),
+                WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.DeserializeObject<List<Models.WildlifeEffect>>(source.WildlifeEffects) : null,
+                Notes = source.Notes,
                 Visibility = source.Visibility,
                 User = source.User?.AsSearchModel(),
                 CreatedBy = source.CreatedBy,
@@ -311,6 +323,7 @@ namespace Emergence.Data.Shared.Extensions
             Height = plantInfo.Height,
             Spread = plantInfo.Spread,
             Requirements = plantInfo.Requirements,
+            Notes = plantInfo.Notes,
             Visibility = Visibility.Inherit,
             UserId = null,
             CreatedBy = userId,

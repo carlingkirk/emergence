@@ -28,6 +28,8 @@ namespace Emergence.Data.Shared.Search.Models
         public Zone MinimumZone { get; set; }
         public Zone MaximumZone { get; set; }
         public IEnumerable<Zone> Zones { get; set; }
+        public IEnumerable<Shared.Models.WildlifeEffect> WildlifeEffects { get; set; }
+        public string Notes { get; set; }
         public Visibility Visibility { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }

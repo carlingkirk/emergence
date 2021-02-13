@@ -1,5 +1,10 @@
-namespace Emergence.Data.Shared.Enums
+using System.ComponentModel;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace Emergence.Data.Shared
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum Wildlife
     {
         Bees,
@@ -8,13 +13,15 @@ namespace Emergence.Data.Shared.Enums
         Butterflies,
         Hummingbirds,
         Moths,
-        Pets
+        Wasps
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum Effect
     {
+        [Description("")]
+        Unknown,
         Food,
-        Host,
-        Toxic
+        Host
     }
 }

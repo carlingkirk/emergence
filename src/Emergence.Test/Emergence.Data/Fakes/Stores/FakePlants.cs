@@ -34,6 +34,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MinimumZone = new Zone { Id = 7, Name = "3" },
                     MaximumZone = new Zone { Id = 22, Name = "8" },
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
+                    WildlifeEffects = "[{\"Wildlife\":\"Bees\",\"Effect\":\"Food\"}]",
+                    Notes = "Liatris spicata, the dense blazing star or prairie gay feather, is an herbaceous perennial flowering plant in the sunflower and daisy family " +
+                    "Asteraceae. It is native to eastern North America where it grows in moist prairies and sedge meadows. The plants have tall spikes of purple flowers " +
+                    "resembling bottle brushes or feathers that grow one to five feet tall. The species grows in hardiness zones 3 - 8, stretching from the Midwest " +
+                    "to the East Coast, eastern and western Canada.",
                     Visibility = Visibility.Contacts,
                     CreatedBy = Helpers.UserId,
                     ModifiedBy = Helpers.UserId,
@@ -66,6 +71,9 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MinimumZone = new Zone { Id = 13, Name = "5" },
                     MaximumZone = new Zone { Id = 22, Name = "8" },
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"1\",\"StratificationType\":\"AbrasionScarify\"},{\"Step\":\"2\",\"DayLength\":\"10\",\"StratificationType\":\"ColdMoist\"}]",
+                    WildlifeEffects = "[{\"Wildlife\":\"Butterflies\",\"Effect\":\"Host\"},{\"Wildlife\":\"Bees\",\"Effect\":\"Food\"}]",
+                    Notes = "Baptisia alba, commonly called white wild indigo or white false indigo, is a herbaceous plant in the bean family Fabaceae. It is native from central and " +
+                            "eastern North America. There are two varieties, Baptisia alba var. alba and Baptisia alba var. macrophylla.",
                     Visibility = Visibility.Public,
                     CreatedBy = Helpers.UserId,
                     ModifiedBy = Helpers.UserId,
@@ -97,6 +105,11 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MinimumZone = new Zone { Id = 7, Name = "3" },
                     MaximumZone = new Zone { Id = 22, Name = "8" },
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
+                    WildlifeEffects = "[{\"Wildlife\":\"Birds\",\"Effect\":\"Food\"}]",
+                    Notes = "Liatris spicata, the dense blazing star or prairie gay feather, is an herbaceous perennial flowering plant in the sunflower and daisy family " +
+                    "Asteraceae. It is native to eastern North America where it grows in moist prairies and sedge meadows. The plants have tall spikes of purple flowers " +
+                    "resembling bottle brushes or feathers that grow one to five feet tall. The species grows in hardiness zones 3 - 8, stretching from the Midwest " +
+                    "to the East Coast, eastern and western Canada.",
                     Visibility = Visibility.Inherit,
                     CreatedBy = FakeUsers.GetPrivate().UserId,
                     ModifiedBy = FakeUsers.GetPrivate().UserId,

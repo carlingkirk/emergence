@@ -20,8 +20,11 @@ namespace Emergence.Client.Components
         public static IEnumerable<Month> Months => Enum.GetValues(typeof(Month)).Cast<Month>();
         public static IEnumerable<DistanceUnit> DistanceUnits => Enum.GetValues(typeof(DistanceUnit)).Cast<DistanceUnit>();
         public static IEnumerable<StratificationType> StratificationTypes => Enum.GetValues(typeof(StratificationType)).Cast<StratificationType>();
+        public static IEnumerable<Wildlife> WildlifeTypes => Enum.GetValues(typeof(Wildlife)).Cast<Wildlife>();
+        public static IEnumerable<Effect> Effects => Enum.GetValues(typeof(Effect)).Cast<Effect>();
         public List<SoilType> ChosenSoilTypes { get; set; }
         public LinkedList<StratificationStage> ChosenStratificationStages { get; set; }
+        public List<WildlifeEffect> ChosenWildlifeEffects { get; set; }
         public IEnumerable<Zone> Zones { get; set; }
         public int? MinimumZoneId { get; set; }
         public int? MaximumZoneId { get; set; }
@@ -119,5 +122,9 @@ namespace Emergence.Client.Components
         protected bool AnyStratificationStages() =>
             (PlantInfo.Requirements?.StratificationStages != null && PlantInfo.Requirements.StratificationStages.Any()) ||
             (ChosenStratificationStages != null && ChosenStratificationStages.Any());
+
+        protected bool AnyWildlifeEffects() =>
+            (PlantInfo.WildlifeEffects != null && PlantInfo.WildlifeEffects.Any()) ||
+            (ChosenWildlifeEffects != null && ChosenWildlifeEffects.Any());
     }
 }
