@@ -66,9 +66,9 @@ namespace Emergence.Client.Components
                     });
                 }
 
+                ChosenWildlifeEffects = new List<WildlifeEffect>();
                 if (PlantInfo.WildlifeEffects != null)
                 {
-                    ChosenWildlifeEffects = new List<WildlifeEffect>();
                     PlantInfo.WildlifeEffects.ToList().ForEach(we =>
                     {
                         ChosenWildlifeEffects.Add(we);

@@ -12,20 +12,20 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 col-xs">
-            <div class="container" style="padding-bottom:.5em;">
-                <label for="new-upload">Upload:</label>
-                <BlazorInputFile.InputFile OnChange="UploadPhotosAsync" id="new-upload" multiple capture="camera" accept="image/*" style="border: 0; padding: .25em 0;"></BlazorInputFile.InputFile>
-                <label for="new-external">or add URL:</label>
-                <input type="text" id="new-external" @bind="ExternalUrl" />
-                <button type="button" class="btn btn-sm btn-secondary" @onclick="async () => await AddExternalPhotoAsync()">Add</button>
-            </div>
+        <div class="col-lg-6 col-xs" style="padding-bottom:0.5em;">
+            <label for="new-upload">Upload:</label>
+            <BlazorInputFile.InputFile OnChange="UploadPhotosAsync" id="new-upload" multiple capture="camera" accept="image/*" style="border: 0; padding: .25em 0;"></BlazorInputFile.InputFile>
         </div>
-    </div>
-    <div class="row">
-        @foreach (var photo in UploadedPhotos)
-        {
-            <div class="col-lg-2 col-xs">
+        <div class="col-lg-6 col-xs" style="padding-bottom:0.5em;">
+            <label for="new-external">Add by URL:</label>
+            <input type="text" id="new-external" @bind="ExternalUrl" />
+            <button type="button" class="btn btn-sm btn-secondary" @onclick="async () => await AddExternalPhotoAsync()">Add</button>
+        </div>
+        </div>
+        <div class="row">
+            @foreach (var photo in UploadedPhotos)
+            {
+                <div class="col-lg-3 col-xs">
                     @if (string.IsNullOrEmpty(photo.ExternalUrl))
                     {
                         <a href="" @onclick="async () => await ModalServiceClient.ShowPhotoModal(photo, Name)" @onclick:preventDefault>
@@ -44,55 +44,55 @@
                             <span>The URL is not accessible. Please try another URL or upload an image.</span>
                         }
                     }
-                <div class="col">
-                    <button type="button" class="btn btn-sm btn-secondary" style="margin-top:.25rem;" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
+                    <div class="col">
+                        <button type="button" class="btn btn-sm btn-secondary" style="margin-top:.25rem;" @onclick="async () => await RemovePhotoAsync(photo.PhotoId)">Remove</button>
+                    </div>
                 </div>
-            </div>
+            }
+        </div>
         }
-    </div>
-}
 
-@code {
-    [Parameter]
-    public PhotoType PhotoType { get; set; }
-    [Parameter]
-    public List<Photo> UploadedPhotos { get; set; }
-    [Parameter]
-    public EventCallback<List<Photo>> UploadedPhotosChanged { get; set; }
-    [Parameter]
-    public string Name { get; set; }
+        @code {
+            [Parameter]
+            public PhotoType PhotoType { get; set; }
+            [Parameter]
+            public List<Photo> UploadedPhotos { get; set; }
+            [Parameter]
+            public EventCallback<List<Photo>> UploadedPhotosChanged { get; set; }
+            [Parameter]
+            public string Name { get; set; }
     public string ExternalUrl { get; set; }
 
-    protected async Task UploadPhotosAsync(IFileListEntry[] files)
-    {
-        var photos = await ApiClient.UploadPhotosAsync(files, PhotoType);
-        UploadedPhotos.AddRange(photos.ToList());
-        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
-    }
-
-    protected async Task UploadPhotoAsync(IFileListEntry[] files)
-    {
-        var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType);
-        UploadedPhotos.Add(photo);
-        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
-    }
-
-    protected async Task AddExternalPhotoAsync()
-    {
-        var photo = await ApiClient.AddExternalPhotoAsync(ExternalUrl, PhotoType);
-        UploadedPhotos.Add(photo);
-        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
-        ExternalUrl = null;
-    }
-
-    protected async Task RemovePhotoAsync(int id)
-    {
-        var photo = UploadedPhotos.First(p => p.PhotoId == id);
-        var result = await ApiClient.RemovePhotoAsync(photo.PhotoId);
-        if (result)
+        protected async Task UploadPhotosAsync(IFileListEntry[] files)
         {
-            UploadedPhotos.Remove(photo);
+            var photos = await ApiClient.UploadPhotosAsync(files, PhotoType);
+            UploadedPhotos.AddRange(photos.ToList());
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
         }
-        await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
-    }
-}
+
+        protected async Task UploadPhotoAsync(IFileListEntry[] files)
+        {
+            var photo = await ApiClient.UploadPhotoAsync(files.First(), PhotoType);
+            UploadedPhotos.Add(photo);
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
+        }
+
+        protected async Task AddExternalPhotoAsync()
+        {
+            var photo = await ApiClient.AddExternalPhotoAsync(ExternalUrl, PhotoType);
+            UploadedPhotos.Add(photo);
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
+            ExternalUrl = null;
+        }
+
+        protected async Task RemovePhotoAsync(int id)
+        {
+            var photo = UploadedPhotos.First(p => p.PhotoId == id);
+            var result = await ApiClient.RemovePhotoAsync(photo.PhotoId);
+            if (result)
+            {
+                UploadedPhotos.Remove(photo);
+            }
+            await UploadedPhotosChanged.InvokeAsync(UploadedPhotos);
+        }
+        }
