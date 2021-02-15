@@ -44,6 +44,7 @@ namespace Emergence.Client.Components
             {
                 PlantInfo.Height.Unit = DistanceUnit.Unknown;
             }
+
             if (PlantInfo.Spread.MinimumSpread.HasValue || PlantInfo.Spread.MaximumSpread.HasValue)
             {
                 PlantInfo.Spread.Unit = DistanceUnit.Feet;
@@ -52,13 +53,28 @@ namespace Emergence.Client.Components
             {
                 PlantInfo.Spread.Unit = DistanceUnit.Unknown;
             }
+
             if (MinimumZoneId != PlantInfo.Requirements.ZoneRequirements?.MinimumZone?.Id)
             {
-                PlantInfo.Requirements.ZoneRequirements.MinimumZone = Zones.First(z => z.Id == MinimumZoneId);
+                PlantInfo.Requirements.ZoneRequirements = new ZoneRequirements
+                {
+                    MinimumZone = Zones.First(z => z.Id == MinimumZoneId)
+                };
             }
+
             if (MaximumZoneId != PlantInfo.Requirements.ZoneRequirements?.MaximumZone?.Id)
             {
-                PlantInfo.Requirements.ZoneRequirements.MaximumZone = Zones.First(z => z.Id == MaximumZoneId);
+                if (PlantInfo.Requirements.ZoneRequirements == null)
+                {
+                    PlantInfo.Requirements.ZoneRequirements = new ZoneRequirements
+                    {
+                        MaximumZone = Zones.First(z => z.Id == MaximumZoneId)
+                    };
+                }
+                else
+                {
+                    PlantInfo.Requirements.ZoneRequirements.MaximumZone = Zones.First(z => z.Id == MaximumZoneId);
+                }
             }
 
             PlantInfo = await ApiClient.PutPlantInfoAsync(PlantInfo);
