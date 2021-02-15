@@ -83,6 +83,8 @@ namespace Emergence.Test.Emergence.Data.Shared.Extensions
             firstPlantInfo.WildlifeEffects.Should().HaveCount(1);
             firstPlantInfo.WildlifeEffects.Count(we => we.Wildlife == Wildlife.Bees).Should().Be(1);
             firstPlantInfo.WildlifeEffects.Count(we => we.Effect == Effect.Food).Should().Be(1);
+            firstPlantInfo.SoilTypes.Should().HaveCount(3);
+            firstPlantInfo.SoilTypes.Count(s => s == SoilType.Loamy).Should().Be(1);
             firstPlantInfo.Notes.Contains("feather").Should().BeTrue();
             firstPlantInfo.Visibility.Should().Be(Visibility.Contacts);
             firstPlantInfo.CreatedBy.Should().Be(Helpers.UserId);

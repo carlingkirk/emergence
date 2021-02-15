@@ -34,6 +34,7 @@ namespace Emergence.Test.Data.Fakes.Stores
                     MinimumZone = new Zone { Id = 7, Name = "3" },
                     MaximumZone = new Zone { Id = 22, Name = "8" },
                     StratificationStages = "[{\"Step\":\"1\",\"DayLength\":\"30\",\"StratificationType\":\"ColdMoist\"}]",
+                    SoilTypes = "[\"Loamy\",\"Rocky\",\"Clay\"]",
                     WildlifeEffects = "[{\"Wildlife\":\"Bees\",\"Effect\":\"Food\"}]",
                     Notes = "Liatris spicata, the dense blazing star or prairie gay feather, is an herbaceous perennial flowering plant in the sunflower and daisy family " +
                     "Asteraceae. It is native to eastern North America where it grows in moist prairies and sedge meadows. The plants have tall spikes of purple flowers " +

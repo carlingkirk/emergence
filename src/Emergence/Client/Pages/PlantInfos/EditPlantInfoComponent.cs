@@ -34,6 +34,7 @@ namespace Emergence.Client.Components
             PlantInfo.CreatedBy = UserId;
             PlantInfo.Requirements.StratificationStages = ChosenStratificationStages != null && ChosenStratificationStages.Any() ? ChosenStratificationStages.ToList() : null;
             PlantInfo.WildlifeEffects = ChosenWildlifeEffects != null && ChosenWildlifeEffects.Any() ? ChosenWildlifeEffects.ToList() : null;
+            PlantInfo.SoilTypes = ChosenSoilTypes != null && ChosenSoilTypes.Any() ? ChosenSoilTypes.ToList() : null;
 
             if (PlantInfo.Height.MinimumHeight.HasValue || PlantInfo.Height.MaximumHeight.HasValue)
             {
@@ -90,7 +91,17 @@ namespace Emergence.Client.Components
             }
         }
 
-        protected void AddSoilType(SoilType soilType) => ChosenSoilTypes.Add(soilType);
+        protected void AddRemoveSoilType(SoilType soilType)
+        {
+            if (ChosenSoilTypes.Contains(soilType))
+            {
+                ChosenSoilTypes.Remove(soilType);
+            }
+            else
+            {
+                ChosenSoilTypes.Add(soilType);
+            }
+        }
 
         protected void AddStratificationStage(StratificationStage stratificationStage = null)
         {

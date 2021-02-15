@@ -18,6 +18,7 @@ namespace Emergence.Data.Shared.Models
         public Spread Spread { get; set; }
         public Requirements Requirements { get; set; }
         public IEnumerable<WildlifeEffect> WildlifeEffects { get; set; }
+        public IEnumerable<SoilType> SoilTypes { get; set; }
         public string Notes { get; set; }
         public Visibility Visibility { get; set; }
         public int? UserId { get; set; }

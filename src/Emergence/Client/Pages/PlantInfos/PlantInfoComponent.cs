@@ -59,7 +59,6 @@ namespace Emergence.Client.Components
                 ChosenStratificationStages = new LinkedList<StratificationStage>();
                 if (PlantInfo.Requirements.StratificationStages != null)
                 {
-
                     PlantInfo.Requirements.StratificationStages.OrderBy(s => s.Step).ToList().ForEach(s =>
                     {
                         ChosenStratificationStages.AddLast(s);
@@ -74,12 +73,22 @@ namespace Emergence.Client.Components
                         ChosenWildlifeEffects.Add(we);
                     });
                 }
+
+                ChosenSoilTypes = new List<SoilType>();
+                if (PlantInfo.SoilTypes != null)
+                {
+                    PlantInfo.SoilTypes.ToList().ForEach(s =>
+                    {
+                        ChosenSoilTypes.Add(s);
+                    });
+                }
             }
             else
             {
                 IsEditing = true;
                 ChosenStratificationStages = new LinkedList<StratificationStage>();
                 ChosenWildlifeEffects = new List<WildlifeEffect>();
+                ChosenSoilTypes = new List<SoilType>();
                 PlantInfo = new PlantInfo
                 {
                     Origin = null,
@@ -87,7 +96,6 @@ namespace Emergence.Client.Components
                     {
                         WaterRequirements = new WaterRequirements(),
                         LightRequirements = new LightRequirements(),
-                        SoilRequirements = new List<SoilType>(),
                         ZoneRequirements = new ZoneRequirements { MinimumZone = new Zone(), MaximumZone = new Zone() },
                         StratificationStages = new List<StratificationStage>()
                     },

@@ -353,6 +353,8 @@ namespace Emergence.Service.Search
                     .Name(nn => nn.PlantLocations))
                 .Nested<Zone>(n => n
                     .Name(nn => nn.Zones))
+                .Nested<WildlifeEffect>(n => n
+                    .Name(nn => nn.WildlifeEffects))
             .Text(t => t.Name(n => n.CommonName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
             .Text(t => t.Name(n => n.ScientificName).Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
             .Text(t => t.Name("lifeform.commonName").Fields(f => f.Text(t => t.Name("nameSearch").Analyzer(NameAnalyzer))))
@@ -380,6 +382,8 @@ namespace Emergence.Service.Search
                 .PropertyName(pl => pl.MinimumLight, "minLight")
                 .PropertyName(pl => pl.MaximumLight, "maxLight")
                 .PropertyName(pl => pl.StratificationStages, "stratificationStages")
+                .PropertyName(pl => pl.WildlifeEffects, "wildlifeEffects")
+                .PropertyName(pl => pl.SoilTypes, "soilTypes")
                 .PropertyName(pl => pl.Zones, "zones")
                 .PropertyName(pl => pl.MinimumZone, "minZone")
                 .PropertyName(pl => pl.MaximumZone, "maxZone")

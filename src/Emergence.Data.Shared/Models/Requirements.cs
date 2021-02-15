@@ -7,7 +7,6 @@ namespace Emergence.Data.Shared.Models
     {
         public WaterRequirements WaterRequirements { get; set; }
         public LightRequirements LightRequirements { get; set; }
-        public IEnumerable<SoilType> SoilRequirements { get; set; }
         public List<StratificationStage> StratificationStages { get; set; }
         public ZoneRequirements ZoneRequirements { get; set; }
     }

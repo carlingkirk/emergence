@@ -16,10 +16,16 @@ namespace Emergence.Data.Shared.Extensions
                 stratificationStages = JsonConvert.DeserializeObject<List<Models.StratificationStage>>(source.StratificationStages);
             }
 
-            List<Models.WildlifeEffect> wildlifeEffects = null;
+            List<WildlifeEffect> wildlifeEffects = null;
             if (!string.IsNullOrEmpty(source.WildlifeEffects))
             {
-                wildlifeEffects = JsonConvert.DeserializeObject<List<Models.WildlifeEffect>>(source.WildlifeEffects);
+                wildlifeEffects = JsonConvert.DeserializeObject<List<WildlifeEffect>>(source.WildlifeEffects);
+            }
+
+            List<SoilType> soilTypes = null;
+            if (!string.IsNullOrEmpty(source.SoilTypes))
+            {
+                soilTypes = JsonConvert.DeserializeObject<List<SoilType>>(source.SoilTypes);
             }
 
             return new Models.PlantInfo
@@ -59,7 +65,6 @@ namespace Emergence.Data.Shared.Extensions
                         MinimumWater = !string.IsNullOrEmpty(source.MinimumWater) ? Enum.Parse<WaterType>(source.MinimumWater) : WaterType.Unknown,
                         MaximumWater = !string.IsNullOrEmpty(source.MaximumWater) ? Enum.Parse<WaterType>(source.MaximumWater) : WaterType.Unknown,
                     },
-                    SoilRequirements = null,
                     StratificationStages = stratificationStages,
                     ZoneRequirements = (source.MinimumZone != null || source.MaximumZone != null) ? new Models.ZoneRequirements
                     {
@@ -82,6 +87,7 @@ namespace Emergence.Data.Shared.Extensions
                 Preferred = source.Preferred,
                 Visibility = source.Visibility,
                 WildlifeEffects = wildlifeEffects,
+                SoilTypes = soilTypes,
                 Notes = source.Notes,
                 UserId = source.UserId,
                 User = source.User?.AsSummaryModel(),
@@ -169,6 +175,7 @@ namespace Emergence.Data.Shared.Extensions
                 Preferred = source.Preferred,
                 TaxonId = source.Taxon?.TaxonId,
                 WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.SerializeObject(source.WildlifeEffects) : null,
+                SoilTypes = source.SoilTypes != null ? JsonConvert.SerializeObject(source.SoilTypes) : null,
                 Notes = source.Notes,
                 Visibility = source.Visibility,
                 UserId = source.UserId,
@@ -181,6 +188,8 @@ namespace Emergence.Data.Shared.Extensions
 
         public static Search.Models.PlantInfo AsSearchModel(this PlantInfo source, IEnumerable<PlantLocation> plantLocations, IEnumerable<Synonym> synonyms)
         {
+            var plantLocationSearch = plantLocations?.Select(pl => pl.AsSearchModel()) ?? source.PlantLocations?.Select(pl => pl.AsSearchModel());
+
             var bloomTimes = new List<Month>();
             if (source.MinimumBloomTime > 0 && source.MaximumBloomTime > 0)
             {
@@ -279,11 +288,11 @@ namespace Emergence.Data.Shared.Extensions
                 ScientificName = source.ScientificName,
                 Origin = source.Origin?.AsSearchModel(),
                 Lifeform = source.Lifeform.AsSearchModel(),
-                PlantLocations = source.PlantLocations?.Select(pl => pl.AsSearchModel()),
+                PlantLocations = plantLocationSearch,
                 Synonyms = synonyms?.Select(s => s.AsSearchModel()),
                 MinimumBloomTime = source.MinimumBloomTime,
                 MaximumBloomTime = source.MaximumBloomTime,
-                BloomTimes = bloomTimes,
+                BloomTimes = bloomTimes.Any() ? bloomTimes : null,
                 MinimumHeight = source.MinimumHeight,
                 MaximumHeight = source.MaximumHeight,
                 HeightUnit = source.MinimumHeight.HasValue || source.MaximumHeight.HasValue ? DistanceUnit.Feet : null,
@@ -292,17 +301,18 @@ namespace Emergence.Data.Shared.Extensions
                 SpreadUnit = source.MinimumSpread.HasValue || source.MaximumSpread.HasValue ? DistanceUnit.Feet : null,
                 MinimumLight = !string.IsNullOrEmpty(source.MinimumLight) ? Enum.Parse<LightType>(source.MinimumLight) : null,
                 MaximumLight = !string.IsNullOrEmpty(source.MaximumLight) ? Enum.Parse<LightType>(source.MaximumLight) : null,
-                LightTypes = lightTypes,
+                LightTypes = lightTypes.Any() ? lightTypes : null,
                 MinimumWater = !string.IsNullOrEmpty(source.MinimumWater) ? Enum.Parse<WaterType>(source.MinimumWater) : null,
                 MaximumWater = !string.IsNullOrEmpty(source.MaximumWater) ? Enum.Parse<WaterType>(source.MaximumWater) : null,
-                WaterTypes = waterTypes,
+                WaterTypes = waterTypes.Any() ? waterTypes : null,
                 MinimumZone = source.MinimumZone?.AsSearchModel(),
                 MaximumZone = source.MaximumZone?.AsSearchModel(),
-                Zones = zones,
+                Zones = zones.Any() ? zones : null,
                 StratificationStages = source.StratificationStages != null ? JsonConvert.DeserializeObject<List<Search.Models.StratificationStage>>(source.StratificationStages) : null,
                 Preferred = source.Preferred,
                 Taxon = source.Taxon?.AsSearchModel(),
-                WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.DeserializeObject<List<Models.WildlifeEffect>>(source.WildlifeEffects) : null,
+                WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.DeserializeObject<List<WildlifeEffect>>(source.WildlifeEffects) : null,
+                SoilTypes = source.SoilTypes != null ? JsonConvert.DeserializeObject<List<SoilType>>(source.SoilTypes) : null,
                 Notes = source.Notes,
                 Visibility = source.Visibility,
                 User = source.User?.AsSearchModel(),
@@ -324,6 +334,8 @@ namespace Emergence.Data.Shared.Extensions
             Height = plantInfo.Height,
             Spread = plantInfo.Spread,
             Requirements = plantInfo.Requirements,
+            WildlifeEffects = plantInfo.WildlifeEffects,
+            SoilTypes = plantInfo.SoilTypes,
             Notes = plantInfo.Notes,
             Visibility = Visibility.Inherit,
             UserId = null,

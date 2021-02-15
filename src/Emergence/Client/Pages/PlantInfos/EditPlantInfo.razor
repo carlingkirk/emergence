@@ -268,7 +268,7 @@
                                         <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => RemoveWildlifeEffect(effect))"><span class="oi oi-minus"></span></button>
                                     </div>
                                     <div class="col-6">
-                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("wildlife", key.ToString())">Type</label>
+                                        <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("wildlife", key.ToString())">Wildlife</label>
                                         <select @bind="@effect.Wildlife" class="form-control" id="@GetElementId("wildlife", key.ToString())">
                                             @foreach (var wildlife in WildlifeTypes)
                                             {
@@ -305,7 +305,7 @@
                     @foreach (var soilType in SoilTypes)
                     {
                         <li>
-                            <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
+                            <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddRemoveSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
                             <label for="@GetElementId("req-soil", soilType.ToString())">@soilType</label>
                         </li>
                     }
