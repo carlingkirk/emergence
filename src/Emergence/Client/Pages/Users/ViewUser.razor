@@ -107,15 +107,8 @@
         <div class="row">
             <div class="form-group">
                 <div class="col">
-                    @if (!string.IsNullOrEmpty(User.UserId) && IsAuthenticated)
-                    {
-                        <label for="specimens">@(User.DisplayName)'s Specimens</label>
-                        <ListSpecimens ForUserId="@User.UserId.ToString()" LinkRelations="false" />
-                    }
-                    else
-                    {
-                        <p><a href="authentication/login">Login</a> to see @User.DisplayName's specimens</p>
-                    }
+                    <label for="specimens">@(User.DisplayName)'s Specimens</label>
+                    <ListSpecimens ForUserId="@User.UserId.ToString()" LinkRelations="false" />
                 </div>
             </div>
         </div>
