@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emergence.API.Controllers
@@ -27,6 +28,7 @@ namespace Emergence.API.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
         public async Task<Specimen> Get(int id)
@@ -95,6 +97,7 @@ namespace Emergence.API.Controllers
             return specimenResult;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Find")]
         public async Task<SpecimenFindResult> FindSpecimens(SpecimenFindParams findParams)
