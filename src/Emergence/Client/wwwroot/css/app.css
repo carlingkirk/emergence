@@ -326,6 +326,10 @@ span.link {
  padding-right:0;
 }
 
+.card-header {
+  margin-bottom: .25em;
+}
+
 .card-img {
   height: 100px;
 }
@@ -349,6 +353,10 @@ img.contain {
   border-radius: 6px;
   padding: 15px;
   margin: 5px;
+}
+
+.tab-content {
+    margin: 0;
 }
 
 /* Tabs */

@@ -4,11 +4,14 @@ using Emergence.Client.Common;
 using Emergence.Data.Shared;
 using Emergence.Data.Shared.Models;
 using Emergence.Data.Shared.Search;
+using Microsoft.AspNetCore.Components;
 
 namespace Emergence.Client.Components
 {
     public class ListPlantInfosComponent : ListComponent<PlantInfo>
     {
+        [Parameter]
+        public Lifeform Lifeform { get; set; }
         public PlantInfoFilters PlantInfoFilters { get; set; }
 
         protected static Dictionary<string, string> Headers =>
@@ -27,27 +30,40 @@ namespace Emergence.Client.Components
 
         public override async Task<FindResult<PlantInfo>> GetListAsync(FindParams findParams)
         {
-            var findPlantInfoParams = new PlantInfoFindParams
+            if (Lifeform == null)
             {
-                SearchText = findParams.SearchText,
-                UseNGrams = false,
-                Skip = findParams.Skip,
-                Take = findParams.Take,
-                SortBy = findParams.SortBy,
-                SortDirection = findParams.SortDirection,
-                Filters = PlantInfoFilters,
-                CreatedBy = findParams.CreatedBy
-            };
+                var findPlantInfoParams = new PlantInfoFindParams
+                {
+                    SearchText = findParams.SearchText,
+                    UseNGrams = false,
+                    Skip = findParams.Skip,
+                    Take = findParams.Take,
+                    SortBy = findParams.SortBy,
+                    SortDirection = findParams.SortDirection,
+                    Filters = PlantInfoFilters,
+                    CreatedBy = findParams.CreatedBy
+                };
 
-            var result = await ApiClient.FindPlantInfosAsync(findPlantInfoParams);
+                var result = await ApiClient.FindPlantInfosAsync(findPlantInfoParams);
 
-            PlantInfoFilters = result.Filters;
+                PlantInfoFilters = result.Filters;
 
-            return new PlantInfoFindResult
+                return new PlantInfoFindResult
+                {
+                    Results = result.Results,
+                    Count = result.Count
+                };
+            }
+            else
             {
-                Results = result.Results,
-                Count = result.Count
-            };
+                var result = await ApiClient.FindPlantInfosAsync(Lifeform);
+
+                return new PlantInfoFindResult
+                {
+                    Results = result.Results,
+                    Count = result.Count
+                };
+            }
         }
     }
 }

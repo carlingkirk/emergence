@@ -1,6 +1,7 @@
 @page "/specimen/{Id:int}"
 @using Emergence.Client.Components
 @using Emergence.Client.Pages.Activities
+@using Emergence.Client.Pages.PlantInfos
 
 @inherits SpecimenComponent
 @inject IModalServiceClient ModalServiceClient
@@ -21,52 +22,100 @@
         <span class="font-italic">New</span>
     }
 </div>
-<div class="group">
-    @if (IsEditing && Specimen != null)
+<ul class="nav nav-tabs">
+    @foreach (var tab in Tabs)
     {
-        @if (RefreshList != null)
-        {
-            <EditSpecimen Cancel="GoBack" RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
-        }
-        else
-        {
-            <EditSpecimen Cancel="GoBack" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
-        }
+        <li class="nav-item@(tab.Key == CurrentTab.Key ? " active" : "")">
+            <a class="nav-link" id="@(tab.Key)-tab" data-toggle="tab" href="#@(tab.Key)" role="tab" aria-controls="@(tab.Key)"
+               aria-selected="false" @onclick="() => SwitchTab(tab.Key)" @onclick:preventDefault>@(tab.Value)</a>
+        </li>
     }
-    else if (Specimen != null)
+</ul>
+
+
+    @if (CurrentTab.Key == "specimen")
     {
-        <ViewSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+        <div class="group tab-content">
+            @if (IsEditing && Specimen != null)
+            {
+                @if (RefreshList != null)
+                {
+                    <EditSpecimen Cancel="GoBack" RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" />
+                }
+                else
+                {
+                    <EditSpecimen Cancel="GoBack" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+                }
+            }
+            else if (Specimen != null)
+            {
+                <ViewSpecimen Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" />
+            }
+            else
+            {
+                <span>Loading...</span>
+            }
+            @if (IsOwner && !IsEditing && Specimen != null && Specimen.SpecimenId > 0)
+            {
+                <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
+                <button type="button" class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
+            }
+            @if (!IsOwner)
+            {
+                <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowMessageModal(GetMessage(), false))">
+                    <span class="oi oi-plus btn-oi"></span>Message
+                </button>
+            }
+        </div>
     }
-    else
+    else if (CurrentTab.Key == "activities" && Specimen != null)
     {
-        <span>Loading...</span>
-    }
-    @if (IsOwner && !IsEditing && Specimen != null && Specimen.SpecimenId > 0)
-    {
-        <button type="button" class="btn btn-primary" @onclick="() => IsEditing = true">Edit</button>
-        <button type="button" class="btn btn-primary" @onclick="async () => await RemoveSpecimen()">Delete</button>
-    }
-    @if (!IsOwner)
-    {
-        <button type="button" class="btn btn-primary" @onclick="@(async () => await ModalServiceClient.ShowMessageModal(GetMessage(), false))">
-            <span class="oi oi-plus btn-oi"></span>Message
-        </button>
-    }
-</div>
-@if (!IsEditing && Specimen != null)
-{
-<div class="group">
-    <div class="form-group">
-        <div class="row">
-            <div class="col">
-                <label for="activities">Activities</label>
-                <ListActivities Specimen="Specimen" ShowSearch="false" LinkRelations="false" />
+        <div class="tab-pane fade show active" id="activities" role="tabpanel" aria-labelledby="activities">
+            <div class="group tab-content">
+                <div class="row">
+                    <div class="col">
+                        <label for="activities">Activities</label>
+                        <ListActivities Specimen="Specimen" ShowSearch="false" LinkRelations="false" />
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-}
+    }
+    else if (CurrentTab.Key == "plant-infos" && Specimen != null)
+    {
+        <div class="tab-pane fade show active" id="plant-infos" role="tabpanel" aria-labelledby="plant-infos">
+            <div class="group tab-content">
+                <div class="row">
+                    <div class="col">
+                        <label for="plant-infos">Plant Profiles</label>
+                        <ListPlantInfos Lifeform="Specimen.Lifeform" ShowSearch="false" LinkRelations="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
 @code {
+
+    protected Dictionary<string, string> Tabs => new Dictionary<string, string>
+    {
+        { "specimen", "Specimen" },
+        { "activities", "Activities" },
+        { "plant-infos", "Plant Profiles"}
+    };
+
+    protected KeyValuePair<string, string> CurrentTab { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CurrentTab = Tabs.First();
+        base.OnInitialized();
+    }
+
+    protected void SwitchTab(string tab)
+    {
+        CurrentTab = Tabs.First(t => t.Key == tab);
+    }
 
     protected async Task GoBack()
     {

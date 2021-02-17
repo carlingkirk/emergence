@@ -18,6 +18,31 @@
                 <div>
                     <span class="text-body">@(PlantInfo.Lifeform.CommonName)</span>&nbsp;<span class="text-body font-italic">@(PlantInfo.Lifeform.ScientificName)</span>
                 </div>
+                @if (PlantInfo.Taxon != null)
+                {
+                    <div>
+                        <label for="botanical-name">Botanical Name </label>
+                    </div>
+                    <div>
+                        <span class="text-body font-italic">@(PlantInfo.Taxon.SpeciesName)</span>
+                        @if (!string.IsNullOrEmpty(PlantInfo.Taxon.Subspecies))
+                        {
+                            <span> ssp. </span><span class="text-body font-italic">@(PlantInfo.Taxon.Subspecies)</span>
+                        }
+                        else if (!string.IsNullOrEmpty(PlantInfo.Taxon.Variety))
+                        {
+                            <span> var. </span><span class="text-body font-italic">@(PlantInfo.Taxon.Variety)</span>
+                        }
+                        else if (!string.IsNullOrEmpty(PlantInfo.Taxon.Subvariety))
+                        {
+                            <span> subvar. </span><span class="text-body font-italic">@(PlantInfo.Taxon.Subvariety)</span>
+                        }
+                        else if (!string.IsNullOrEmpty(PlantInfo.Taxon.Form))
+                        {
+                            <span> f. </span><span class="text-body font-italic">@(PlantInfo.Taxon.Form)</span>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-lg-4 col-xs">
                 <div>

@@ -135,6 +135,33 @@ namespace Emergence.Service.Search
             return response;
         }
 
+        public async Task<SearchResponse<PlantInfo>> SearchAsync(Data.Shared.Models.Lifeform lifeform, Data.Shared.Models.User user)
+        {
+            var shoulds = new List<QueryContainer>();
+            var query = new QueryContainerDescriptor<PlantInfo>();
+            var musts = new List<QueryContainer>
+            {
+                FilterByVisibility(query, user),
+                query.Bool(b => b.Must(m => m.Term(t => t.Lifeform.Id, lifeform.LifeformId )))
+            };
+
+            var searchDescriptor = new SearchDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())
+                        .Must(musts.ToArray())));
+
+            var countDescriptor = new CountDescriptor<PlantInfo>()
+                .Query(q => q
+                    .Bool(b => b
+                        .Should(shoulds.ToArray())
+                        .Must(musts.ToArray())));
+
+            var response = await _searchClient.SearchAsync(pi => searchDescriptor, pi => countDescriptor);
+
+            return response;
+        }
+
         public async Task<SearchResponse<Lifeform>> SearchAsync(FindParams<Data.Shared.Models.Lifeform> findParams, Data.Shared.Models.User user)
         {
             var searchTerm = findParams.SearchText;
@@ -187,6 +214,9 @@ namespace Emergence.Service.Search
                 Aggregations = null
             };
         }
+
+        Task<SearchResponse<Lifeform>> IIndex<Lifeform, Data.Shared.Models.Lifeform>.SearchAsync(Data.Shared.Models.Lifeform lifeform, Data.Shared.Models.User user)
+            => throw new NotImplementedException();
 
         public async Task<bool> RemoveAsync(string id) => await _searchClient.RemoveAsync(id);
 

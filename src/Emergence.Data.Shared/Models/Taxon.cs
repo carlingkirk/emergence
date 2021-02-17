@@ -45,8 +45,10 @@ namespace Emergence.Data.Shared.Models
         public DateTime? DateModified { get; set; }
 
         public string SpeciesName => Genus + " " + Species;
-        public string SubspeciesName => SpeciesName + " ssp. " + Subspecies;
-        public string VarietyName => SpeciesName + " var. " + Variety;
+        public string SubspeciesName => Subspecies != null ? " ssp. " + Subspecies : "";
+        public string VarietyName => Variety != null ? " var. " + Variety : "";
+        public string SubvarietyName => Subvariety != null ? " subvar. " + Subvariety : "";
+        public string FormName => Form != null ? " f. " + Form : "";
 
         public IEnumerable<Synonym> Synonyms { get; set; }
     }

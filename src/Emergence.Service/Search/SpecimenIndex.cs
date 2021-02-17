@@ -270,5 +270,6 @@ namespace Emergence.Service.Search
                 .PropertyName(s => s.ModifiedBy, "modifiedBy")
                 .PropertyName(s => s.DateCreated, "dateCreated")
                 .PropertyName(s => s.DateModified, "dateModified");
+        public Task<SearchResponse<Specimen>> SearchAsync(Data.Shared.Models.Lifeform lifeform, Data.Shared.Models.User user) => throw new NotImplementedException();
     }
 }

@@ -110,6 +110,22 @@
                                     </div>
                                     <div class="col-12">
                                         <span style="font-style:italic">@plantInfo.Lifeform.ScientificName</span>
+                                        @if (!string.IsNullOrEmpty(plantInfo.Taxon?.Form))
+                                        {
+                                            <span> f. </span><span class="font-italic">@(plantInfo.Taxon.Form)</span>
+                                        }
+                                        else if (!string.IsNullOrEmpty(plantInfo.Taxon?.Subvariety))
+                                        {
+                                            <span> subvar. </span><span class="font-italic">@(plantInfo.Taxon.Subvariety)</span>
+                                        }
+                                        else if (!string.IsNullOrEmpty(plantInfo.Taxon?.Variety))
+                                        {
+                                            <span> var. </span><span class="font-italic">@(plantInfo.Taxon.Variety)</span>
+                                        }
+                                        else if (!string.IsNullOrEmpty(plantInfo.Taxon?.Subspecies))
+                                        {
+                                            <span> ssp. </span><span class="font-italic">@(plantInfo.Taxon.Subspecies)</span>
+                                        }
                                     </div>
                                 </a>
                                 @if (plantInfo.Requirements?.ZoneRequirements != null)
