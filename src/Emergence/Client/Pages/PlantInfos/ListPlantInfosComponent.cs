@@ -30,40 +30,32 @@ namespace Emergence.Client.Components
 
         public override async Task<FindResult<PlantInfo>> GetListAsync(FindParams findParams)
         {
-            if (Lifeform == null)
+            var findPlantInfoParams = new PlantInfoFindParams
             {
-                var findPlantInfoParams = new PlantInfoFindParams
-                {
-                    SearchText = findParams.SearchText,
-                    UseNGrams = false,
-                    Skip = findParams.Skip,
-                    Take = findParams.Take,
-                    SortBy = findParams.SortBy,
-                    SortDirection = findParams.SortDirection,
-                    Filters = PlantInfoFilters,
-                    CreatedBy = findParams.CreatedBy
-                };
+                SearchText = findParams.SearchText,
+                UseNGrams = false,
+                Skip = findParams.Skip,
+                Take = findParams.Take,
+                SortBy = findParams.SortBy,
+                SortDirection = findParams.SortDirection,
+                Filters = PlantInfoFilters,
+                CreatedBy = findParams.CreatedBy
+            };
 
-                var result = await ApiClient.FindPlantInfosAsync(findPlantInfoParams);
-
-                PlantInfoFilters = result.Filters;
-
-                return new PlantInfoFindResult
-                {
-                    Results = result.Results,
-                    Count = result.Count
-                };
-            }
-            else
+            if (Lifeform != null)
             {
-                var result = await ApiClient.FindPlantInfosAsync(Lifeform);
-
-                return new PlantInfoFindResult
-                {
-                    Results = result.Results,
-                    Count = result.Count
-                };
+                findPlantInfoParams.Lifeform = Lifeform;
             }
+
+            var result = await ApiClient.FindPlantInfosAsync(findPlantInfoParams);
+
+            PlantInfoFilters = result.Filters;
+
+            return new PlantInfoFindResult
+            {
+                Results = result.Results,
+                Count = result.Count
+            };
         }
     }
 }

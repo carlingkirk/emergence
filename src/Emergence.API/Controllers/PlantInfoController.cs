@@ -96,28 +96,6 @@ namespace Emergence.API.Controllers
             return result;
         }
 
-        [HttpPost]
-        [Route("lifeform")]
-        public async Task<PlantInfoFindResult> FindPlantInfosByLifeform(Lifeform lifeform)
-        {
-            var user = await _userService.GetIdentifyingUser(UserId);
-            var result = await _plantInfoService.FindPlantInfos(lifeform, user);
-
-            var typeIds = result.Results.Select(p => p.PlantInfoId).ToList();
-            var photos = await _photoService.GetPhotosByTypeAsync(PhotoType.PlantInfo, typeIds);
-
-            foreach (var photoGroup in photos.GroupBy(p => p.TypeId))
-            {
-                var plantInfo = result.Results.FirstOrDefault(p => p.PlantInfoId == photoGroup.Key);
-                if (plantInfo != null)
-                {
-                    plantInfo.Photos = photoGroup.ToList();
-                }
-            }
-
-            return result;
-        }
-
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)

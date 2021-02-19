@@ -63,13 +63,6 @@ namespace Emergence.Client.Common
             return await ReadResult<PlantInfoFindResult>(result);
         }
 
-        public async Task<PlantInfoFindResult> FindPlantInfosAsync(Lifeform lifeform)
-        {
-            var result = await _httpClient.PostAsJsonAsync($"/api/plantinfo/lifeform", lifeform);
-
-            return await ReadResult<PlantInfoFindResult>(result);
-        }
-
         public async Task<SpecimenFindResult> FindSpecimensAsync(SpecimenFindParams findParams)
         {
             var result = await _httpClient.PostAsJsonAsync($"/api/specimen/find", findParams);

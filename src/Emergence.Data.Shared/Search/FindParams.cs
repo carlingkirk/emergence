@@ -46,6 +46,8 @@ namespace Emergence.Data.Shared
 
     public class PlantInfoFindParams : FindParams<PlantInfo>, IFindParams
     {
+        public Lifeform Lifeform { get; set; }
+
         public PlantInfoFindParams()
         {
             Skip = 0;

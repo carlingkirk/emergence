@@ -150,35 +150,6 @@ namespace Emergence.Service
             };
         }
 
-        public async Task<PlantInfoFindResult> FindPlantInfos(Data.Shared.Models.Lifeform lifeform, Data.Shared.Models.User user)
-        {
-            var plantInfoSearch = await _plantInfoIndex.SearchAsync(lifeform, user);
-            var plantInfoIds = plantInfoSearch.Documents.Select(p => p.Id).ToArray();
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => plantInfoIds.Contains(p.Id),
-                                                                        false,
-                                                                        p => p.Include(p => p.Lifeform)
-                                                                              .Include(p => p.Taxon)
-                                                                              .Include(p => p.Origin)
-                                                                              .Include(p => p.User)
-                                                                              .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
-
-            plantInfoQuery = plantInfoQuery.CanViewContent(user);
-
-            var plantInfoResult = plantInfoQuery.GetSomeAsync(track: false);
-
-            var plantInfos = new List<Data.Shared.Models.PlantInfo>();
-            await foreach (var plantInfo in plantInfoResult)
-            {
-                plantInfos.Add(plantInfo.AsModel());
-            }
-
-            return new PlantInfoFindResult
-            {
-                Count = plantInfoSearch.Count,
-                Results = plantInfoIds.Join(plantInfos, pid => pid, pi => pi.PlantInfoId, (id, p) => p).ToList()
-            };
-        }
-
         public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> AddPlantInfosAsync(IEnumerable<Data.Shared.Models.PlantInfo> plantInfos)
         {
             var plantInfosResult = await _plantInfoRepository.AddSomeAsync(plantInfos.Select(o => o.AsStore()));
