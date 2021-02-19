@@ -7,75 +7,83 @@
 
 @if (Specimen != null)
 {
-    <div class="form-group">
-        <div class="row">
-            <div class="col-lg-4 col-xs">
-                <div>
-                    <label for="specimen-name">Specimen Name </label>
-                </div>
-                <div>
-                    <span class="text-body">@(Specimen.InventoryItem.Name)</span>
-                </div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="specimen-name">Specimen Name </label>
             </div>
-            <div class="col-lg-4 col-xs">
-                <div>
-                    <label for="quantity">Quantity</label>
-                </div>
-                <div>
-                    <span class="text-body">@Specimen.InventoryItem.Quantity</span>
-                </div>
-            </div>
-            @if (!string.IsNullOrEmpty(Specimen.InventoryItem.User?.DisplayName))
-            {
-                <div class="col-lg-4 col-xs">
-                    <UserDisplay Label="By" User="Specimen.InventoryItem.User" />
-                </div>
-            }
-            <div class="col-lg-4 col-xs">
-                <div>
-                    <label for="status">Status</label>
-                </div>
-                <div>
-                    <span class="text-body">@Specimen.InventoryItem.Status.ToFriendlyName()</span>
-                </div>
-            </div>
-            <div class="col-lg-4 col-xs">
-                <div>
-                    <label for="stage">Stage</label>
-                </div>
-                <div>
-                    <span class="text-body">@Specimen.SpecimenStage.ToFriendlyName()</span>
-                </div>
-            </div>
-            @if (@Specimen.InventoryItem.DateAcquired.HasValue)
-            {
-                <div class="col-lg-4 col-xs">
-                    <div>
-                        <label for="date-acquired">Date Acquired</label>
-                    </div>
-                    <div>
-                        <span class="text-body">@Specimen.InventoryItem.DateAcquired.Value.ToShortDateString()</span>
-                    </div>
-                </div>
-            }
-            <div class="col-lg-4 col-xs">
-                <div>
-                    <label for="type">Type</label>
-                </div>
-                <div>
-                    <span class="text-body">@Specimen.InventoryItem.ItemType.ToFriendlyName()</span>
-                </div>
-            </div>
-            <div class="col-lg-4 col-xs">
-                <div>
-                    <label for="origin">Origin</label>
-                </div>
-                <div>
-                    <span class="text-body">@(Specimen.InventoryItem.Origin != null && Specimen.InventoryItem.Origin.OriginId > 0 ? Specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
-                </div>
+            <div>
+                <span class="text-body">@(Specimen.InventoryItem.Name)</span>
             </div>
         </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="quantity">Quantity</label>
+            </div>
+            <div>
+                <span class="text-body">@Specimen.InventoryItem.Quantity</span>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Specimen.InventoryItem.User?.DisplayName))
+        {
+            <div class="col-lg-4 col-xs">
+                <UserDisplay Label="By" User="Specimen.InventoryItem.User" />
+            </div>
+        }
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="status">Status</label>
+            </div>
+            <div>
+                <span class="text-body">@Specimen.InventoryItem.Status.ToFriendlyName()</span>
+            </div>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="stage">Stage</label>
+            </div>
+            <div>
+                <span class="text-body">@Specimen.SpecimenStage.ToFriendlyName()</span>
+            </div>
+        </div>
+        @if (@Specimen.InventoryItem.DateAcquired.HasValue)
+        {
+            <div class="col-lg-4 col-xs">
+                <div>
+                    <label for="date-acquired">Date Acquired</label>
+                </div>
+                <div>
+                    <span class="text-body">@Specimen.InventoryItem.DateAcquired.Value.ToShortDateString()</span>
+                </div>
+            </div>
+        }
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="type">Type</label>
+            </div>
+            <div>
+                <span class="text-body">@Specimen.InventoryItem.ItemType.ToFriendlyName()</span>
+            </div>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="origin">Origin</label>
+            </div>
+            <div>
+                <span class="text-body">@(Specimen.InventoryItem.Origin != null && Specimen.InventoryItem.Origin.OriginId > 0 ? Specimen.InventoryItem.Origin?.Name ?? "(No name)" : null)</span>
+            </div>
+        </div>
+        <div class="col-lg-12 col">
+            @if (Specimen.Notes != null)
+            {
+                <label for="notes">Notes</label>
+                <p>@Specimen.Notes</p>
+
+            }
+        </div>
     </div>
+</div>
     @if (UploadedPhotos != null && UploadedPhotos.Any())
     {
         <div class="form-group">

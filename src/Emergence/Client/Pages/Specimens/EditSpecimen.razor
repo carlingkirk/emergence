@@ -95,6 +95,12 @@
             </div>
         </div>
         <UploadPhoto @bind-UploadedPhotos="UploadedPhotos" PhotoType="PhotoType.Specimen" Name="@(Specimen.Name)" />
+        <div class="form-group">
+            <div class="col">
+                <label for="notes">Notes</label>
+                <textarea rows="3" @bind="Specimen.Notes" id="notes" class="form-control" />
+            </div>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
     @if (BlazoredModal != null)
