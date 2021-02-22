@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Emergence.Client.Common;
+using Emergence.Service.Geolocation;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,7 @@ namespace Emergence.Client
 
             // Client services
             builder.Services.AddTransient<IModalServiceClient, ModalServiceClient>();
+            builder.Services.AddTransient<IGeolocationService, GeolocationService>();
 
             await builder.Build().RunAsync();
         }

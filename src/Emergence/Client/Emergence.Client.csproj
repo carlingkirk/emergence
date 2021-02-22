@@ -8,12 +8,14 @@
   <ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="5.1.0" />
     <PackageReference Include="Blazored.Typeahead" Version="4.4.1" />
+    <PackageReference Include="BlazorGoogleMaps" Version="1.0.12" />
     <PackageReference Include="BlazorInputFile" Version="0.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="5.0.3" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
