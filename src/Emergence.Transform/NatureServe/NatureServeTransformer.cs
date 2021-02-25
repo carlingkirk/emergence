@@ -71,7 +71,7 @@ namespace Emergence.Transform.NatureServe
 
             var plantInfo = new PlantInfo
             {
-                ScientificName = source.ScientificName,
+                ScientificName = scientificName,
                 CommonName = source.PrimaryCommonName,
                 Origin = origin,
                 Lifeform = lifeform,

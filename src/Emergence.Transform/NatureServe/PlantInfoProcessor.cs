@@ -129,13 +129,8 @@ namespace Emergence.Transform.NatureServe
                 plantInfo.Lifeform = lifeform ?? throw new Exception("We shouldn't have any missing lifeforms at this point.");
 
                 var taxon = Taxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
-                                                && t.Subkingdom == plantInfo.Taxon.Subkingdom
-                                                && t.Infrakingdom == plantInfo.Taxon.Infrakingdom
                                                 && t.Phylum == plantInfo.Taxon.Phylum
-                                                && t.Subphylum == plantInfo.Taxon.Subphylum
                                                 && t.Class == plantInfo.Taxon.Class
-                                                && t.Subclass == plantInfo.Taxon.Subclass
-                                                && t.Superorder == plantInfo.Taxon.Superorder
                                                 && t.Order == plantInfo.Taxon.Order
                                                 && t.Family == plantInfo.Taxon.Family
                                                 && t.Genus == plantInfo.Taxon.Genus
@@ -145,7 +140,11 @@ namespace Emergence.Transform.NatureServe
                                                 && t.Subvariety == plantInfo.Taxon.Subvariety
                                                 && t.Form == plantInfo.Taxon.Form);
 
-                plantInfo.Taxon = taxon ?? throw new Exception("We really shouldn't have null taxa at this point.");
+                if (taxon == null)
+                {
+                    taxon = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
+                    Taxons.Add(taxon);
+                }
 
                 // Do we already have the same origin in our insert list?
                 var originResult = newOrigins.FirstOrDefault(o => o.ParentOrigin.OriginId == Origin.OriginId
