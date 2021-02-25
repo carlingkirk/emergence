@@ -126,7 +126,11 @@ namespace Emergence.Transform.NatureServe
             {
                 var lifeform = Lifeforms.FirstOrDefault(l => l.ScientificName == plantInfo.ScientificName);
 
-                plantInfo.Lifeform = lifeform ?? throw new Exception("We shouldn't have any missing lifeforms at this point.");
+                if (lifeform == null)
+                {
+                    lifeform = await _lifeformService.AddOrUpdateLifeformAsync(plantInfo.Lifeform);
+                    Lifeforms.Add(lifeform);
+                }
 
                 var taxon = Taxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
                                                 && t.Phylum == plantInfo.Taxon.Phylum
@@ -224,15 +228,14 @@ namespace Emergence.Transform.NatureServe
             if (plantInfoLocations.Any() && newPlantInfos.Any())
             {
                 var states = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.StateOrProvince).Distinct();
-                var regions = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Region).Distinct();
                 var countries = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
-                var locations = (await _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || regions.Contains(l.Region))).ToList();
+                var locations = (await _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || states.Contains(l.StateOrProvince))).ToList();
 
                 var missingLocations = plantInfoLocations.GroupJoin(locations,
-                    pl => new { pl.Location.Region, pl.Location.Country },
-                    l => new { l.Region, l.Country },
+                    pl => new { pl.Location.StateOrProvince, pl.Location.Country },
+                    l => new { l.StateOrProvince, l.Country },
                     (pl, l) => pl.Location)
-                    .DistinctBy(l => new { l.Region, l.Country })
+                    .DistinctBy(l => new { l.StateOrProvince, l.Country })
                     .ToList();
 
                 if (missingLocations.Any())
@@ -249,7 +252,7 @@ namespace Emergence.Transform.NatureServe
                     if (newPlantInfo != null)
                     {
                         var location = locations.First(l => l.Country == plantInfoLocation.Location.Country
-                                                            && l.Region == plantInfoLocation.Location.Region);
+                                                            && l.StateOrProvince == plantInfoLocation.Location.StateOrProvince);
                         plantLocationsToAdd.Add(new PlantLocation
                         {
                             PlantInfo = newPlantInfo,
