@@ -1,7 +1,7 @@
 using System;
 using Microsoft.JSInterop;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     internal class JSAction<T>
     {

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// Represents the data from a location query

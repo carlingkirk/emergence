@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// The main entry point of the API

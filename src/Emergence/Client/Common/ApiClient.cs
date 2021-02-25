@@ -341,6 +341,13 @@ namespace Emergence.Client.Common
             return await ReadResult<UserMessage>(result);
         }
 
+        public async Task<IEnumerable<Place>> GetGeocodesAsync(string address, string region = null)
+        {
+            var result = await _httpClient.GetAsync($"/api/place/geocodes?address={address}&region={region}");
+
+            return await ReadResult<IEnumerable<Place>>(result);
+        }
+
         private async Task<T> ReadResult<T>(HttpResponseMessage result, JsonSerializerOptions options = null)
         {
             if (result.IsSuccessStatusCode)

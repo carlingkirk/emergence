@@ -1,0 +1,22 @@
+@page "/map"
+@using GoogleMapsComponents
+
+@inherits Map
+
+<h1>Google Map</h1>
+
+<input type="text" @bind="SearchText" />
+<button type="button" class="btn btn-primary" @onclick="@(async () => await SearchAsync())"></button>
+
+@if (MapOptions != null)
+{
+    <GoogleMap @ref="@GoogleMap" Id="map" Options="@MapOptions" OnAfterInit="@(async () => await OnAfterInitAsync())"></GoogleMap>
+}
+
+@if (Markers != null && Markers.Any())
+{
+    foreach (var marker in Markers)
+    {
+        <span>@(marker.Key.LatLong)</span>
+    }
+}

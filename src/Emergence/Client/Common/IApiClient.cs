@@ -49,5 +49,6 @@ namespace Emergence.Client.Common
         Task<bool> RemoveContactAsync(UserContact userContact);
         Task<bool> RemoveContactRequestAsync(UserContactRequest userContactRequest);
         Task<UserMessage> SendMessageAsync(UserMessage message);
+        Task<IEnumerable<Place>> GetGeocodesAsync(string address, string region = null);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// An interface that defines a Geolocation Service

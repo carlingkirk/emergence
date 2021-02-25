@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// A class that contains info about an encountered error while querying a device's location

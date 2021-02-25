@@ -1,6 +1,6 @@
 using System;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// A class that wraps a <see cref="GeolocationPosition"/> for use in events

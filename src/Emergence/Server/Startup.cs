@@ -112,6 +112,7 @@ namespace Emergence.Server
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserContactService, UserContactService>();
             services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IPlaceService, PlaceService>();
 
             // Add repositories
             services.AddScoped(typeof(IRepository<Activity>), typeof(Repository<Activity>));

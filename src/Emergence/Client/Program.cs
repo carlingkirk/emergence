@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Emergence.Client.Common;
-using Emergence.Service.Geolocation;
+using Emergence.Client.Service.Geolocation;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;

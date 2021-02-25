@@ -1,6 +1,6 @@
 using System;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// Wraps a <see cref="GeolocationPositionError"/> object for use in events

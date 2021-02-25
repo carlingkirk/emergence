@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// A class that contains options for retrieving locations

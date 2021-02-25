@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Emergence.Service.Geolocation
+namespace Emergence.Client.Service.Geolocation
 {
     /// <summary>
     /// Similar to the <see cref="GeolocationPositionError"/> class, but used as an exception
