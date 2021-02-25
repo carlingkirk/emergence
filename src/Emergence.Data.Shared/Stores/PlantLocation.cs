@@ -11,6 +11,8 @@ namespace Emergence.Data.Shared.Stores
         [StringLength(20)]
         public string Status { get; set; }
         [StringLength(36)]
+        public string ConservationStatus { get; set; }
+        [StringLength(36)]
         public string CreatedBy { get; set; }
         [StringLength(36)]
         public string ModifiedBy { get; set; }

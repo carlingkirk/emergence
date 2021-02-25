@@ -38,6 +38,7 @@ namespace Emergence.Transform
             _specimenIndex = specimenIndex;
         }
 
+        public NatureServe.PlantInfoProcessor GetNatureServePlantInfoProcessor => new NatureServe.PlantInfoProcessor(_lifeformService, _originService, _plantInfoService, _taxonService, _locationService);
         public PlantInfoProcessor GetPlantInfoProcessor => new PlantInfoProcessor(_lifeformService, _originService, _plantInfoService, _taxonService, _locationService);
         public SynonymProcessor GetSynonymProcessor => new SynonymProcessor(_synonymService, _originService, _taxonService);
         public ElasticPlantInfoProcessor GetElasticPlantInfoProcessor => new ElasticPlantInfoProcessor(_plantInfoRepository, _plantInfoIndex);

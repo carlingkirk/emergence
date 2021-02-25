@@ -9,6 +9,7 @@ namespace Emergence.Data.Shared.Extensions
         {
             Id = source.Id,
             Status = Enum.Parse<LocationStatus>(source.Status),
+            ConservationStatus = Enum.Parse<ConservationStatus>(source.ConservationStatus),
             Location = source.Location != null ? source.Location.AsModel() : new Models.Location { LocationId = source.LocationId },
             PlantInfo = source.PlantInfo != null ? source.PlantInfo.AsModel() : new Models.PlantInfo { PlantInfoId = source.PlantInfoId },
             CreatedBy = source.CreatedBy,

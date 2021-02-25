@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Emergence.Data.External.ITIS;
+using Emergence.Data.External.NatureServe;
 using Emergence.Data.External.USDA;
 using Emergence.Data.Shared.Models;
+using Emergence.Transform.NatureServe;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -213,6 +215,39 @@ namespace Emergence.Transform.Runner
                         }
 
                         counter += 1000;
+                    }
+                }
+                else if (importer.Type == ImporterType.TextImporter && importer.ImportModel == "PlantsFile")
+                {
+                    var processor = _importTransformOrchestrator.get;
+                    var transformer = new NatureServeTransformer();
+
+                    await processor.InitializeOrigin(transformer.Origin);
+                    await processor.InitializeLifeforms();
+                    await processor.InitializeTaxons();
+
+                    var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
+                    var textImporter = new JsonImporter<PlantsFile>(dataFile);
+
+                    var plantsFile = textImporter.ImportObjectAsync();
+                    var plantInfos = new List<PlantInfo>();
+
+                    foreach (var plant in plantsFile.Plants)
+                    {
+                        plantInfos.Add(transformer.Transform(plant));
+                    }
+
+                    var batchSize = 100;
+                    var finished = false;
+                    var counter = 0;
+                    var counterEnd = 1000000;
+
+                    while (!finished && counter < counterEnd)
+                    {
+                        var batch = plantInfos.Skip(counter).Take(batchSize);
+                        var result = await processor.Process(batch);
+                        Console.WriteLine($"Processed: {result.Count()} plantInfos - ended on {batch.Last().ScientificName}");
+                        counter += batchSize;
                     }
                 }
             }
