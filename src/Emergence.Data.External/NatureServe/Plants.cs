@@ -3,12 +3,6 @@ using System.Collections.Generic;
 
 namespace Emergence.Data.External.NatureServe
 {
-
-    public class PlantsFile
-    {
-        public IEnumerable<Plant> Plants { get; set; }
-    }
-
     public class Plant
     {
         public string ElementGlobalId { get; set; }

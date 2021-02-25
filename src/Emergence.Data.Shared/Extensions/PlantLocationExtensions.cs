@@ -22,6 +22,7 @@ namespace Emergence.Data.Shared.Extensions
         {
             Id = source.Id,
             Status = source.Status.ToString(),
+            ConservationStatus = source.ConservationStatus.ToString(),
             LocationId = source.Location.LocationId,
             PlantInfoId = source.PlantInfo.PlantInfoId,
             CreatedBy = source.CreatedBy,
@@ -34,6 +35,7 @@ namespace Emergence.Data.Shared.Extensions
         {
             Id = source.Id,
             Status = Enum.Parse<LocationStatus>(source.Status),
+            ConservationStatus = Enum.Parse<ConservationStatus>(source.ConservationStatus),
             Location = source.Location?.AsSearchModel(),
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,

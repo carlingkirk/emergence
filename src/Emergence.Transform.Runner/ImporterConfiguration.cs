@@ -16,6 +16,7 @@ namespace Emergence.Transform.Runner
     {
         TextImporter,
         SqlImporter,
-        EFImporter
+        EFImporter,
+        JsonImporter
     }
 }

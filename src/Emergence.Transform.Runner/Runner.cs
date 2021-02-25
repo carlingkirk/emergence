@@ -217,25 +217,25 @@ namespace Emergence.Transform.Runner
                         counter += 1000;
                     }
                 }
-                else if (importer.Type == ImporterType.TextImporter && importer.ImportModel == "PlantsFile")
+                else if (importer.Type == ImporterType.JsonImporter && importer.ImportModel == "PlantsFile")
                 {
-                    var processor = _importTransformOrchestrator.get;
+                    var processor = _importTransformOrchestrator.GetNatureServePlantInfoProcessor;
                     var transformer = new NatureServeTransformer();
+
+                    var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
+                    var textImporter = new JsonImporter<IEnumerable<Plant>>(dataFile);
+
+                    var plants = textImporter.ImportObjectAsync();
+                    var plantInfos = new List<PlantInfo>();
+
+                    foreach (var plant in plants)
+                    {
+                        plantInfos.Add(transformer.Transform(plant));
+                    }
 
                     await processor.InitializeOrigin(transformer.Origin);
                     await processor.InitializeLifeforms();
                     await processor.InitializeTaxons();
-
-                    var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
-                    var textImporter = new JsonImporter<PlantsFile>(dataFile);
-
-                    var plantsFile = textImporter.ImportObjectAsync();
-                    var plantInfos = new List<PlantInfo>();
-
-                    foreach (var plant in plantsFile.Plants)
-                    {
-                        plantInfos.Add(transformer.Transform(plant));
-                    }
 
                     var batchSize = 100;
                     var finished = false;
@@ -357,6 +357,10 @@ namespace Emergence.Transform.Runner
                 {
                     config.ConnectionString = importer["connectionString"];
                     config.SqlQuery = importer["sqlQuery"];
+                }
+                else if (config.Type == ImporterType.JsonImporter)
+                {
+                    config.Filename = importer["filename"];
                 }
                 if (true)
                 {

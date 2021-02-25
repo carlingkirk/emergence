@@ -35,6 +35,7 @@ namespace Emergence.Transform.NatureServe
 
             var speciesParts = species.Split(' ');
             var scientificName = speciesParts[0] + " " + speciesParts[1];
+            var speciesName = speciesParts[1];
             string variety = null;
             string subspecies = null;
 
@@ -82,7 +83,7 @@ namespace Emergence.Transform.NatureServe
                     Order = source.SpeciesGlobal.Taxorder.NullIfEmpty(),
                     Family = source.SpeciesGlobal.Family.NullIfEmpty(),
                     Genus = source.SpeciesGlobal.Genus.NullIfEmpty(),
-                    Species = species,
+                    Species = speciesName,
                     Subspecies = subspecies,
                     Variety = variety,
                     DateCreated = dateCreated
@@ -105,6 +106,8 @@ namespace Emergence.Transform.NatureServe
                 Status = GetLocationStatus(n),
                 ConservationStatus = GetConservationStatus(n.RoundedNRank)
             }));
+
+            plantInfo.Locations = locations;
 
             return plantInfo;
         }
