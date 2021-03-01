@@ -126,6 +126,12 @@ namespace Emergence.Service
             });
         }
 
+        public async Task<IEnumerable<Data.Shared.Models.Taxon>> AddTaxonsAsync(IEnumerable<Data.Shared.Models.Taxon> taxons)
+        {
+            var taxonResult = await _taxonRepository.AddSomeAsync(taxons.Select(o => o.AsStore()));
+            return taxonResult.Select(o => o.AsModel());
+        }
+
         private IQueryable<Taxon> OrderByDistinct(TaxonRank rank, IQueryable<Taxon> source)
         {
             switch (rank)

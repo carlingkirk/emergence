@@ -17,9 +17,10 @@ namespace Emergence.Transform.NatureServe
         private readonly ILocationService _locationService;
 
         private Origin Origin;
-        private List<Lifeform> Lifeforms { get; set; }
-        private List<Taxon> Taxons { get; set; }
-        private List<Origin> Origins { get; set; }
+        public List<Origin> Origins { get; set; }
+        public List<Lifeform> Lifeforms { get; set; }
+        public List<Taxon> Taxons { get; set; }
+
 
         public PlantInfoProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService, ILocationService locationService)
         {
@@ -34,6 +35,20 @@ namespace Emergence.Transform.NatureServe
             Origins = new List<Origin>();
         }
 
+        public PlantInfoProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService,
+            ILocationService locationService, List<Lifeform> lifeforms, List<Taxon> taxons, List<Origin> origins)
+        {
+            _lifeformService = lifeformService;
+            _originService = originService;
+            _plantInfoService = plantInfoService;
+            _taxonService = taxonService;
+            _locationService = locationService;
+
+            Origins = origins;
+            Lifeforms = lifeforms;
+            Taxons = taxons;
+        }
+
         public async Task InitializeOrigin(Origin origin)
         {
             Origin = await _originService.GetOriginAsync(origin.OriginId);
@@ -43,17 +58,28 @@ namespace Emergence.Transform.NatureServe
             }
         }
 
-        public async Task InitializeLifeforms()
+        public async Task InitializeLifeforms() => Lifeforms = await GetLifeforms();
+        public async Task InitializeTaxons() => Taxons = await GetTaxons();
+        public async Task InitializeOrigins() => Origins = await GetOrigins();
+
+        public async Task<List<Lifeform>> GetLifeforms()
         {
             var lifeformResult = await _lifeformService.GetLifeformsAsync();
             Lifeforms = lifeformResult.ToList();
+            return Lifeforms;
         }
 
-        public async Task InitializeTaxons()
+        public async Task<List<Taxon>> GetTaxons()
         {
             var itisDate = new DateTime(2020, 08, 25);
             var taxonResult = await _taxonService.GetTaxonsAsync(t => t.DateCreated >= itisDate);
-            Taxons = taxonResult.ToList();
+            return taxonResult.ToList();
+        }
+
+        public async Task<List<Origin>> GetOrigins()
+        {
+            var originResult = await _originService.GetOriginsOfParentAsync(Origin.OriginId);
+            return originResult.ToList();
         }
 
         public async Task<PlantInfo> Process(PlantInfo plantInfo)
@@ -101,8 +127,8 @@ namespace Emergence.Transform.NatureServe
             }
             else
             {
-                //originResult = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, null);
-                //Origins.Add(originResult);
+                originResult = await _originService.AddOrUpdateOriginAsync(plantInfo.Origin, null);
+                Origins.Add(originResult);
             }
 
             var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(originResult.OriginId, taxon.TaxonId);
@@ -112,7 +138,7 @@ namespace Emergence.Transform.NatureServe
                 plantInfo.Origin = originResult;
                 plantInfo.Lifeform = lifeform;
                 plantInfo.Taxon = taxon;
-                //plantInfoResult = await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
+                plantInfoResult = await _plantInfoService.AddOrUpdatePlantInfoAsync(plantInfo);
             }
 
             return plantInfoResult;
@@ -122,6 +148,8 @@ namespace Emergence.Transform.NatureServe
         {
             var newOrigins = new List<Origin>();
             var newPlantInfos = new List<PlantInfo>();
+            var newTaxons = new List<Taxon>();
+
             foreach (var plantInfo in plantInfos)
             {
                 var lifeform = Lifeforms.FirstOrDefault(l => l.ScientificName == plantInfo.ScientificName);
@@ -132,22 +160,27 @@ namespace Emergence.Transform.NatureServe
                     Lifeforms.Add(lifeform);
                 }
 
+                plantInfo.Lifeform = lifeform;
+
                 var taxon = Taxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
-                                                && t.Phylum == plantInfo.Taxon.Phylum
-                                                && t.Class == plantInfo.Taxon.Class
-                                                && t.Order == plantInfo.Taxon.Order
-                                                && t.Family == plantInfo.Taxon.Family
                                                 && t.Genus == plantInfo.Taxon.Genus
                                                 && t.Species == plantInfo.Taxon.Species
                                                 && (t.Subspecies == plantInfo.Taxon.Subspecies || !string.IsNullOrEmpty(plantInfo.Taxon.Variety))
-                                                && t.Variety == plantInfo.Taxon.Variety
-                                                && t.Subvariety == plantInfo.Taxon.Subvariety
-                                                && t.Form == plantInfo.Taxon.Form);
+                                                && t.Variety == plantInfo.Taxon.Variety);
 
                 if (taxon == null)
                 {
-                    taxon = await _taxonService.AddOrUpdateTaxonAsync(plantInfo.Taxon);
-                    Taxons.Add(taxon);
+                    // Do we already have the same taxon in our insert list?
+                    var taxonResult = newTaxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
+                                                && t.Genus == plantInfo.Taxon.Genus
+                                                && t.Species == plantInfo.Taxon.Species
+                                                && (t.Subspecies == plantInfo.Taxon.Subspecies || !string.IsNullOrEmpty(plantInfo.Taxon.Variety))
+                                                && t.Variety == plantInfo.Taxon.Variety);
+
+                    if (taxonResult == null)
+                    {
+                        newTaxons.Add(plantInfo.Taxon);
+                    }
                 }
 
                 // Do we already have the same origin in our insert list?
@@ -157,38 +190,30 @@ namespace Emergence.Transform.NatureServe
                 if (originResult == null)
                 {
                     // See if it already exists, if not, add it to the insert list
-                    originResult = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
+                    originResult = Origins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId && o.AltExternalId == plantInfo.Origin.AltExternalId);
                     if (originResult == null)
                     {
                         newOrigins.Add(plantInfo.Origin);
-                    }
-                    else
-                    {
-                        Origins.Add(originResult);
                     }
                 }
             }
 
             if (newOrigins.Any())
             {
-                //newOrigins = (await _originService.AddOriginsAsync(newOrigins)).ToList();
+                newOrigins = (await _originService.AddOriginsAsync(newOrigins)).ToList();
                 Origins.AddRange(newOrigins);
             }
 
-            var distinctPlantInfos = plantInfos.DistinctBy(p => new
+            if (newTaxons.Any())
             {
-                p.Taxon.Genus,
-                p.Taxon.Species,
-                p.Taxon.Subspecies,
-                p.Taxon.Variety,
-                p.Taxon.Subvariety,
-                p.Taxon.Form
-            });
+                newTaxons = (await _taxonService.AddTaxonsAsync(newTaxons)).ToList();
+                Taxons.AddRange(newTaxons);
+            }
 
-            foreach (var plantInfo in distinctPlantInfos)
+            foreach (var plantInfo in plantInfos)
             {
                 var origin = Origins.FirstOrDefault(o => o.ExternalId == plantInfo.Origin.ExternalId
-                                                        && o.AltExternalId == plantInfo.Origin.AltExternalId);
+                                                      && o.AltExternalId == plantInfo.Origin.AltExternalId);
                 if (origin == null)
                 {
                     origin = await _originService.GetOriginAsync(Origin.OriginId, plantInfo.Origin.ExternalId, plantInfo.Origin.AltExternalId);
@@ -196,23 +221,32 @@ namespace Emergence.Transform.NatureServe
 
                 plantInfo.Origin = origin;
 
-                var plantInfoResult = await _plantInfoService.GetPlantInfoAsync(plantInfo.Origin.OriginId, plantInfo.Taxon.TaxonId);
-
-                if (plantInfoResult == null)
+                if (plantInfo.Taxon != null)
                 {
-                    newPlantInfos.Add(plantInfo);
+                    var taxon = Taxons.FirstOrDefault(t => t.Kingdom == plantInfo.Taxon.Kingdom
+                                                        && t.Genus == plantInfo.Taxon.Genus
+                                                        && t.Species == plantInfo.Taxon.Species
+                                                        && (t.Subspecies == plantInfo.Taxon.Subspecies || !string.IsNullOrEmpty(plantInfo.Taxon.Variety))
+                                                        && t.Variety == plantInfo.Taxon.Variety);
+                    if (taxon == null)
+                    {
+                        Console.WriteLine("wtf?");
+                    }
+
+                    plantInfo.Taxon = taxon;
                 }
+
+                newPlantInfos.Add(plantInfo);
             }
 
             if (newPlantInfos.Any())
             {
-                //newPlantInfos = (await _plantInfoService.AddPlantInfosAsync(newPlantInfos)).ToList();
+                newPlantInfos = (await _plantInfoService.AddPlantInfosAsync(newPlantInfos)).ToList();
             }
 
             foreach (var newPlantInfo in newPlantInfos)
             {
-                var plantInfo = plantInfos.First(p => p.Origin.OriginId == newPlantInfo.Origin.OriginId
-                                                        && p.Taxon.TaxonId == newPlantInfo.Taxon.TaxonId);
+                var plantInfo = plantInfos.First(p => p.Origin.OriginId == newPlantInfo.Origin.OriginId);
 
                 plantInfo.PlantInfoId = newPlantInfo.PlantInfoId;
                 newPlantInfo.Taxon = plantInfo.Taxon;
@@ -222,20 +256,24 @@ namespace Emergence.Transform.NatureServe
 
             var plantInfoLocations = plantInfos.Where(p => p.Locations != null && p.Locations.Any())
                                                 .SelectMany(p => p.Locations)
-                                                .DistinctBy(pl => new { pl.PlantInfo.PlantInfoId, pl.Location.LocationId })
+                                                .DistinctBy(pl => new { pl.PlantInfo.Origin.AltExternalId, pl.Location.StateOrProvince })
                                                 .ToList();
 
             if (plantInfoLocations.Any() && newPlantInfos.Any())
             {
                 var states = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.StateOrProvince).Distinct();
                 var countries = plantInfos.SelectMany(p => p.Locations).Select(l => l.Location.Country).Distinct();
-                var locations = (await _locationService.GetLocationsAsync(l => countries.Contains(l.Country) || states.Contains(l.StateOrProvince))).ToList();
+                var locations = (await _locationService.GetLocationsAsync(l =>
+                    (countries.Contains(l.Country) || states.Contains(l.StateOrProvince)) &&
+                    l.PostalCode == null && l.Region == null && l.AddressLine1 == null & l.City == null)).ToList();
 
-                var missingLocations = plantInfoLocations.GroupJoin(locations,
-                    pl => new { pl.Location.StateOrProvince, pl.Location.Country },
-                    l => new { l.StateOrProvince, l.Country },
-                    (pl, l) => pl.Location)
-                    .DistinctBy(l => new { l.StateOrProvince, l.Country })
+                var missingLocations = plantInfoLocations.Select(pl => pl.Location)
+                    .GroupJoin(locations,
+                        pl => new { pl.StateOrProvince, pl.Country },
+                        l => new { l.StateOrProvince, l.Country },
+                        (pl, l) => new { pl, l })
+                    .Where(pll => !pll.l.Any())
+                    .Select(pll => pll.pl).DistinctBy(pl => new { pl.StateOrProvince, pl.Country })
                     .ToList();
 
                 if (missingLocations.Any())
@@ -247,17 +285,18 @@ namespace Emergence.Transform.NatureServe
                 var plantLocationsToAdd = new List<PlantLocation>();
                 foreach (var plantInfoLocation in plantInfoLocations)
                 {
-                    var newPlantInfo = newPlantInfos.FirstOrDefault(npl => npl.Origin.OriginId == plantInfoLocation.PlantInfo.Origin.OriginId
-                                                        && npl.Taxon.TaxonId == plantInfoLocation.PlantInfo.Taxon.TaxonId);
+                    var newPlantInfo = newPlantInfos.FirstOrDefault(npl => npl.Origin.AltExternalId == plantInfoLocation.PlantInfo.Origin.AltExternalId);
                     if (newPlantInfo != null)
                     {
                         var location = locations.First(l => l.Country == plantInfoLocation.Location.Country
-                                                            && l.StateOrProvince == plantInfoLocation.Location.StateOrProvince);
+                                                         && l.StateOrProvince == plantInfoLocation.Location.StateOrProvince);
+
                         plantLocationsToAdd.Add(new PlantLocation
                         {
                             PlantInfo = newPlantInfo,
                             Location = location,
-                            Status = plantInfoLocation.Status
+                            Status = plantInfoLocation.Status,
+                            ConservationStatus = plantInfoLocation.ConservationStatus
                         });
                     }
                 }

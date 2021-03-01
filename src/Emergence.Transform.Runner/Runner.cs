@@ -219,32 +219,56 @@ namespace Emergence.Transform.Runner
                 }
                 else if (importer.Type == ImporterType.JsonImporter && importer.ImportModel == "PlantsFile")
                 {
-                    var processor = _importTransformOrchestrator.GetNatureServePlantInfoProcessor;
-                    var transformer = new NatureServeTransformer();
 
+                    var transformer = new NatureServeTransformer();
                     var dataFile = FileHelpers.GetDatafileName(importer.Filename, dataDirectory);
                     var textImporter = new JsonImporter<IEnumerable<Plant>>(dataFile);
-
                     var plants = textImporter.ImportObjectAsync();
                     var plantInfos = new List<PlantInfo>();
+
+                    List<Taxon> taxons;
+                    List<Lifeform> lifeforms;
+                    List<Origin> origins;
 
                     foreach (var plant in plants)
                     {
                         plantInfos.Add(transformer.Transform(plant));
                     }
 
+                    var processor = _importTransformOrchestrator.GetNatureServePlantInfoProcessor();
                     await processor.InitializeOrigin(transformer.Origin);
                     await processor.InitializeLifeforms();
                     await processor.InitializeTaxons();
+                    await processor.InitializeOrigins();
 
-                    var batchSize = 100;
+                    taxons = processor.Taxons;
+                    lifeforms = processor.Lifeforms;
+                    origins = processor.Origins;
+
+                    var batchSize = 500;
                     var finished = false;
-                    var counter = 0;
-                    var counterEnd = 1000000;
+                    var start = 10000;
+                    var counter = start;
+                    var counterEnd = 40000;
+
+                    plantInfos = plantInfos.OrderBy(p => p.Origin.ExternalId).ToList();
 
                     while (!finished && counter < counterEnd)
                     {
+                        if (counter > start)
+                        {
+                            processor = _importTransformOrchestrator.GetNatureServePlantInfoProcessor(lifeforms, taxons, origins);
+                            await processor.InitializeOrigin(transformer.Origin);
+                        }
+
                         var batch = plantInfos.Skip(counter).Take(batchSize);
+
+                        if (!batch.Any())
+                        {
+                            finished = true;
+                            continue;
+                        }
+
                         var result = await processor.Process(batch);
                         Console.WriteLine($"Processed: {result.Count()} plantInfos - ended on {batch.Last().ScientificName}");
                         counter += batchSize;

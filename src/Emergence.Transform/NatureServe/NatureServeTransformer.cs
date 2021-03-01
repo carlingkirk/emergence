@@ -13,6 +13,7 @@ namespace Emergence.Transform.NatureServe
     {
         private string UrlRoot => "https://explorer.natureserve.org";
         private readonly Dictionary<string, string> _nations;
+
         public Origin Origin => new Origin
         {
             OriginId = 160832
@@ -33,6 +34,11 @@ namespace Emergence.Transform.NatureServe
                 return null;
             }
 
+            if (species.Contains(" x "))
+            {
+                species = species.Replace(" x ", " ×");
+            }
+
             var speciesParts = species.Split(' ');
             var scientificName = speciesParts[0] + " " + speciesParts[1];
             var speciesName = speciesParts[1];
@@ -43,12 +49,12 @@ namespace Emergence.Transform.NatureServe
             {
                 if (speciesParts.Any(species => species == "var."))
                 {
-                    variety = speciesParts.Where(sp => sp == "var.")?.Skip(1).FirstOrDefault();
+                    variety = speciesParts.Last();
                 }
 
                 if (speciesParts.Any(species => species == "ssp."))
                 {
-                    subspecies = speciesParts.Where(sp => sp == "ssp.")?.Skip(1).FirstOrDefault();
+                    subspecies = speciesParts.Last();
                 }
             }
 

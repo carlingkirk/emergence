@@ -9,6 +9,7 @@ namespace Emergence.Service.Interfaces
     {
         Task<Origin> GetOriginAsync(int id, User user);
         Task<Origin> GetOriginAsync(int id);
+        Task<IEnumerable<Origin>> GetOriginsOfParentAsync(int parentOriginId);
         Task<Origin> AddOrUpdateOriginAsync(Origin origin, string userId);
         Task<Origin> GetOriginAsync(int parentOriginId, string externalId, string altExternalId);
         Task<FindResult<Origin>> FindOrigins(FindParams findParams, User user);

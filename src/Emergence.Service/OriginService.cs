@@ -38,6 +38,15 @@ namespace Emergence.Service
             return origin?.AsModel();
         }
 
+        public async Task<IEnumerable<Data.Shared.Models.Origin>> GetOriginsOfParentAsync(int parentOriginId)
+        {
+            var originQuery = _originRepository.Where(o => o.ParentOriginId == parentOriginId);
+
+            var origins = await originQuery.GetAllAsync();
+
+            return origins?.Select(o => o.AsModel());
+        }
+
         public async Task<Data.Shared.Models.Origin> GetOriginAsync(int id)
         {
             var origin = await _originRepository.GetWithIncludesAsync(o => o.Id == id, false,

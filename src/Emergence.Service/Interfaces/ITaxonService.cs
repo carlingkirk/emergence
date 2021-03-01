@@ -16,5 +16,6 @@ namespace Emergence.Service.Interfaces
         Task<Taxon> AddOrUpdateTaxonAsync(Taxon taxon);
         Task<Taxon> GetTaxonAsync(string genus, string species, string subspecies, string variety, string subvariety, string form);
         Task<FindResult<Taxon>> FindTaxons(FindParams<Taxon> findParams, TaxonRank rank);
+        Task<IEnumerable<Taxon>> AddTaxonsAsync(IEnumerable<Taxon> taxons);
     }
 }
