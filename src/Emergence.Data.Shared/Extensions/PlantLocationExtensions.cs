@@ -8,8 +8,8 @@ namespace Emergence.Data.Shared.Extensions
         public static Models.PlantLocation AsModel(this PlantLocation source) => new Models.PlantLocation
         {
             Id = source.Id,
-            Status = Enum.Parse<LocationStatus>(source.Status),
-            ConservationStatus = Enum.Parse<ConservationStatus>(source.ConservationStatus),
+            Status = !string.IsNullOrEmpty(source.Status) ? Enum.Parse<LocationStatus>(source.Status) : LocationStatus.Unknown,
+            ConservationStatus = !string.IsNullOrEmpty(source.ConservationStatus) ? Enum.Parse<ConservationStatus>(source.ConservationStatus) : ConservationStatus.Unknown,
             Location = source.Location != null ? source.Location.AsModel() : new Models.Location { LocationId = source.LocationId },
             PlantInfo = source.PlantInfo != null ? source.PlantInfo.AsModel() : new Models.PlantInfo { PlantInfoId = source.PlantInfoId },
             CreatedBy = source.CreatedBy,
@@ -21,8 +21,8 @@ namespace Emergence.Data.Shared.Extensions
         public static PlantLocation AsStore(this Models.PlantLocation source) => new PlantLocation
         {
             Id = source.Id,
-            Status = source.Status.ToString(),
-            ConservationStatus = source.ConservationStatus.ToString(),
+            Status = source.Status != LocationStatus.Unknown ? source.Status.ToString() : null,
+            ConservationStatus = source.ConservationStatus != ConservationStatus.Unknown ? source.ConservationStatus.ToString() : null,
             LocationId = source.Location.LocationId,
             PlantInfoId = source.PlantInfo.PlantInfoId,
             CreatedBy = source.CreatedBy,
@@ -34,8 +34,8 @@ namespace Emergence.Data.Shared.Extensions
         public static Search.Models.PlantLocation AsSearchModel(this PlantLocation source) => new Search.Models.PlantLocation
         {
             Id = source.Id,
-            Status = Enum.Parse<LocationStatus>(source.Status),
-            ConservationStatus = Enum.Parse<ConservationStatus>(source.ConservationStatus),
+            Status = !string.IsNullOrEmpty(source.Status) ? Enum.Parse<LocationStatus>(source.Status) : LocationStatus.Unknown,
+            ConservationStatus = !string.IsNullOrEmpty(source.ConservationStatus) ? Enum.Parse<ConservationStatus>(source.ConservationStatus) : ConservationStatus.Unknown,
             Location = source.Location?.AsSearchModel(),
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
