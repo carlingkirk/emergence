@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Emergence.Service.Extensions;
 using Emergence.Service.Interfaces;
+using Emergence.Service.Search;
+using SearchModels = Emergence.Data.Shared.Search.Models;
 
 namespace Emergence.Transform.NatureServe
 {
@@ -15,6 +18,7 @@ namespace Emergence.Transform.NatureServe
         private readonly IPlantInfoService _plantInfoService;
         private readonly ITaxonService _taxonService;
         private readonly ILocationService _locationService;
+        private readonly IIndex<SearchModels.PlantInfo, PlantInfo> _plantInfoIndex;
 
         private Origin Origin;
         public List<Origin> Origins { get; set; }
@@ -22,13 +26,15 @@ namespace Emergence.Transform.NatureServe
         public List<Taxon> Taxons { get; set; }
 
 
-        public PlantInfoProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService, ILocationService locationService)
+        public PlantInfoProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService,
+            ILocationService locationService, IIndex<SearchModels.PlantInfo, PlantInfo> plantInfoIndex)
         {
             _lifeformService = lifeformService;
             _originService = originService;
             _plantInfoService = plantInfoService;
             _taxonService = taxonService;
             _locationService = locationService;
+            _plantInfoIndex = plantInfoIndex;
 
             Lifeforms = new List<Lifeform>();
             Taxons = new List<Taxon>();
@@ -36,13 +42,14 @@ namespace Emergence.Transform.NatureServe
         }
 
         public PlantInfoProcessor(ILifeformService lifeformService, IOriginService originService, IPlantInfoService plantInfoService, ITaxonService taxonService,
-            ILocationService locationService, List<Lifeform> lifeforms, List<Taxon> taxons, List<Origin> origins)
+            ILocationService locationService, IIndex<SearchModels.PlantInfo, PlantInfo> plantInfoIndex, List<Lifeform> lifeforms, List<Taxon> taxons, List<Origin> origins)
         {
             _lifeformService = lifeformService;
             _originService = originService;
             _plantInfoService = plantInfoService;
             _taxonService = taxonService;
             _locationService = locationService;
+            _plantInfoIndex = plantInfoIndex;
 
             Origins = origins;
             Lifeforms = lifeforms;
@@ -312,6 +319,10 @@ namespace Emergence.Transform.NatureServe
                     }
                 }
             }
+
+            var newPlantInfosStores = newPlantInfos.Select(p => p.AsStore());
+            var plantLocations = newPlantInfos.SelectMany(p => p.Locations).Select(pl => pl.AsStore());
+            var indexResult = await _plantInfoIndex.IndexManyAsync(newPlantInfosStores.Select(p => p.AsSearchModel(plantLocations, null)));
 
             return newPlantInfos;
         }

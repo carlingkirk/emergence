@@ -153,12 +153,14 @@ namespace Emergence.Service
         public async Task<IEnumerable<Data.Shared.Models.PlantInfo>> AddPlantInfosAsync(IEnumerable<Data.Shared.Models.PlantInfo> plantInfos)
         {
             var plantInfosResult = await _plantInfoRepository.AddSomeAsync(plantInfos.Select(o => o.AsStore()));
+
             return plantInfosResult.Select(o => o.AsModel());
         }
 
         public async Task<IEnumerable<Data.Shared.Models.PlantLocation>> AddPlantLocations(IEnumerable<Data.Shared.Models.PlantLocation> plantLocations)
         {
             var plantLocationsResult = await _plantLocationRepository.AddSomeAsync(plantLocations.Select(o => o.AsStore()));
+
             return plantLocationsResult.Select(o => o.AsModel());
         }
 
