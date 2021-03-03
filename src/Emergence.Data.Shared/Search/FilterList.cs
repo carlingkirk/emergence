@@ -17,6 +17,7 @@ namespace Emergence.Data.Shared.Search
             LightFilter = new LightFilter();
             WaterFilter = new WaterFilter();
             BloomFilter = new BloomFilter();
+            NativeFilter = new NativeFilter();
         }
 
         public ZoneFilter ZoneFilter { get; set; }
@@ -26,6 +27,7 @@ namespace Emergence.Data.Shared.Search
         public LightFilter LightFilter { get; set; }
         public WaterFilter WaterFilter { get; set; }
         public BloomFilter BloomFilter { get; set; }
+        public NativeFilter NativeFilter { get; set; }
     }
 
     public class SpecimenFilters : IFilterList<Specimen>

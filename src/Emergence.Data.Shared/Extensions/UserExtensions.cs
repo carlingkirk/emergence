@@ -77,5 +77,12 @@ namespace Emergence.Data.Shared.Extensions
             DateModified = source.DateModified,
             ContactIds = source.Contacts?.Select(c => c.Id)
         };
+
+        public static Search.Models.User AsSearchModel(this Models.UserSummary source) => new Search.Models.User
+        {
+            Id = source.Id,
+            DisplayName = source.DisplayName,
+            ProfileVisibility = source.Visibility
+        };
     }
 }

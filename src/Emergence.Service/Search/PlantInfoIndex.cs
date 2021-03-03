@@ -13,8 +13,8 @@ namespace Emergence.Service.Search
     public class PlantInfoIndex : IIndex<PlantInfo, Data.Shared.Models.PlantInfo>, IIndex<Lifeform, Data.Shared.Models.Lifeform>
     {
         private readonly ISearchClient<PlantInfo> _searchClient;
-        public string IndexName => "plant_infos_02";
-        public string Alias => "plant_infos";
+        public string IndexName => "plant_infos_dev_01";
+        public string Alias => "plant_infos_dev";
         public string NameTokenizer => "name_tokenizer";
         public string NameAnalyzer => "name_analyzer";
 
@@ -62,13 +62,18 @@ namespace Emergence.Service.Search
 
             var searchFilters = new List<SearchFilter<PlantInfo>>
             {
-                new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword" ,"plantLocations", plantInfoFindParams.Filters.RegionFilter.Value),
+                new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword", "plantLocations", plantInfoFindParams.Filters.RegionFilter.Value),
                 new SearchValuesFilter<PlantInfo, string>("Water", "waterTypes", plantInfoFindParams.Filters.WaterFilter.MinimumValue, plantInfoFindParams.Filters.WaterFilter.MaximumValue),
                 new SearchValuesFilter<PlantInfo, string>("Light", "lightTypes", plantInfoFindParams.Filters.LightFilter.MinimumValue, plantInfoFindParams.Filters.LightFilter.MaximumValue),
-                new SearchValuesFilter<PlantInfo, string>("Bloom", "bloomTimes", plantInfoFindParams.Filters.BloomFilter.MinimumValue?.ToString(), plantInfoFindParams.Filters.BloomFilter.MaximumValue?.ToString()),
+                new SearchValuesFilter<PlantInfo, string>("Bloom", "bloomTimes", plantInfoFindParams.Filters.BloomFilter.MinimumValue?.ToString(),
+                    plantInfoFindParams.Filters.BloomFilter.MaximumValue?.ToString()),
                 new NestedSearchValueFilter<PlantInfo, string>("Zone", "id", "zones", plantInfoFindParams.Filters.ZoneFilter.Value?.ToString()),
-                new SearchRangeFilter<PlantInfo, double>("Height", "minHeight","maxHeight", plantInfoFindParams.Filters.HeightFilter.Values, plantInfoFindParams.Filters.HeightFilter.Value, plantInfoFindParams.Filters.HeightFilter.MaximumValue),
-                new SearchRangeFilter<PlantInfo, double>("Spread", "minSpread","maxSpread", plantInfoFindParams.Filters.SpreadFilter.Values, plantInfoFindParams.Filters.SpreadFilter.Value, plantInfoFindParams.Filters.SpreadFilter.MaximumValue)
+                new SearchRangeFilter<PlantInfo, double>("Height", "minHeight","maxHeight", plantInfoFindParams.Filters.HeightFilter.Values, plantInfoFindParams.Filters.HeightFilter.Value,
+                    plantInfoFindParams.Filters.HeightFilter.MaximumValue),
+                new SearchRangeFilter<PlantInfo, double>("Spread", "minSpread","maxSpread", plantInfoFindParams.Filters.SpreadFilter.Values, plantInfoFindParams.Filters.SpreadFilter.Value,
+                    plantInfoFindParams.Filters.SpreadFilter.MaximumValue),
+                new NestedSearchMultiValueFilter<PlantInfo, string, LocationStatus>("Native", "location.stateOrProvince.keyword", "plantLocations", "conservationStatus",
+                    plantInfoFindParams.Filters.NativeFilter.Value,plantInfoFindParams.Filters.NativeFilter.Status)
             };
 
             var musts = GetFilters(plantInfoFindParams, searchFilters);

@@ -80,6 +80,8 @@ namespace Emergence.Data.Shared
                     return plantInfoFindParams.Filters.HeightFilter;
                 case "MaxHeight":
                     return plantInfoFindParams.Filters.HeightFilter;
+                case "Native":
+                    return plantInfoFindParams.Filters.NativeFilter;
                 default:
                     return null;
             }

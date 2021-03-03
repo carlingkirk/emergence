@@ -36,5 +36,15 @@ namespace Emergence.Data.Shared.Extensions
             DateUpdated = source.DateUpdated,
             Origin = source.Origin?.AsSearchModel()
         };
+
+        public static Search.Models.Synonym AsSearchModel(this Models.Synonym source) => new Search.Models.Synonym
+        {
+            Id = source.SynonymId,
+            Name = source.Name,
+            Rank = source.Rank,
+            Language = source.Language,
+            DateUpdated = source.DateUpdated,
+            Origin = source.Origin?.AsSearchModel()
+        };
     }
 }

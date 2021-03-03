@@ -263,4 +263,48 @@ namespace Emergence.Service.Search
                     .Aggregations(a => a
                         .Terms(Name, t => t.Field(Path + "." + Field))));
     }
+
+    public class NestedSearchMultiValueFilter<T, TValue, TValue2> : NestedSearchFilter<T> where T : class
+    {
+        public TValue2 FilterValue { get; set; }
+        public string FilterField { get; set; }
+        public NestedSearchMultiValueFilter(string name, string field1, string path, string filterField, TValue value, TValue2 filterValue) : base(name, field1, path)
+        {
+            Value = value;
+            FilterValue = filterValue;
+            FilterField = filterField;
+        }
+
+        public TValue Value { get; set; }
+
+        public QueryContainer ToFilter(QueryContainerDescriptor<T> queryContainerDescriptor)
+        {
+            QueryContainer query = null;
+            var isNumber = int.TryParse(Value?.ToString(), out var value);
+
+            if ((!isNumber || value > 0) && !string.IsNullOrEmpty(Value?.ToString()))
+            {
+                var musts = new List<QueryContainer>();
+                var queryDesc = new QueryContainerDescriptor<T>();
+
+                musts.Add(queryDesc.Term(Path + "." + FilterField, FilterValue));
+                musts.Add(queryDesc.Term(Path + "." + Field, Value.ToString()));
+
+                return queryContainerDescriptor.Nested(n => n
+                        .Path(Path)
+                            .Query(q => q
+                                .Bool(b => b.Must(musts.ToArray()))));
+            }
+
+            return query;
+        }
+
+        public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor)
+            => aggregationDescriptor
+                .Filter(Name, f => f.Filter(f => f.Term(Path + "." + FilterField, FilterValue)))
+                .Nested(Name, n => n
+                .Path(Path)
+                    .Aggregations(a => a
+                        .Terms(Name, t => t.Field(Path + "." + Field))));
+    }
 }

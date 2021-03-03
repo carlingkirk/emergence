@@ -16,7 +16,8 @@ namespace Emergence.Transform.NatureServe
 
         public Origin Origin => new Origin
         {
-            OriginId = 160832
+            OriginId = 160832,
+            Type = OriginType.Website
         };
 
         public NatureServeTransformer()

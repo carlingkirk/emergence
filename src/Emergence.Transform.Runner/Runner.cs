@@ -247,9 +247,9 @@ namespace Emergence.Transform.Runner
 
                     var batchSize = 500;
                     var finished = false;
-                    var start = 10000;
+                    var start = 0;
                     var counter = start;
-                    var counterEnd = 40000;
+                    var counterEnd = 1000;
 
                     plantInfos = plantInfos.OrderBy(p => p.Origin.ExternalId).ToList();
 

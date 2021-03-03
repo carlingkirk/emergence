@@ -235,10 +235,6 @@ namespace Emergence.Transform.NatureServe
                                                         && t.Species == plantInfo.Taxon.Species
                                                         && (t.Subspecies == plantInfo.Taxon.Subspecies || !string.IsNullOrEmpty(plantInfo.Taxon.Variety))
                                                         && t.Variety == plantInfo.Taxon.Variety);
-                    if (taxon == null)
-                    {
-                        Console.WriteLine("wtf?");
-                    }
 
                     plantInfo.Taxon = taxon;
                 }
@@ -320,9 +316,7 @@ namespace Emergence.Transform.NatureServe
                 }
             }
 
-            var newPlantInfosStores = newPlantInfos.Select(p => p.AsStore());
-            var plantLocations = newPlantInfos.SelectMany(p => p.Locations).Select(pl => pl.AsStore());
-            var indexResult = await _plantInfoIndex.IndexManyAsync(newPlantInfosStores.Select(p => p.AsSearchModel(plantLocations, null)));
+            var indexResult = await _plantInfoIndex.IndexManyAsync(newPlantInfos.Select(p => p.AsSearchModel(null, null)));
 
             return newPlantInfos;
         }

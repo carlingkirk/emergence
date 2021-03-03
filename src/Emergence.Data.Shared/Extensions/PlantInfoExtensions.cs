@@ -157,6 +157,7 @@ namespace Emergence.Data.Shared.Extensions
                 ScientificName = source.ScientificName,
                 OriginId = source.Origin?.OriginId,
                 LifeformId = source.Lifeform?.LifeformId ?? source.LifeformId,
+                TaxonId = source.Taxon?.TaxonId,
                 MinimumBloomTime = (short?)source.BloomTime?.MinimumBloomTime,
                 MaximumBloomTime = (short?)source.BloomTime?.MaximumBloomTime,
                 MinimumHeight = source.Height?.MinimumHeight,
@@ -171,9 +172,10 @@ namespace Emergence.Data.Shared.Extensions
                 MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
                 MinimumZoneId = source.Requirements?.ZoneRequirements?.MinimumZone?.Id,
                 MaximumZoneId = source.Requirements?.ZoneRequirements?.MaximumZone?.Id,
+                MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone != null ? new Zone { Id = source.Requirements.ZoneRequirements.MinimumZone.Id.Value } : null,
+                MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone != null ? new Zone { Id = source.Requirements.ZoneRequirements.MaximumZone.Id.Value } : null,
                 StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
                 Preferred = source.Preferred,
-                TaxonId = source.Taxon?.TaxonId,
                 WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.SerializeObject(source.WildlifeEffects) : null,
                 SoilTypes = source.SoilTypes != null ? JsonConvert.SerializeObject(source.SoilTypes) : null,
                 Notes = source.Notes,
@@ -322,6 +324,168 @@ namespace Emergence.Data.Shared.Extensions
                 DateModified = source.DateModified
             };
         }
+
+        public static Search.Models.PlantInfo AsSearchModel(this Models.PlantInfo source, IEnumerable<Models.PlantLocation> plantLocations, IEnumerable<Models.Synonym> synonyms)
+        {
+            var plantLocationSearch = plantLocations?.Select(pl => pl.AsSearchModel()) ?? source.Locations?.Select(pl => pl.AsSearchModel());
+
+            var bloomTimes = new List<Month>();
+
+            if (source.BloomTime != null)
+            {
+                if (source.BloomTime.MinimumBloomTime > 0 && source.BloomTime.MaximumBloomTime > 0)
+                {
+                    for (var i = source.BloomTime.MinimumBloomTime; i <= source.BloomTime.MaximumBloomTime; i++)
+                    {
+                        bloomTimes.Add(i);
+                    }
+                }
+                else
+                {
+                    if (source.BloomTime.MinimumBloomTime > 0)
+                    {
+                        bloomTimes.Add(source.BloomTime.MinimumBloomTime);
+                    }
+                    if (source.BloomTime.MaximumBloomTime > 0 && source.BloomTime.MinimumBloomTime != source.BloomTime.MaximumBloomTime)
+                    {
+                        bloomTimes.Add(source.BloomTime.MaximumBloomTime);
+                    }
+                }
+            }
+
+            var waterTypes = new List<WaterType>();
+
+            if (source.Requirements?.WaterRequirements != null)
+            {
+                if (source.Requirements.WaterRequirements.MinimumWater != WaterType.Unknown &&
+                    source.Requirements.WaterRequirements.MaximumWater != WaterType.Unknown)
+                {
+                    var minWater = source.Requirements.WaterRequirements.MinimumWater;
+                    var maxWater = source.Requirements.WaterRequirements.MaximumWater;
+                    for (var i = minWater; i <= maxWater; i++)
+                    {
+                        waterTypes.Add(i);
+                    }
+                }
+                else
+                {
+                    if (source.Requirements.WaterRequirements.MinimumWater != WaterType.Unknown)
+                    {
+                        waterTypes.Add(source.Requirements.WaterRequirements.MinimumWater);
+                    }
+                    if (source.Requirements.WaterRequirements.MaximumWater != WaterType.Unknown)
+                    {
+                        waterTypes.Add(source.Requirements.WaterRequirements.MaximumWater);
+                    }
+                }
+            }
+
+            var lightTypes = new List<LightType>();
+
+            if (source.Requirements?.LightRequirements != null)
+            {
+                if (source.Requirements.LightRequirements.MinimumLight != LightType.Unknown &&
+                    source.Requirements.LightRequirements.MaximumLight != LightType.Unknown)
+                {
+                    var minLight = source.Requirements.LightRequirements.MinimumLight;
+                    var maxLight = source.Requirements.LightRequirements.MaximumLight;
+                    for (var i = minLight; i <= maxLight; i++)
+                    {
+                        lightTypes.Add(i);
+                    }
+                }
+                else
+                {
+                    if (source.Requirements.LightRequirements.MinimumLight != LightType.Unknown)
+                    {
+                        lightTypes.Add(source.Requirements.LightRequirements.MinimumLight);
+                    }
+                    if (source.Requirements.LightRequirements.MaximumLight != LightType.Unknown)
+                    {
+                        lightTypes.Add(source.Requirements.LightRequirements.MaximumLight);
+                    }
+                }
+            }
+
+            var zones = new List<Search.Models.Zone>();
+            var allZones = ZoneHelper.GetZones();
+            if (source.Requirements?.ZoneRequirements?.MinimumZone != null && source.Requirements?.ZoneRequirements?.MaximumZone != null)
+            {
+                for (var i = source.Requirements?.ZoneRequirements?.MinimumZone.Id; i <= source.Requirements?.ZoneRequirements?.MaximumZone.Id; i++)
+                {
+                    zones.Add(allZones.First(z => z.Id == i).AsSearchModel());
+                }
+            }
+            else
+            {
+                if (source.Requirements?.ZoneRequirements?.MinimumZone != null)
+                {
+                    zones.Add(source.Requirements?.ZoneRequirements?.MinimumZone.AsSearchModel());
+                }
+                if (source.Requirements?.ZoneRequirements?.MaximumZone != null &&
+                    source.Requirements?.ZoneRequirements?.MinimumZone.Id != source.Requirements?.ZoneRequirements?.MaximumZone.Id)
+                {
+                    zones.Add(source.Requirements?.ZoneRequirements?.MaximumZone.AsSearchModel());
+                }
+            }
+
+            return new Search.Models.PlantInfo
+            {
+                Id = source.PlantInfoId,
+                CommonName = source.CommonName,
+                ScientificName = source.ScientificName,
+                Origin = source.Origin?.AsSearchModel(),
+                Lifeform = source.Lifeform.AsSearchModel(),
+                PlantLocations = plantLocationSearch,
+                Synonyms = synonyms?.Select(s => s.AsSearchModel()),
+                MinimumBloomTime = source.BloomTime != null && source.BloomTime?.MinimumBloomTime != Month.Unknown ? (short?)source.BloomTime.MinimumBloomTime : null,
+                MaximumBloomTime = source.BloomTime != null && source.BloomTime?.MaximumBloomTime != Month.Unknown ? (short?)source.BloomTime.MaximumBloomTime : null,
+                BloomTimes = bloomTimes.Any() ? bloomTimes : null,
+                MinimumHeight = source.Height != null ? source.Height?.MinimumHeight : null,
+                MaximumHeight = source.Height != null ? source.Height?.MaximumHeight : null,
+                HeightUnit = source.Height != null && (source.Height.MinimumHeight.HasValue || source.Height.MaximumHeight.HasValue) ? DistanceUnit.Feet : null,
+                MinimumSpread = source.Spread != null ? source.Spread?.MinimumSpread : null,
+                MaximumSpread = source.Spread != null ? source.Spread?.MaximumSpread : null,
+                SpreadUnit = source.Spread != null && (source.Spread.MinimumSpread.HasValue || source.Spread.MaximumSpread.HasValue) ? DistanceUnit.Feet : null,
+                MinimumLight = source.Requirements?.LightRequirements?.MinimumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MinimumLight : null,
+                MaximumLight = source.Requirements?.LightRequirements?.MaximumLight != LightType.Unknown ? source.Requirements?.LightRequirements?.MaximumLight : null,
+                LightTypes = lightTypes.Any() ? lightTypes : null,
+                MinimumWater = source.Requirements?.WaterRequirements?.MinimumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MinimumWater : null,
+                MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater : null,
+                WaterTypes = waterTypes.Any() ? waterTypes : null,
+                MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone?.AsSearchModel(),
+                MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone?.AsSearchModel(),
+                Zones = zones.Any() ? zones : null,
+                StratificationStages = source.Requirements?.StratificationStages?.Select(s => s.AsSearchModel()),
+                Preferred = source.Preferred,
+                Taxon = source.Taxon?.AsSearchModel(),
+                WildlifeEffects = source.WildlifeEffects,
+                SoilTypes = source.SoilTypes,
+                Notes = source.Notes,
+                Visibility = source.Visibility,
+                User = source.User?.AsSearchModel(),
+                CreatedBy = source.CreatedBy,
+                ModifiedBy = source.ModifiedBy,
+                DateCreated = source.DateCreated ?? DateTime.UtcNow,
+                DateModified = source.DateModified
+            };
+        }
+
+        public static Search.Models.StratificationStage AsSearchModel(this Models.StratificationStage source)
+            => new Search.Models.StratificationStage
+            {
+                DayLength = source.DayLength,
+                Step = source.Step,
+                StratificationType = source.StratificationType
+            };
+
+        public static Search.Models.Zone AsSearchModel(this Models.Zone source)
+            => new Search.Models.Zone
+            {
+                Id = source.Id.Value,
+                Name = source.Name,
+                Notes = source.Notes
+            };
 
         public static Models.PlantInfo Clone(this Models.PlantInfo plantInfo, string userId) => new Models.PlantInfo
         {
