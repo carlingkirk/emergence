@@ -35,10 +35,11 @@
                 {
                     <tr>
                         <td>
-                            <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault><span class="link">@plantInfo.Lifeform.ScientificName</span></a>
+                            <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
+                            <span class="link">@(plantInfo.ScientificName ?? plantInfo.Lifeform.ScientificName)</span></a>
                         </td>
                         <td>
-                            <span>@plantInfo.Lifeform.CommonName</span>
+                            <span>@(plantInfo.CommonName ?? plantInfo.Lifeform.CommonName)</span>
                         </td>
                         <td>
                             @if (plantInfo.Origin != null)
@@ -102,14 +103,14 @@
                     {
                         var photo = plantInfo.Photos?.FirstOrDefault();
 
-                        <Card Name="@plantInfo.Lifeform.ScientificName" ColorSearch="@(plantInfo.Lifeform.CommonName ?? "green")" Photo="@photo">
+                        <Card Name="@plantInfo.Lifeform.ScientificName" ColorSearch="@(@plantInfo.CommonName ?? plantInfo.Lifeform.CommonName ?? "green")" Photo="@photo">
                             <Content>
                                 <a href="" @onclick="() => LoadInfo(ViewItemType.PlantInfo, plantInfo.PlantInfoId)" @onclick:preventDefault>
                                     <div class="col-12">
-                                        <span class="link">@plantInfo.Lifeform.CommonName</span>
+                                        <span class="link">@(plantInfo.CommonName ?? plantInfo.Lifeform.CommonName)</span>
                                     </div>
                                     <div class="col-12">
-                                        <span style="font-style:italic">@plantInfo.Lifeform.ScientificName</span>
+                                        <span style="font-style:italic">@(plantInfo.ScientificName ?? plantInfo.Lifeform.ScientificName)</span>
                                         @if (!string.IsNullOrEmpty(plantInfo.Taxon?.Form))
                                         {
                                             <span> f. </span><span class="font-italic">@(plantInfo.Taxon.Form)</span>

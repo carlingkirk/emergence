@@ -301,10 +301,10 @@ namespace Emergence.Service.Search
 
         public override AggregationContainerDescriptor<T> ToAggregationContainerDescriptor(AggregationContainerDescriptor<T> aggregationDescriptor)
             => aggregationDescriptor
-                .Filter(Name, f => f.Filter(f => f.Term(Path + "." + FilterField, FilterValue)))
+                .Filter(Name, f => f.Filter(f => f.Nested(n => n.Path(Path).Query(q => q.Term(Path + "." + FilterField, FilterValue)))))
                 .Nested(Name, n => n
                 .Path(Path)
                     .Aggregations(a => a
-                        .Terms(Name, t => t.Field(Path + "." + Field))));
+                        .Terms(Name, t => t.Field(Path + "." + Field).Size(100))));
     }
 }

@@ -50,30 +50,28 @@ namespace Emergence.Service.Search
 
                 shoulds.Add(query.MultiMatch(mm => mm.Fields(mmf => fields)
                             .Query(searchTerm)
-                            .Fuzziness(Fuzziness.AutoLength(1, 3))));
+                            .Fuzziness(Fuzziness.AutoLength(3, 5))));
                 shoulds.Add(query.Nested(n => n
                             .Path(p => p.Synonyms)
                             .Query(q => q
                                 .Match(sq => sq
                                     .Field("synonyms.name")
                                     .Query(searchTerm)
-                                    .Fuzziness(Fuzziness.AutoLength(1, 3))))));
+                                    .Fuzziness(Fuzziness.AutoLength(3, 5))))));
             }
 
+            var filters = plantInfoFindParams.Filters;
             var searchFilters = new List<SearchFilter<PlantInfo>>
             {
-                new NestedSearchValueFilter<PlantInfo, string>("Region", "location.region.keyword", "plantLocations", plantInfoFindParams.Filters.RegionFilter.Value),
-                new SearchValuesFilter<PlantInfo, string>("Water", "waterTypes", plantInfoFindParams.Filters.WaterFilter.MinimumValue, plantInfoFindParams.Filters.WaterFilter.MaximumValue),
-                new SearchValuesFilter<PlantInfo, string>("Light", "lightTypes", plantInfoFindParams.Filters.LightFilter.MinimumValue, plantInfoFindParams.Filters.LightFilter.MaximumValue),
-                new SearchValuesFilter<PlantInfo, string>("Bloom", "bloomTimes", plantInfoFindParams.Filters.BloomFilter.MinimumValue?.ToString(),
-                    plantInfoFindParams.Filters.BloomFilter.MaximumValue?.ToString()),
-                new NestedSearchValueFilter<PlantInfo, string>("Zone", "id", "zones", plantInfoFindParams.Filters.ZoneFilter.Value?.ToString()),
-                new SearchRangeFilter<PlantInfo, double>("Height", "minHeight","maxHeight", plantInfoFindParams.Filters.HeightFilter.Values, plantInfoFindParams.Filters.HeightFilter.Value,
-                    plantInfoFindParams.Filters.HeightFilter.MaximumValue),
-                new SearchRangeFilter<PlantInfo, double>("Spread", "minSpread","maxSpread", plantInfoFindParams.Filters.SpreadFilter.Values, plantInfoFindParams.Filters.SpreadFilter.Value,
-                    plantInfoFindParams.Filters.SpreadFilter.MaximumValue),
-                new NestedSearchMultiValueFilter<PlantInfo, string, LocationStatus>("Native", "location.stateOrProvince.keyword", "plantLocations", "conservationStatus",
-                    plantInfoFindParams.Filters.NativeFilter.Value,plantInfoFindParams.Filters.NativeFilter.Status)
+                new NestedSearchValueFilter<PlantInfo, string>(filters.RegionFilter.Name, "location.region.keyword", "plantLocations", filters.RegionFilter.Value),
+                new SearchValuesFilter<PlantInfo, string>(filters.WaterFilter.Name, "waterTypes", filters.WaterFilter.MinimumValue, filters.WaterFilter.MaximumValue),
+                new SearchValuesFilter<PlantInfo, string>(filters.LightFilter.Name, "lightTypes", filters.LightFilter.MinimumValue, filters.LightFilter.MaximumValue),
+                new SearchValuesFilter<PlantInfo, string>(filters.BloomFilter.Name, "bloomTimes", filters.BloomFilter.MinimumValue?.ToString(), filters.BloomFilter.MaximumValue?.ToString()),
+                new NestedSearchValueFilter<PlantInfo, string>(filters.ZoneFilter.Name, "id", "zones", filters.ZoneFilter.Value?.ToString()),
+                new SearchRangeFilter<PlantInfo, double>(filters.HeightFilter.Name, "minHeight","maxHeight", filters.HeightFilter.Values, filters.HeightFilter.Value, filters.HeightFilter.MaximumValue),
+                new SearchRangeFilter<PlantInfo, double>(filters.SpreadFilter.Name, "minSpread","maxSpread", filters.SpreadFilter.Values, filters.SpreadFilter.Value, filters.SpreadFilter.MaximumValue),
+                new NestedSearchMultiValueFilter<PlantInfo, string, LocationStatus>(filters.NativeFilter.Name, "location.stateOrProvince.keyword", "plantLocations", "status",
+                    filters.NativeFilter.Value, filters.NativeFilter.Status)
             };
 
             var musts = GetFilters(plantInfoFindParams, searchFilters);
@@ -100,7 +98,11 @@ namespace Emergence.Service.Search
 
             foreach (var filter in searchFilters)
             {
-                if (filter is NestedSearchValueFilter<PlantInfo, string> nestedFilter)
+                if (filter is NestedSearchMultiValueFilter<PlantInfo, string, LocationStatus> nestedMultiFilter)
+                {
+                    aggregations = nestedMultiFilter.ToAggregationContainerDescriptor(aggregations);
+                }
+                else if (filter is NestedSearchValueFilter<PlantInfo, string> nestedFilter)
                 {
                     aggregations = nestedFilter.ToAggregationContainerDescriptor(aggregations);
                 }
@@ -221,6 +223,7 @@ namespace Emergence.Service.Search
                             foreach (var bucketValue in bucketValues.Items)
                             {
                                 var keyedBucket = bucketValue as KeyedBucket<object>;
+
                                 bucketResults.Add(keyedBucket.Key.ToString(), keyedBucket.DocCount);
                             }
 
@@ -290,7 +293,11 @@ namespace Emergence.Service.Search
             {
                 foreach (var filter in filters)
                 {
-                    if (filter is NestedSearchValueFilter<PlantInfo, string> nestedFilter)
+                    if (filter is NestedSearchMultiValueFilter<PlantInfo, string, LocationStatus> nestedMultiFilter)
+                    {
+                        musts.Add(query.Bool(b => b.Should(s => nestedMultiFilter.ToFilter(s))));
+                    }
+                    else if (filter is NestedSearchValueFilter<PlantInfo, string> nestedFilter)
                     {
                         musts.Add(query.Bool(b => b.Should(s => nestedFilter.ToFilter(s))));
                     }

@@ -311,6 +311,13 @@ namespace Emergence.Transform.NatureServe
                     foreach (var newPlantInfo in newPlantInfos)
                     {
                         var newPlantInfoLocations = plantLocationsResult.Where(pl => pl.PlantInfo.PlantInfoId == newPlantInfo.PlantInfoId);
+
+                        // Hydrate Locations
+                        foreach (var newPlantInfoLocation in newPlantInfoLocations)
+                        {
+                            newPlantInfoLocation.Location = locations.Where(l => l.LocationId == newPlantInfoLocation.Location.LocationId).First();
+                        }
+
                         newPlantInfo.Locations = newPlantInfoLocations.Any() ? newPlantInfoLocations : null;
                     }
                 }

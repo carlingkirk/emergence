@@ -63,6 +63,7 @@ namespace Emergence.Transform.NatureServe
             {
                 ParentOrigin = new Origin { OriginId = Origin.OriginId },
                 Name = "NatureServe Plants Profile for " + species,
+                Description = "NatureServe. 2021. NatureServe Explorer [web application]. NatureServe, Arlington, Virginia. Available https://explorer.natureserve.org/. (Accessed: Month 03, 2021).",
                 ExternalId = source.UniqueId,
                 AltExternalId = source.ElementGlobalId,
                 Type = OriginType.Database,

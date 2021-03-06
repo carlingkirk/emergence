@@ -16,7 +16,7 @@ namespace Emergence.Data.Shared.Search
 
         public NativeFilter()
         {
-            Name = "Native";
+            Name = "Native to";
             Status = LocationStatus.Native;
             InputType = InputType.Select;
             FilterType = FilterType.String;

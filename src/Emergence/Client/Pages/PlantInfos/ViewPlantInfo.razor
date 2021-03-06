@@ -16,7 +16,8 @@
                     <label for="lifeform">Plant Name </label>
                 </div>
                 <div>
-                    <span class="text-body">@(PlantInfo.Lifeform.CommonName)</span>&nbsp;<span class="text-body font-italic">@(PlantInfo.Lifeform.ScientificName)</span>
+                    <span class="text-body">@(PlantInfo.CommonName ?? PlantInfo.Lifeform.CommonName)</span>&nbsp;
+                    <span class="text-body font-italic">@(PlantInfo.ScientificName ?? PlantInfo.Lifeform.ScientificName)</span>
                 </div>
                 @if (PlantInfo.Taxon != null)
                 {
@@ -73,7 +74,7 @@
                     <div>
                         <span id="light">
                             @DisplayRange(PlantInfo.Requirements.LightRequirements.MinimumLight.ToFriendlyName(),
-                                            PlantInfo.Requirements.LightRequirements.MaximumLight.ToFriendlyName())
+                                          PlantInfo.Requirements.LightRequirements.MaximumLight.ToFriendlyName())
                         </span>
                     </div>
                 }

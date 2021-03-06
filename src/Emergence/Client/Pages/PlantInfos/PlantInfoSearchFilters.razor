@@ -33,6 +33,22 @@
                     </div>
                 </div>
             </div>
+            @*Native*@
+            <div class="col-lg-3 col-xs">
+                <div class="row">
+                    <label for="@Filters.NativeFilter.Name.Replace(" ","-").ToLower()">@Filters.NativeFilter.Name</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-11 col-xs" style="padding: 0;">
+                        <select @bind="@Filters.NativeFilter.Value" class="form-control" id="@Filters.NativeFilter.Name.Replace(" ","-").ToLower()">
+                            @foreach (var value in Filters.NativeFilter.FacetValues)
+                            {
+                                <option value="@value.Key">@(Filters.NativeFilter.DisplayValue(value.Key, value.Value))</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
             @*Height*@
             <div class="col-lg-3 col-xs">
                 <div class="row">
