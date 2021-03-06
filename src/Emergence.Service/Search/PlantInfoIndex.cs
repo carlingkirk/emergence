@@ -13,8 +13,8 @@ namespace Emergence.Service.Search
     public class PlantInfoIndex : IIndex<PlantInfo, Data.Shared.Models.PlantInfo>, IIndex<Lifeform, Data.Shared.Models.Lifeform>
     {
         private readonly ISearchClient<PlantInfo> _searchClient;
-        public string IndexName => "plant_infos_dev_01";
-        public string Alias => "plant_infos_dev";
+        public string IndexName => "plant_infos_01";
+        public string Alias => "plant_infos";
         public string NameTokenizer => "name_tokenizer";
         public string NameAnalyzer => "name_analyzer";
 
