@@ -68,7 +68,7 @@ namespace Emergence.Service
             origin.DateModified = DateTime.UtcNow;
             origin.CreatedBy = userId;
 
-            if (origin.Location != null)
+            if (origin.Location != null && origin.Location.IsNotEmpty())
             {
                 origin.Location = await _locationService.AddOrUpdateLocationAsync(origin.Location);
             }

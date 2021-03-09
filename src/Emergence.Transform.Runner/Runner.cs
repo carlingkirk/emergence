@@ -249,7 +249,7 @@ namespace Emergence.Transform.Runner
                     var finished = false;
                     var start = 0;
                     var counter = start;
-                    var counterEnd = 1000;
+                    var counterEnd = 40000;
 
                     plantInfos = plantInfos.OrderBy(p => p.Origin.ExternalId).ToList();
 

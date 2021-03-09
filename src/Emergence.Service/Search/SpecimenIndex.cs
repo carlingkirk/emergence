@@ -69,17 +69,9 @@ namespace Emergence.Service.Search
 
             // Sort
             var specimenSorts = GetSpecimenSorts();
-            if (string.IsNullOrEmpty(findParams.SearchText))
-            {
-                searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts["DateModified"]).Descending()).Field(f => f.Field(specimenSorts["DateCreated"]).Descending()));
-            }
-            else if (findParams.SortDirection != SortDirection.None)
-            {
-                if (findParams.SortBy == null)
-                {
-                    findParams.SortBy = "DateCreated";
-                }
 
+            if (!string.IsNullOrEmpty(findParams.SortBy))
+            {
                 if (findParams.SortDirection == SortDirection.Ascending)
                 {
                     searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts[findParams.SortBy]).Ascending()));
@@ -88,6 +80,10 @@ namespace Emergence.Service.Search
                 {
                     searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts[findParams.SortBy]).Descending()));
                 }
+            }
+            else if (string.IsNullOrEmpty(findParams.SearchText))
+            {
+                searchDescriptor.Sort(s => s.Field(f => f.Field(specimenSorts["DateModified"]).Descending()).Field(f => f.Field(specimenSorts["DateCreated"]).Descending()));
             }
 
             var aggregations = new AggregationContainerDescriptor<Specimen>();
@@ -192,7 +188,7 @@ namespace Emergence.Service.Search
         {
             { "ScientificName", s => s.Lifeform.ScientificName.Suffix("keyword") },
             { "CommonName", s => s.Lifeform.CommonName.Suffix("keyword") },
-            { "Quantity", s => s.Quantity},
+            { "Quantity", s => s.InventoryItem.Quantity},
             { "Stage", s => s.SpecimenStage },
             { "Status", s => s.InventoryItem.Status },
             { "DateAcquired", s => s.InventoryItem.DateAcquired },

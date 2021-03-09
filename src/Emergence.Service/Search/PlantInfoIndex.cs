@@ -124,11 +124,8 @@ namespace Emergence.Service.Search
 
             // Sort
             var plantInfoSorts = GetPlantInfoSorts();
-            if (string.IsNullOrEmpty(findParams.SearchText))
-            {
-                searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts["DateModified"]).Descending()).Field(f => f.Field(plantInfoSorts["DateCreated"]).Descending()));
-            }
-            else if (findParams.SortDirection != SortDirection.None && findParams.SortBy != null)
+
+            if (!string.IsNullOrEmpty(findParams.SortBy))
             {
                 if (findParams.SortDirection == SortDirection.Ascending)
                 {
@@ -138,6 +135,10 @@ namespace Emergence.Service.Search
                 {
                     searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts[findParams.SortBy]).Descending()));
                 }
+            }
+            else if (string.IsNullOrEmpty(findParams.SearchText))
+            {
+                searchDescriptor.Sort(s => s.Field(f => f.Field(plantInfoSorts["DateModified"]).Descending()).Field(f => f.Field(plantInfoSorts["DateCreated"]).Descending()));
             }
 
             var response = await _searchClient.SearchAsync(pi => searchDescriptor.Skip(findParams.Skip).Take(findParams.Take), pi => countDescriptor);

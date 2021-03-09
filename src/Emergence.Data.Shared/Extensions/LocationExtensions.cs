@@ -81,5 +81,9 @@ namespace Emergence.Data.Shared.Extensions
             DateCreated = source.DateCreated ?? DateTime.UtcNow,
             DateModified = source.DateModified
         };
+
+        public static bool IsNotEmpty(this Models.Location source)
+            => !string.IsNullOrEmpty(source.AddressLine1) || !string.IsNullOrEmpty(source.City) || !string.IsNullOrEmpty(source.StateOrProvince)
+            || !string.IsNullOrEmpty(source.Country) || !string.IsNullOrEmpty(source.Region) || source.Latitude.HasValue || source.Longitude.HasValue;
     }
 }

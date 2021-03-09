@@ -172,8 +172,6 @@ namespace Emergence.Data.Shared.Extensions
                 MaximumWater = source.Requirements?.WaterRequirements?.MaximumWater != WaterType.Unknown ? source.Requirements?.WaterRequirements?.MaximumWater.ToString() : null,
                 MinimumZoneId = source.Requirements?.ZoneRequirements?.MinimumZone?.Id,
                 MaximumZoneId = source.Requirements?.ZoneRequirements?.MaximumZone?.Id,
-                MinimumZone = source.Requirements?.ZoneRequirements?.MinimumZone != null ? new Zone { Id = source.Requirements.ZoneRequirements.MinimumZone.Id.Value } : null,
-                MaximumZone = source.Requirements?.ZoneRequirements?.MaximumZone != null ? new Zone { Id = source.Requirements.ZoneRequirements.MaximumZone.Id.Value } : null,
                 StratificationStages = source.Requirements?.StratificationStages != null ? JsonConvert.SerializeObject(source.Requirements.StratificationStages) : null,
                 Preferred = source.Preferred,
                 WildlifeEffects = source.WildlifeEffects != null ? JsonConvert.SerializeObject(source.WildlifeEffects) : null,

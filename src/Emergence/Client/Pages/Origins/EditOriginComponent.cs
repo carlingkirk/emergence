@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -37,12 +38,21 @@ namespace Emergence.Client.Components
 
             if (Origin.Location != null)
             {
-                if (Origin.Location.LocationId == 0)
+                if (Origin.Location.IsNotEmpty())
                 {
-                    Origin.Location.DateCreated = DateTime.UtcNow;
+                    if (Origin.Location.LocationId == 0)
+                    {
+                        Origin.Location.DateCreated = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        Origin.Location.DateModified = DateTime.UtcNow;
+                    }
                 }
-
-                Origin.Location.DateModified = DateTime.UtcNow;
+                else
+                {
+                    Origin.Location = null;
+                }
             }
 
             Origin = await ApiClient.PutOriginAsync(Origin);

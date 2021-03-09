@@ -137,7 +137,7 @@ namespace Emergence.Service
 
             return new SpecimenFindResult
             {
-                Results = specimens,
+                Results = specimenIds.Join(specimens, sid => sid, s => s.SpecimenId, (id, s) => s).ToList(),
                 Count = specimenSearch.Count,
                 Filters = findParams.Filters
             };
