@@ -196,16 +196,16 @@
 
                     <label for="wildlife-effects">Wildlife effects</label>
                     <ul>
-                    @foreach (var wildlifeEffect in PlantInfo.WildlifeEffects)
-                    {
-                        <li>
-                            @if (wildlifeEffect.Effect != Effect.Unknown)
-                            {
-                                <span id="@GetElementId("effect", key.ToString())">@wildlifeEffect.Effect.ToFriendlyName() for </span>
-                            }
-                            <span id="@GetElementId("wildlife", key.ToString())">@wildlifeEffect.Wildlife</span>
-                        </li>
-                    }
+                        @foreach (var wildlifeEffect in PlantInfo.WildlifeEffects)
+                        {
+                            <li>
+                                @if (wildlifeEffect.Effect != Effect.Unknown)
+                                {
+                                    <span id="@GetElementId("effect", key.ToString())">@wildlifeEffect.Effect.ToFriendlyName() for </span>
+                                }
+                                <span id="@GetElementId("wildlife", key.ToString())">@wildlifeEffect.Wildlife</span>
+                            </li>
+                        }
                     </ul>
                 }
             </div>
@@ -222,11 +222,33 @@
                 }
             </div>
             <div class="col-lg-12 col">
+                @if (PlantInfo.Locations != null && PlantInfo.Locations.Any())
+                {
+                <div>
+                    <label for="native-distribution">Native Distribution</label>
+                    @{ var conservationGroups = PlantInfo.Locations.Where(pl => pl.Status == LocationStatus.Native).OrderBy(l => l.ConservationStatus).GroupBy(l => l.ConservationStatus); }
+
+                    @foreach (var group in conservationGroups)
+                    {
+                    <ul style="line-height:1.25em;margin-bottom:.5em;">
+                        <li>
+                            @{ var stateGroups = group.GroupBy(l => l.Location.Country);}
+                            <span>@(group.Key.ToFriendlyName()): </span>
+                            @foreach (var stateGroup in stateGroups.OrderByDescending(c => c.Key))
+                            {
+                                <span>@(stateGroup.Key) (@(string.Join(", ", stateGroup.OrderBy(l => l.Location.StateOrProvince).Select(l => l.Location.StateOrProvince ?? "Federal")))); </span>
+                            }
+                        </li>
+                    </ul>
+                    }
+                </div>
+                }
+            </div>
+            <div class="col-lg-12 col">
                 @if (PlantInfo.Notes != null)
                 {
                     <label for="notes">Notes</label>
                     <p>@PlantInfo.Notes</p>
-
                 }
             </div>
         </div>

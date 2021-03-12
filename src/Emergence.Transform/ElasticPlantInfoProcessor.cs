@@ -62,15 +62,9 @@ namespace Emergence.Transform
             return await _plantInfoIndex.IndexManyAsync(plantInfos);
         }
 
-        public async Task<BulkIndexResponse> ProcessSome()
+        public async Task<BulkIndexResponse> ProcessSome(int skip, int take)
         {
-            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.MinimumZone != null || p.MaximumZone != null ||
-                                                                             (p.MinimumBloomTime.HasValue && p.MinimumBloomTime.Value > 0) ||
-                                                                             (p.MaximumBloomTime.HasValue && p.MaximumBloomTime > 0) ||
-                                                                             !string.IsNullOrEmpty(p.MinimumWater) ||
-                                                                             !string.IsNullOrEmpty(p.MaximumWater) ||
-                                                                             !string.IsNullOrEmpty(p.MinimumLight) ||
-                                                                             !string.IsNullOrEmpty(p.MaximumLight),
+            var plantInfoQuery = _plantInfoRepository.WhereWithIncludes(p => p.Origin.ParentOriginId == 160832,
                                                                         false,
                                                                         p => p.Include(p => p.Lifeform)
                                                                               .Include(p => p.Lifeform.PlantSynonyms)
@@ -84,10 +78,12 @@ namespace Emergence.Transform
                                                                               .Include(p => p.User.Photo)
                                                                               .Include(p => p.User.Contacts)
                                                                               .Include(p => p.MinimumZone)
-                                                                              .Include(p => p.MaximumZone));
+                                                                              .Include(p => p.MaximumZone)
+                                                                              )
+                                                    .OrderBy(p => p.Id).Skip(skip).Take(take);
 
-            var plantInfoResult = await plantInfoQuery.GetAllAsync();
-            if (plantInfoResult.Count() == 0)
+            var plantInfoResult = (await plantInfoQuery.GetAllAsync()).ToList();
+            if (plantInfoResult.Count == 0)
             {
                 return new BulkIndexResponse { Successes = 0, Failures = 0 };
             }
@@ -104,7 +100,7 @@ namespace Emergence.Transform
                     plantInfoKey.User.Contacts = contacts;
                 }
 
-                plantInfos.Add(plantInfoKey.AsSearchModel(plantLocations, synonyms));
+                plantInfos.Add(plantInfoKey.AsSearchModel(plantLocations, null));
             }
 
             return await _plantInfoIndex.IndexManyAsync(plantInfos);

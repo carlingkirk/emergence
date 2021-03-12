@@ -49,6 +49,6 @@ namespace Emergence.Transform
             return await _specimenIndex.IndexManyAsync(specimens);
         }
 
-        public Task<BulkIndexResponse> ProcessSome() => throw new System.NotImplementedException();
+        public Task<BulkIndexResponse> ProcessSome(int take, int skip) => throw new System.NotImplementedException();
     }
 }

@@ -126,15 +126,15 @@ namespace Emergence.Transform.NatureServe
 
             switch (rank)
             {
-                case "5":
+                case "1":
                     return ConservationStatus.CriticallyEndangered;
-                case "4":
+                case "2":
                     return ConservationStatus.Endangered;
                 case "3":
                     return ConservationStatus.Vulnerable;
-                case "2":
+                case "4":
                     return ConservationStatus.NearThreatened;
-                case "1":
+                case "5":
                     return ConservationStatus.LeastConcern;
                 case "NR":
                     return ConservationStatus.NotEvaluated;

@@ -53,10 +53,14 @@ namespace Emergence.Service
                                                                               .Include(p => p.Origin)
                                                                               .Include(p => p.User)
                                                                               .Include(p => p.User.Photo)
-                                                                              .Include(p => p.MinimumZone).Include(p => p.MaximumZone));
+                                                                              .Include(p => p.MinimumZone)
+                                                                              .Include(p => p.MaximumZone));
             plantInfoQuery = plantInfoQuery.CanViewContent(user);
 
             var plantInfo = await plantInfoQuery.FirstOrDefaultAsync();
+            var plantLocations = await _plantLocationRepository.WhereWithIncludes(pl => pl.PlantInfoId == plantInfo.Id, false, pl => pl.Include(pl => pl.Location)).GetAllAsync();
+            plantInfo.PlantLocations = plantLocations;
+
             return plantInfo?.AsModel();
         }
 

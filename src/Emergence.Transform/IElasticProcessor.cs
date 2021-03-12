@@ -6,6 +6,6 @@ namespace Emergence.Transform
     public interface IElasticProcessor<T>
     {
         Task<BulkIndexResponse> Process(int startId, int endId);
-        Task<BulkIndexResponse> ProcessSome();
+        Task<BulkIndexResponse> ProcessSome(int skip, int take);
     }
 }
