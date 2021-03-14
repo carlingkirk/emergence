@@ -382,6 +382,10 @@ namespace Emergence.Test.Mocks
                     return plantLocations;
                 });
 
+            mockPlantLocationRepo.Setup(p => p.WhereWithIncludes(It.IsAny<Expression<Func<PlantLocation, bool>>>(), It.IsAny<bool>(),
+                It.IsAny<Func<IIncludable<PlantLocation>, IIncludable>[]>()))
+                .Returns(mockPlantLocations);
+
             return mockPlantLocationRepo;
         }
 
