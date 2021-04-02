@@ -84,9 +84,10 @@ namespace Emergence.Client.Common
             return List;
         }
 
-        protected async Task<IEnumerable<T>> PageAsync(int page)
+        protected async Task<IEnumerable<T>> PageAsync(int page, int perPage)
         {
             CurrentPage = page;
+            Take = perPage;
             await FindAsync();
             return List;
         }
@@ -98,7 +99,7 @@ namespace Emergence.Client.Common
             if (!List.Any() && CurrentPage > 1)
             {
                 CurrentPage--;
-                await PageAsync(CurrentPage);
+                await PageAsync(CurrentPage, Take);
             }
 
             return List;

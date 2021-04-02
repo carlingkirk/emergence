@@ -20,13 +20,22 @@ namespace Emergence.Client.Shared
         [Parameter]
         public EventCallback<IEnumerable<T>> ValuesChanged { get; set; }
         [Parameter]
-        public Func<int, Task<IEnumerable<T>>> Page { get; set; }
+        public Func<int, int, Task<IEnumerable<T>>> Page { get; set; }
 
-        protected async Task DoPage(int page)
+        protected async Task DoPage(int page, int perPage)
         {
+            Take = perPage;
             CurrentPage += page;
-            Values = await Page.Invoke(CurrentPage);
+            Values = await Page.Invoke(CurrentPage, Take);
             await ValuesChanged.InvokeAsync(Values);
+        }
+
+        protected async void OnTakeChanged(ChangeEventArgs eventArgs)
+        {
+            var take = int.Parse(eventArgs.Value.ToString()); // 100
+            var pageReset = (CurrentPage - 1) * -1;
+
+            await DoPage(pageReset, take);
         }
     }
 }

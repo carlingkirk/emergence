@@ -39,7 +39,7 @@
                 {
                     <tr>
                         <td>
-                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault><span class="link">@specimen.Lifeform.ScientificName</span></a>
+                            <a href="" @onclick="() => LoadInfo(ViewItemType.Specimen, specimen.SpecimenId)" @onclick:preventDefault><span class="link">@(specimen.Lifeform?.ScientificName)</span></a>
                         </td>
                         <td>
                             <span>@(specimen.Lifeform?.CommonName ?? specimen.Name)</span>
