@@ -1,5 +1,9 @@
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Emergence</a>
+    <a class="navbar-brand" href="">
+        <div style="width:35px;margin:0 0 0 -0.5em;padding: 0 0 0 .5em;" aria-label="Emergence logo">
+            <Logo Class="light"></Logo><span style="color:#EDE3CE;margin-left:.5em;" aria-hidden="true">Home</span>
+    </div>
+    </a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,12 +11,6 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        
         <li class="nav-item px-3">
             <AuthorizeView>
                 <NavLink class="nav-link" href="dashboard">

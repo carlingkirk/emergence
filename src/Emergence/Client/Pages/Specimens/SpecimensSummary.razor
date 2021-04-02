@@ -16,7 +16,7 @@
             {
                 var photo = specimen.Photos?.FirstOrDefault();
 
-                <Card Name="@(specimen.Lifeform.ScientificName ?? specimen.Name)" ColorSearch="@(specimen.Lifeform?.CommonName ?? specimen.Name)" Photo="@photo" CompactView="true">
+                <Card Name="@(specimen.Lifeform?.ScientificName ?? specimen.Name)" ColorSearch="@(specimen.Lifeform?.CommonName ?? specimen.Name)" Photo="@photo" CompactView="true">
                     <Content>
                         <a href="" @onclick="() => ModalServiceClient.ShowSpecimenModal(specimen.SpecimenId)" @onclick:preventDefault>
                             <div class="col-12">
@@ -28,7 +28,7 @@
                             </div>
                         </a>
                         <div class="col-12">
-                            <span>@specimen.InventoryItem.Quantity</span>
+                            <span>@(specimen.InventoryItem?.Quantity ?? specimen.Quantity)</span>
                             <span>@specimen.SpecimenStage.ToFriendlyName()</span>
                         </div>
                     </Content>
