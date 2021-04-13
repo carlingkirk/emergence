@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59A921FA-FC96-446D-8A73-4A83EB59CEC6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		..\.gitignore = ..\.gitignore
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emergence.Service", "Emergence.Service\Emergence.Service.csproj", "{0AAB8398-8089-4710-82AA-103DC36551B8}"
