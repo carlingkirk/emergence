@@ -359,7 +359,7 @@ serviceDependencies*
 /data/nsExplorer-Export-2021-02-24-07-34.json
 
 # compiled output
-/dist
+dist/
 /dist-server
 /tmp
 /out-tsc

@@ -12,6 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
+import { SpecimensListPageComponent } from './pages/specimens-list-page/specimens-list-page.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    SpecimensListPageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -30,6 +32,7 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
     { path: '', component: HomeComponent, pathMatch: 'full' },
     { path: 'counter', component: CounterComponent },
     { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
+    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
 ], { relativeLinkResolution: 'legacy' })
   ],
   providers: [
