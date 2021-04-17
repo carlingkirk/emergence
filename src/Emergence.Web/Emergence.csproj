@@ -47,6 +47,24 @@
     <ProjectReference Include="..\Emergence.Service\Emergence.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\CacheFingerprinted.js" />
+    <None Remove="Resources\CacheFirst.js" />
+    <None Remove="Resources\CacheFirstSafe.js" />
+    <None Remove="Resources\Minimal.js" />
+    <None Remove="Resources\NetworkFirst.js" />
+    <None Remove="Resources\offline.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CacheFingerprinted.js" />
+    <EmbeddedResource Include="Resources\CacheFirst.js" />
+    <EmbeddedResource Include="Resources\Minimal.js" />
+    <EmbeddedResource Include="Resources\NetworkFirst.js" />
+    <EmbeddedResource Include="Resources\offline.html" />
+    <EmbeddedResource Include="Resources\CacheFirstSafe.js" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

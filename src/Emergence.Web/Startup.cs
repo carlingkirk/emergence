@@ -6,6 +6,7 @@ using Emergence.Data.Identity;
 using Emergence.Data.Repository;
 using Emergence.Data.Shared.Email;
 using Emergence.Data.Shared.Stores;
+using Emergence.Extensions;
 using Emergence.Models;
 using Emergence.Service;
 using Emergence.Service.Interfaces;
@@ -150,6 +151,7 @@ namespace Emergence
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddProgressiveWebApp();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

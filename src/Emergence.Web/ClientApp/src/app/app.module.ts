@@ -13,6 +13,9 @@ import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { SpecimensListPageComponent } from './pages/specimens-list-page/specimens-list-page.component';
+import { PlantInfosListPageComponent } from './pages/plant-infos-list-page/plant-infos-list-page.component';
+import { SpecimenService } from './service/specimen-service';
+import { SpecimenPageComponent } from './pages/specimen-page/specimen-page.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import { SpecimensListPageComponent } from './pages/specimens-list-page/specimen
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    SpecimensListPageComponent
+    SpecimensListPageComponent,
+    PlantInfosListPageComponent,
+    SpecimenPageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,11 +37,13 @@ import { SpecimensListPageComponent } from './pages/specimens-list-page/specimen
     { path: '', component: HomeComponent, pathMatch: 'full' },
     { path: 'counter', component: CounterComponent },
     { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
-], { relativeLinkResolution: 'legacy' })
+    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] }], 
+    { relativeLinkResolution: 'legacy' 
+    })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
+    { provide: SpecimenService, useClass: SpecimenService }
   ],
   bootstrap: [AppComponent]
 })
