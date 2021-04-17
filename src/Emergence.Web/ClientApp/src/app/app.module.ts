@@ -16,6 +16,9 @@ import { SpecimensListPageComponent } from './pages/specimens-list-page/specimen
 import { PlantInfosListPageComponent } from './pages/plant-infos-list-page/plant-infos-list-page.component';
 import { SpecimenService } from './service/specimen-service';
 import { SpecimenPageComponent } from './pages/specimen-page/specimen-page.component';
+import { AboutComponent } from './pages/about/about.component';
+import { TermsComponent } from './pages/terms/terms.component';
+import { PrivacyComponent } from './pages/privacy/privacy.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { SpecimenPageComponent } from './pages/specimen-page/specimen-page.compo
     FetchDataComponent,
     SpecimensListPageComponent,
     PlantInfosListPageComponent,
-    SpecimenPageComponent
+    SpecimenPageComponent,
+    AboutComponent,
+    TermsComponent,
+    PrivacyComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -35,9 +41,11 @@ import { SpecimenPageComponent } from './pages/specimen-page/specimen-page.compo
     ApiAuthorizationModule,
     RouterModule.forRoot([
     { path: '', component: HomeComponent, pathMatch: 'full' },
-    { path: 'counter', component: CounterComponent },
-    { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] }], 
+    { path: 'terms', component: TermsComponent },
+    { path: 'privacy', component: PrivacyComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
+    { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard] }], 
     { relativeLinkResolution: 'legacy' 
     })
   ],
