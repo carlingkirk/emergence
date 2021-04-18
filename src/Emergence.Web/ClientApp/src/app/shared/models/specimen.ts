@@ -5,6 +5,7 @@ export interface Specimen {
   quantity: number;
   specimenId: number;
   specimenStage: string;
+  notes: string;
   createdBy: string;
   dateCreated: Date;
   modifiedBy: string;

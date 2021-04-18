@@ -4,7 +4,7 @@ import { Column } from 'src/app/shared/components/sortable-headers/sortable-head
 import { Sortable } from 'src/app/shared/interface/sortable';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { SearchResult } from 'src/app/shared/models/search-result';
-import { Specimen } from '../../shared/models/specimen';
+import { Specimen } from '../../../shared/models/specimen';
 
 @Component({
   selector: 'app-specimens-list-page',

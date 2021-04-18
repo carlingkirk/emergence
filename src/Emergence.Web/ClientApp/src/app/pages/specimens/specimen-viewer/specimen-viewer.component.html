@@ -1,0 +1,44 @@
+<div class="card-header h3">
+    <button type="button" class="btn btn-primary" (click)="goBack">Back</button>
+
+    <span class="title">Specimen: </span>
+    <ng-container *ngIf="specimen && specimen.specimenId > 0">
+        <span *ngIf="specimen.lifeform?.commonName">{{specimen.lifeform?.commonName}}</span>
+        <span *ngIf="!specimen.lifeform?.commonName && selectedLifeform?.commonName">{{selectedLifeform?.commonName}}</span>
+        <span *ngIf="!specimen.lifeform?.commonName && !selectedLifeform?.commonName && specimen.name">{{specimen.name}}</span>
+
+        <span *ngIf="specimen.lifeform?.scientificName" class="font-italic">{{specimen.lifeform?.scientificName}}</span>
+        <span *ngIf="!specimen.lifeform?.scientificName && selectedLifeform?.scientificName">{{selectedLifeform?.scientificName}}</span>
+    </ng-container>
+    <ng-container *ngIf="specimen && specimen.specimenId == 0">
+        <span class="font-italic">New</span>
+    </ng-container>
+</div>
+
+<ul class="nav nav-tabs">
+    <li *ngFor="let tab of tabs" [ngClass]="'nav-item' + (tab.key == currentTab ? ' active' : '')">
+        <a class="nav-link" id="{{tab.key}}" data-toggle="tab" role="tab" aria-controls="{{tab.key}}"
+            aria-selected="false" (click)="switchTab(tab.key)" style="cursor:pointer">{{tab.value}}</a>
+    </li>
+</ul>
+
+<div *ngIf="currentTab === 'specimen'" class="group tab-content">
+    <ng-container *ngIf="isEditing && specimen">
+        <!-- <EditSpecimen Cancel="GoBack" RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" /> -->
+    </ng-container>
+    <ng-container *ngIf="specimen">
+        <app-specimen-page [specimen]="specimen"></app-specimen-page>
+    </ng-container>
+    <span *ngIf="!specimen">Loading...</span>
+
+    <ng-container *ngIf="isOwner && !isEditing && specimen && specimen.specimenId > 0">
+        <button type="button" class="btn btn-primary" (click)="isEditing = true">Edit</button>
+        <button type="button" class="btn btn-primary" (click)="removeSpecimen()">Delete</button>
+    </ng-container>
+
+    <ng-container *ngIf="!isOwner">
+        <button type="button" class="btn btn-primary" (click)="showMessageModal()">
+            <span class="oi oi-plus btn-oi"></span>Message
+        </button>
+    </ng-container>
+</div>

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpecimenService } from 'src/app/service/specimen-service';
+import { Photo } from 'src/app/shared/models/photo';
 import { Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
@@ -9,21 +10,17 @@ import { Specimen } from 'src/app/shared/models/specimen';
   styleUrls: ['./specimen-page.component.css']
 })
 export class SpecimenPageComponent implements OnInit {
+  
   @Input()
-  public id: number;
   public specimen: Specimen;
+  public uploadedPhotos: Photo[];
 
   constructor(
-    private readonly specimenService: SpecimenService,
-    private route: ActivatedRoute
+    private readonly specimenService: SpecimenService
   ) { 
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-    console.log("Id: " + this.id);
-      this.specimenService.getSpecimen(this.id).subscribe((specimen) => 
-        this.specimen = specimen
-    );
+    
   }
 }

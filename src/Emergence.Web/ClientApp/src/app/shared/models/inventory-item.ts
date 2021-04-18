@@ -1,3 +1,4 @@
+import { User } from "./user";
 import { Origin } from "./origin";
 
 export interface InventoryItem {
@@ -14,4 +15,5 @@ export interface InventoryItem {
   modifiedBy: string;
   dateModified: Date;
   origin: Origin;
+  user: User;
 }

@@ -12,15 +12,16 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
-import { SpecimensListPageComponent } from './pages/specimens-list-page/specimens-list-page.component';
+import { SpecimensListPageComponent } from './pages/specimens/specimens-list-page/specimens-list-page.component';
 import { PlantInfosListPageComponent } from './pages/plant-infos-list-page/plant-infos-list-page.component';
 import { SpecimenService } from './service/specimen-service';
-import { SpecimenPageComponent } from './pages/specimen-page/specimen-page.component';
+import { SpecimenPageComponent } from './pages/specimens/specimen-page/specimen-page.component';
 import { AboutComponent } from './pages/about/about.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SortableHeadersComponent } from './shared/components/sortable-headers/sortable-headers.component';
+import { SpecimenViewerComponent } from './pages/specimens/specimen-viewer/specimen-viewer.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SortableHeadersComponent } from './shared/components/sortable-headers/s
     AboutComponent,
     TermsComponent,
     PrivacyComponent,
-    SortableHeadersComponent
+    SortableHeadersComponent,
+    SpecimenViewerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -48,7 +50,7 @@ import { SortableHeadersComponent } from './shared/components/sortable-headers/s
     { path: 'privacy', component: PrivacyComponent },
     { path: 'about', component: AboutComponent },
     { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
-    { path: 'specimens/:id', component: SpecimenPageComponent, canActivate: [AuthorizeGuard] }, 
+    { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
     { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard] }], 
     { relativeLinkResolution: 'legacy' 
     }),
