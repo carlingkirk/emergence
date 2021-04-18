@@ -19,6 +19,8 @@ import { SpecimenPageComponent } from './pages/specimen-page/specimen-page.compo
 import { AboutComponent } from './pages/about/about.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SortableHeadersComponent } from './shared/components/sortable-headers/sortable-headers.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
     SpecimenPageComponent,
     AboutComponent,
     TermsComponent,
-    PrivacyComponent
+    PrivacyComponent,
+    SortableHeadersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -45,9 +48,11 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
     { path: 'privacy', component: PrivacyComponent },
     { path: 'about', component: AboutComponent },
     { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
+    { path: 'specimens/:id', component: SpecimenPageComponent, canActivate: [AuthorizeGuard] }, 
     { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard] }], 
     { relativeLinkResolution: 'legacy' 
-    })
+    }),
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
