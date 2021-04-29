@@ -1,38 +1,54 @@
-<div>
-    <table>
-        <thead app-sortable-headers [columns]="columns">
-        <tbody>
-            <tr *ngIf="totalCount == 0">
-                <td><span>No specimens found</span></td>
-            </tr>
-            <tr *ngFor="let specimen of specimens">
-                <td>
-                    <a [routerLink]='["/specimens", specimen.specimenId]'>
-                        <span class="link">{{ specimen.lifeform?.scientificName }}</span>
-                    </a>
-                </td>
-                <td>
-                    <span>{{ specimen.name }}</span>
-                </td>
-                <td>
-                    <span>{{ specimen.inventoryItem?.quantity }}</span>
-                </td>
-                <td>
-                    <span>{{ specimen.specimenStage }}</span>
-                </td>
-                <td>
-                    <span>{{ specimen.inventoryItem?.status }}</span>
-                </td>
-                <td>
-                    <span>
-                        {{ specimen.inventoryItem?.dateAcquired }}
-                    </span>
-                </td>
-                <td>
-                    <span *ngIf="specimen.inventoryItem?.origin" class="link">{{ specimen.inventoryItem?.origin?.name }}</span>
-                    <span *ngIf="!specimen.inventoryItem?.origin"></span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<form (ngSubmit)="search()">
+    <div *ngIf="searchRequest">
+        <ng-container *ngIf="showSearch">
+            <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
+            <button class="btn btn-primary" type="submit">Search</button>
+            <ng-container *ngIf="!forUserId">
+                <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
+                <label for="show-public">Show Public</label>
+            </ng-container>
+            <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
+            <label for="list-view">List View</label>
+            <button type="button" class="btn btn-primary" (click)="toggleFilters()">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+        </ng-container>
+        <app-search-filters *ngIf="showFilters && searchResult" [filterResponse]="searchResult.filters"></app-search-filters>
+        <ng-container *ngIf="listView">
+            <table>
+                <thead app-sortable-headers [columns]="columns">
+                <tbody>
+                    <tr *ngIf="totalCount == 0">
+                        <td><span>No specimens found</span></td>
+                    </tr>
+                    <tr *ngFor="let specimen of specimens">
+                        <td>
+                            <a [routerLink]='["/specimens", specimen.specimenId]'>
+                                <span class="link">{{ specimen.lifeform?.scientificName }}</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span>{{ specimen.name }}</span>
+                        </td>
+                        <td>
+                            <span>{{ specimen.inventoryItem?.quantity }}</span>
+                        </td>
+                        <td>
+                            <span>{{ specimen.specimenStage }}</span>
+                        </td>
+                        <td>
+                            <span>{{ specimen.inventoryItem?.status }}</span>
+                        </td>
+                        <td>
+                            <span>
+                                {{ specimen.inventoryItem?.dateAcquired }}
+                            </span>
+                        </td>
+                        <td>
+                            <span *ngIf="specimen.inventoryItem?.origin" class="link">{{ specimen.inventoryItem?.origin?.name }}</span>
+                            <span *ngIf="!specimen.inventoryItem?.origin"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </div>
+</form>

@@ -21,8 +21,8 @@ namespace Emergence.Data.Shared.Search
             Name = "Stage";
             InputType = InputType.Select;
             FilterType = FilterType.String;
-            var values = new List<string> { "" };
-            values.AddRange(Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>().Select(s => s.ToString()));
+            var values = new List<string>();
+            values.AddRange(Enum.GetValues(typeof(SpecimenStage)).Cast<SpecimenStage>().Select(s => s.ToFriendlyName()));
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
 

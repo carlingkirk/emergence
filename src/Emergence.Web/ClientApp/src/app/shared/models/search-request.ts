@@ -1,7 +1,7 @@
-import { Filter } from "./search-result"
+import { FilterResponse } from "./filters";
 
 export interface SearchRequest {
-    filters?: Filter[],
+    filters?: FilterResponse,
     shape?: any;
     useNGrams: boolean;
     searchText?: string;

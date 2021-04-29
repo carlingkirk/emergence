@@ -1,0 +1,38 @@
+<div class="container">
+    <div *ngFor="let filter of filters" class="row">
+        <div class="col-lg-4 col-xs">
+            <ng-container *ngIf="filter.inputType == 1">
+                <div class="row">
+                    <label for="{{filter.name}}">{{filter.name}}</label>
+                </div>
+                <div class="row">
+                    <div *ngIf="filter.filterType == 0" class="col-lg-11 col-xs" style="padding: 0;">
+                        <select [(ngModel)]="filter.value" class="form-control" [id]="filter.name + '-select'">
+                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.value">{{facetValue.key}}</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="filter.inputType == 2">
+                <div class="row">
+                    <label for="{{filter.name}}">Min {{filter.name}}</label>
+                </div>
+                <div class="row">
+                    <div class="col-5 range-input">
+                        <select [(ngModel)]="filter.minimumValue" class="form-control" [id]="filter.name + '-select'">
+                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.value">{{facetValue.key}}</option>
+                        </select>
+                    </div>
+                    <div class="col-1 range-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="col-5 range-input">
+                        <select [(ngModel)]="filter.maximumValue" class="form-control" [id]="filter.name + '-select'">
+                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.value">{{facetValue.key}}</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

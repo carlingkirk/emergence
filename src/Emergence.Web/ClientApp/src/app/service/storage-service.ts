@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { StorageMap } from "@ngx-pwa/local-storage/public_api";
+import { StorageMap } from "@ngx-pwa/local-storage";
 import { of } from "rxjs";
 import { catchError } from "rxjs/operators";
 

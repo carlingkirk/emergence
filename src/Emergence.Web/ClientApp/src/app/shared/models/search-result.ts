@@ -1,9 +1,7 @@
+import { FilterResponse } from "./filters";
+
 export interface SearchResult {
-    filters: Filter[];
+    filters: FilterResponse;
     count: number;
     results: [];
-}
-
-export interface Filter {
-    filter: any;
 }

@@ -3,5 +3,5 @@ import { Column } from "../components/sortable-headers/sortable-headers.componen
 export interface Sortable {
     columns: Column[];
 
-    Sort(): void;
+    sort(): void;
 }

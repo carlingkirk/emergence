@@ -110,8 +110,14 @@ namespace Emergence.Service
                     if (filter is SelectFilter<string> selectFilter)
                     {
                         var values = aggregation.Values;
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        selectFilter.FacetValues = values;
+                        if (!values.ContainsKey(""))
+                        {
+                            values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+                        }
+
+                        selectFilter.FacetValues = values
+                            .Select(v => new KeyValuePair<string, long?>(v.Key.GetDisplayValue<SpecimenStage>(), v.Value))
+                            .ToDictionary(k => k.Key, v => v.Value);
                     }
                     if (filter is SelectRangeFilter<double> selectRangeFilter)
                     {

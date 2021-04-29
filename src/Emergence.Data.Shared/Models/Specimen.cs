@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Emergence.Data.Shared.Enums;
 
 namespace Emergence.Data.Shared.Models
 {
     public class Specimen : IValidatableObject
     {
         public int SpecimenId { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<SpecimenStage>))]
         public SpecimenStage SpecimenStage { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }

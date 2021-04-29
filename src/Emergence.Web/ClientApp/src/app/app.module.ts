@@ -22,6 +22,7 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SortableHeadersComponent } from './shared/components/sortable-headers/sortable-headers.component';
 import { SpecimenViewerComponent } from './pages/specimens/specimen-viewer/specimen-viewer.component';
+import { SearchFiltersComponent } from './shared/components/search-filters/search-filters.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { SpecimenViewerComponent } from './pages/specimens/specimen-viewer/speci
     TermsComponent,
     PrivacyComponent,
     SortableHeadersComponent,
-    SpecimenViewerComponent
+    SpecimenViewerComponent,
+    SearchFiltersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
