@@ -1,6 +1,7 @@
 <div class="card-header h3">
-    <button type="button" class="btn btn-primary" (click)="goBack">Back</button>
-
+    <a [routerLink]="['/specimens/list']">
+        <button type="button" class="btn btn-primary">Back</button>
+    </a>
     <span class="title">Specimen: </span>
     <ng-container *ngIf="specimen && specimen.specimenId > 0">
         <span *ngIf="specimen.lifeform?.commonName">{{specimen.lifeform?.commonName}}</span>

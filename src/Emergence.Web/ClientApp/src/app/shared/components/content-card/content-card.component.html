@@ -1,0 +1,33 @@
+<div>
+    <div class="group">
+        <div class="row">
+            <div class="col-4 card-container">
+                <div *ngIf="mainPhoto">
+                    <ng-container *ngIf="!mainPhoto.externalUrl">
+                        <a href="" (click)="showPhotoModal()">
+                            <img [srcset]="mainPhoto.thumbnailUri + ' 1x'" src="mainPhoto.originalUri"
+                                    (error)="onImgError($event)" [alt]="'Uploaded photo of ' + mainPhoto.type"
+                                    class="card-img contain" />
+                        </a>
+                    </ng-container>
+                    <ng-container *ngIf="mainPhoto.externalUrl">
+                        <a href="" (click)="showPhotoModal()" >
+                            <img src="mainPhoto.externalUrl" [alt]="'Uploaded photo of ' + mainPhoto.type" class="card-img contain" />
+                        </a>
+                    </ng-container>
+                </div>
+                <div *ngIf="!mainPhoto">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="shadow-sm align-center">
+                        <rect [attr.fill]="color" width="100" height="100" />
+                        <text fill="#FFF" dy="1" x="50%" y="50%" text-anchor="middle">&nbsp;</text>
+                    </svg>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <ng-content></ng-content>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

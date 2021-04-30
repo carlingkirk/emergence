@@ -23,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SortableHeadersComponent } from './shared/components/sortable-headers/sortable-headers.component';
 import { SpecimenViewerComponent } from './pages/specimens/specimen-viewer/specimen-viewer.component';
 import { SearchFiltersComponent } from './shared/components/search-filters/search-filters.component';
+import { ContentCardComponent } from './shared/components/content-card/content-card.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { SearchFiltersComponent } from './shared/components/search-filters/searc
     PrivacyComponent,
     SortableHeadersComponent,
     SpecimenViewerComponent,
-    SearchFiltersComponent
+    SearchFiltersComponent,
+    ContentCardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

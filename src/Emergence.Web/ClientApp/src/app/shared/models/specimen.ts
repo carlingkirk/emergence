@@ -1,4 +1,5 @@
 import { InventoryItem } from "./inventory-item";
+import { Photo } from "./photo";
 
 export interface Specimen {
   name: string;
@@ -11,4 +12,5 @@ export interface Specimen {
   modifiedBy: string;
   dateModified: Date;
   inventoryItem: InventoryItem;
+  photos: Photo[];
 }
