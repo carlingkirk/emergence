@@ -3,7 +3,7 @@ import { SpecimenService } from 'src/app/service/specimen-service';
 import { StorageService } from 'src/app/service/storage-service';
 import { Column } from 'src/app/shared/components/sortable-headers/sortable-headers.component';
 import { Sortable } from 'src/app/shared/interface/sortable';
-import { DisplayValue } from 'src/app/shared/models/filters';
+import { SpecimenStage } from 'src/app/shared/models/enums';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { SearchResult } from 'src/app/shared/models/search-result';
 import { Specimen } from '../../../shared/models/specimen';
@@ -53,15 +53,12 @@ export class SpecimensListPageComponent implements OnInit, Sortable {
 
   public resetSearch() {
     this.searchRequest = {
-      // searchText: null,
-      // filters: null,
-      // sortBy: null,
-      // sortDirection: null,
-      // createdBy: null,
+      filters: null,
       take: 12,
       skip: 0,
       useNGrams: false
     };
+    this.loadSpecimens();
   }
 
   loadSpecimens() {
@@ -71,6 +68,8 @@ export class SpecimensListPageComponent implements OnInit, Sortable {
           this.searchResult = searchResult;
           this.specimens = searchResult.results;
           this.totalCount = searchResult.count;
+
+          this.searchRequest.filters = searchResult.filters;
         }
       );
     });
@@ -82,7 +81,6 @@ export class SpecimensListPageComponent implements OnInit, Sortable {
 
   public toggleFilters(): void {
     this.showFilters = !this.showFilters;
-    console.log(this.showFilters);
   }
 
   public search(): void {

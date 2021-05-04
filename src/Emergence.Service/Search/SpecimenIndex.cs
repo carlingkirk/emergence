@@ -238,7 +238,8 @@ namespace Emergence.Service.Search
 
                 if (!string.IsNullOrEmpty(stageFilter.Value))
                 {
-                    musts.Add(query.Term(t => t.SpecimenStage, stageFilter.Value));
+                    var stageFilterValue = Enum.Parse<SpecimenStage>(stageFilter.Value.Replace(" ", ""));
+                    musts.Add(query.Term(t => t.SpecimenStage, stageFilterValue.ToString("D")));
                 }
             }
 

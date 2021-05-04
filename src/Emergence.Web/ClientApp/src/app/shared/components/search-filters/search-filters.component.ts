@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SpecimenStage } from '../../models/enums';
 import { FilterResponse, Filter } from '../../models/filters';
 
@@ -10,6 +10,8 @@ import { FilterResponse, Filter } from '../../models/filters';
 export class SearchFiltersComponent implements OnInit {
   @Input()
   public filterResponse: FilterResponse;
+  @Output()
+  public outFilters = new EventEmitter<Filter[]>();
   public filters: Filter[] = [];
   constructor() { }
 
@@ -25,4 +27,7 @@ export class SearchFiltersComponent implements OnInit {
     }
   }
 
+  valueChanged(): void {
+    this.outFilters.emit(this.filters);
+  }
 }

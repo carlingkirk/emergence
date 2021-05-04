@@ -38,7 +38,7 @@ export class ContentCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.color = this.getRandomColor(this.colorSearch);
-    console.log(this.color);
+
     if (this.photos) {
       this.mainPhoto = this.photos.length > 0 ? this.photos[0] : null;
     }

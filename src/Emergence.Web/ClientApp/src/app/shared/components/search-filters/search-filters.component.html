@@ -7,8 +7,8 @@
                 </div>
                 <div class="row">
                     <div *ngIf="filter.filterType == 0" class="col-lg-11 col-xs" style="padding: 0;">
-                        <select [(ngModel)]="filter.value" class="form-control" [id]="filter.name + '-select'">
-                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.value">{{facetValue.key}}</option>
+                        <select [(ngModel)]="filter.value" class="form-control" [id]="filter.name + '-select'" (change)="valueChanged()">
+                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.key">{{facetValue.key}}</option>
                         </select>
                     </div>
                 </div>
@@ -19,16 +19,16 @@
                 </div>
                 <div class="row">
                     <div class="col-5 range-input">
-                        <select [(ngModel)]="filter.minimumValue" class="form-control" [id]="filter.name + '-select'">
-                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.value">{{facetValue.key}}</option>
+                        <select [(ngModel)]="filter.minimumValue" class="form-control" [id]="filter.name + '-select'" (change)="valueChanged()">
+                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.key">{{facetValue.key}}</option>
                         </select>
                     </div>
                     <div class="col-1 range-separator">
                         <span>to</span>
                     </div>
                     <div class="col-5 range-input">
-                        <select [(ngModel)]="filter.maximumValue" class="form-control" [id]="filter.name + '-select'">
-                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.value">{{facetValue.key}}</option>
+                        <select [(ngModel)]="filter.maximumValue" class="form-control" [id]="filter.name + '-select'" (change)="valueChanged()">
+                            <option *ngFor="let facetValue of filter.facetValues | keyvalue" [value]="facetValue.key">{{facetValue.key}}</option>
                         </select>
                     </div>
                 </div>
