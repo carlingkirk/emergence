@@ -24,6 +24,7 @@ import { SortableHeadersComponent } from './shared/components/sortable-headers/s
 import { SpecimenViewerComponent } from './pages/specimens/specimen-viewer/specimen-viewer.component';
 import { SearchFiltersComponent } from './shared/components/search-filters/search-filters.component';
 import { ContentCardComponent } from './shared/components/content-card/content-card.component';
+import { SpecimenEditComponent } from './pages/specimens/specimen-edit/specimen-edit.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ContentCardComponent } from './shared/components/content-card/content-c
     SortableHeadersComponent,
     SpecimenViewerComponent,
     SearchFiltersComponent,
-    ContentCardComponent
+    ContentCardComponent,
+    SpecimenEditComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,6 +57,7 @@ import { ContentCardComponent } from './shared/components/content-card/content-c
     { path: 'about', component: AboutComponent },
     { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
     { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
+    { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] }, 
     { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard] }], 
     { relativeLinkResolution: 'legacy' 
     }),

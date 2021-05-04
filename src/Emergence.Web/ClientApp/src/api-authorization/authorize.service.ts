@@ -31,6 +31,7 @@ export enum AuthenticationResultStatus {
 
 export interface IUser {
   name?: string;
+  userId?: string;
 }
 
 @Injectable({
@@ -49,10 +50,11 @@ export class AuthorizeService {
   }
 
   public getUser(): Observable<IUser | null> {
-    return concat(
+    var user = concat(
       this.userSubject.pipe(take(1), filter(u => !!u)),
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());
+    return user;
   }
 
   public getAccessToken(): Observable<string> {

@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { Specimen } from 'src/app/shared/models/specimen';
 
@@ -20,16 +23,26 @@ export class SpecimenViewerComponent implements OnInit {
   public currentTab: string = 'specimen';
   public isEditing: boolean = false;
   public isOwner: boolean = false;
+  public isAuthenticated: Observable<boolean>;
+  public userName: Observable<string>;
+  public user: IUser;
   constructor(
+    private authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
-    console.log("Id: " + this.id);
-      this.specimenService.getSpecimen(this.id).subscribe((specimen) => 
-        this.specimen = specimen
-    );
+    this.isAuthenticated = this.authorizeService.isAuthenticated();
+    this.authorizeService.getUser().subscribe((user) => {
+      this.user = user;
+      this.user.userId = user["sub"];
+
+      this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
+        this.specimen = specimen;
+        this.isOwner = this.specimen.createdBy == this.user.userId;
+      });
+    });
   }
 
   public switchTab(tab: string) {
@@ -43,5 +56,9 @@ export class SpecimenViewerComponent implements OnInit {
   }
 
   public removeSpecimen() {
+  }
+
+  public editSpecimen() {
+    this.isEditing = true;
   }
 }

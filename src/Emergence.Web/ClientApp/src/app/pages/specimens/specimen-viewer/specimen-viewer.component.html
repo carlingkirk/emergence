@@ -25,7 +25,7 @@
 
 <div *ngIf="currentTab === 'specimen'" class="group tab-content">
     <ng-container *ngIf="isEditing && specimen">
-        <!-- <EditSpecimen Cancel="GoBack" RefreshList="RefreshList" Specimen="Specimen" @bind-IsEditing="IsEditing" @bind-IsItemLoaded="IsItemLoaded" @bind-List="List" /> -->
+        <app-specimen-edit [specimen]="specimen"></app-specimen-edit>>
     </ng-container>
     <ng-container *ngIf="specimen">
         <app-specimen-page [specimen]="specimen"></app-specimen-page>
@@ -33,7 +33,9 @@
     <span *ngIf="!specimen">Loading...</span>
 
     <ng-container *ngIf="isOwner && !isEditing && specimen && specimen.specimenId > 0">
-        <button type="button" class="btn btn-primary" (click)="isEditing = true">Edit</button>
+        <a [routerLink]='["/specimens/edit", specimen.specimenId]'>
+            <button type="button" class="btn btn-primary">Edit</button>
+        </a>
         <button type="button" class="btn btn-primary" (click)="removeSpecimen()">Delete</button>
     </ng-container>
 
