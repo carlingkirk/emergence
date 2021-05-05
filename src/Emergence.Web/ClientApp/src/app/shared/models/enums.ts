@@ -1,5 +1,4 @@
-export enum SpecimenStage
-{
+export enum SpecimenStage {
     'Unknown',
     'Seed',
     'Ordered',
@@ -11,4 +10,25 @@ export enum SpecimenStage
     'Diseased',
     'Deceased',
     'Dormant'
+}
+
+export enum InventoryItemStatus {
+    'Available',
+    'Wishlist',
+    'Ordered',
+    'In Use'
+}
+
+export enum Visibility {
+    'Inherit from profile',
+    'Public',
+    'My Contacts',
+    'Private'
+}
+
+export enum ItemType {
+    Specimen,
+    Supply,
+    Container,
+    Tool
 }

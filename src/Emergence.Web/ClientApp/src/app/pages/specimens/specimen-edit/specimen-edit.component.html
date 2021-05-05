@@ -1,1 +1,82 @@
-<p>specimen-edit works!</p>
+<ng-container *ngIf="specimen">
+    <form (ngSubmit)="saveSpecimen()">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12">
+                    <div id="validation-summary"></div>
+                </div>
+                <div class="col">
+                    <label for="lifeform">Plant Name </label>
+                    <input type="text" class="form-control" [(ngModel)]="specimen.lifeform.scientificName" name="scientificName" />
+                    <!-- TODO: typeahead -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-xs">
+                    <label for="specimen-name">Specimen Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="specimen.name" name="name" id="specimen-name" />
+                </div>
+                <div class="col-lg-2 col-xs">
+                    <label for="quantity">Quantity</label>
+                    <input type="text" class="form-control" [(ngModel)]="specimen.quantity" name="quantity" id="quantity" />
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="status">Status</label>
+                    <select [(ngModel)]="specimen.inventoryItem.status" class="form-control" id="status" name="status" >
+                        <option *ngFor="let status of inventoryItemStatuses | keyvalue" [ngValue]="status.value">{{status.value}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="visibility">Visibility</label>
+                    <select [(ngModel)]="specimen.inventoryItem.visibility" class="form-control" id="visibility" name="visibility" >
+                        <option *ngFor="let visibility of visibilities | keyvalue" [ngValue]="visibility.value">{{visibility.value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-xs">
+                    <label for="stage">Stage</label>
+                    <select [(ngModel)]="specimen.specimenStage" class="form-control" id="specimen-stage" name="specimenStage" >
+                        <option *ngFor="let specimenStage of specimenStages | keyvalue" [ngValue]="specimenStage.value">{{specimenStage.value}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <label for="date-acquired">Date Acquired</label>
+                    <input type="date" [(ngModel)]="specimen.inventoryItem.dateAcquired" class="form-control" name="dateAcquired" />
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <label for="type">Type</label>
+                    <select [(ngModel)]="specimen.inventoryItem.itemType" class="form-control" id="type" name="itemType" >
+                        <option *ngFor="let itemType of itemTypes | keyvalue" [ngValue]="itemType.value">{{itemType.value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="origin">Origin</label>
+                    <input type="text" [(ngModel)]="specimen.inventoryItem.origin" class="form-control" name="origin" />
+                    <!-- TODO: typeahead -->
+                </div>
+            </div>
+            <div id="uploaded-photos"></div>
+            <!-- TODO: upload photo component -->
+            <!-- <UploadPhoto [(ngModel)]="uploadedPhotos" PhotoType="PhotoType.Specimen" Name="@(Specimen.Name)" /> -->
+            <div class="row">
+                <div class="col">
+                    <label for="notes">Notes</label>
+                    <textarea rows="3" [(ngModel)]="specimen.notes" id="notes" name="notes" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <ng-container *ngIf="!modal">
+            <button type="button" (click)="closeModel()" class="btn btn-secondary">Cancel</button>
+        </ng-container>
+        <ng-container *ngIf="modal">
+            <button type="button" (click)="cancel()" class="btn btn-secondary" >Cancel</button>
+        </ng-container>
+    </form>
+</ng-container>
+<ng-container *ngIf="!specimen">
+    <span>Loading...</span>
+</ng-container>
