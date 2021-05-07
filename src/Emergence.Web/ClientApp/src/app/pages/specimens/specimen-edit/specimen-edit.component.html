@@ -7,15 +7,17 @@
                 </div>
                 <div class="col">
                     <label for="lifeform">Plant Name </label>
-                    <input type="text" class="form-control" name="scientificName" 
-                        [(ngModel)]="specimen.lifeform.scientificName" 
+                    <input type="text" class="form-control" name="scientificName" style="font-style:italic;"
+                        [(ngModel)]="selectedLifeform" 
                         [ngbTypeahead]="search" 
-                        [resultFormatter]="formatter"
+                        [resultFormatter]="resultFormatter"
                         [inputFormatter]="inputFormatter"
                         [resultTemplate]="resultTemplate" />
-                    <!-- TODO: typeahead -->
                     <ng-template #resultTemplate let-r="result" let-t="term">
-                        <ngb-highlight [result]="r.scientificName" [term]="t"></ngb-highlight>
+                        <span>{{r.commonName}} </span>
+                        <span style="font-style:italic;">
+                            <ngb-highlight [result]="r.scientificName" [term]="t"></ngb-highlight>
+                        </span>
                     </ng-template>
                 </div>
             </div>
@@ -62,13 +64,19 @@
             <div class="row">
                 <div class="col">
                     <label for="origin">Origin</label>
-                    <input type="text" [(ngModel)]="specimen.inventoryItem.origin" class="form-control" name="origin" />
+                    <input type="text" 
+                    [(ngModel)]="specimen.inventoryItem.origin" 
+                    class="form-control" name="origin" />
                     <!-- TODO: typeahead -->
                 </div>
             </div>
-            <div id="uploaded-photos"></div>
             <!-- TODO: upload photo component -->
             <!-- <UploadPhoto [(ngModel)]="uploadedPhotos" PhotoType="PhotoType.Specimen" Name="@(Specimen.Name)" /> -->
+            <div *ngFor="let photo of uploadedPhotos" id="uploaded-photos">
+                <img [srcset]="photo.largeUri + ' 3x, ' + photo.mediumUri + ' 2x, ' + photo.thumbnailUri + ' 1x'" src="photo.originalUri"
+                        (error)="onImgError($event, photo)" [alt]="'Uploaded photo of ' + photo.type"
+                        class="viewer-img" />
+            </div>
             <div class="row">
                 <div class="col">
                     <label for="notes">Notes</label>

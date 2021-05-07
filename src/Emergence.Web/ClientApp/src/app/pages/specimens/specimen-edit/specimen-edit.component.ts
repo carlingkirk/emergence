@@ -2,10 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { LifeformService } from 'src/app/service/lifeform-service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { InventoryItemStatus, ItemType, SpecimenStage, Visibility } from 'src/app/shared/models/enums';
 import { Lifeform } from 'src/app/shared/models/lifeform';
+import { Photo } from 'src/app/shared/models/photo';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { Specimen } from 'src/app/shared/models/specimen';
 
@@ -27,9 +29,12 @@ export class SpecimenEditComponent implements OnInit {
   public searching: boolean;
   public searchFailed: boolean;
   public lifeforms: Lifeform[];
-  private inventoryItemStatusEnum = InventoryItemStatus;
+  public selectedLifeform: Lifeform;
+  public user: IUser;
+  public uploadedPhotos: Photo[];
 
   constructor(
+    private authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
     private readonly lifeformService: LifeformService,
     private route: ActivatedRoute
@@ -42,16 +47,36 @@ export class SpecimenEditComponent implements OnInit {
     this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
     this.specimenStages = Object.keys(SpecimenStage).filter(key => !isNaN(Number(key))).map(key => SpecimenStage[key]);
     this.itemTypes = Object.keys(ItemType).filter(key => !isNaN(Number(key))).map((key) => ItemType[key]);
-
-    if (!this.specimen) {
-      this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
-        this.specimen = specimen;
-      });
-    }
+    this.authorizeService.getUser().subscribe((user) => {
+      this.user = user;
+      this.user.userId = user["sub"];
+      this.loadSpecimen();
+    });
   }
 
-  formatter = (result: Lifeform) => result.scientificName;
+  resultFormatter = (result: Lifeform) => result.scientificName;
   inputFormatter = (x: Lifeform) => x.scientificName;
+
+  loadSpecimen() {
+    if (!this.specimen && this.id > 0) {
+      this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
+        this.specimen = specimen;
+        this.selectedLifeform = specimen.lifeform;
+        this.uploadedPhotos = specimen.photos;
+      });
+    }
+
+    if (this.id == 0) {
+      this.specimen.createdBy = this.user.userId;
+      this.specimen.ownerId = this.user.userId;
+      this.specimen.dateCreated = new Date();
+      this.specimen.inventoryItem.inventory.createdBy = this.user.userId;
+      this.specimen.inventoryItem.inventory.dateCreated = new Date();
+      this.specimen.inventoryItem.createdBy = this.user.userId;
+      this.specimen.inventoryItem.dateCreated = new Date();
+      this.specimen.inventoryItem.itemType = ItemType.Specimen;
+    }
+  }
 
   searchLifeforms(searchText: string): Observable<Lifeform[]> {
     if (searchText === '') {
@@ -78,44 +103,9 @@ export class SpecimenEditComponent implements OnInit {
         : this.searchLifeforms(term).pipe((lifeform) => lifeform ))
     );
 
-  searchX: OperatorFunction<string, readonly Lifeform[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      tap(() => this.searching = true),
-      switchMap(term =>
-        this.searchLifeforms(term).pipe(
-          tap(() => this.searchFailed = false),
-          catchError(() => {
-            this.searchFailed = true;
-            return of([]);
-          }))
-      ),
-      tap(() => this.searching = false)
-    )
-
-  fruits = ["Apple", "Orange", "Banana"];
-
-  searchY: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(term => term.length < 2 ? []
-        : this.fruits)
-    )
-
-  searchZ = (text: Observable<string>) => {
-      return text.pipe(
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(term => {
-          return term.length < 3 ? [].slice() : this.fruits;
-        })
-      );
-    }
-
   public saveSpecimen(): void {
-
+    this.specimen.lifeform = this.selectedLifeform;
+    this.specimen.photos = this.uploadedPhotos;
   }
 
   public populateInventoryItemName(): void {
@@ -129,4 +119,11 @@ export class SpecimenEditComponent implements OnInit {
   public closeModal(): void {
     
   }
+
+  onImgError(event, photo: Photo) {
+    event.onerror = null;
+    event.srcset = '';
+    event.src = photo.originalUri;
+    event.target.src = photo.originalUri;
+   }
 }
