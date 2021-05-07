@@ -48,10 +48,10 @@ export class ContentCardComponent implements OnInit {
   {
       let randomValue = 1;
       if (this.colorSearch) {
-        var random = new seedrandom(search);
+        var random = seedrandom(search);
         randomValue = Math.abs(random.int32() % this.colors.length);
       } else {
-        var random = new seedrandom();
+        var random = seedrandom();
         randomValue = Math.abs(random.int32() % this.colors.length);
       }
 

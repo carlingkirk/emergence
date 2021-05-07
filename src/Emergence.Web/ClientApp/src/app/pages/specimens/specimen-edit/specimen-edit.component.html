@@ -7,8 +7,16 @@
                 </div>
                 <div class="col">
                     <label for="lifeform">Plant Name </label>
-                    <input type="text" class="form-control" [(ngModel)]="specimen.lifeform.scientificName" name="scientificName" />
+                    <input type="text" class="form-control" name="scientificName" 
+                        [(ngModel)]="specimen.lifeform.scientificName" 
+                        [ngbTypeahead]="search" 
+                        [resultFormatter]="formatter"
+                        [inputFormatter]="inputFormatter"
+                        [resultTemplate]="resultTemplate" />
                     <!-- TODO: typeahead -->
+                    <ng-template #resultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.scientificName" [term]="t"></ngb-highlight>
+                    </ng-template>
                 </div>
             </div>
             <div class="row">

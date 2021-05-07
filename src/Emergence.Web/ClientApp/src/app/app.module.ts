@@ -25,6 +25,7 @@ import { SpecimenViewerComponent } from './pages/specimens/specimen-viewer/speci
 import { SearchFiltersComponent } from './shared/components/search-filters/search-filters.component';
 import { ContentCardComponent } from './shared/components/content-card/content-card.component';
 import { SpecimenEditComponent } from './pages/specimens/specimen-edit/specimen-edit.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { SpecimenEditComponent } from './pages/specimens/specimen-edit/specimen-
     { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard] }], 
     { relativeLinkResolution: 'legacy' 
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
