@@ -26,6 +26,9 @@ import { SearchFiltersComponent } from './shared/components/search-filters/searc
 import { ContentCardComponent } from './shared/components/content-card/content-card.component';
 import { SpecimenEditComponent } from './pages/specimens/specimen-edit/specimen-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { OriginService } from './service/origin-service';
+import { LifeformService } from './service/lifeform-service';
+import { StorageService } from './service/storage-service';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
-    { provide: SpecimenService, useClass: SpecimenService }
+    { provide: SpecimenService, useClass: SpecimenService },
+    { provide: LifeformService, useClass: LifeformService },
+    { provide: OriginService, useClass: OriginService },
+    { provide: StorageService, useClass: StorageService }
   ],
   bootstrap: [AppComponent]
 })

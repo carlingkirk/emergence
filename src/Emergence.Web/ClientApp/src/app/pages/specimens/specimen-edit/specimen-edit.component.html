@@ -9,11 +9,11 @@
                     <label for="lifeform">Plant Name </label>
                     <input type="text" class="form-control" name="scientificName" style="font-style:italic;"
                         [(ngModel)]="selectedLifeform" 
-                        [ngbTypeahead]="search" 
-                        [resultFormatter]="resultFormatter"
-                        [inputFormatter]="inputFormatter"
-                        [resultTemplate]="resultTemplate" />
-                    <ng-template #resultTemplate let-r="result" let-t="term">
+                        [ngbTypeahead]="lifeformsTypeahead" 
+                        [resultFormatter]="lifeformResultFormatter"
+                        [inputFormatter]="lifeformInputFormatter"
+                        [resultTemplate]="lifeformResultTemplate" />
+                    <ng-template #lifeformResultTemplate let-r="result" let-t="term">
                         <span>{{r.commonName}} </span>
                         <span style="font-style:italic;">
                             <ngb-highlight [result]="r.scientificName" [term]="t"></ngb-highlight>
@@ -64,10 +64,15 @@
             <div class="row">
                 <div class="col">
                     <label for="origin">Origin</label>
-                    <input type="text" 
-                    [(ngModel)]="specimen.inventoryItem.origin" 
-                    class="form-control" name="origin" />
-                    <!-- TODO: typeahead -->
+                    <input type="text" class="form-control" name="origin" 
+                        [(ngModel)]="selectedOrigin" 
+                        [ngbTypeahead]="originsTypeahead" 
+                        [resultFormatter]="originResultFormatter"
+                        [inputFormatter]="originInputFormatter"
+                        [resultTemplate]="originResultTemplate" />
+                    <ng-template #originResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>>
+                    </ng-template>
                 </div>
             </div>
             <!-- TODO: upload photo component -->
