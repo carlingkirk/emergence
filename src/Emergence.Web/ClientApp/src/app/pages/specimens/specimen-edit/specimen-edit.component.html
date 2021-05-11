@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-lg-4 col-xs">
                     <label for="specimen-name">Specimen Name</label>
-                    <input type="text" class="form-control" [(ngModel)]="specimen.name" name="name" id="specimen-name" />
+                    <input type="text" class="form-control" [(ngModel)]="specimen.name" name="name" id="specimen-name" (focus)="populateInventoryItemName()" />
                 </div>
                 <div class="col-lg-2 col-xs">
                     <label for="quantity">Quantity</label>
@@ -33,13 +33,13 @@
                 <div class="col-lg-3 col-xs">
                     <label for="status">Status</label>
                     <select [(ngModel)]="specimen.inventoryItem.status" class="form-control" id="status" name="status" >
-                        <option *ngFor="let status of inventoryItemStatuses | keyvalue" [ngValue]="status.value">{{status.value}}</option>
+                        <option *ngFor="let status of inventoryItemStatuses" [value]="statusEnum[status]">{{status}}</option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-xs">
                     <label for="visibility">Visibility</label>
                     <select [(ngModel)]="specimen.inventoryItem.visibility" class="form-control" id="visibility" name="visibility" >
-                        <option *ngFor="let visibility of visibilities | keyvalue" [ngValue]="visibility.value">{{visibility.value}}</option>
+                        <option *ngFor="let visibility of visibilities" [value]="visibilityEnum[visibility]">{{visibility}}</option>
                     </select>
                 </div>
             </div>
@@ -47,17 +47,19 @@
                 <div class="col-lg-4 col-xs">
                     <label for="stage">Stage</label>
                     <select [(ngModel)]="specimen.specimenStage" class="form-control" id="specimen-stage" name="specimenStage" >
-                        <option *ngFor="let specimenStage of specimenStages | keyvalue" [ngValue]="specimenStage.value">{{specimenStage.value}}</option>
+                        <option *ngFor="let specimenStage of specimenStages" [value]="specimenStageEnum[specimenStage]">{{specimenStage}}</option>
                     </select>
                 </div>
                 <div class="col-lg-4 col-xs">
                     <label for="date-acquired">Date Acquired</label>
-                    <input type="date" [(ngModel)]="specimen.inventoryItem.dateAcquired" class="form-control" name="dateAcquired" />
+                    <input type="date" class="form-control" name="dateAcquired" 
+                        [ngModel]="specimen.inventoryItem.dateAcquired | date:'yyyy-MM-dd'" 
+                        (ngModelChange)="specimen.inventoryItem.dateAcquired = $event" />
                 </div>
                 <div class="col-lg-4 col-xs">
                     <label for="type">Type</label>
                     <select [(ngModel)]="specimen.inventoryItem.itemType" class="form-control" id="type" name="itemType" >
-                        <option *ngFor="let itemType of itemTypes | keyvalue" [ngValue]="itemType.value">{{itemType.value}}</option>
+                        <option *ngFor="let itemType of itemTypes" [value]="itemTypeEnum[itemType]">{{itemType}}</option>
                     </select>
                 </div>
             </div>
@@ -77,11 +79,7 @@
             </div>
             <!-- TODO: upload photo component -->
             <!-- <UploadPhoto [(ngModel)]="uploadedPhotos" PhotoType="PhotoType.Specimen" Name="@(Specimen.Name)" /> -->
-            <div *ngFor="let photo of uploadedPhotos" id="uploaded-photos">
-                <img [srcset]="photo.largeUri + ' 3x, ' + photo.mediumUri + ' 2x, ' + photo.thumbnailUri + ' 1x'" src="photo.originalUri"
-                        (error)="onImgError($event, photo)" [alt]="'Uploaded photo of ' + photo.type"
-                        class="viewer-img" />
-            </div>
+            <app-upload-photos [(photos)]="uploadedPhotos" [type]="1"></app-upload-photos>
             <div class="row">
                 <div class="col">
                     <label for="notes">Notes</label>

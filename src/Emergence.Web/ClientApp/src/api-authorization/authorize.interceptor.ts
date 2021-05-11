@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { AuthorizeService } from './authorize.service';
-import { mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap } from 'rxjs/operators';
+import { INavigationState } from './api-authorization.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,17 @@ export class AuthorizeInterceptor implements HttpInterceptor {
       });
     }
 
-    return next.handle(req);
+    return next.handle(req).pipe(catchError(err => {
+      if ([401, 403].includes(err.status) && this.authorize.getUser()) {
+          // auto logout if 401 or 403 response returned from api
+          const state: INavigationState = { returnUrl: window.location.toString() };
+          this.authorize.signOut(state);
+      }
+
+      const error = (err && err.error && err.error.message) || err.statusText;
+      console.error(err);
+      return throwError(error);
+    }));
   }
 
   private isSameOriginUrl(req: any) {

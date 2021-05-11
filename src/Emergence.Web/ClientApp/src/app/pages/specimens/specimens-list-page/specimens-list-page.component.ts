@@ -3,7 +3,6 @@ import { SpecimenService } from 'src/app/service/specimen-service';
 import { StorageService } from 'src/app/service/storage-service';
 import { Column } from 'src/app/shared/components/sortable-headers/sortable-headers.component';
 import { Sortable } from 'src/app/shared/interface/sortable';
-import { SpecimenStage } from 'src/app/shared/models/enums';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { SearchResult } from 'src/app/shared/models/search-result';
 import { Specimen } from '../../../shared/models/specimen';

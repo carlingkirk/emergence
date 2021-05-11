@@ -2,7 +2,7 @@ import { InventoryItem } from "./inventory-item";
 import { Lifeform } from "./lifeform";
 import { Photo } from "./photo";
 
-export interface Specimen {
+export class Specimen {
   name: string;
   quantity: number;
   specimenId: number;

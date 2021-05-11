@@ -3,5 +3,6 @@ namespace Emergence.Data.Shared
     public class AppConfiguration
     {
         public string BlobStorageRoot { get; set; }
+        public string BlobContainer { get; set; }
     }
 }

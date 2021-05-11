@@ -1,4 +1,4 @@
-export interface Lifeform {
+export class Lifeform {
   lifeformId: number;
   scientificName: string;
   commonName: string;

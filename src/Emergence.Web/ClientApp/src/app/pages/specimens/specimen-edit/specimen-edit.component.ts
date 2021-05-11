@@ -7,6 +7,8 @@ import { LifeformService } from 'src/app/service/lifeform-service';
 import { OriginService } from 'src/app/service/origin-service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { InventoryItemStatus, ItemType, SpecimenStage, Visibility } from 'src/app/shared/models/enums';
+import { Inventory } from 'src/app/shared/models/inventory';
+import { InventoryItem } from 'src/app/shared/models/inventory-item';
 import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Origin } from 'src/app/shared/models/origin';
 import { Photo } from 'src/app/shared/models/photo';
@@ -36,6 +38,10 @@ export class SpecimenEditComponent implements OnInit {
   public selectedOrigin: Origin;
   public user: IUser;
   public uploadedPhotos: Photo[];
+  public itemTypeEnum = ItemType;
+  public specimenStageEnum = SpecimenStage;
+  public statusEnum = InventoryItemStatus;
+  public visibilityEnum = Visibility;
 
   constructor(
     private authorizeService: AuthorizeService,
@@ -75,14 +81,19 @@ export class SpecimenEditComponent implements OnInit {
     }
 
     if (this.id == 0) {
+      this.specimen = new Specimen();
       this.specimen.createdBy = this.user.userId;
       this.specimen.ownerId = this.user.userId;
       this.specimen.dateCreated = new Date();
+      this.specimen.inventoryItem = new InventoryItem();
+      this.specimen.inventoryItem.inventory = new Inventory();
       this.specimen.inventoryItem.inventory.createdBy = this.user.userId;
       this.specimen.inventoryItem.inventory.dateCreated = new Date();
+      this.specimen.inventoryItem.status = InventoryItemStatus["In Use"];
       this.specimen.inventoryItem.createdBy = this.user.userId;
       this.specimen.inventoryItem.dateCreated = new Date();
       this.specimen.inventoryItem.itemType = ItemType.Specimen;
+      this.specimen.inventoryItem.visibility = Visibility["Inherit from profile"];
     }
   }
 
@@ -139,10 +150,14 @@ export class SpecimenEditComponent implements OnInit {
   public saveSpecimen(): void {
     this.specimen.lifeform = this.selectedLifeform;
     this.specimen.photos = this.uploadedPhotos;
+
+    this.specimenService.saveSpecimen(this.specimen).subscribe((specimen) => this.specimen = specimen);
   }
 
   public populateInventoryItemName(): void {
-
+    if (!this.specimen.name) {
+      this.specimen.name = this.selectedLifeform.scientificName;
+    }
   }
 
   public cancel(): void {

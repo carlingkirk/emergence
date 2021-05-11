@@ -23,6 +23,11 @@ export class SpecimenService {
         .pipe((specimen) => { return specimen });
     }
 
+    public saveSpecimen(specimen: Specimen) {
+        return this.httpClient.put<Specimen>(this.baseUrl + 'api/specimen', specimen)
+        .pipe((specimen) => { return specimen });
+    }
+
     public findSpecimens(searchRequest: SearchRequest): Observable<SearchResult> {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/specimen/find', searchRequest)
         .pipe((searchResult) => { return searchResult });

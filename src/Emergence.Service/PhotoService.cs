@@ -22,12 +22,14 @@ namespace Emergence.Service
         private readonly IBlobService _blobService;
         private readonly IRepository<Photo> _photoRepository;
         private readonly string _blobStorageRoot;
+        private readonly string _blobContainer;
 
         public PhotoService(IBlobService blobService, IRepository<Photo> photoRepository, IConfigurationService configurationService)
         {
             _blobService = blobService;
             _photoRepository = photoRepository;
-            _blobStorageRoot = configurationService.Settings.BlobStorageRoot + "photos/";
+            _blobContainer = configurationService.Settings.BlobContainer;
+            _blobStorageRoot = configurationService.Settings.BlobStorageRoot + _blobContainer + "/";
         }
 
         public async Task<IEnumerable<Data.Shared.Models.Photo>> UploadOriginalsAsync(IEnumerable<IFormFile> photos, PhotoType type, string userId, bool storeLocation = true)

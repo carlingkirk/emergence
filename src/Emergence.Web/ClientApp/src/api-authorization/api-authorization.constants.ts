@@ -79,3 +79,7 @@ interface ApplicationPathsType {
 }
 
 export const ApplicationPaths: ApplicationPathsType = applicationPaths;
+
+export interface INavigationState {
+  [ReturnUrlType]: string;
+}

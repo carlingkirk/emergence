@@ -1,4 +1,4 @@
-export interface Origin {
+export class Origin {
   originId: number;
   name: string;
   type: number;

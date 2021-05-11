@@ -3,7 +3,7 @@ import { Origin } from "./origin";
 import { Inventory } from "./inventory";
 import { ItemType } from "./enums";
 
-export interface InventoryItem {
+export class InventoryItem {
   inventoryItemId: number;
   itemType: ItemType;
   name: string;

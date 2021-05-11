@@ -1,6 +1,8 @@
-export interface Photo {
+import { PhotoType } from "./enums";
+
+export class Photo {
   photoId: number;
-  type: number;
+  type: PhotoType;
   typeId: number;
   filename: string;
   blobPath: string;

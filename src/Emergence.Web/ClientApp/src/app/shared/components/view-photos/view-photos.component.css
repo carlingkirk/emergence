@@ -1,0 +1,4 @@
+.img-contain {
+    object-fit: scale-down;
+    max-width: 100%;
+}

@@ -32,3 +32,12 @@ export enum ItemType {
     Container,
     Tool
 }
+
+export enum PhotoType {
+    Activity,
+    Specimen,
+    'Inventory Item',
+    Origin,
+    'Plant Profile',
+    User
+}

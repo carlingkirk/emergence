@@ -1,0 +1,16 @@
+<div class="row" id="uploaded-photos">
+    <div *ngFor="let photo of photos" class="col-lg-3 col-xs">
+        <img *ngIf="!photo.externalUrl" class="img-contain" [src]="photo.originalUri" 
+            [srcset]="photo.largeUri + ' 3x, ' + photo.mediumUri + ' 2x, ' + photo.thumbnailUri + ' 1x'"
+            (error)="onImgError($event, photo)" [alt]="'Uploaded photo of ' + photo.type" />
+        <ng-container *ngIf="photo.externalUrl">
+            <a href="" (click)="showPhotoModal()" >
+                <img [src]="photo.externalUrl"  class="img-contain" [alt]="'Uploaded photo of ' + photo.type" />
+            </a>
+            <span *ngIf="photo.urlBroken">The URL is not accessible. Please try another URL or upload an image.</span>
+        </ng-container>
+        <div *ngIf="isEditing" class="col">
+            <button type="button" class="btn btn-sm btn-secondary" style="margin-top:.25rem;" (click)="removePhotoAsync(photo.photoId)">Remove</button>
+        </div>
+    </div>
+</div>

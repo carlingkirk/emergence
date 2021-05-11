@@ -17,17 +17,19 @@ namespace Emergence.Service
         private readonly string _connectionString;
         private readonly IExifService _exifService;
         private readonly ILogger<BlobService> _logger;
+        private readonly string _blobContainer;
 
         public BlobService(IConfiguration configuration, IExifService exifService, ILogger<BlobService> logger)
         {
             _connectionString = configuration["AzureStorageConnectionString"];
             _exifService = exifService;
             _logger = logger;
+            _blobContainer = configuration["App:BlobContainer"];
         }
 
         public async Task<IBlobResult> UploadPhotoAsync(IFormFile photo, string userId, string blobPath)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var typeContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
             await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
 
             HttpStatusCode status;
@@ -50,7 +52,7 @@ namespace Emergence.Service
 
         public async Task<bool> RemovePhotoAsync(string blobPath)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var typeContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
             var blobs = typeContainerClient.GetBlobsAsync(prefix: blobPath);
             await foreach (var blob in blobs)
             {
@@ -65,7 +67,7 @@ namespace Emergence.Service
 
         public async Task<bool> UploadPhotoStreamAsync(MemoryStream stream, string blobPath)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var typeContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
             await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
 
             HttpStatusCode status;
@@ -86,7 +88,7 @@ namespace Emergence.Service
 
         public async Task<IBlobResult> SetBlobPropertiesAsync(Stream stream, string blobPath, string userId, string contentType)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var typeContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
             await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
 
             var photoClient = typeContainerClient.GetBlobClient(blobPath);
@@ -97,7 +99,7 @@ namespace Emergence.Service
 
         public async Task<IBlobResult> SetBlobPropertiesAsync(IBlobResult blobProperties, string blobPath, string userId)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var typeContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
             await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
 
             var client = typeContainerClient.GetBlobClient(blobPath);
@@ -107,7 +109,7 @@ namespace Emergence.Service
 
         public async Task<IBlobResult> GetBlobPropertiesAsync(string blobPath)
         {
-            var typeContainerClient = new BlobContainerClient(_connectionString, "photos");
+            var typeContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
             await typeContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
 
             var client = typeContainerClient.GetBlobClient(blobPath);

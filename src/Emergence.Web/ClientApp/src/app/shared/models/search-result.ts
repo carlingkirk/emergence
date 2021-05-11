@@ -1,6 +1,6 @@
 import { Filter, FilterResponse } from "./filters";
 
-export interface SearchResult {
+export class SearchResult {
     filters: Filter[];
     count: number;
     results: [];

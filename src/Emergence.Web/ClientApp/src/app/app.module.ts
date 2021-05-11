@@ -29,6 +29,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OriginService } from './service/origin-service';
 import { LifeformService } from './service/lifeform-service';
 import { StorageService } from './service/storage-service';
+import { UploadPhotosComponent } from './shared/components/upload-photos/upload-photos.component';
+import { ViewPhotosComponent } from './shared/components/view-photos/view-photos.component';
+import { PhotoService } from './service/photo-service';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,9 @@ import { StorageService } from './service/storage-service';
     SpecimenViewerComponent,
     SearchFiltersComponent,
     ContentCardComponent,
-    SpecimenEditComponent
+    SpecimenEditComponent,
+    UploadPhotosComponent,
+    ViewPhotosComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -73,6 +78,7 @@ import { StorageService } from './service/storage-service';
     { provide: SpecimenService, useClass: SpecimenService },
     { provide: LifeformService, useClass: LifeformService },
     { provide: OriginService, useClass: OriginService },
+    { provide: PhotoService, useClass: PhotoService },
     { provide: StorageService, useClass: StorageService }
   ],
   bootstrap: [AppComponent]

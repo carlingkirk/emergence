@@ -1,11 +1,11 @@
-export interface Filter {
+export class Filter {
     name: string;
     value: any;
     filterType: number;
     inputType: number;
 }
 
-export interface FilterResponse {
+export class FilterResponse {
     stageFilter: SelectFilter;
     zoneFilter: SelectRangeFilter;
 }
