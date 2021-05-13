@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { LifeformService } from 'src/app/service/lifeform-service';
 import { OriginService } from 'src/app/service/origin-service';
 import { SpecimenService } from 'src/app/service/specimen-service';
+import { onImgError } from 'src/app/shared/common';
 import { InventoryItemStatus, ItemType, SpecimenStage, Visibility } from 'src/app/shared/models/enums';
 import { Inventory } from 'src/app/shared/models/inventory';
 import { InventoryItem } from 'src/app/shared/models/inventory-item';
@@ -42,12 +43,14 @@ export class SpecimenEditComponent implements OnInit {
   public specimenStageEnum = SpecimenStage;
   public statusEnum = InventoryItemStatus;
   public visibilityEnum = Visibility;
+  public errorMessage: string;
 
   constructor(
     private authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
     private readonly lifeformService: LifeformService,
     private readonly originService: OriginService,
+    private router: Router,
     private route: ActivatedRoute
     ) { }
 
@@ -89,11 +92,12 @@ export class SpecimenEditComponent implements OnInit {
       this.specimen.inventoryItem.inventory = new Inventory();
       this.specimen.inventoryItem.inventory.createdBy = this.user.userId;
       this.specimen.inventoryItem.inventory.dateCreated = new Date();
-      this.specimen.inventoryItem.status = InventoryItemStatus["In Use"];
+      this.specimen.photos = [];
+      this.specimen.inventoryItem.status = this.inventoryItemStatuses[InventoryItemStatus["In Use"]];
       this.specimen.inventoryItem.createdBy = this.user.userId;
       this.specimen.inventoryItem.dateCreated = new Date();
-      this.specimen.inventoryItem.itemType = ItemType.Specimen;
-      this.specimen.inventoryItem.visibility = Visibility["Inherit from profile"];
+      this.specimen.inventoryItem.itemType = this.itemTypes[ItemType.Specimen];
+      this.specimen.inventoryItem.visibility = this.visibilities[Visibility["Inherit from profile"]];
     }
   }
 
@@ -144,14 +148,22 @@ export class SpecimenEditComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
-        : this.searchLifeforms(term).pipe((lifeform) => lifeform ))
+        : this.searchOrigins(term).pipe((origin) => origin ))
     );
 
   public saveSpecimen(): void {
     this.specimen.lifeform = this.selectedLifeform;
+    this.specimen.inventoryItem.origin = this.selectedOrigin;
+    this.specimen.inventoryItem.quantity = this.specimen.quantity;
+    this.specimen.inventoryItem.name = this.specimen.name;
     this.specimen.photos = this.uploadedPhotos;
 
-    this.specimenService.saveSpecimen(this.specimen).subscribe((specimen) => this.specimen = specimen);
+    this.specimenService.saveSpecimen(this.specimen).subscribe(
+      (specimen) => this.router.navigate(['/specimen/view', specimen.specimenId]),
+      (error) => {
+        console.log(error);
+        this.errorMessage = "There was an error saving the specimen";
+      });
   }
 
   public populateInventoryItemName(): void {
@@ -161,7 +173,11 @@ export class SpecimenEditComponent implements OnInit {
   }
 
   public cancel(): void {
-
+    if (this.specimen.specimenId) {
+      this.router.navigate(['/specimen/:id', this.specimen.specimenId]);
+    } else {
+      this.router.navigate([".."]);
+    }
   }
 
   public closeModal(): void {
@@ -169,9 +185,10 @@ export class SpecimenEditComponent implements OnInit {
   }
 
   onImgError(event, photo: Photo) {
-    event.onerror = null;
-    event.srcset = '';
-    event.src = photo.originalUri;
-    event.target.src = photo.originalUri;
-   }
+    onImgError(event, photo);
+  }
+
+   photosChanged(photos: Photo[]) {
+    this.uploadedPhotos = photos;
+  }
 }

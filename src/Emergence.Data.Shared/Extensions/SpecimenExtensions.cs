@@ -32,6 +32,7 @@ namespace Emergence.Data.Shared.Extensions
             LifeformId = source.Lifeform?.LifeformId,
             PlantInfoId = source.PlantInfo?.PlantInfoId,
             ParentSpecimenId = source.ParentSpecimen?.SpecimenId,
+            Notes = source.Notes,
             CreatedBy = source.CreatedBy,
             ModifiedBy = source.ModifiedBy,
             DateCreated = source.DateCreated ?? DateTime.UtcNow,

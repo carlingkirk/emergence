@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PhotoService } from 'src/app/service/photo-service';
+import { onImgError } from '../../common';
 import { Photo } from '../../models/photo';
 
 @Component({
@@ -14,7 +15,7 @@ export class ViewPhotosComponent implements OnInit {
   @Input()
   public isEditing: boolean;
   @Output()
-  public outPhotos = new EventEmitter<Photo[]>();
+  public photosChange = new EventEmitter<Photo[]>();
   constructor(private readonly photoService: PhotoService) { }
 
   ngOnInit(): void {
@@ -27,15 +28,11 @@ export class ViewPhotosComponent implements OnInit {
   public removePhotoAsync(id: number) {
     this.photoService.removePhoto(id).subscribe(() => {
       this.photos = this.photos.filter((photo) => photo.photoId !== id);
-      this.outPhotos.emit(this.photos);
+      this.photosChange.emit(this.photos);
     });
   }
 
   onImgError(event, photo: Photo) {
-    event.onerror = null;
-    event.srcset = '';
-    event.src = photo.originalUri;
-    event.target.src = photo.originalUri;
-    event.target.srcset = '';
-   }
+    onImgError(event, photo);
+  }
 }

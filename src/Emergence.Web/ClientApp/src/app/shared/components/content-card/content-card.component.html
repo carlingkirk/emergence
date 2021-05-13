@@ -5,14 +5,13 @@
                 <div *ngIf="mainPhoto">
                     <ng-container *ngIf="!mainPhoto.externalUrl">
                         <a href="" (click)="showPhotoModal()">
-                            <img [srcset]="mainPhoto.thumbnailUri + ' 1x'" src="mainPhoto.originalUri"
-                                    (error)="onImgError($event)" [alt]="'Uploaded photo of ' + mainPhoto.type"
-                                    class="card-img contain" />
+                            <img [srcset]="mainPhoto.thumbnailUri + ' 1x'" [src]="mainPhoto.originalUri" class="card-img contain"
+                                (error)="onImgError($event)" [alt]="'Uploaded photo of ' + mainPhoto.type" />
                         </a>
                     </ng-container>
                     <ng-container *ngIf="mainPhoto.externalUrl">
                         <a href="" (click)="showPhotoModal()" >
-                            <img src="mainPhoto.externalUrl" [alt]="'Uploaded photo of ' + mainPhoto.type" class="card-img contain" />
+                            <img [src]="mainPhoto.externalUrl" [alt]="'Uploaded photo of ' + mainPhoto.type" class="card-img contain" />
                         </a>
                     </ng-container>
                 </div>

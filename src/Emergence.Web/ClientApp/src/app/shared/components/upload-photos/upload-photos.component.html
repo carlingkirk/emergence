@@ -15,4 +15,4 @@
         <button type="button" class="btn btn-sm btn-secondary" (click)="addExternalPhoto()">Add</button>
     </div>
 </div>
-<app-view-photos [photos]="photos" [isEditing]="true" ></app-view-photos>
+<app-view-photos [photos]="photos" [isEditing]="true" (photosChange)="photosChanged($event)"></app-view-photos>

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Photo } from '../../models/photo';
 import * as seedrandom from 'seedrandom';
 import { Specimen } from '../../models/specimen';
+import { onImgError } from '../../common';
 
 @Component({
   selector: 'content-card',
@@ -70,13 +71,10 @@ export class ContentCardComponent implements OnInit {
   }
 
   onImgError(event) {
-    event.onerror = null;
-    event.srcset = '';
-    event.src = this.mainPhoto.originalUri;
-    event.target.src = this.mainPhoto.originalUri;
-   }
+    onImgError(event, this.mainPhoto);
+  }
 
-   showPhotoModal() {
+  showPhotoModal() {
 
-   }
+  }
 }

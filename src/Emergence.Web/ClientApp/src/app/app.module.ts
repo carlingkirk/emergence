@@ -64,9 +64,13 @@ import { PhotoService } from './service/photo-service';
     { path: 'terms', component: TermsComponent },
     { path: 'privacy', component: PrivacyComponent },
     { path: 'about', component: AboutComponent },
-    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard] },
+    { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard],
+      children: [
+        { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
+        { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] }
+      ]},
     { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
-    { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] }, 
+    { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] },
     { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard] }], 
     { relativeLinkResolution: 'legacy' 
     }),
