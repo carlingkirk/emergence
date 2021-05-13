@@ -69,7 +69,5 @@
             <p>{{specimen.notes}}</p>
         </div>
     </div>
-</div>
-<div *ngIf="uploadedPhotos" class="form-group">
-    <!-- <ViewPhotos UploadedPhotos="uploadedPhotos" Name="@(Specimen.Name)" /> -->
+    <app-view-photos *ngIf="specimen.photos" [photos]="specimen.photos"></app-view-photos>
 </div>

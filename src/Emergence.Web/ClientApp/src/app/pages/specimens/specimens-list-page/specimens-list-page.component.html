@@ -5,12 +5,15 @@
             <button class="btn btn-primary" type="submit">Search</button>
             <ng-container *ngIf="!forUserId">
                 <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
-                <label for="show-public">Show Public</label>
+                <label for="show-public"> Show Public</label>
             </ng-container>
             <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
-            <label for="list-view">List View</label>
+            <label for="list-view"> List View</label>
             <button type="button" class="btn btn-primary" (click)="toggleFilters()">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
             <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
+            <a [routerLink]='["/specimens/edit/0"]'>
+                <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Specimen</button>
+            </a>
         </ng-container>
         <app-search-filters *ngIf="showFilters && searchResult" (filters)="searchRequest.filters" [filterResponse]="searchResult.filters"></app-search-filters>
         <ng-container *ngIf="listView">

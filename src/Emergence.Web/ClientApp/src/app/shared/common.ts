@@ -1,7 +1,7 @@
 import { Photo } from "./models/photo";
 
 export function onImgError(event, photo: Photo) {
-    if (photo.originalUri !== event.target.src) {
+    if (event.target.srcset) {
         event.src = photo.originalUri;
         event.target.src = photo.originalUri;
         event.target.srcset = '';

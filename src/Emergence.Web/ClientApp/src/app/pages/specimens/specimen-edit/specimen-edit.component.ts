@@ -159,7 +159,7 @@ export class SpecimenEditComponent implements OnInit {
     this.specimen.photos = this.uploadedPhotos;
 
     this.specimenService.saveSpecimen(this.specimen).subscribe(
-      (specimen) => this.router.navigate(['/specimen/view', specimen.specimenId]),
+      (specimen) => this.router.navigate(['/specimens/', specimen.specimenId]),
       (error) => {
         console.log(error);
         this.errorMessage = "There was an error saving the specimen";
@@ -174,7 +174,7 @@ export class SpecimenEditComponent implements OnInit {
 
   public cancel(): void {
     if (this.specimen.specimenId) {
-      this.router.navigate(['/specimen/:id', this.specimen.specimenId]);
+      this.router.navigate(['/specimens/', this.specimen.specimenId]);
     } else {
       this.router.navigate([".."]);
     }
