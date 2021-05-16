@@ -103,6 +103,16 @@ a, .btn-link {
             color: #EDE3CE;
           }
 
+.store-link {
+  color: #EDE3CE;
+  text-decoration:none;
+}
+
+.store-link:hover {
+  color: #EDE3CE !important;
+  text-decoration: none !important;
+}
+
 .content {
     padding-top: 1.1rem;
 }
