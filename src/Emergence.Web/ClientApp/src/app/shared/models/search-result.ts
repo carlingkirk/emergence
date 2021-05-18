@@ -1,7 +1,7 @@
-import { Filter, FilterResponse } from "./filters";
+import { FilterBody } from "./filters";
 
 export class SearchResult {
-    filters: Filter[];
+    filters: FilterBody;
     count: number;
     results: [];
 }

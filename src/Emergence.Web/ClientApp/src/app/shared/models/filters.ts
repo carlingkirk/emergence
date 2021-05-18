@@ -5,7 +5,7 @@ export class Filter {
     inputType: number;
 }
 
-export class FilterResponse {
+export class FilterBody {
     stageFilter: SelectFilter;
     zoneFilter: SelectRangeFilter;
 }

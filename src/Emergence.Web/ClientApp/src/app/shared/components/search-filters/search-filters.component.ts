@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SpecimenStage } from '../../models/enums';
-import { FilterResponse, Filter } from '../../models/filters';
+import { FilterBody, Filter } from '../../models/filters';
 
 @Component({
   selector: 'app-search-filters',
@@ -9,25 +9,31 @@ import { FilterResponse, Filter } from '../../models/filters';
 })
 export class SearchFiltersComponent implements OnInit {
   @Input()
-  public filterResponse: FilterResponse;
+  public filterBody: FilterBody;
   @Output()
-  public outFilters = new EventEmitter<Filter[]>();
+  public filtersChanged = new EventEmitter<FilterBody>();
   public filters: Filter[] = [];
   constructor() { }
 
   ngOnInit(): void {
-    if (this.filterResponse.stageFilter) {
-      this.filterResponse.stageFilter.displayValues = [];
-      for(let key in this.filterResponse.stageFilter.facetValues) {
-        let value = this.filterResponse.stageFilter.facetValues[key];
+    if (this.filterBody.stageFilter) {
+      this.filterBody.stageFilter.displayValues = [];
+      for(let key in this.filterBody.stageFilter.facetValues) {
+        let value = this.filterBody.stageFilter.facetValues[key];
         let name = +key as SpecimenStage;
-        this.filterResponse.stageFilter.displayValues.push({ name: name[key], value: value })
+        this.filterBody.stageFilter.displayValues.push({ name: name[key], value: value })
       }
-      this.filters.push(this.filterResponse.stageFilter);
+      this.filters.push(this.filterBody.stageFilter);
     }
   }
 
   valueChanged(): void {
-    this.outFilters.emit(this.filters);
+    this.filters.forEach((filter) => {
+      if (filter.name === "Stage") {
+        this.filterBody.stageFilter.displayValues = null;
+        this.filterBody.stageFilter.value = filter.value;
+      }
+    });
+    this.filtersChanged.emit(this.filterBody);
   }
 }

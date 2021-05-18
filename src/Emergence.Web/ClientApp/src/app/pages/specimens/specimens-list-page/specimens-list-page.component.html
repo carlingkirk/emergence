@@ -15,7 +15,7 @@
                 <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Specimen</button>
             </a>
         </ng-container>
-        <app-search-filters *ngIf="showFilters && searchResult" (filters)="searchRequest.filters" [filterResponse]="searchResult.filters"></app-search-filters>
+        <app-search-filters *ngIf="showFilters && searchResult" (filtersChanged)="filtersChange($event)" [filterBody]="searchResult.filters"></app-search-filters>
         <ng-container *ngIf="listView">
             <table>
                 <thead app-sortable-headers [columns]="columns">

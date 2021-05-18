@@ -1,7 +1,7 @@
-import { Filter, FilterResponse } from "./filters";
+import { FilterBody } from "./filters";
 
 export class SearchRequest {
-    filters?: Filter[];
+    filters?: FilterBody;
     shape?: any;
     useNGrams: boolean;
     searchText?: string;
