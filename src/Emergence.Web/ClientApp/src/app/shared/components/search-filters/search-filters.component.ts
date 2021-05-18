@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs';
 import { SpecimenStage } from '../../models/enums';
 import { FilterBody, Filter } from '../../models/filters';
 
@@ -33,7 +32,7 @@ export class SearchFiltersComponent implements OnInit {
         let name = +key as SpecimenStage;
         this.filterBody.stageFilter.displayValues.push({ name: name[key], value: value })
       }
-      this.filters =[ this.filterBody.stageFilter ];
+      this.filters = [ this.filterBody.stageFilter ];
     }
   }
 
