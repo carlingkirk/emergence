@@ -32,6 +32,7 @@ import { StorageService } from './service/storage-service';
 import { UploadPhotosComponent } from './shared/components/upload-photos/upload-photos.component';
 import { ViewPhotosComponent } from './shared/components/view-photos/view-photos.component';
 import { PhotoService } from './service/photo-service';
+import { PagerComponent } from './shared/components/pager/pager.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { PhotoService } from './service/photo-service';
     ContentCardComponent,
     SpecimenEditComponent,
     UploadPhotosComponent,
-    ViewPhotosComponent
+    ViewPhotosComponent,
+    PagerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

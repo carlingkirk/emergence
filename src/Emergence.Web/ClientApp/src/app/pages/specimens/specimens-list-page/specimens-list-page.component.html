@@ -84,4 +84,10 @@
             </div>
         </ng-container>
     </div>
+    <div>
+        <app-pager *ngIf="searchResult" [count]="totalCount" [take]="searchRequest.take" (pageChange)="pageChanged($event)"></app-pager>
+        <a [routerLink]='["/specimens/edit/0"]'>
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Specimen</button>
+        </a>
+    </div>
 </form>

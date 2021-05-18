@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { SpecimenStage } from '../../models/enums';
 import { FilterBody, Filter } from '../../models/filters';
 
@@ -8,14 +9,23 @@ import { FilterBody, Filter } from '../../models/filters';
   styleUrls: ['./search-filters.component.css']
 })
 export class SearchFiltersComponent implements OnInit {
-  @Input()
-  public filterBody: FilterBody;
+  private _filterBody: FilterBody;
+  @Input() set filterBody(value: FilterBody) {
+    this._filterBody = value;
+    this.filter();
+  }
+  get filterBody(): FilterBody {
+      return this._filterBody;
+  }
   @Output()
   public filtersChanged = new EventEmitter<FilterBody>();
   public filters: Filter[] = [];
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  filter() {
     if (this.filterBody.stageFilter) {
       this.filterBody.stageFilter.displayValues = [];
       for(let key in this.filterBody.stageFilter.facetValues) {
@@ -23,7 +33,7 @@ export class SearchFiltersComponent implements OnInit {
         let name = +key as SpecimenStage;
         this.filterBody.stageFilter.displayValues.push({ name: name[key], value: value })
       }
-      this.filters.push(this.filterBody.stageFilter);
+      this.filters =[ this.filterBody.stageFilter ];
     }
   }
 

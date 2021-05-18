@@ -11,3 +11,13 @@ export class SearchRequest {
     sortDirection?: string;
     createdBy?: string;
 }
+
+export class SortRequest {
+    sortBy?: string;
+    sortDirection?: string;
+}
+
+export class PageRequest {
+    skip: number;
+    take: number;
+}
