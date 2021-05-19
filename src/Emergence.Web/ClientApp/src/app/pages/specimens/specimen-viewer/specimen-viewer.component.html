@@ -4,9 +4,9 @@
     </a>
     <span class="title">Specimen: </span>
     <ng-container *ngIf="specimen && specimen.specimenId > 0">
-        <span *ngIf="specimen.lifeform?.commonName">{{specimen.lifeform?.commonName}}</span>
-        <span *ngIf="!specimen.lifeform?.commonName && selectedLifeform?.commonName">{{selectedLifeform?.commonName}}</span>
-        <span *ngIf="!specimen.lifeform?.commonName && !selectedLifeform?.commonName && specimen.name">{{specimen.name}}</span>
+        <span *ngIf="specimen.lifeform?.commonName">{{specimen.lifeform?.commonName}} </span>
+        <span *ngIf="!specimen.lifeform?.commonName && selectedLifeform?.commonName">{{selectedLifeform?.commonName}} </span>
+        <span *ngIf="!specimen.lifeform?.commonName && !selectedLifeform?.commonName && specimen.name">{{specimen.name}} </span>
 
         <span *ngIf="specimen.lifeform?.scientificName" class="font-italic">{{specimen.lifeform?.scientificName}}</span>
         <span *ngIf="!specimen.lifeform?.scientificName && selectedLifeform?.scientificName">{{selectedLifeform?.scientificName}}</span>

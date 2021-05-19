@@ -69,5 +69,5 @@
             <p>{{specimen.notes}}</p>
         </div>
     </div>
-    <app-view-photos *ngIf="specimen.photos" [photos]="specimen.photos"></app-view-photos>
+    <app-view-photos *ngIf="specimen.photos" [photos]="specimen.photos" [name]="specimen.inventoryItem.name"></app-view-photos>
 </div>

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Photo } from '../../models/photo';
 import * as seedrandom from 'seedrandom';
-import { Specimen } from '../../models/specimen';
 import { onImgError } from '../../common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'content-card',
@@ -21,7 +21,7 @@ export class ContentCardComponent implements OnInit {
   public color: string;
   public mainPhoto: Photo;
   
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   private colors = [
     { name: "black", color: "#333333" },
@@ -74,7 +74,7 @@ export class ContentCardComponent implements OnInit {
     onImgError(event, this.mainPhoto);
   }
 
-  showPhotoModal() {
-
+  public showPhotoModal(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
   }
 }

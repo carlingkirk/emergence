@@ -1,0 +1,18 @@
+  <div class="modal-header card-header h3">
+    <span class="title">{{type}} </span>&nbsp;
+    <span class="font-italic">{{name}}</span>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <img *ngIf="!photo.externalUrl" style="max-width:100%" [alt]="'Uploaded photo of ' + type"
+        [src]="photo.originalUri" 
+        [srcset]="photo.largeUri + ' 1x'" 
+        (error)="onImgError($event, photo)" />
+    <ng-container *ngIf="photo.externalUrl">
+        <img style="max-width:100%" [alt]="'Uploaded photo of ' + type"
+            [src]="photo.externalUrl" 
+            onerror="this.onerror=null;this.srcset='';this.src='/broken.png'" />
+    </ng-container>
+  </div>

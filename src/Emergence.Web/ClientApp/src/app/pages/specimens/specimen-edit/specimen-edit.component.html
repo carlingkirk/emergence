@@ -77,9 +77,7 @@
                     </ng-template>
                 </div>
             </div>
-            <!-- TODO: upload photo component -->
-            <!-- <UploadPhoto [(ngModel)]="uploadedPhotos" PhotoType="PhotoType.Specimen" Name="@(Specimen.Name)" /> -->
-            <app-upload-photos [(photos)]="uploadedPhotos" [type]="1" (photosChange)="photosChanged($event)"></app-upload-photos>
+            <app-upload-photos [(photos)]="uploadedPhotos" [type]="1" (photosChange)="photosChanged($event)" [name]="specimen.name" type="Specimen"></app-upload-photos>
             <div class="row">
                 <div class="col">
                     <label for="notes">Notes</label>

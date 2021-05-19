@@ -18,4 +18,5 @@ export class Photo {
   largeUri: string;
   mediumUri: string;
   thumbnailUri: string;
+  externalUrl: string;
 }

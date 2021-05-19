@@ -33,6 +33,7 @@ import { UploadPhotosComponent } from './shared/components/upload-photos/upload-
 import { ViewPhotosComponent } from './shared/components/view-photos/view-photos.component';
 import { PhotoService } from './service/photo-service';
 import { PagerComponent } from './shared/components/pager/pager.component';
+import { PhotoModalComponent } from './shared/components/photo-modal/photo-modal.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { PagerComponent } from './shared/components/pager/pager.component';
     SpecimenEditComponent,
     UploadPhotosComponent,
     ViewPhotosComponent,
-    PagerComponent
+    PagerComponent,
+    PhotoModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

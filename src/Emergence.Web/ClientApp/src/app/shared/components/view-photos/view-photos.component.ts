@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PhotoService } from 'src/app/service/photo-service';
 import { onImgError } from '../../common';
 import { Photo } from '../../models/photo';
@@ -14,15 +15,17 @@ export class ViewPhotosComponent implements OnInit {
   public photos: Photo[];
   @Input()
   public isEditing: boolean;
+  @Input()
+  public name: string;
   @Output()
   public photosChange = new EventEmitter<Photo[]>();
-  constructor(private readonly photoService: PhotoService) { }
+  constructor(private readonly photoService: PhotoService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
   }
 
-  public showPhotoModal() {
-
+  public showPhotoModal(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   public removePhotoAsync(id: number) {

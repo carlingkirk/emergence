@@ -46,5 +46,6 @@ export class UploadPhotosComponent implements OnInit {
 
   photosChanged(photos: Photo[]) {
     this.photos = photos;
+    this.photosChange.emit(this.photos);
   }
 }

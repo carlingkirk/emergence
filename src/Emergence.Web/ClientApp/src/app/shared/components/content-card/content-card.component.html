@@ -4,15 +4,13 @@
             <div class="col-4 card-container">
                 <div *ngIf="mainPhoto">
                     <ng-container *ngIf="!mainPhoto.externalUrl">
-                        <a href="" (click)="showPhotoModal()">
-                            <img [srcset]="mainPhoto.thumbnailUri + ' 1x'" [src]="mainPhoto.originalUri" class="card-img contain"
-                                (error)="onImgError($event)" [alt]="'Uploaded photo of ' + mainPhoto.type" />
-                        </a>
+                        <img [srcset]="mainPhoto.thumbnailUri + ' 1x'" class="card-img contain link"
+                             [src]="mainPhoto.originalUri" (click)="showPhotoModal(modalData)"
+                             (error)="onImgError($event)" [alt]="'Uploaded photo of ' + mainPhoto.type" />
                     </ng-container>
                     <ng-container *ngIf="mainPhoto.externalUrl">
-                        <a href="" (click)="showPhotoModal()" >
-                            <img [src]="mainPhoto.externalUrl" [alt]="'Uploaded photo of ' + mainPhoto.type" class="card-img contain" />
-                        </a>
+                        <img [src]="mainPhoto.externalUrl" class="card-img contain link"
+                        (click)="showPhotoModal(modalData)" [alt]="'Uploaded photo of ' + mainPhoto.type" />
                     </ng-container>
                 </div>
                 <div *ngIf="!mainPhoto">
@@ -30,3 +28,6 @@
         </div>
     </div>
 </div> 
+<ng-template #modalData let-modal>
+    <app-photo-modal [photo]="mainPhoto" [name]="name" [modal]="modal"></app-photo-modal>
+</ng-template>
