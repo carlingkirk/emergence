@@ -8,13 +8,13 @@ export class SearchRequest {
     skip: number;
     take: number;
     sortBy?: string;
-    sortDirection?: string;
+    sortDirection?: number;
     createdBy?: string;
 }
 
 export class SortRequest {
     sortBy?: string;
-    sortDirection?: string;
+    sortDirection?: number;
 }
 
 export class PageRequest {

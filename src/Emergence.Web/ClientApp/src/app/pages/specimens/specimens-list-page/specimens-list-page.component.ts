@@ -4,7 +4,7 @@ import { StorageService } from 'src/app/service/storage-service';
 import { Column } from 'src/app/shared/components/sortable-headers/sortable-headers.component';
 import { Sortable } from 'src/app/shared/interface/sortable';
 import { Filter, FilterBody } from 'src/app/shared/models/filters';
-import { PageRequest, SearchRequest } from 'src/app/shared/models/search-request';
+import { PageRequest, SearchRequest, SortRequest } from 'src/app/shared/models/search-request';
 import { SearchResult } from 'src/app/shared/models/search-result';
 import { Specimen } from '../../../shared/models/specimen';
 
@@ -31,13 +31,13 @@ export class SpecimensListPageComponent implements OnInit, Sortable {
     private readonly storageService: StorageService
   ) { }
   public columns: Column[] = [
-    { name: 'Scientific Name', value: 'scientificName'},
-    { name: 'Common Name', value: 'name'},
-    { name: 'Quantity', value: 'quantity'},
-    { name: 'Stage', value: 'specimenStage'},
-    { name: 'Status', value: 'status'},
-    { name: 'Acquired', value: 'dateAcquired'},
-    { name: 'Origin', value: 'origin'}
+    { name: 'Scientific Name', value: 'ScientificName'},
+    { name: 'Common Name', value: 'CommonName'},
+    { name: 'Quantity', value: 'Quantity'},
+    { name: 'Stage', value: 'Stage'},
+    { name: 'Status', value: 'Status'},
+    { name: 'Acquired', value: 'DateAcquired'},
+    { name: 'Origin', value: 'Origin'}
   ];
 
   ngOnInit(): void {
@@ -56,7 +56,9 @@ export class SpecimensListPageComponent implements OnInit, Sortable {
       filters: null,
       take: 12,
       skip: 0,
-      useNGrams: false
+      useNGrams: false,
+      sortDirection: 0,
+      sortBy: null
     };
     this.loadSpecimens();
   }
@@ -94,6 +96,13 @@ export class SpecimensListPageComponent implements OnInit, Sortable {
   public pageChanged(page: PageRequest) {
     this.searchRequest.take = page.take;
     this.searchRequest.skip = page.skip;
+
+    this.search();
+  }
+
+  public sortChange(sort: SortRequest) {
+    this.searchRequest.sortBy = sort.sortBy;
+    this.searchRequest.sortDirection = sort.sortDirection;
 
     this.search();
   }
