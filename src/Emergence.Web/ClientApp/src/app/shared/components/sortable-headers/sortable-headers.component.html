@@ -1,6 +1,6 @@
 <tr>
     <ng-container *ngFor='let column of columns'>
-        <th (click)="sort(column.value)">
+        <th (click)="sort(column.value)" class="sortable">
             <span *ngIf="sortBy === column.value && sortDirection === 1" class="oi oi-caret-bottom"></span>
             <span *ngIf="sortBy === column.value && sortDirection === 2" class="oi oi-caret-top"></span>
             <span>{{column.name}}</span>

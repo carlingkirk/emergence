@@ -17,7 +17,7 @@
         </ng-container>
         <app-search-filters *ngIf="showFilters && searchResult" (filtersChanged)="filtersChange($event)" [filterBody]="searchResult.filters"></app-search-filters>
         <ng-container *ngIf="listView">
-            <table>
+            <table class="list">
                 <thead app-sortable-headers [columns]="columns" [sortBy]="searchRequest.sortBy" [sortDirection]="searchRequest.sortDirection" (sortChanged)="sortChange($event)">
                 <tbody>
                     <tr *ngIf="totalCount == 0">
@@ -43,7 +43,7 @@
                         </td>
                         <td>
                             <span>
-                                {{ specimen.inventoryItem?.dateAcquired }}
+                                {{ specimen.inventoryItem?.dateAcquired | date }}
                             </span>
                         </td>
                         <td>
