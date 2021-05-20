@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Extensions;
 using Emergence.Data.Shared.Interfaces;
 
@@ -20,6 +22,7 @@ namespace Emergence.Data.Shared.Models
         public IEnumerable<WildlifeEffect> WildlifeEffects { get; set; }
         public IEnumerable<SoilType> SoilTypes { get; set; }
         public string Notes { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<Visibility>))]
         public Visibility Visibility { get; set; }
         public int? UserId { get; set; }
         public string CreatedBy { get; set; }
@@ -40,7 +43,9 @@ namespace Emergence.Data.Shared.Models
 
     public class BloomTime
     {
+        [JsonConverter(typeof(EnumDisplayConverter<Month>))]
         public Month MinimumBloomTime { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<Month>))]
         public Month MaximumBloomTime { get; set; }
 
         public string ToFriendlyString()
@@ -65,6 +70,7 @@ namespace Emergence.Data.Shared.Models
     {
         public double? MinimumHeight { get; set; }
         public double? MaximumHeight { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<DistanceUnit>))]
         public DistanceUnit Unit { get; set; }
 
         public string ToFriendlyString()
@@ -96,6 +102,7 @@ namespace Emergence.Data.Shared.Models
     {
         public double? MinimumSpread { get; set; }
         public double? MaximumSpread { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<DistanceUnit>))]
         public DistanceUnit Unit { get; set; }
 
         public string ToFriendlyString()

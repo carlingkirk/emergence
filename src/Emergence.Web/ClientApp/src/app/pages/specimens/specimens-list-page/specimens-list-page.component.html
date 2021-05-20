@@ -70,6 +70,10 @@
                                 <div class="col-12">
                                     <span class="link">{{ specimen.lifeform?.scientificName }}</span>
                                 </div>
+                                <div *ngIf="!specimen.lifeform?.scientificName && !specimen.lifeform?.commonName" class="col-12">
+                                    <span *ngIf="specimen.inventoryItem.name" class="link">{{ specimen.inventoryItem.name }}</span>
+                                    <span *ngIf="!specimen.inventoryItem.name" class="link">{{ specimen.name }}</span>
+                                </div>
                             </a>
                             <div class="col-12">
                                 <span>{{ specimen.inventoryItem.quantity }} </span>

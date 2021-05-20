@@ -26,7 +26,7 @@ export interface IListable {
 export class Listable implements IListable {
     public searchRequest: SearchRequest;
     public searchResult: SearchResult;
-    public totalCount: number;
+    public totalCount: number = 0;
     public forUserId?: string;
     public showSearch: boolean;
     public searchText: string;

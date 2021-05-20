@@ -1,1 +1,144 @@
-<p>plant-infos-list-page works!</p>
+<form (ngSubmit)="search()">
+    <div *ngIf="searchRequest">
+        <ng-container *ngIf="showSearch">
+            <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
+            <button class="btn btn-primary" type="submit">Search</button>
+            <ng-container *ngIf="!forUserId">
+                <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
+                <label for="show-public"> Show Public</label>
+            </ng-container>
+            <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
+            <label for="list-view"> List View</label>
+            <button type="button" class="btn btn-primary" (click)="toggleFilters()">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
+            <a [routerLink]='["/plantinfos/edit/0"]'>
+                <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Plant Profile</button>
+            </a>
+        </ng-container>
+        <app-search-filters *ngIf="showFilters && searchResult" (filtersChanged)="filtersChange($event)" [filterBody]="searchResult.filters"></app-search-filters>
+        <ng-container *ngIf="listView">
+            <table class="list">
+                <thead app-sortable-headers [columns]="columns" [sortBy]="searchRequest.sortBy" [sortDirection]="searchRequest.sortDirection" (sortChanged)="sortChange($event)">
+                <tbody>
+                    <tr *ngIf="totalCount == 0">
+                        <td><span>No plant profiles found</span></td>
+                    </tr>
+                    <tr *ngFor="let plantInfo of plantInfos">
+                        <td>
+                            <a [routerLink]='["/plantinfos", plantInfo.plantInfoId]'>
+                                <span class="link">{{ plantInfo.lifeform.scientificName }}</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span *ngIf="plantInfo.lifeform.commonName">{{ plantInfo.lifeform.commonName }}</span>
+                            <span *ngIf="!plantInfo.lifeform.commonName">{{ plantInfo.commonName }}</span>
+                        </td>
+                        <td>
+                            <span *ngIf="plantInfo.origin">{{ plantInfo.origin.name }}</span>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="plantInfo.requirements.zoneRequirements">
+                                <span *ngIf="plantInfo.requirements.zoneRequirements.minimumZone">{{ plantInfo.requirements.zoneRequirements.minimumZone.name }}</span>
+                                <span *ngIf="plantInfo.requirements.zoneRequirements.minimumZone && plantInfo.requirements.zoneRequirements.maximumZone"> - </span>
+                                <span *ngIf="plantInfo.requirements.zoneRequirements.maximumZone">{{ plantInfo.requirements.zoneRequirements.maximumZone.name }}</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="plantInfo.requirements.lightRequirements" >
+                                <span *ngIf="plantInfo.requirements.lightRequirements.minimumLight">{{ plantInfo.requirements.lightRequirements.minimumLight }}</span>
+                                <span *ngIf="plantInfo.requirements.lightRequirements.minimumLight && plantInfo.requirements.lightRequirements.maximumLight"> - </span>
+                                <span *ngIf="plantInfo.requirements.lightRequirements.maximumLight">{{ plantInfo.requirements.lightRequirements.maximumLight }}</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="plantInfo.requirements.waterRequirements" >
+                                <span *ngIf="plantInfo.requirements.waterRequirements.minimumWater">{{ plantInfo.requirements.waterRequirements.minimumWater }}</span>
+                                <span *ngIf="plantInfo.requirements.waterRequirements.minimumWater && plantInfo.requirements.waterRequirements.maximumWater"> - </span>
+                                <span *ngIf="plantInfo.requirements.waterRequirements.maximumWater">{{ plantInfo.requirements.waterRequirements.maximumWater }}</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="plantInfo.bloomTime">
+                                <span *ngIf="plantInfo.bloomTime.minimumBloomTime">{{ plantInfo.bloomTime.minimumBloomTime }}</span>
+                                <span *ngIf="plantInfo.bloomTime.minimumBloomTime && plantInfo.bloomTime.maximumBloomTime"> - </span>
+                                <span *ngIf="plantInfo.bloomTime.maximumBloomTime">{{ plantInfo.bloomTime.maximumBloomTime }}</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="plantInfo.height">
+                                <span *ngIf="plantInfo.height.minimumHeight">{{ plantInfo.height.minimumHeight }}</span>
+                                <span *ngIf="plantInfo.height.minimumHeight && plantInfo.height.maximumHeight"> - </span>
+                                <span *ngIf="plantInfo.height.maximumHeight">{{ plantInfo.height.maximumHeight }}</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="plantInfo.spread" >
+                                <span *ngIf="plantInfo.spread.minimumSpread">{{ plantInfo.spread.minimumSpread }}</span>
+                                <span *ngIf="plantInfo.spread.minimumSpread && plantInfo.spread.maximumSpread"> - </span>
+                                <span *ngIf="plantInfo.spread.maximumSpread">{{ plantInfo.spread.maximumSpread }}</span>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-container *ngIf="!listView">
+            <div class="container">
+                <div class="row">
+                    <span *ngIf="totalCount == 0">No plant profiles found</span>
+                    <ng-container *ngFor="let plantInfo of plantInfos">
+                        <content-card class="col-lg-4 col-md-6 col-xs item-card"
+                            [name]="plantInfo.lifeform?.scientificName" 
+                            [colorSearch]="plantInfo.lifeform?.commonName" 
+                            [photos]="plantInfo.photos" >
+                            <a [routerLink]='["/plantInfos", plantInfo.plantInfoId]'>
+                                <div class="col-12">
+                                    <span class="link">{{ plantInfo.lifeform?.commonName }}</span>
+                                </div>
+                                <div class="col-12">
+                                    <span class="link">{{ plantInfo.lifeform?.scientificName }}</span>
+                                    <ng-container *ngIf="plantInfo.taxon?.form">
+                                        <span> f. </span><span class="font-italic">{{plantInfo.taxon.form}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="plantInfo.taxon?.subvariety">
+                                        <span> subvar. </span><span class="font-italic">{{plantInfo.taxon.subvariety}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="plantInfo.taxon?.variety">
+                                        <span> var. </span><span class="font-italic">{{plantInfo.taxon.variety}}</span>
+                                    </ng-container>     
+                                    <ng-container *ngIf="plantInfo.taxon?.subspecies">
+                                        <span> ssp. </span><span class="font-italic">{{plantInfo.taxon.subspecies}}</span>
+                                    </ng-container>  
+                                </div>
+                            </a>
+                            <div class="col-12">
+                                <ng-container *ngIf="plantInfo.requirements.zoneRequirements">
+                                    <span *ngIf="plantInfo.requirements.zoneRequirements.minimumZone">{{ plantInfo.requirements.zoneRequirements.minimumZone.name }}</span>
+                                    <span *ngIf="plantInfo.requirements.zoneRequirements.minimumZone && plantInfo.requirements.zoneRequirements.maximumZone"> - </span>
+                                    <span *ngIf="plantInfo.requirements.zoneRequirements.maximumZone">{{ plantInfo.requirements.zoneRequirements.maximumZone.name }}</span>
+                                </ng-container>
+                            </div>
+                            <div class="col-12">
+                                <ng-container *ngIf="plantInfo.requirements.lightRequirements" >
+                                    <span *ngIf="plantInfo.requirements.lightRequirements.minimumLight">{{ plantInfo.requirements.lightRequirements.minimumLight }}</span>
+                                    <span *ngIf="plantInfo.requirements.lightRequirements.minimumLight && plantInfo.requirements.lightRequirements.maximumLight"> - </span>
+                                    <span *ngIf="plantInfo.requirements.lightRequirements.maximumLight">{{ plantInfo.requirements.lightRequirements.maximumLight }}</span>
+                                </ng-container>
+                            </div>
+                            <div class="col-12">
+                                <span *ngIf="!plantInfo.User">from {{plantInfo.origin.name.substring(0,20)}}</span>
+                                <span *ngIf="plantInfo.User">from {{plantInfo.user.displayName}}</span>
+                            </div>
+                        </content-card>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div>
+        <app-pager *ngIf="searchResult" [count]="totalCount" [take]="searchRequest.take" (pageChange)="pageChanged($event)"></app-pager>
+        <a [routerLink]='["/plantinfos/edit/0"]'>
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Plant Profile</button>
+        </a>
+    </div>
+</form>

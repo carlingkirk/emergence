@@ -8,6 +8,13 @@ export class Filter {
 export class FilterBody {
     stageFilter: SelectFilter;
     zoneFilter: SelectRangeFilter;
+    regionFilter: SelectFilter;
+    bloomFilter: SelectRangeFilter;
+    heightFilter: SelectRangeFilter;
+    spreadFilter: SelectRangeFilter;
+    lightFilter: SelectRangeFilter;
+    waterFilter: SelectRangeFilter;
+    nativeFilter: SelectFilter;
 }
 
 export class SelectFilter implements Filter {

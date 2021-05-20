@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Emergence.Data.Shared.Enums;
 using Emergence.Data.Shared.Extensions;
 
 namespace Emergence.Data.Shared.Models
@@ -13,7 +15,9 @@ namespace Emergence.Data.Shared.Models
 
     public class WaterRequirements
     {
+        [JsonConverter(typeof(EnumDisplayConverter<WaterType>))]
         public WaterType MinimumWater { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<WaterType>))]
         public WaterType MaximumWater { get; set; }
 
         public string ToFriendlyString()
@@ -36,7 +40,9 @@ namespace Emergence.Data.Shared.Models
 
     public class LightRequirements
     {
+        [JsonConverter(typeof(EnumDisplayConverter<LightType>))]
         public LightType MinimumLight { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<LightType>))]
         public LightType MaximumLight { get; set; }
 
         public string ToFriendlyString()
@@ -61,6 +67,7 @@ namespace Emergence.Data.Shared.Models
     {
         public int Step { get; set; }
         public short DayLength { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<StratificationType>))]
         public StratificationType StratificationType { get; set; }
     }
 

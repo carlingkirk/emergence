@@ -15,17 +15,9 @@ import { Specimen } from '../../../shared/models/specimen';
   styleUrls: ['./specimens-list-page.component.css']
 })
 export class SpecimensListPageComponent extends Listable implements OnInit, IListable   {
-  public searchRequest: SearchRequest;
-  public searchResult: SearchResult;
   public specimens: Specimen[];
-  public totalCount: number = 0;
-  public forUserId?: string;
   @Input()
   public showSearch: boolean = true;
-  public searchText: string;
-  public showPublic: boolean;
-  public listView: boolean;
-  public showFilters: boolean;
 
   constructor(
     private readonly specimenService: SpecimenService,
