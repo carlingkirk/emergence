@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Emergence.Data.Shared.Search
@@ -9,25 +10,35 @@ namespace Emergence.Data.Shared.Search
         public FilterType FilterType { get; set; }
     }
 
-    public class Filter<TValue> : Filter
+    public class Filter<TValue> : Filter where TValue : IComparable
     {
         public TValue Value { get; set; }
     }
 
-    public class SelectFilter<TValue> : Filter<TValue>
+    public abstract class SelectFilter<TValue> : Filter<TValue> where TValue : IComparable
     {
         public Dictionary<TValue, long?> FacetValues { get; set; }
+
+        public abstract Dictionary<TValue, long?> GetFacetValues(Dictionary<string, long?> values);
     }
 
-    public class SelectRangeFilter<TValue> : RangeFilter<TValue>
+    public abstract class SelectRangeFilter<TValue> : RangeFilter<TValue> where TValue : IComparable
     {
         public Dictionary<TValue, long?> MinFacetValues { get; set; }
         public Dictionary<TValue, long?> MaxFacetValues { get; set; }
     }
 
-    public class RangeFilter<TValue> : SelectFilter<TValue>
+    public abstract class SelectRangeFilter<TValue, TEnum> : SelectRangeFilter<TValue> where TValue : IComparable
+    {
+    }
+
+    public abstract class RangeFilter<TValue> : SelectFilter<TValue> where TValue : IComparable
     {
         public TValue MinimumValue { get; set; }
         public TValue MaximumValue { get; set; }
+    }
+
+    public abstract class RangeFilter<TValue, TEnum> : RangeFilter<TValue> where TValue : IComparable
+    {
     }
 }

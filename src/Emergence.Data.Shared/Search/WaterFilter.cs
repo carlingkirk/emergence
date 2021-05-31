@@ -29,6 +29,8 @@ namespace Emergence.Data.Shared.Search
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
 
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values.GetFacetValues<WaterType>("");
+
         private IEnumerable<string> GetWaterValues()
         {
             var waterValues = new List<string>();

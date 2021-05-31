@@ -1,0 +1,45 @@
+export function getZones(): { [id: number]: string } {
+    let items: { [id: number]: string } = {};
+    items[0] = "";
+    items[1] = "1";
+    items[2] = "1a";
+    items[3] = "1b";
+    items[4] = "2";
+    items[5] = "2a";
+    items[6] = "2b";
+    items[7] = "3";
+    items[8] = "3a";
+    items[9] = "3b";
+    items[10] = "4";
+    items[11] = "4a";
+    items[12] = "4b";
+    items[13] = "5";
+    items[14] = "5a";
+    items[15] = "5b";
+    items[16] = "6";
+    items[17] = "6a";
+    items[18] = "6b";
+    items[19] = "7";
+    items[20] = "7a";
+    items[21] = "7b";
+    items[22] = "8";
+    items[23] = "8a";
+    items[24] = "8b";
+    items[25] = "9";
+    items[26] = "9a";
+    items[27] = "9b";
+    items[28] = "10";
+    items[29] = "10a";
+    items[30] = "10b";
+    items[31] = "11";
+    items[32] = "11a";
+    items[33] = "11b";
+    items[34] = "12";
+    items[35] = "12a";
+    items[36] = "12b";
+    items[37] = "13";
+    items[38] = "13a";
+    items[39] = "13b";
+
+    return items;
+}

@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using Emergence.Data.Shared.Extensions;
 
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Bloom")]
-    public class BloomFilter : RangeFilter<string>, IFilterDisplay<string>
+    public class BloomFilter : SelectRangeFilter<string>, IFilterDisplay<string>
     {
-        public BloomFilter(RangeFilter<string> filter)
+        public BloomFilter(SelectRangeFilter<string> filter)
         {
             Name = filter.Name;
             InputType = filter.InputType;
@@ -35,6 +36,12 @@ namespace Emergence.Data.Shared.Search
             {
                 return value.ToString();
             }
+        }
+
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values)
+        {
+            values = values.ToDictionary(k => int.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key.ToString(), v => v.Value);
+            return values.GetFacetValues<Month>(null);
         }
     }
 }

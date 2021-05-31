@@ -38,5 +38,7 @@ namespace Emergence.Data.Shared.Search
                 return count != null ? $"{value} ({count})" : $"{value}";
             }
         }
+
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values;
     }
 }

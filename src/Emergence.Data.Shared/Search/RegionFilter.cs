@@ -21,6 +21,8 @@ namespace Emergence.Data.Shared.Search
             FacetValues = new Dictionary<string, long?>();
         }
 
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values;
+
         public string DisplayValue(string value, long? count = null)
         {
             if (string.IsNullOrEmpty(value))

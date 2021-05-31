@@ -27,6 +27,12 @@ namespace Emergence.Data.Shared.Search
             MaxFacetValues = Values.ToDictionary(m => m, c => (long?)0L);
         }
 
+        public override Dictionary<double, long?> GetFacetValues(Dictionary<string, long?> values)
+        {
+            var facetValues = values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+            return facetValues;
+        }
+
         public string DisplayValue(double value, long? count = null)
         {
             if (value == 0)

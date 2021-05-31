@@ -38,5 +38,7 @@ namespace Emergence.Data.Shared.Search
                 return count != null ? $"{stageValue.ToFriendlyName()} ({count})" : $"{stageValue.ToFriendlyName()}";
             }
         }
+
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values.GetFacetValues<SpecimenStage>("");
     }
 }

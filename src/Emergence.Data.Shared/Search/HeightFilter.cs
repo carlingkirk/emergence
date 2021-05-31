@@ -37,6 +37,12 @@ namespace Emergence.Data.Shared.Search
                 return count != null ? $"{value} ({count})" : $"{value}";
             }
         }
+
+        public override Dictionary<double, long?> GetFacetValues(Dictionary<string, long?> values)
+        {
+            var facetValues = values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+            return facetValues;
+        }
     }
 
     public class SearchRange<T>

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Emergence.Data.Shared.Stores;
 
@@ -9,8 +10,21 @@ namespace Emergence.Data.Shared.Search
         {
             Name = "Zone";
             InputType = InputType.Select;
-            FilterType = FilterType.Integer;
+            FilterType = FilterType.String;
             FacetValues = ZoneHelper.GetZones().Select(z => z.Id).ToDictionary(m => m.ToString(), c => (long?)0L);
+        }
+
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values)
+        {
+            var zones = ZoneHelper.GetZones();
+            var facetValues = values.ToDictionary(k => zones.First(z => z.Id.ToString() == k.Key).Name, v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
+
+            if (!facetValues.Any(v => v.Key == ""))
+            {
+                facetValues = facetValues.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+            }
+
+            return facetValues;
         }
 
         public string DisplayValue(string value, long? count = null)

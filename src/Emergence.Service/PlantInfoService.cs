@@ -111,37 +111,34 @@ namespace Emergence.Service
 
                     if (filter is SelectFilter<string> selectFilter)
                     {
-                        var values = aggregation.Values;
-                        if (!values.Any(v => v.Key == "0"))
-                        {
-                            values = values.Prepend(new KeyValuePair<string, long?>("0", null)).ToDictionary(k => k.Key, v => v.Value);
-                        }
-                        selectFilter.FacetValues = values;
+                        selectFilter.FacetValues = selectFilter.GetFacetValues(aggregation.Values);
                     }
                     if (filter is SelectRangeFilter<double> selectRangeFilter)
                     {
-                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
                         if (aggregation.Name.Contains("Min"))
                         {
-                            selectRangeFilter.MinFacetValues = values;
+                            selectRangeFilter.MinFacetValues = selectRangeFilter.GetFacetValues(aggregation.Values);
                         }
                         else
                         {
-                            selectRangeFilter.MaxFacetValues = values;
+                            selectRangeFilter.MaxFacetValues = selectRangeFilter.GetFacetValues(aggregation.Values);
+                        }
+                    }
+                    if (filter is SelectRangeFilter<string> selectRangeStrFilter)
+                    {
+                        if (aggregation.Name.Contains("Min"))
+                        {
+                            selectRangeStrFilter.MinFacetValues = selectRangeStrFilter.GetFacetValues(aggregation.Values);
+                        }
+                        else
+                        {
+                            selectRangeStrFilter.MaxFacetValues = selectRangeStrFilter.GetFacetValues(aggregation.Values);
                         }
                     }
                     if (filter is RangeFilter<string> rangeFilter)
                     {
                         var values = aggregation.Values;
-                        if (aggregation.Name == "Bloom")
-                        {
-                            values = aggregation.Values.ToDictionary(k => int.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key.ToString(), v => v.Value);
-                        }
-                        if (!values.Any(v => v.Key == "0"))
-                        {
-                            values = values.Prepend(new KeyValuePair<string, long?>("0", null)).ToDictionary(k => k.Key, v => v.Value);
-                        }
-                        rangeFilter.FacetValues = values;
+                        rangeFilter.FacetValues = rangeFilter.GetFacetValues(aggregation.Values);
                     }
                 }
             }

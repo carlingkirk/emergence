@@ -6,7 +6,7 @@ using Emergence.Data.Shared.Extensions;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Light")]
-    public class LightFilter : RangeFilter<string>, IFilterDisplay<string>
+    public class LightFilter : RangeFilter<string, LightType>, IFilterDisplay<string>
     {
         private IEnumerable<string> LightValues { get; set; }
         public LightFilter(RangeFilter<string> filter)
@@ -24,10 +24,14 @@ namespace Emergence.Data.Shared.Search
             Name = "Light";
             InputType = InputType.SelectRange;
             FilterType = FilterType.String;
-            var values = new List<string> { "" };
-            values.AddRange(Enum.GetValues(typeof(LightType)).Cast<LightType>().Where(l => l != LightType.Unknown).Select(s => s.ToString()));
+            var values = new List<string>();
+            values.AddRange(Enum.GetValues(typeof(LightType)).Cast<LightType>().Select(s => s.ToFriendlyName()));
             FacetValues = values.ToDictionary(m => m, c => (long?)0L);
         }
+
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values.GetFacetValues<LightType>("");
+
+        public LightType GetFacetValue(string value) => Enum.Parse<LightType>(value);
 
         private IEnumerable<string> GetLightValues()
         {

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Emergence.Data.Shared.Extensions
 {
@@ -27,19 +29,33 @@ namespace Emergence.Data.Shared.Extensions
 
         public static string GetDisplayValue<T>(this string value) where T : struct, Enum
         {
-            T stageValue;
+            T enumValue;
 
             if (string.IsNullOrEmpty(value))
             {
-                stageValue = Enum.Parse<T>("0");
+                enumValue = Enum.Parse<T>("0");
             }
             else
             {
-                stageValue = Enum.Parse<T>(value);
+                enumValue = Enum.Parse<T>(value);
 
             }
 
-            return stageValue.ToFriendlyName();
+            return enumValue.ToFriendlyName();
+        }
+
+        public static Dictionary<string, long?> GetFacetValues<TEnum>(this Dictionary<string, long?> values, string defaultValue) where TEnum : struct, Enum
+        {
+            if (defaultValue != null && !values.Any(v => v.Key.ToString() == defaultValue.ToString()))
+            {
+                values = values.Prepend(new KeyValuePair<string, long?>(defaultValue, null)).ToDictionary(k => k.Key, v => v.Value);
+            }
+
+            values = values
+                .Select(v => new KeyValuePair<string, long?>(v.Key.GetDisplayValue<TEnum>(), v.Value))
+                .ToDictionary(k => k.Key, v => v.Value);
+
+            return values;
         }
     }
 }

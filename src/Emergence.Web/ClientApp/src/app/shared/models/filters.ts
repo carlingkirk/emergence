@@ -3,11 +3,12 @@ export class Filter {
     value: any;
     filterType: number;
     inputType: number;
+    width: number;
 }
 
 export class FilterBody {
     stageFilter: SelectFilter;
-    zoneFilter: SelectRangeFilter;
+    zoneFilter: SelectFilter;
     regionFilter: SelectFilter;
     bloomFilter: SelectRangeFilter;
     heightFilter: SelectRangeFilter;
@@ -17,24 +18,18 @@ export class FilterBody {
     nativeFilter: SelectFilter;
 }
 
-export class SelectFilter implements Filter {
-    name: string;
-    value: any;
+export class SelectFilter extends Filter {
     facetValues: { [key: string]: number; }
     displayValues: DisplayValue[];
-    filterType: number;
-    inputType: number;
 }
 
-export class SelectRangeFilter implements Filter {
-    name: string;
-    value: any;
+export class SelectRangeFilter extends SelectFilter {
     minimumValue: any;
     maximumValue: any;
-    facetValues: { [key: string]: number; }
-    displayValues: DisplayValue[];
-    filterType: number;
-    inputType: number;
+    minFacetValues: { [key: string]: number; }
+    maxFacetValues: { [key: string]: number; }
+    minDisplayValues: DisplayValue[];
+    maxDisplayValues: DisplayValue[];
 }
 
 export interface DisplayValue {
