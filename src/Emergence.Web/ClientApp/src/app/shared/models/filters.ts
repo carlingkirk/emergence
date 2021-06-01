@@ -4,6 +4,7 @@ export class Filter {
     filterType: number;
     inputType: number;
     width: number;
+    sort?: number = 0;
 }
 
 export class FilterBody {
@@ -32,7 +33,8 @@ export class SelectRangeFilter extends SelectFilter {
     maxDisplayValues: DisplayValue[];
 }
 
-export interface DisplayValue {
+export class DisplayValue {
     name: string;
     value: string | number;
+    key: string;
 }

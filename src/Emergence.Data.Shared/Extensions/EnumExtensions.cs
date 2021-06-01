@@ -38,10 +38,22 @@ namespace Emergence.Data.Shared.Extensions
             else
             {
                 enumValue = Enum.Parse<T>(value);
-
             }
 
             return enumValue.ToFriendlyName();
+        }
+
+        public static T GetEnumValue<T>(this string value) where T : struct, Enum
+        {
+            var enumValues = Enum.GetValues(typeof(T)).Cast<T>();
+            foreach (var enumValue in enumValues)
+            {
+                if (value == enumValue.ToFriendlyName())
+                {
+                    return enumValue;
+                }
+            }
+            return default;
         }
 
         public static Dictionary<string, long?> GetFacetValues<TEnum>(this Dictionary<string, long?> values, string defaultValue) where TEnum : struct, Enum

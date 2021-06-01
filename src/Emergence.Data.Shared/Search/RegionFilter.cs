@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -21,7 +22,14 @@ namespace Emergence.Data.Shared.Search
             FacetValues = new Dictionary<string, long?>();
         }
 
-        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values;
+        public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values)
+        {
+            if (!values.Any(v => v.Key == ""))
+            {
+                values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
+            }
+            return values;
+        }
 
         public string DisplayValue(string value, long? count = null)
         {

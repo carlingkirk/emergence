@@ -64,10 +64,10 @@ namespace Emergence.Service.Search
             var searchFilters = new List<SearchFilter<PlantInfo>>
             {
                 new NestedSearchValueFilter<PlantInfo, string>(filters.RegionFilter.Name, "location.region.keyword", "plantLocations", filters.RegionFilter.Value),
-                new SearchValuesFilter<PlantInfo, string>(filters.WaterFilter.Name, "waterTypes", filters.WaterFilter.MinimumValue, filters.WaterFilter.MaximumValue),
-                new SearchValuesFilter<PlantInfo, string>(filters.LightFilter.Name, "lightTypes", filters.LightFilter.MinimumValue, filters.LightFilter.MaximumValue),
-                new SearchValuesFilter<PlantInfo, string>(filters.BloomFilter.Name, "bloomTimes", filters.BloomFilter.MinimumValue?.ToString(), filters.BloomFilter.MaximumValue?.ToString()),
-                new NestedSearchValueFilter<PlantInfo, string>(filters.ZoneFilter.Name, "id", "zones", filters.ZoneFilter.Value?.ToString()),
+                new SearchValuesFilter<PlantInfo, string>(filters.WaterFilter.Name, "waterTypes", filters.WaterFilter.GetFacetValue(filters.WaterFilter.MinimumValue), filters.WaterFilter.MaximumValue),
+                new SearchValuesFilter<PlantInfo, string>(filters.LightFilter.Name, "lightTypes", filters.LightFilter.GetFacetValue(filters.LightFilter.MinimumValue), filters.LightFilter.GetFacetValue(filters.LightFilter.MaximumValue)),
+                new SearchValuesFilter<PlantInfo, string>(filters.BloomFilter.Name, "bloomTimes", filters.BloomFilter.GetFacetValue(filters.BloomFilter.MinimumValue), filters.BloomFilter.MaximumValue?.ToString()),
+                new NestedSearchValueFilter<PlantInfo, string>(filters.ZoneFilter.Name, "id", "zones", filters.ZoneFilter.GetFacetValue(filters.ZoneFilter.Value)),
                 new SearchRangeFilter<PlantInfo, double>(filters.HeightFilter.Name, "minHeight","maxHeight", filters.HeightFilter.Values, filters.HeightFilter.Value, filters.HeightFilter.MaximumValue),
                 new SearchRangeFilter<PlantInfo, double>(filters.SpreadFilter.Name, "minSpread","maxSpread", filters.SpreadFilter.Values, filters.SpreadFilter.Value, filters.SpreadFilter.MaximumValue),
                 new NestedSearchMultiValueFilter<PlantInfo, string, LocationStatus>(filters.NativeFilter.Name, "location.stateOrProvince.keyword", "plantLocations", "status",

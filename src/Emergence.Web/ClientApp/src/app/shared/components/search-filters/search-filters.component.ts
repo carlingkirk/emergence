@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { LightType, Month, Region, SpecimenStage, WaterType } from '../../models/enums';
-import { FilterBody, Filter, DisplayValue, SelectRangeFilter } from '../../models/filters';
+import { Region } from '../../models/enums';
+import { FilterBody, Filter, DisplayValue, SelectRangeFilter, SelectFilter } from '../../models/filters';
 import { getZones } from '../../models/zone';
 
 @Component({
@@ -29,79 +29,85 @@ export class SearchFiltersComponent implements OnInit {
   filter() {
     this.filters = [];
     if (this.filterBody.stageFilter) {
+      this.filterBody.stageFilter = this.mapSelectFilter(this.filterBody.stageFilter);
       this.filterBody.stageFilter.width = 4;
       this.filters = [ this.filterBody.stageFilter ];
     }
     if (this.filterBody.zoneFilter) {
-      this.filterBody.zoneFilter.displayValues = [];
-      for(let key in this.filterBody.zoneFilter.facetValues) {
-        let value = this.filterBody.zoneFilter.facetValues[key];
-        let name = this.zones[key];
-        this.filterBody.zoneFilter.displayValues.push({ name: name, value: value })
-      }
-      this.filterBody.zoneFilter.width = 3;
+      this.filterBody.zoneFilter = this.mapSelectFilter(this.filterBody.zoneFilter);
+      this.filterBody.zoneFilter.width = 2;
+      this.filterBody.zoneFilter.sort = 1;
+      this.filterBody.zoneFilter.displayValues.sort((a, b) => a.name > b.name ? 1 : a.name === b.name ? 0 : -1);
       this.filters.push(this.filterBody.zoneFilter);
     }
 
     if (this.filterBody.regionFilter) {
-      this.filterBody.regionFilter.displayValues = [];
-      for(let key in this.filterBody.regionFilter.facetValues) {
-        let value = this.filterBody.regionFilter.facetValues[key];
-        let name = +key as Region;
-        this.filterBody.regionFilter.displayValues.push({ name: name[key], value: value })
-      }
+      this.filterBody.regionFilter = this.mapSelectFilter(this.filterBody.regionFilter);
       this.filterBody.regionFilter.width = 4;
+      this.filterBody.regionFilter.sort = 2;
       this.filters.push(this.filterBody.regionFilter);
     }
 
     if (this.filterBody.bloomFilter) {
       this.filterBody.bloomFilter = this.mapSelectRangeFilter(this.filterBody.bloomFilter);
-      this.filterBody.bloomFilter.width = 4;
+      this.filterBody.bloomFilter.width = 3;
+      this.filterBody.bloomFilter.sort = 3;
       this.filters.push(this.filterBody.bloomFilter);
+    }
+
+    if (this.filterBody.nativeFilter) {
+      this.filterBody.nativeFilter = this.mapSelectFilter(this.filterBody.nativeFilter);
+      this.filterBody.nativeFilter.width = 2;
+      this.filterBody.nativeFilter.sort = 4;
+      this.filters.push(this.filterBody.nativeFilter);
     }
 
     if (this.filterBody.heightFilter) {
       this.filterBody.heightFilter = this.mapSelectRangeNumFilter(this.filterBody.heightFilter);
-      this.filterBody.heightFilter.width = 4;
+      this.filterBody.heightFilter.width = 2;
+      this.filterBody.heightFilter.sort = 5;
       this.filters.push(this.filterBody.heightFilter);
     }
 
     if (this.filterBody.spreadFilter) {
       this.filterBody.spreadFilter = this.mapSelectRangeNumFilter(this.filterBody.spreadFilter);
-      this.filterBody.spreadFilter.width = 4;
+      this.filterBody.spreadFilter.width = 2;
+      this.filterBody.spreadFilter.sort = 6;
       this.filters.push(this.filterBody.spreadFilter);
     }
 
     if (this.filterBody.lightFilter) {
       this.filterBody.lightFilter = this.mapSelectRangeFilter(this.filterBody.lightFilter);
-      this.filterBody.lightFilter.width = 5;
+      this.filterBody.lightFilter.width = 4;
+      this.filterBody.lightFilter.sort = 7;
       this.filters.push(this.filterBody.lightFilter);
     }
 
     if (this.filterBody.waterFilter) {
       this.filterBody.waterFilter = this.mapSelectRangeFilter(this.filterBody.waterFilter);
-      this.filterBody.waterFilter.width = 5;
+      this.filterBody.waterFilter.width = 4;
+      this.filterBody.waterFilter.sort = 8;
       this.filters.push(this.filterBody.waterFilter);
     }
-
-    if (this.filterBody.nativeFilter) {
-      this.filterBody.nativeFilter.displayValues = [];
-      for(let key in this.filterBody.nativeFilter.facetValues) {
-        let value = this.filterBody.nativeFilter.facetValues[key];
-        let name = +key as LightType;
-        this.filterBody.nativeFilter.displayValues.push({ name: name[key], value: value })
-      }
-      this.filterBody.nativeFilter.width = 4;
-      this.filters.push(this.filterBody.nativeFilter);
-    }
+    this.filters.sort((a, b) => a.sort > b.sort ? 1 : a.sort === b.sort ? 0 : -1);
   }
+
+  mapSelectFilter(filter: SelectFilter): SelectFilter {
+    filter.displayValues = [];
+    for(let key in filter.facetValues) {
+      let value = filter.facetValues[key];
+      filter.displayValues.push({ name: key, value: value, key: key })
+    }
+    return filter;
+  }
+
   mapSelectRangeFilter(filter: SelectRangeFilter): SelectRangeFilter {
     filter.minDisplayValues = [];
     filter.maxDisplayValues = [];
     for(let key in filter.facetValues) {
       let value = filter.facetValues[key];
-      filter.minDisplayValues.push({ name: key, value: value });
-      filter.maxDisplayValues.push({ name: key, value: value })
+      filter.minDisplayValues.push({ name: key, value: value, key: key });
+      filter.maxDisplayValues.push({ name: key, value: value, key: key })
     }
     return filter;
   }
@@ -112,20 +118,20 @@ export class SearchFiltersComponent implements OnInit {
 
     for(let key in filter.minFacetValues) {
       let value = filter.minFacetValues[key];
-      filter.minDisplayValues.push({ name: key.toString(), value: value })
+      filter.minDisplayValues.push({ name: key, value: value, key: key })
     }
-    filter.minDisplayValues = this.sortDisplayValues(filter.minDisplayValues);
+    filter.minDisplayValues = this.sortDisplayNumValues(filter.minDisplayValues);
 
     for(let key in filter.maxFacetValues) {
       let value = filter.maxFacetValues[key];
-      filter.maxDisplayValues.push({ name: key.toString(), value: value })
+      filter.maxDisplayValues.push({ name: key, value: value, key: key })
     }
-    filter.maxDisplayValues = this.sortDisplayValues(filter.maxDisplayValues);
+    filter.maxDisplayValues = this.sortDisplayNumValues(filter.maxDisplayValues);
 
     return filter;
   }
 
-  sortDisplayValues(displayValues: DisplayValue[]): DisplayValue[] {
+  sortDisplayNumValues(displayValues: DisplayValue[]): DisplayValue[] {
     return displayValues.sort((a, b) => Number(a.name) > Number(b.name) ? 1 : Number(a.name) === Number(b.name) ? 0 : -1);
   }
 

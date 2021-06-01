@@ -5,7 +5,7 @@ using Emergence.Data.Shared.Extensions;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Bloom")]
-    public class BloomFilter : SelectRangeFilter<string>, IFilterDisplay<string>
+    public class BloomFilter : SelectRangeFilter<string, Month>, IFilterDisplay<string>
     {
         public BloomFilter(SelectRangeFilter<string> filter)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Emergence.Data.Shared.Extensions;
 
 namespace Emergence.Data.Shared.Search
 {
@@ -28,8 +29,9 @@ namespace Emergence.Data.Shared.Search
         public Dictionary<TValue, long?> MaxFacetValues { get; set; }
     }
 
-    public abstract class SelectRangeFilter<TValue, TEnum> : SelectRangeFilter<TValue> where TValue : IComparable
+    public abstract class SelectRangeFilter<TValue, TEnum> : SelectRangeFilter<TValue> where TValue : IComparable where TEnum : struct, Enum
     {
+        public string GetFacetValue(string value) => ((int)(object)value.GetEnumValue<TEnum>()).ToString();
     }
 
     public abstract class RangeFilter<TValue> : SelectFilter<TValue> where TValue : IComparable
@@ -38,7 +40,8 @@ namespace Emergence.Data.Shared.Search
         public TValue MaximumValue { get; set; }
     }
 
-    public abstract class RangeFilter<TValue, TEnum> : RangeFilter<TValue> where TValue : IComparable
+    public abstract class RangeFilter<TValue, TEnum> : RangeFilter<TValue> where TValue : IComparable where TEnum : struct, Enum
     {
+        public string GetFacetValue(string value) => ((int)(object)value.GetEnumValue<TEnum>()).ToString();
     }
 }

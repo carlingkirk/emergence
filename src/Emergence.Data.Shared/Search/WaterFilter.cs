@@ -6,7 +6,7 @@ using Emergence.Data.Shared.Extensions;
 namespace Emergence.Data.Shared.Search
 {
     [TypeDiscriminator("Water")]
-    public class WaterFilter : RangeFilter<string>, IFilterDisplay<string>
+    public class WaterFilter : RangeFilter<string, WaterType>, IFilterDisplay<string>
     {
         private IEnumerable<string> WaterValues { get; set; }
         public WaterFilter(RangeFilter<string> filter)

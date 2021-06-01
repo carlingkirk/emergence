@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Emergence.Data.Shared.Extensions;
@@ -11,16 +10,8 @@ namespace Emergence.Data.Shared.Enums
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var enumString = reader.GetString();
-            var enumValues = Enum.GetValues(typeof(T)).Cast<T>();
-            foreach (var enumValue in enumValues)
-            {
-                if (enumString == enumValue.ToFriendlyName())
-                {
-                    return enumValue;
-                }
-            }
 
-            return Enum.Parse<T>("");
+            return enumString.GetEnumValue<T>();
         }
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToFriendlyName());

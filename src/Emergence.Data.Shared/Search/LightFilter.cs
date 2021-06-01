@@ -31,8 +31,6 @@ namespace Emergence.Data.Shared.Search
 
         public override Dictionary<string, long?> GetFacetValues(Dictionary<string, long?> values) => values.GetFacetValues<LightType>("");
 
-        public LightType GetFacetValue(string value) => Enum.Parse<LightType>(value);
-
         private IEnumerable<string> GetLightValues()
         {
             var lightValues = new List<string>();
