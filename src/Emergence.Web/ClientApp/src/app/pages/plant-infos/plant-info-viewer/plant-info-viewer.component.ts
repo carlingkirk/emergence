@@ -2,24 +2,20 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
-import { SpecimenService } from 'src/app/service/specimen-service';
-import { Specimen } from 'src/app/shared/models/specimen';
+import { PlantInfoService } from 'src/app/service/plant-info-service';
+import { PlantInfo } from 'src/app/shared/models/plant-info';
 
 @Component({
-  selector: 'app-specimen-viewer',
-  templateUrl: './specimen-viewer.component.html',
-  styleUrls: ['./specimen-viewer.component.css']
+  selector: 'app-plant-info-viewer',
+  templateUrl: './plant-info-viewer.component.html',
+  styleUrls: ['./plant-info-viewer.component.css']
 })
-export class SpecimenViewerComponent implements OnInit {
+export class PlantInfoViewerComponent implements OnInit {
   @Input()
   public id: number;
-  public specimen: Specimen;
-  public tabs: any = [ 
-    { key: 'specimen', value: 'Specimen'},
-    { key: 'activities', value: 'Activities'},
-    { key: 'plant-infos', value: 'Plant Profiles'}
-  ];
-  public currentTab: string = 'specimen';
+  public plantInfo: PlantInfo;
+  public commonName: string;
+  public scientificName: string;
   public isEditing: boolean = false;
   public isOwner: boolean = false;
   public isAuthenticated: Observable<boolean>;
@@ -27,7 +23,7 @@ export class SpecimenViewerComponent implements OnInit {
   public user: IUser;
   constructor(
     private authorizeService: AuthorizeService,
-    private readonly specimenService: SpecimenService,
+    private readonly plantInfoService: PlantInfoService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -37,18 +33,13 @@ export class SpecimenViewerComponent implements OnInit {
       this.user = user;
       this.user.userId = user["sub"];
 
-      this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
-        this.specimen = specimen;
-        this.isOwner = this.specimen.createdBy == this.user.userId;
+      this.plantInfoService.getPlantInfo(this.id).subscribe((plantInfo) => {
+        this.plantInfo = plantInfo;
+        this.scientificName = plantInfo.scientificName ?? plantInfo.lifeform.scientificName;
+        this.commonName = plantInfo.commonName ?? plantInfo.lifeform.commonName;
+        this.isOwner = this.plantInfo.createdBy == this.user.userId;
       });
     });
-  }
-
-  public switchTab(tab: string) {
-    this.currentTab = tab;
-  }
-
-  public goBack() {
   }
 
   public showMessageModal() {

@@ -7,6 +7,8 @@ import { Photo } from "./photo";
 export class PlantInfo {
     plantInfoId: number;
     lifeformId: number;
+    scientificName: string;
+    commonName: string;
     bloomTime: BloomTime;
     height: Height;
     spread: Spread;
