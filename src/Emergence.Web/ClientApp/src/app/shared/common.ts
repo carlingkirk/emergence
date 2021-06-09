@@ -12,3 +12,7 @@ export function onImgError(event, photo: Photo) {
         event.stopPropagation();
     }
 }
+
+export function getElementId(element: string, id: string) {
+    return element + "-" + id;
+}

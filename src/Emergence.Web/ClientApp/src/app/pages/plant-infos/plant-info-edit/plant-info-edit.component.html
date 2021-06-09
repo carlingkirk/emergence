@@ -1,1 +1,293 @@
-<p>plant-info-edit works!</p>
+<ng-container *ngIf="plantInfo">
+    <form (ngSubmit)="savePlantInfo()">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Validation message -->
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <label for="lifeform">Plant Name </label>
+                    <input type="text" class="form-control" name="scientificName" style="font-style:italic;"
+                        [(ngModel)]="selectedLifeform" 
+                        [ngbTypeahead]="lifeformsTypeahead" 
+                        [resultFormatter]="lifeformResultFormatter"
+                        [inputFormatter]="lifeformInputFormatter"
+                        [resultTemplate]="lifeformResultTemplate" />
+                    <ng-template #lifeformResultTemplate let-r="result" let-t="term">
+                        <span>{{r.commonName}} </span>
+                        <span style="font-style:italic;">
+                            <ngb-highlight [result]="r.scientificName" [term]="t"></ngb-highlight>
+                        </span>
+                    </ng-template>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <label for="origin">Origin</label>
+                    <input type="text" class="form-control" name="origin" 
+                        [(ngModel)]="selectedOrigin" 
+                        [ngbTypeahead]="originsTypeahead" 
+                        [resultFormatter]="originResultFormatter"
+                        [inputFormatter]="originInputFormatter"
+                        [resultTemplate]="originResultTemplate" />
+                    <ng-template #originResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </ng-template>
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="visibility">Visibility</label>
+                    <select [(ngModel)]="plantInfo.visibility" class="form-control" id="visibility" name="visibility" >
+                        <option *ngFor="let visibility of visibilities" [value]="visibility">{{visibility}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-xs">
+                    <div class="container">
+                        <div class="row">
+                            <label for="req-light-min">Light</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="plantInfo.requirements.lightRequirements.minimumLight" class="form-control" id="req-light-min" name="minimumLight" >
+                                    <option *ngFor="let lightType of lightTypes" [value]="lightType">{{lightType}}</option>
+                                </select>
+                            </div>
+                            <div class="col-1 range-separator">
+                                <span>to</span>
+                            </div>
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="plantInfo.requirements.lightRequirements.maximumLight" class="form-control" id="req-light-max" name="maximumLight" >
+                                    <option *ngFor="let lightType of lightTypes" [value]="lightType">{{lightType}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <div class="container">
+                        <div class="row">
+                            <label for="req-water-min">Water</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="plantInfo.requirements.waterRequirements.minimumWater" class="form-control" id="req-water-min" name="minimumWater" >
+                                    <option *ngFor="let waterType of waterTypes" [value]="waterType">{{waterType}}</option>
+                                </select>
+                            </div>
+                            <div class="col-1 range-separator">
+                                <span>to</span>
+                            </div>
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="plantInfo.requirements.waterRequirements.maximumWater" class="form-control" id="req-water-max" name="maximumWater" >
+                                    <option *ngFor="let waterType of waterTypes" [value]="waterType">{{waterType}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <div class="container">
+                        <div class="row">
+                            <label for="req-zones-min">Zones</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="minimumZoneId" class="form-control" id="req-zone-min" name="minimumZoneId" >
+                                    <option *ngFor="let zone of zones" [value]="zone.id">{{zone.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-1 range-separator">
+                                <span>to</span>
+                            </div>
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="maximumZoneId" class="form-control" id="req-zone-max" name="maximumZoneId" >
+                                    <option *ngFor="let zone of zones" [value]="zone.id">{{zone.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <div class="container">
+                        <div class="row">
+                            <label for="bloom-min">Bloom Times</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="plantInfo.bloomTime.minimumBloomTime" class="form-control" id="bloom-min" name="minimumBloomTime" >
+                                    <option *ngFor="let month of months" [value]="month">{{month}}</option>
+                                </select>
+                            </div>
+                            <div class="col-1 range-separator">
+                                <span>to</span>
+                            </div>
+                            <div class="col-5 range-input">
+                                <select [(ngModel)]="plantInfo.bloomTime.maximumBloomTime" class="form-control" id="bloom-max" name="maximumBloomTime" >
+                                    <option *ngFor="let month of months" [value]="month">{{month}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <div class="container">
+                        <div class="row">
+                            <label for="height-min">Height</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 range-input">
+                                <input type="text" class="form-control" [(ngModel)]="plantInfo.height.minimumHeight" name="minimumHeight" id="height-min" />
+                            </div>
+                            <div class="col-1 range-separator">
+                                <span>to</span>
+                            </div>
+                            <div class="col-3 range-input">
+                                <input type="text" class="form-control" [(ngModel)]="plantInfo.height.maximumHeight" name="maximumHeight" id="height-max" />
+                            </div>
+                            <div class="col-2 range-input range-input-unit">
+                                <label>feet</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <div class="container">
+                        <div class="row">
+                            <label for="spread-min">Spread</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 range-input">
+                                <input type="text" class="form-control" [(ngModel)]="plantInfo.spread.minimumSpread" name="minimumSpread" id="spread-min" />
+                            </div>
+                            <div class="col-1 range-separator">
+                                <span>to</span>
+                            </div>
+                            <div class="col-3 range-input">
+                                <input type="text" class="form-control" [(ngModel)]="plantInfo.spread.minimumSpread" name="minimumSpread" id="spread-min" />
+                            </div>
+                            <div class="col-2 range-input range-input-unit">
+                                <label>feet</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-xs">
+                    <div class="row">
+                        <div class="col-lg-12 col-xs">
+                            <label for="req-scarification">Stratification Stages</label>
+                            <div *ngIf="!plantInfo.requirements.stratificationStages">
+                                <button type="button" class="btn btn-sm btn-primary" (click)="addStratificationStage()"><span class="oi oi-plus"></span></button>
+                            </div>
+                            <ng-container *ngFor="let stage of chosenStratificationStages">
+                                <div class="row">
+                                    <div class="col-md-2 col-3">
+                                        <div *ngIf="stage.step === 1"><label>Step</label></div>
+                                        <button type="button" class="btn btn-sm btn-primary" (click)="removeStratificationStage(stage.step)">
+                                            <span class="oi oi-minus"></span>
+                                        </button>
+                                        <span [id]="getElementId('req-scarification', stage.step)">{{stage.step}}</span>
+                                    </div>
+                                    <div class="col-md-2 col-3">
+                                        <label *ngIf="stage.step === 1" [for]="getElementId('req-scarification-days', stage.step)">Days</label>
+                                        <input [(ngModel)]="stage.dayLength" [name]="getElementId('dayLength', stage.step)" type="text" class="form-control" [id]="getElementId('req-scarification-days', stage.step)" />
+                                    </div>
+                                    <div class="col">
+                                        <label *ngIf="stage.step === 1" [for]="getElementId('req-scarification-type', stage.step)">Method</label>
+                                        <select [(ngModel)]="stage.stratificationType" class="form-control" [id]="getElementId('req-scarification-type', stage.step)" [name]="getElementId('stratificationType', stage.step)">
+                                            <option *ngFor="let stratificationType of stratificationTypes" [value]="stratificationType">{{stratificationType}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div *ngIf="chosenStratificationStages.length == stage.step" class="row">
+                                    <div class="col-1">
+                                        <button type="button" class="btn btn-sm btn-primary" (click)="addStratificationStage()">
+                                            <span class="oi oi-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <!-- <div class="col-lg-12 col-xs">
+                            <label for="wildlife-effects">Wildlife effects</label>
+                            <div class="@(AnyWildlifeEffects() ? "d-none" : "")">
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddWildlifeEffect())"><span class="oi oi-plus"></span></button>
+                            </div>
+                            @if (ChosenWildlifeEffects != null)
+                            {
+                                var key = 1;
+                                @foreach (var effect in ChosenWildlifeEffects)
+                                {
+                                    var firstRow = key == 1;
+                                    var lastRow = ChosenWildlifeEffects.Count == key;
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <div class="@(firstRow ? "" : "d-none")"><label>&nbsp;</label></div>
+                                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => RemoveWildlifeEffect(effect))"><span class="oi oi-minus"></span></button>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("wildlife", key.ToString())">Wildlife</label>
+                                            <select @bind="@effect.Wildlife" class="form-control" id="@GetElementId("wildlife", key.ToString())">
+                                                @foreach (var wildlife in WildlifeTypes)
+                                                {
+                                                    <option value="@wildlife">@(wildlife.ToString())</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("effect", key.ToString())">Effect</label>
+                                            <select @bind="@effect.Effect" class="form-control" id="@GetElementId("effect", key.ToString())">
+                                                @foreach (var effectType in Effects)
+                                                {
+                                                    <option value="@effectType">@(effectType.ToFriendlyName())</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="@(lastRow ? "row" : "d-none")">
+                                        <div class="col-1">
+                                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddWildlifeEffect())"><span class="oi oi-plus"></span></button>
+                                        </div>
+                                    </div>
+                                    key++;
+                                }
+                            }
+                        </div> -->
+                    </div>
+                </div>
+                <div class="col-lg-1 col-xs">
+                </div>
+                <!-- <div class="col-lg-2 col-xs">
+                    <label for="soil-types">Soil types</label>
+                    <ul class="checklist">
+                        @foreach (var soilType in SoilTypes)
+                        {
+                            <li>
+                                <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddRemoveSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
+                                <label for="@GetElementId("req-soil", soilType.ToString())">@soilType</label>
+                            </li>
+                        }
+                    </ul>
+                </div> -->
+            </div>
+            <app-upload-photos [(photos)]="uploadedPhotos" [type]="4" (photosChange)="photosChanged($event)" [name]="plantInfo.commonName" type="PlantInfo"></app-upload-photos>
+            <div class="row">
+                <div class="col">
+                    <label for="notes">Notes</label>
+                    <textarea rows="3" [(ngModel)]="plantInfo.notes" id="notes" name="notes" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <ng-container *ngIf="modal">
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancel</button>
+        </ng-container>
+        <ng-container *ngIf="!modal">
+            <button type="button" (click)="cancel()" class="btn btn-secondary" >Cancel</button>
+        </ng-container>
+            <span *ngIf="errorMessage" class="error-message">{{errorMessage}}</span>
+    </form>
+</ng-container>
+<ng-container *ngIf="!plantInfo">
+    <span>Loading...</span>
+</ng-container>

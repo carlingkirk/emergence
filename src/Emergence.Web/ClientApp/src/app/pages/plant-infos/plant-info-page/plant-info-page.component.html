@@ -1,1 +1,163 @@
-<p>plant-info-page works!</p>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="lifeform">Plant Name </label>
+            </div>
+            <div>
+                <span class="text-body">{{commonName}}</span>&nbsp;
+                <span class="text-body font-italic">{{scientificName}}</span>
+            </div>
+            <ng-container *ngIf="plantInfo.taxon">
+                <div>
+                    <label for="botanical-name">Botanical Name </label>
+                </div>
+                <div>
+                    <span class="text-body font-italic">{{plantInfo.taxon.speciesName}}</span>
+                    <span *ngIf="plantInfo.taxon.subspecies"> ssp. </span>
+                    <span *ngIf="plantInfo.taxon.subspecies" class="text-body font-italic">{{plantInfo.taxon.subspecies}}</span>
+                    <span *ngIf="plantInfo.taxon.variety"> var. </span>
+                    <span *ngIf="plantInfo.taxon.variety" class="text-body font-italic">{{plantInfo.taxon.variety}}</span>
+                    <span *ngIf="plantInfo.taxon.subvariety"> subvar. </span>
+                    <span *ngIf="plantInfo.taxon.subvariety" class="text-body font-italic">{{plantInfo.taxon.subvariety}}</span>
+                    <span *ngIf="plantInfo.taxon.form"> f. </span>
+                    <span *ngIf="plantInfo.taxon.form" class="text-body font-italic">{{plantInfo.taxon.form}}</span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="origin">Origin</label>
+            </div>
+            <div *ngIf="plantInfo?.origin?.name">
+                <span class="text-body">{{plantInfo.origin.name}}</span>
+            </div>
+            <div *ngIf="!plantInfo.origin?.name">
+                <span class="text-body">(No name)</span>
+            </div>
+            <div>
+                <a [href]="plantInfo.origin?.uri" target="_blank"><span class="link">{{plantInfo.origin?.shortUri}}</span></a>
+            </div>
+        </div>
+        <div *ngIf="plantInfo.user?.displayName" class="col-lg-4 col-xs">
+            <div class="user-display">By {{plantInfo.user?.displayName}}</div>
+            <!-- <UserDisplay Label="By" User="Specimen.InventoryItem.User" /> -->
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-3 col-4">
+            <ng-container *ngIf="plantInfo.requirements.lightRequirements.minimumLight || plantInfo.requirements.lightRequirements.maximumLight">
+                <div><label for="light">Light</label></div>
+                <div>
+                    <span id="light">
+                        {{displayRange(plantInfo.requirements.lightRequirements.minimumLight, plantInfo.requirements.lightRequirements.maximumLight)}}
+                    </span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col-4">
+            <ng-container *ngIf="plantInfo.requirements.waterRequirements.minimumWater || plantInfo.requirements.waterRequirements.maximumWater">
+                <div>
+                    <label for="water">Water</label>
+                </div>
+                <div>
+                    <span id="water">
+                        {{displayRange(plantInfo.requirements.waterRequirements.minimumWater, plantInfo.requirements.waterRequirements.maximumWater)}}
+                    </span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col-4">
+            <ng-container *ngIf="plantInfo.requirements.zoneRequirements.minimumZone || plantInfo.requirements.zoneRequirements.maximumZone">
+                <div>
+                    <label for="zones">Zones</label>
+                </div>
+                <div>
+                    <span id="zones">
+                        {{displayRange(plantInfo.requirements.zoneRequirements.minimumZone?.name, plantInfo.requirements.zoneRequirements.maximumZone?.name)}}
+                    </span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col-4">
+            <ng-container *ngIf="plantInfo.bloomTime.minimumBloomTime || plantInfo.bloomTime.maximumBloomTime">
+                <div>
+                    <label for="bloom">Bloom Times</label>
+                </div>
+                <div>
+                    <span id="bloom">
+                        {{displayRange(plantInfo.bloomTime.minimumBloomTime, plantInfo.bloomTime.maximumBloomTime)}}
+                    </span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col-4">
+            <ng-container *ngIf="plantInfo.height.minimumHeight || plantInfo.height.maximumHeight">
+                <div>
+                    <label for="height">Height</label>
+                </div>
+                <div>
+                    <span id="height">
+                        {{displayRange(plantInfo.height.minimumHeight, plantInfo.height.maximumHeight, plantInfo.height.unit)}}
+                    </span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col-4">
+            <ng-container *ngIf="plantInfo.spread.minimumSpread || plantInfo.spread.maximumSpread">
+                <div>
+                    <label for="spread">Spread</label>
+                </div>
+                <div>
+                    <span id="spread">
+                        {{displayRange(plantInfo.spread.minimumSpread, plantInfo.spread.maximumSpread, plantInfo.spread.unit)}}
+                    </span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col-4">
+        </div>
+        <div class="col-lg-3 col-4">
+        </div>
+        <div class="col-lg-5 col">
+            <ng-container *ngIf="plantInfo.requirements.stratificationStages">
+                <label for="req-scarification">Stratification Stages</label>
+                <ng-container *ngFor="let stage of plantInfo.requirements.stratificationStages">
+                    <div class="row">
+                        <div class="col-2">
+                            <div [class]="stage.step == 1 ? '' : 'd-none'">
+                                <label [for]="getElementId('req-scarification-step', stage.step)">Step</label>
+                            </div>
+                            <div>
+                                <span [id]="getElementId('req-scarification-step', stage.step)">{{stage.step}}</span>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div [class]="stage.step == 1 ? '' : 'd-none'">
+                                <label [for]="getElementId('req-scarification-days', stage.step)">Days</label>
+                            </div>
+                            <div>
+                                <span [id]="getElementId('req-scarification-days', stage.step)">{{stage.dayLength}}</span>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div [class]="stage.step == 1 ? '' : 'd-none'">
+                                <label [for]="getElementId('req-scarification-type', stage.step)">Statification Method</label>
+                            </div>
+                            <div>
+                                <span [id]="getElementId('req-scarification-type', stage.step)">{{stage.stratificationType}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div *ngIf="plantInfo.notes" class="col-lg-12 col">
+            <label for="notes">Notes</label>
+            <p>{{plantInfo.notes}}</p>
+        </div>
+    </div>
+    <app-view-photos *ngIf="plantInfo.photos" [photos]="plantInfo.photos" [name]="scientificName"></app-view-photos>
+</div>

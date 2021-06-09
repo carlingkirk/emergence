@@ -20,7 +20,6 @@ export class SearchFiltersComponent implements OnInit {
   @Output()
   public filtersChanged = new EventEmitter<FilterBody>();
   public filters: Filter[] = [];
-  private zones: { [id: number]: string } = getZones();
   constructor() { }
 
   ngOnInit(): void {

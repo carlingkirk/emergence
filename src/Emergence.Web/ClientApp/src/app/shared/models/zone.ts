@@ -1,45 +1,46 @@
-export function getZones(): { [id: number]: string } {
-    let items: { [id: number]: string } = {};
-    items[0] = "";
-    items[1] = "1";
-    items[2] = "1a";
-    items[3] = "1b";
-    items[4] = "2";
-    items[5] = "2a";
-    items[6] = "2b";
-    items[7] = "3";
-    items[8] = "3a";
-    items[9] = "3b";
-    items[10] = "4";
-    items[11] = "4a";
-    items[12] = "4b";
-    items[13] = "5";
-    items[14] = "5a";
-    items[15] = "5b";
-    items[16] = "6";
-    items[17] = "6a";
-    items[18] = "6b";
-    items[19] = "7";
-    items[20] = "7a";
-    items[21] = "7b";
-    items[22] = "8";
-    items[23] = "8a";
-    items[24] = "8b";
-    items[25] = "9";
-    items[26] = "9a";
-    items[27] = "9b";
-    items[28] = "10";
-    items[29] = "10a";
-    items[30] = "10b";
-    items[31] = "11";
-    items[32] = "11a";
-    items[33] = "11b";
-    items[34] = "12";
-    items[35] = "12a";
-    items[36] = "12b";
-    items[37] = "13";
-    items[38] = "13a";
-    items[39] = "13b";
+import { Zone } from "./plant-info";
 
-    return items;
+export function getZones(): Zone[] {
+    return [
+        { id: 0, name: ""},
+        { id: 1, name: "1"},
+        { id: 2, name: "1a"},
+        { id: 3, name: "1b"},
+        { id: 4, name: "2"},
+        { id: 5, name: "2a"},
+        { id: 6, name: "2b"},
+        { id: 7, name: "3"},
+        { id: 8, name: "3a"},
+        { id: 9, name: "3b"},
+        { id: 10, name: "4"},
+        { id: 11, name: "4a"},
+        { id: 12, name: "4b"},
+        { id: 13, name: "5"},
+        { id: 14, name: "5a"},
+        { id: 15, name: "5b"},
+        { id: 16, name: "6"},
+        { id: 17, name: "6a"},
+        { id: 18, name: "6b"},
+        { id: 19, name: "7"},
+        { id: 20, name: "7a"},
+        { id: 21, name: "7b"},
+        { id: 22, name: "8"},
+        { id: 23, name: "8a"},
+        { id: 24, name: "8b"},
+        { id: 25, name: "9"},
+        { id: 26, name: "9a"},
+        { id: 27, name: "9b"},
+        { id: 28, name: "10"},
+        { id: 29, name: "10a"},
+        { id: 30, name: "10b"},
+        { id: 31, name: "11"},
+        { id: 32, name: "11a"},
+        { id: 33, name: "11b"},
+        { id: 34, name: "12"},
+        { id: 35, name: "12a"},
+        { id: 36, name: "12b"},
+        { id: 37, name: "13"},
+        { id: 38, name: "13a"},
+        { id: 39, name: "13b"}
+    ];
 }
