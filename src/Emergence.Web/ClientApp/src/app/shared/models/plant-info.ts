@@ -1,4 +1,4 @@
-import { LightType, Month, StratificationType, Unit, Visibility, WaterType } from "./enums";
+import { Effect, LightType, Month, SoilType, StratificationType, Unit, Visibility, WaterType, Wildlife } from "./enums";
 import { Lifeform } from "./lifeform";
 import { Origin } from "./origin";
 import { Photo } from "./photo";
@@ -17,6 +17,7 @@ export class PlantInfo {
     visibility: Visibility;
     name: string;
     notes: string;
+    wildlifeEffects: WildlifeEffect[];
     userId: number;
     createdBy: string;
     dateCreated: Date;
@@ -27,6 +28,7 @@ export class PlantInfo {
     taxon: Taxon;
     photos: Photo[];
     user: User;
+    soilTypes: SoilType[];
 }
   
 export class BloomTime {
@@ -82,20 +84,4 @@ export class StratificationStage {
 export class WildlifeEffect {
   wildlife: Wildlife;
   effect: Effect;
-}
-
-export enum Wildlife {
-  Bees,
-  Beetles,
-  Birds,
-  Butterflies,
-  Hummingbirds,
-  Moths,
-  Wasps
-}
-
-export enum Effect {
-  "",
-  Food,
-  Host
 }

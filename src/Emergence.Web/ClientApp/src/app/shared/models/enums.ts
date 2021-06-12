@@ -137,6 +137,21 @@ export enum LocationStatus {
     "Native & Extirpated"
 }
 
+export enum Wildlife {
+    Bees,
+    Beetles,
+    Birds,
+    Butterflies,
+    Hummingbirds,
+    Moths,
+    Wasps
+  }
+  
+  export enum Effect {
+    Food,
+    Host
+  }
+
 export enum ActivityType {
     "",
     "Germinate",

@@ -7,11 +7,11 @@ import { LifeformService } from 'src/app/service/lifeform-service';
 import { OriginService } from 'src/app/service/origin-service';
 import { PlantInfoService } from 'src/app/service/plant-info-service';
 import { getElementId, onImgError } from 'src/app/shared/common';
-import { LightType, Month, SoilType, StratificationType, Visibility, WaterType } from 'src/app/shared/models/enums';
+import { Effect, LightType, Month, SoilType, StratificationType, Visibility, WaterType, Wildlife } from 'src/app/shared/models/enums';
 import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Origin } from 'src/app/shared/models/origin';
 import { Photo } from 'src/app/shared/models/photo';
-import { Effect, PlantInfo, StratificationStage, Wildlife, WildlifeEffect, Zone } from 'src/app/shared/models/plant-info';
+import { PlantInfo, StratificationStage, WildlifeEffect, Zone } from 'src/app/shared/models/plant-info';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { getZones } from 'src/app/shared/models/zone';
 
@@ -91,6 +91,8 @@ export class PlantInfoEditComponent implements OnInit {
         this.selectedOrigin = plantInfo.origin;
         this.uploadedPhotos = plantInfo.photos;
         this.chosenStratificationStages = plantInfo.requirements.stratificationStages;
+        this.chosenWildlifeEffects = plantInfo.wildlifeEffects;
+        this.chosenSoilTypes = plantInfo.soilTypes ?? [];
       });
     }
 
@@ -100,7 +102,7 @@ export class PlantInfoEditComponent implements OnInit {
       this.plantInfo.dateCreated = new Date();
       this.plantInfo.photos = [];
       this.plantInfo.visibility = this.visibilities[Visibility["Inherit from profile"]];
-
+      this.chosenSoilTypes = [];
     }
   }
 
@@ -156,8 +158,13 @@ export class PlantInfoEditComponent implements OnInit {
 
   public savePlantInfo(): void {
     this.plantInfo.lifeform = this.selectedLifeform;
+    this.plantInfo.commonName = this.selectedLifeform.commonName;
+    this.plantInfo.scientificName = this.selectedLifeform.scientificName;
     this.plantInfo.origin = this.selectedOrigin;
     this.plantInfo.photos = this.uploadedPhotos;
+    this.plantInfo.requirements.stratificationStages = this.chosenStratificationStages;
+    this.plantInfo.wildlifeEffects = this.chosenWildlifeEffects;
+    this.plantInfo.soilTypes = this.chosenSoilTypes;
 
     this.plantInfoService.savePlantInfo(this.plantInfo).subscribe(
       (plantInfo) => this.router.navigate(['/plantinfos/', plantInfo.plantInfoId]),
@@ -188,10 +195,53 @@ export class PlantInfoEditComponent implements OnInit {
   }
 
   addStratificationStage() {
-
+    if (!this.chosenStratificationStages) {
+      this.chosenStratificationStages = [];
+    }
+    this.chosenStratificationStages.push({ 
+        step: this.chosenStratificationStages.length + 1, 
+        dayLength: null, 
+        stratificationType: null
+      });
   }
 
-  removeStratificationStage() {
+  removeStratificationStage(step: number) {
+    this.chosenStratificationStages = this.chosenStratificationStages.filter((stage) => stage.step != step);
+    if (this.chosenStratificationStages.length === 0) {
+      this.chosenStratificationStages = null;
+    }
+  }
 
+  addWildlifeEffect() {
+    if (!this.chosenWildlifeEffects) {
+      this.chosenWildlifeEffects = [];
+    }
+    this.chosenWildlifeEffects.push({ 
+        effect: null,
+        wildlife: null
+      });
+  }
+
+  removeWildlifeEffect(index: number) {
+    this.chosenWildlifeEffects.splice(index, 1);
+    if (this.chosenWildlifeEffects.length === 0) {
+      this.chosenWildlifeEffects = null;
+    }
+  }
+
+  isSoilTypeChosen(soilType: SoilType) {
+    return this.chosenSoilTypes.includes(soilType);
+  }
+
+  addRemoveSoilType(soilType: SoilType) {
+    if (this.isSoilTypeChosen(soilType)) {
+      this.chosenSoilTypes = this.chosenSoilTypes.filter((type) => type != soilType);
+    } else {
+      this.chosenSoilTypes.push(soilType);
+    }
+
+    if (this.chosenSoilTypes.length === 0) {
+      this.chosenSoilTypes = null;
+    }
   }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Emergence.Data;
 using Emergence.Data.Identity;
@@ -150,6 +151,16 @@ namespace Emergence
             });
 
             services.AddControllersWithViews();
+            services.AddControllers()
+                .AddApplicationPart(Assembly.Load("Emergence.API"))
+                .ConfigureApiBehaviorOptions(opt =>
+                {
+                    opt.SuppressModelStateInvalidFilter = true;
+                })
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
+                });
             services.AddRazorPages();
             services.AddProgressiveWebApp();
             // In production, the Angular files will be served from this directory

@@ -176,13 +176,13 @@
                     <div class="row">
                         <div class="col-lg-12 col-xs">
                             <label for="req-scarification">Stratification Stages</label>
-                            <div *ngIf="!plantInfo.requirements.stratificationStages">
+                            <div *ngIf="!chosenStratificationStages">
                                 <button type="button" class="btn btn-sm btn-primary" (click)="addStratificationStage()"><span class="oi oi-plus"></span></button>
                             </div>
                             <ng-container *ngFor="let stage of chosenStratificationStages">
                                 <div class="row">
                                     <div class="col-md-2 col-3">
-                                        <div *ngIf="stage.step === 1"><label>Step</label></div>
+                                        <div *ngIf="stage.step === 1" style="text-align:right;"><label>Step</label></div>
                                         <button type="button" class="btn btn-sm btn-primary" (click)="removeStratificationStage(stage.step)">
                                             <span class="oi oi-minus"></span>
                                         </button>
@@ -208,67 +208,56 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <!-- <div class="col-lg-12 col-xs">
+                        <div class="col-lg-12 col-xs">
                             <label for="wildlife-effects">Wildlife effects</label>
-                            <div class="@(AnyWildlifeEffects() ? "d-none" : "")">
-                                <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddWildlifeEffect())"><span class="oi oi-plus"></span></button>
+                            <div *ngIf="!chosenWildlifeEffects">
+                                <button type="button" class="btn btn-sm btn-primary" (click)="addWildlifeEffect()"><span class="oi oi-plus"></span></button>
                             </div>
-                            @if (ChosenWildlifeEffects != null)
-                            {
-                                var key = 1;
-                                @foreach (var effect in ChosenWildlifeEffects)
-                                {
-                                    var firstRow = key == 1;
-                                    var lastRow = ChosenWildlifeEffects.Count == key;
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <div class="@(firstRow ? "" : "d-none")"><label>&nbsp;</label></div>
-                                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => RemoveWildlifeEffect(effect))"><span class="oi oi-minus"></span></button>
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("wildlife", key.ToString())">Wildlife</label>
-                                            <select @bind="@effect.Wildlife" class="form-control" id="@GetElementId("wildlife", key.ToString())">
-                                                @foreach (var wildlife in WildlifeTypes)
-                                                {
-                                                    <option value="@wildlife">@(wildlife.ToString())</option>
-                                                }
-                                            </select>
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="@(firstRow ? "" : "d-none")" for="@GetElementId("effect", key.ToString())">Effect</label>
-                                            <select @bind="@effect.Effect" class="form-control" id="@GetElementId("effect", key.ToString())">
-                                                @foreach (var effectType in Effects)
-                                                {
-                                                    <option value="@effectType">@(effectType.ToFriendlyName())</option>
-                                                }
-                                            </select>
-                                        </div>
+                            <ng-container *ngFor="let wildlifeEffect of chosenWildlifeEffects; let key = index">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div *ngIf="key === 0"><label>&nbsp;</label></div>
+                                        <button type="button" class="btn btn-sm btn-primary" 
+                                            (click)="removeWildlifeEffect(key)">
+                                            <span class="oi oi-minus"></span>
+                                        </button>
                                     </div>
-                                    <div class="@(lastRow ? "row" : "d-none")">
-                                        <div class="col-1">
-                                            <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => AddWildlifeEffect())"><span class="oi oi-plus"></span></button>
-                                        </div>
+                                    <div class="col-6">
+                                        <label *ngIf="key === 0" [for]="getElementId('req-wildlife', key)">Wildlife</label>
+                                        <select [(ngModel)]="wildlifeEffect.wildlife" class="form-control" [id]="getElementId('req-wildlife', key)" [name]="getElementId('wildlife', key)">
+                                            <option *ngFor="let wildlifeType of wildlifeTypes" [value]="wildlifeType">{{wildlifeType}}</option>
+                                        </select>
                                     </div>
-                                    key++;
-                                }
-                            }
-                        </div> -->
+                                    <div class="col-4">
+                                        <label *ngIf="key === 0" [for]="getElementId('req-effect', key)">Effect</label>
+                                        <select [(ngModel)]="wildlifeEffect.effect" class="form-control" [id]="getElementId('req-effect', key)" [name]="getElementId('effect', key)">
+                                            <option *ngFor="let effect of effects" [value]="effect">{{effect}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div *ngIf="chosenWildlifeEffects.length == key + 1" class="row">
+                                    <div class="col-1">
+                                        <button type="button" class="btn btn-sm btn-primary" (click)="addWildlifeEffect()">
+                                            <span class="oi oi-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-1 col-xs">
                 </div>
-                <!-- <div class="col-lg-2 col-xs">
+                <div class="col-lg-2 col-xs">
                     <label for="soil-types">Soil types</label>
                     <ul class="checklist">
-                        @foreach (var soilType in SoilTypes)
-                        {
-                            <li>
-                                <input type="checkbox" checked="@IsSoilTypeChosen(soilType)" @onclick="(() => AddRemoveSoilType(soilType))" id="@GetElementId("req-soil", "soilType")" />
-                                <label for="@GetElementId("req-soil", soilType.ToString())">@soilType</label>
-                            </li>
-                        }
+                        <li *ngFor="let soilType of soilTypes; let key = index">
+                            <input type="checkbox" [checked]="isSoilTypeChosen(soilType)" (click)="addRemoveSoilType(soilType)" 
+                                [id]="getElementId('req-soil', key)" [name]="getElementId('req-soil', key)" />
+                            <label [for]="getElementId('req-soil', key)">{{soilType}}</label>
+                        </li>
                     </ul>
-                </div> -->
+                </div>
             </div>
             <app-upload-photos [(photos)]="uploadedPhotos" [type]="4" (photosChange)="photosChanged($event)" [name]="plantInfo.commonName" type="PlantInfo"></app-upload-photos>
             <div class="row">
