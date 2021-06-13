@@ -1,5 +1,6 @@
-import { Effect, LightType, Month, SoilType, StratificationType, Unit, Visibility, WaterType, Wildlife } from "./enums";
+import { ConservationStatus, Effect, LightType, LocationStatus, Month, SoilType, StratificationType, Unit, Visibility, WaterType, Wildlife } from "./enums";
 import { Lifeform } from "./lifeform";
+import { GeoLocation } from "./location";
 import { Origin } from "./origin";
 import { Photo } from "./photo";
 import { Taxon } from "./taxon";
@@ -29,6 +30,7 @@ export class PlantInfo {
     photos: Photo[];
     user: User;
     soilTypes: SoilType[];
+    locations: PlantLocation[];
 }
   
 export class BloomTime {
@@ -84,4 +86,14 @@ export class StratificationStage {
 export class WildlifeEffect {
   wildlife: Wildlife;
   effect: Effect;
+}
+
+export class PlantLocation {
+  location: GeoLocation;
+  status: LocationStatus;
+  conservationStatus: ConservationStatus;
+  createdBy: string;
+  dateCreated: Date;
+  modifiedBy: string;
+  dateModified: Date;
 }

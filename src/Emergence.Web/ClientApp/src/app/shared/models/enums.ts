@@ -117,8 +117,8 @@ export enum Month {
 export enum ConservationStatus {
     "" = 0,
     "Critically Endangered" = 1,
-    Endangered = 2,
-    Vulnerable = 3,
+    "Endangered" = 2,
+    "Vulnerable" = 3,
     "Near Threatened" = 4,
     "Least Concern" = 5,
     "Possibly Extirpated" = 6,
@@ -130,9 +130,9 @@ export enum ConservationStatus {
 
 export enum LocationStatus {
     "",
-    Native,
-    Introduced,
-    Incidental,
+    "Native",
+    "Introduced",
+    "Incidental",
     "Native & Introduced",
     "Native & Extirpated"
 }

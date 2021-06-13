@@ -70,7 +70,7 @@
             </ng-container>
         </div>
         <div class="col-lg-3 col-4">
-            <ng-container *ngIf="plantInfo.requirements.zoneRequirements.minimumZone || plantInfo.requirements.zoneRequirements.maximumZone">
+            <ng-container *ngIf="plantInfo.requirements.zoneRequirements?.minimumZone || plantInfo.requirements.zoneRequirements?.maximumZone">
                 <div>
                     <label for="zones">Zones</label>
                 </div>
@@ -152,6 +152,38 @@
                         </div>
                     </div>
                 </ng-container>
+            </ng-container>
+        </div>
+        <div class="col-lg-4 col">
+            <ng-container *ngIf="plantInfo.wildlifeEffects">
+                <label for="wildlife-effects">Wildlife effects</label>
+                <ul>
+                    <li *ngFor="let wildlifeEffect of plantInfo.wildlifeEffects; let key = index;">
+                        <span [id]="getElementId('effect', key)">{{wildlifeEffect.effect}} for </span>
+                        <span [id]="getElementId('wildlife', key)">{{wildlifeEffect.wildlife}}</span>
+                    </li>
+                </ul>
+            </ng-container>
+        </div>
+        <div class="col-lg-3 col">
+            <ng-container *ngIf="plantInfo.soilTypes">
+                <label for="soil-types">Soil Types</label>
+                <ul>
+                    <li *ngFor="let soilType of plantInfo.soilTypes">{{soilType}}</li>
+                </ul>
+            </ng-container>
+        </div>
+        <div class="col-lg-12 col">
+            <ng-container *ngIf="plantInfo.locations">
+            <div>
+                <label for="native-distribution">Native Distribution</label>
+                <ul *ngFor="let conservationGroup of conservationGroups" style="line-height:1.25em;margin-bottom:.5em;">
+                    <li>
+                        <span>{{conservationGroup.conservationStatus}}: </span>
+                        <span *ngFor="let stateGroup of conservationGroup.countryGroups">{{stateGroup.country}}: ({{stateGroup.states}}); </span>
+                    </li>
+                </ul>
+            </div>
             </ng-container>
         </div>
         <div *ngIf="plantInfo.notes" class="col-lg-12 col">
