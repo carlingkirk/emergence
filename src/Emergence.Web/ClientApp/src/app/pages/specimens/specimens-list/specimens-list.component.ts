@@ -1,20 +1,16 @@
-import { basename } from '@angular/compiler-cli/src/ngtsc/file_system';
 import { Component, Input, OnInit } from '@angular/core';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { StorageService } from 'src/app/service/storage-service';
 import { Column } from 'src/app/shared/components/sortable-headers/sortable-headers.component';
 import { IListable, Listable } from 'src/app/shared/interface/list';
-import { FilterBody } from 'src/app/shared/models/filters';
-import { PageRequest, SearchRequest, SortRequest } from 'src/app/shared/models/search-request';
-import { SearchResult } from 'src/app/shared/models/search-result';
 import { Specimen } from '../../../shared/models/specimen';
 
 @Component({
-  selector: 'app-specimens-list-page',
-  templateUrl: './specimens-list-page.component.html',
-  styleUrls: ['./specimens-list-page.component.css']
+  selector: 'app-specimens-list',
+  templateUrl: './specimens-list.component.html',
+  styleUrls: ['./specimens-list.component.css']
 })
-export class SpecimensListPageComponent extends Listable implements OnInit, IListable   {
+export class SpecimensListComponent extends Listable implements OnInit, IListable   {
   public specimens: Specimen[];
   @Input()
   public showSearch: boolean = true;

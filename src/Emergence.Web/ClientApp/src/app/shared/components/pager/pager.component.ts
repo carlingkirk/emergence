@@ -20,7 +20,10 @@ export class PagerComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.totalPages = Math.floor(this.count / this.take);
+  }
+
+  public getPageDisplay() {
+    return this.currentPage + " of " + Math.floor(this.count / this.take);
   }
 
   public page(pages: number = 0) {

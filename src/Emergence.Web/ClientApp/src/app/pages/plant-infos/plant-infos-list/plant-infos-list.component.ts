@@ -6,11 +6,11 @@ import { IListable, Listable } from 'src/app/shared/interface/list';
 import { PlantInfo } from 'src/app/shared/models/plant-info';
 
 @Component({
-  selector: 'app-plant-infos-list-page',
-  templateUrl: './plant-infos-list-page.component.html',
-  styleUrls: ['./plant-infos-list-page.component.css']
+  selector: 'app-plant-infos-list',
+  templateUrl: './plant-infos-list.component.html',
+  styleUrls: ['./plant-infos-list.component.css']
 })
-export class PlantInfosListPageComponent extends Listable implements OnInit, IListable {
+export class PlantInfosListComponent extends Listable implements OnInit, IListable {
   public plantInfos: PlantInfo[];
   @Input()
   public showSearch: boolean = true;

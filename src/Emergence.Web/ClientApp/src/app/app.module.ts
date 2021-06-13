@@ -12,8 +12,8 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
-import { SpecimensListPageComponent } from './pages/specimens/specimens-list-page/specimens-list-page.component';
-import { PlantInfosListPageComponent } from './pages/plant-infos/plant-infos-list-page/plant-infos-list-page.component';
+import { SpecimensListComponent } from './pages/specimens/specimens-list/specimens-list.component';
+import { PlantInfosListComponent } from './pages/plant-infos/plant-infos-list/plant-infos-list.component';
 import { SpecimenService } from './service/specimen-service';
 import { SpecimenPageComponent } from './pages/specimens/specimen-page/specimen-page.component';
 import { AboutComponent } from './pages/about/about.component';
@@ -45,8 +45,8 @@ import { PlantInfoEditComponent } from './pages/plant-infos/plant-info-edit/plan
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    SpecimensListPageComponent,
-    PlantInfosListPageComponent,
+    SpecimensListComponent,
+    PlantInfosListComponent,
     SpecimenPageComponent,
     AboutComponent,
     TermsComponent,
@@ -74,14 +74,14 @@ import { PlantInfoEditComponent } from './pages/plant-infos/plant-info-edit/plan
       { path: 'terms', component: TermsComponent },
       { path: 'privacy', component: PrivacyComponent },
       { path: 'about', component: AboutComponent },
-      { path: 'specimens/list', component: SpecimensListPageComponent, canActivate: [AuthorizeGuard],
+      { path: 'specimens/list', component: SpecimensListComponent, canActivate: [AuthorizeGuard],
         children: [
           { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
           { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] }
         ]},
       { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
       { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] },
-      { path: 'plantinfos/list', component: PlantInfosListPageComponent, canActivate: [AuthorizeGuard],
+      { path: 'plantinfos/list', component: PlantInfosListComponent, canActivate: [AuthorizeGuard],
       children: [
         { path: 'plantinfos/:id', component: PlantInfoViewerComponent, canActivate: [AuthorizeGuard] }, 
         { path: 'plantinfos/edit/:id', component: PlantInfoEditComponent, canActivate: [AuthorizeGuard] }
