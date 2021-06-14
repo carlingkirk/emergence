@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { getElementId } from 'src/app/shared/common';
-import { ConservationStatus, LocationStatus } from 'src/app/shared/models/enums';
+import { ConservationStatus } from 'src/app/shared/models/enums';
 import { Photo } from 'src/app/shared/models/photo';
-import { PlantInfo, PlantLocation } from 'src/app/shared/models/plant-info';
+import { PlantInfo } from 'src/app/shared/models/plant-info';
 
 @Component({
   selector: 'app-plant-info-page',

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Emergence.Data.Shared.Enums;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -9,6 +11,7 @@ namespace Emergence.Data.Shared.Models
         public int OriginId { get; set; }
 
         public string Name { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<OriginType>))]
         public OriginType Type { get; set; }
         public string Description { get; set; }
         public string Authors { get; set; }
@@ -16,6 +19,7 @@ namespace Emergence.Data.Shared.Models
         public int? LocationId { get; set; }
         public string ExternalId { get; set; }
         public string AltExternalId { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<Visibility>))]
         public Visibility Visibility { get; set; }
         public int? UserId { get; set; }
         public string CreatedBy { get; set; }

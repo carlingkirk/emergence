@@ -14,4 +14,6 @@ export class GeoLocation {
     dateCreated: Date;
     modifiedBy: string;
     dateModified: Date;
+    latLong: string;
+    cityState: string;
   }

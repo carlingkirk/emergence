@@ -1,0 +1,33 @@
+<div class="card-header h3">
+    <a [routerLink]="['/origins/list']">
+        <button type="button" class="btn btn-primary">Back</button>
+    </a>
+    <span class="title">Origin: </span>
+    <ng-container *ngIf="origin && origin.originId > 0">
+        <span >{{origin.name}} </span>
+    </ng-container>
+    <ng-container *ngIf="origin && origin.originId == 0">
+        <span class="font-italic">New</span>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isEditing && origin">
+    <app-origin-edit [origin]="origin"></app-origin-edit>>
+</ng-container>
+<ng-container *ngIf="origin">
+    <app-origin-page [origin]="origin"></app-origin-page>
+</ng-container>
+<span *ngIf="!origin">Loading...</span>
+
+<ng-container *ngIf="isOwner && !isEditing && origin && origin.originId > 0">
+    <a [routerLink]='["/origins/edit", origin.originId]'>
+        <button type="button" class="btn btn-primary">Edit</button>
+    </a>
+    <button type="button" class="btn btn-primary" (click)="removeorigin()">Delete</button>
+</ng-container>
+
+<ng-container *ngIf="!isOwner">
+    <button type="button" class="btn btn-primary" (click)="showMessageModal()">
+        <span class="oi oi-plus btn-oi"></span>Message
+    </button>
+</ng-container>

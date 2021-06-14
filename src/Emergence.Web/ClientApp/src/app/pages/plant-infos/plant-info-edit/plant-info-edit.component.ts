@@ -170,7 +170,7 @@ export class PlantInfoEditComponent implements OnInit {
       (plantInfo) => this.router.navigate(['/plantinfos/', plantInfo.plantInfoId]),
       (error) => {
         console.log(error);
-        this.errorMessage = "There was an error saving the specimen";
+        this.errorMessage = "There was an error saving the plant profile";
       });
   }
 

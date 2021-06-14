@@ -37,6 +37,10 @@ import { PhotoModalComponent } from './shared/components/photo-modal/photo-modal
 import { PlantInfoPageComponent } from './pages/plant-infos/plant-info-page/plant-info-page.component';
 import { PlantInfoViewerComponent } from './pages/plant-infos/plant-info-viewer/plant-info-viewer.component';
 import { PlantInfoEditComponent } from './pages/plant-infos/plant-info-edit/plant-info-edit.component';
+import { OriginsListComponent } from './pages/origins/origins-list/origins-list.component';
+import { OriginViewerComponent } from './pages/origins/origin-viewer/origin-viewer.component';
+import { OriginEditComponent } from './pages/origins/origin-edit/origin-edit.component';
+import { OriginPageComponent } from './pages/origins/origin-page/origin-page.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +66,11 @@ import { PlantInfoEditComponent } from './pages/plant-infos/plant-info-edit/plan
     PhotoModalComponent,
     PlantInfoPageComponent,
     PlantInfoViewerComponent,
-    PlantInfoEditComponent
+    PlantInfoEditComponent,
+    OriginsListComponent,
+    OriginViewerComponent,
+    OriginEditComponent,
+    OriginPageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -87,7 +95,14 @@ import { PlantInfoEditComponent } from './pages/plant-infos/plant-info-edit/plan
         { path: 'plantinfos/edit/:id', component: PlantInfoEditComponent, canActivate: [AuthorizeGuard] }
       ]},
       { path: 'plantinfos/:id', component: PlantInfoViewerComponent, canActivate: [AuthorizeGuard] }, 
-      { path: 'plantinfos/edit/:id', component: PlantInfoEditComponent, canActivate: [AuthorizeGuard] }
+      { path: 'plantinfos/edit/:id', component: PlantInfoEditComponent, canActivate: [AuthorizeGuard] },
+      { path: 'origins/list', component: OriginsListComponent, canActivate: [AuthorizeGuard],
+      children: [
+        { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] }, 
+        { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] }
+      ]},
+      { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] }, 
+      { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] }
     ],
     { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule,

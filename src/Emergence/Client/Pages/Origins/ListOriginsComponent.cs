@@ -12,10 +12,11 @@ namespace Emergence.Client.Components
             new Dictionary<string, string>
             {
                 { "Name", "Name" },
-                { "ScientificName", "Scientific Name" },
-                { "ActivityType", "Activity Type" },
-                { "DateOccured", "Date Occured" },
-                { "DateScheduled", "Date Scheduled" }
+                { "Type", "Type" },
+                { "Description", "Description" },
+                { "ParentOrigin", "Parent Origin" },
+                { "City", "City" },
+                { "Link", "Link" }
             };
         public override async Task<FindResult<Origin>> GetListAsync(FindParams findParams)
         {

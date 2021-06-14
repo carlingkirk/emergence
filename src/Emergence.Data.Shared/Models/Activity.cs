@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Emergence.Data.Shared.Enums;
 
 namespace Emergence.Data.Shared.Models
 {
@@ -9,6 +11,7 @@ namespace Emergence.Data.Shared.Models
         public int ActivityId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<ActivityType>))]
         public ActivityType ActivityType { get; set; }
         public string CustomActivityType { get; set; }
         public int? Quantity { get; set; }
@@ -16,6 +19,7 @@ namespace Emergence.Data.Shared.Models
         public string AssignedTo { get; set; }
         public DateTime? DateOccurred { get; set; }
         public DateTime? DateScheduled { get; set; }
+        [JsonConverter(typeof(EnumDisplayConverter<Visibility>))]
         public Visibility Visibility { get; set; }
         public int? UserId { get; set; }
         public string CreatedBy { get; set; }

@@ -1,0 +1,93 @@
+<form (ngSubmit)="search()">
+    <div *ngIf="searchRequest">
+        <ng-container *ngIf="showSearch">
+            <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
+            <button class="btn btn-primary" type="submit">Search</button>
+            <ng-container *ngIf="!forUserId">
+                <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
+                <label for="show-public"> Show Public</label>
+            </ng-container>
+            <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
+            <label for="list-view"> List View</label>
+            <button type="button" class="btn btn-primary" (click)="toggleFilters()">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
+            <a [routerLink]='["/origins/edit/0"]'>
+                <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Origin</button>
+            </a>
+        </ng-container>
+        <app-search-filters *ngIf="showFilters && searchResult" (filtersChanged)="filtersChange($event)" [filterBody]="searchResult.filters"></app-search-filters>
+        <ng-container *ngIf="listView">
+            <table class="list">
+                <thead app-sortable-headers [columns]="columns" [sortBy]="searchRequest.sortBy" [sortDirection]="searchRequest.sortDirection" (sortChanged)="sortChange($event)">
+                <tbody>
+                    <tr *ngIf="totalCount == 0">
+                        <td><span>No origins found</span></td>
+                    </tr>
+                    <tr *ngFor="let origin of origins">
+                        <td>
+                            <a [routerLink]='["/origins", origin.originId]'>
+                                <span *ngIf="origin.name" class="link">{{ origin.name }}</span>
+                                <span *ngIf="!origin.name" class="link">(No name)</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span *ngIf="origin.type">{{ origin.type }}</span>
+                        </td>
+                        <td>
+                            <span *ngIf="origin.description">{{ origin.description }}</span>
+                        </td>
+                        <td>
+                            <a *ngIf="origin.parentOrigin" [routerLink]='["/origins", origin.parentOrigin.originId]'>
+                                <span *ngIf="origin.parentOrigin.name" class="link">{{ origin.parentOrigin.name }}</span>
+                                <span *ngIf="!origin.parentOrigin.name" class="link">(No name)</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span *ngIf="origin.location?.cityState">{{origin.location.cityState}}</span>
+                        </td>
+                        <td>
+                            <a *ngIf="origin.uri" [href]="origin.uri" target="_blank" [alt]="'Link for ' + origin.name"><span class="link">{{origin.shortUri}}</span></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-container *ngIf="!listView">
+            <div class="container">
+                <div class="row">
+                    <span *ngIf="totalCount == 0">No origins found</span>
+                    <ng-container *ngFor="let origin of origins">
+                        <content-card class="col-lg-4 col-md-6 col-xs item-card"
+                            [name]="origin.name" 
+                            [colorSearch]="origin.name" >
+                            <div class="col-12">
+                                <a [routerLink]='["/origins", origin.originId]'>
+                                    <span *ngIf="origin.name" class="link">{{ origin.name }}</span>
+                                    <span *ngIf="!origin.name" class="link">(No name)</span>
+                                </a>
+                            </div>
+                            <div class="col-12">
+                                <a *ngIf="origin.uri" [href]="origin.uri" target="_blank" [alt]="'Link for ' + origin.name">
+                                    <span *ngIf="origin.type" class="link">{{ origin.type }}</span><span class="oi link oi-external-link"></span>
+                                </a>
+                                <span *ngIf="!origin.uri">{{ origin.type }}</span>
+                            </div>
+                            <div class="col-12">
+                                <span *ngIf="origin.location?.cityState">{{origin.location.cityState}}</span>
+                            </div>
+                            <div class="col-12">
+                                <span *ngIf="origin.user">by {{origin.user.displayName}}</span>
+                            </div>
+                        </content-card>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div>
+        <app-pager *ngIf="searchResult" [count]="totalCount" [take]="searchRequest.take" (pageChange)="pageChanged($event)"></app-pager>
+        <a [routerLink]='["/origins/edit/0"]'>
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Origin</button>
+        </a>
+    </div>
+</form>

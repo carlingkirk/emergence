@@ -2,18 +2,19 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
-import { PlantInfoService } from 'src/app/service/plant-info-service';
-import { PlantInfo } from 'src/app/shared/models/plant-info';
+import { OriginService } from 'src/app/service/origin-service';
+import { Origin } from 'src/app/shared/models/origin';
 
 @Component({
-  selector: 'app-plant-info-viewer',
-  templateUrl: './plant-info-viewer.component.html',
-  styleUrls: ['./plant-info-viewer.component.css']
+  selector: 'app-origin-viewer',
+  templateUrl: './origin-viewer.component.html',
+  styleUrls: ['./origin-viewer.component.css']
 })
-export class PlantInfoViewerComponent implements OnInit {
+export class OriginViewerComponent implements OnInit {
+  
   @Input()
   public id: number;
-  public plantInfo: PlantInfo;
+  public origin: Origin;
   public commonName: string;
   public scientificName: string;
   public isEditing: boolean = false;
@@ -23,7 +24,7 @@ export class PlantInfoViewerComponent implements OnInit {
   public user: IUser;
   constructor(
     private authorizeService: AuthorizeService,
-    private readonly plantInfoService: PlantInfoService,
+    private readonly originService: OriginService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -33,11 +34,9 @@ export class PlantInfoViewerComponent implements OnInit {
       this.user = user;
       this.user.userId = user["sub"];
 
-      this.plantInfoService.getPlantInfo(this.id).subscribe((plantInfo) => {
-        this.plantInfo = plantInfo;
-        this.scientificName = plantInfo.scientificName ?? plantInfo.lifeform.scientificName;
-        this.commonName = plantInfo.commonName ?? plantInfo.lifeform.commonName;
-        this.isOwner = this.plantInfo.createdBy == this.user.userId;
+      this.originService.getOrigin(this.id).subscribe((origin) => {
+        this.origin = origin;
+        this.isOwner = this.origin.createdBy == this.user.userId;
       });
     });
   }

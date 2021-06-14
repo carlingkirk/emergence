@@ -1,0 +1,116 @@
+<ng-container *ngIf="origin">
+    <form (ngSubmit)="saveOrigin()">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Validation message -->
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="name">Name </label>
+                    <input [(ngModel)]="origin.name" type="text" class="form-control" id="name" name="name" />
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="type">Type</label>
+                    <select [(ngModel)]="origin.type" class="form-control" id="type" name="type" >
+                        <option *ngFor="let type of originTypes" [value]="type">{{type}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="origin">Parent Origin</label>
+                    <input type="text" class="form-control" name="parentOrigin" 
+                        [(ngModel)]="selectedParentOrigin" 
+                        [ngbTypeahead]="originsTypeahead" 
+                        [resultFormatter]="originResultFormatter"
+                        [inputFormatter]="originInputFormatter"
+                        [resultTemplate]="originResultTemplate" />
+                    <ng-template #originResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </ng-template>
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="visibility">Visibility</label>
+                    <select [(ngModel)]="origin.visibility" class="form-control" id="visibility" name="visibility" >
+                        <option *ngFor="let visibility of visibilities" [value]="visibility">{{visibility}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="uri">Link</label>
+                    <input [(ngModel)]="origin.uri" type="text" class="form-control" id="uri" name="uri" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="description">Description</label>
+                    <textarea [(ngModel)]="origin.description" type="text" class="form-control" id="description" name="description"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-xs">
+                    <label for="authors">Authors</label>
+                    <input [(ngModel)]="origin.authors" type="text" class="form-control" id="authors" name="authors" />
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="external-id">External Identifier</label>
+                    <input [(ngModel)]="origin.externalId" type="text" class="form-control" id="externalId" name="externalId" />
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="alt-external-id">Alt External Identifier</label>
+                    <input [(ngModel)]="origin.altExternalId" type="text" class="form-control" id="altExternalId" name="altExternalId" />
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col-lg-9 col-xs">
+                    <div class="row"><div class="col">
+                        <label for="addressLine1">Address Line 1</label>
+                        <input [(ngModel)]="origin.location.addressLine1" type="text" class="form-control" id="addressLine1" name="addressLine1" />
+                    </div></div>
+                    <div class="row"><div class="col">
+                        <label for="addressLine2">Address Line 2</label>
+                        <input [(ngModel)]="origin.location.addressLine2" type="text" class="form-control" id="addressLine2" name="addressLine2" />
+                    </div></div>
+                    <div class="row"><div class="col">
+                        <label for="city">City</label>
+                        <input [(ngModel)]="origin.location.city" type="text" class="form-control" id="city" name="city" />
+                    </div></div>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <label for="stateOrProvince">State</label>
+                            <input [(ngModel)]="origin.location.stateOrProvince" type="text" class="form-control" id="stateOrProvince" name="stateOrProvince" />
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="postalCode">Postal Code</label>
+                            <input [(ngModel)]="origin.location.postalCode" type="text" class="form-control" id="postalCode" name="postalCode" />
+                        </div>
+                        <div class="col">
+                            <label for="country">Country</label>
+                            <input [(ngModel)]="origin.location.country" type="text" class="form-control" id="country" name="country" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row"><div class="col">
+                        <label for="latitude">Latitude</label>
+                        <input [(ngModel)]="origin.location.latitude" type="text" class="form-control" id="latitude" name="latitude" />
+                    </div></div>
+                    <div class="row"><div class="col">
+                        <label for="longitude">Longitude</label>
+                        <input [(ngModel)]="origin.location.longitude" type="text" class="form-control" id="longitude" name="longitude" />
+                    </div></div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <ng-container *ngIf="modal">
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancel</button>
+        </ng-container>
+        <ng-container *ngIf="!modal">
+            <button type="button" (click)="cancel()" class="btn btn-secondary" >Cancel</button>
+        </ng-container>
+            <span *ngIf="errorMessage" class="error-message">{{errorMessage}}</span>
+    </form>
+</ng-container>
+<ng-container *ngIf="!origin">
+    <span>Loading...</span>
+</ng-container>

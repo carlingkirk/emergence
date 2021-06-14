@@ -9,3 +9,8 @@
 table.list > tbody > tr > td {
     padding: .15rem .25rem;
 }
+
+span.oi-external-link {
+    padding-left: .25rem;
+    font-size: .8rem;
+}

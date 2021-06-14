@@ -27,4 +27,9 @@ export class OriginService {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/origin/find', searchRequest)
         .pipe((searchResult) => { return searchResult });
     }
+
+    public saveOrigin(origin: Origin) {
+        return this.httpClient.put<Origin>(this.baseUrl + 'api/origin/', origin)
+        .pipe((origin) => { return origin });
+    }
 }

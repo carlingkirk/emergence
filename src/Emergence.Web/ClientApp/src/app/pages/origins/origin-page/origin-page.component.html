@@ -1,0 +1,110 @@
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="name">Name</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.name}}</span>
+            </div>
+        </div>
+        <div class="col-lg-2 col-xs">
+            <div>
+                <label for="type">Type</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.type}}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs">
+            <div>
+                <label for="name">Parent Origin</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.parentOrigin?.name}}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs">
+            <div *ngIf="origin.user?.displayName" class="col-lg-4 col-xs">
+                <div class="user-display">By {{origin.user?.displayName}}</div>
+            </div>
+        </div>
+        <div class="col">
+            <div>
+                <label for="uri">Link</label>
+            </div>
+            <div>
+                <a [href]="origin.uri" target="_blank">
+                    <span class="link">{{origin.uri}}</span><span *ngIf="origin.uri" class="oi link oi-external-link"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div>
+                <label for="description">Description</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.description}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-6 col-xs">
+            <div>
+                <label for="authors">Authors</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.authors}}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs">
+            <div>
+                <label for="external-id">External Identifier</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.externalId}}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs">
+            <div>
+                <label for="alt-external-id">Alt External Identifier</label>
+            </div>
+            <div>
+                <span class="text-body">{{origin.altExternalId}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="hasAddressInfo()" class="form-group">
+    <div class="row">
+        <div class="col-lg-9 col-xs">
+            <div>
+                <label for="address">Physical Address</label>
+            </div>
+            <div class="col">
+                <span class="text-body">{{origin.location?.addressLine1}}</span>
+            </div>
+            <div class="col">
+                <span class="text-body">{{origin.location?.addressLine2}}</span>
+            </div>
+            <div class="col">
+                <span class="text-body">{{origin.location?.cityState}}</span>
+            </div>
+            <div class="col">
+                <span class="text-body">{{origin.location?.postalCode}}</span>
+            </div>
+            <div class="col">
+                <span class="text-body">{{origin.location?.country}}</span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="col">
+                <span class="text-body">{{origin.location?.latLong}}</span>
+            </div>
+        </div>
+    </div>
+</div>
