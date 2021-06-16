@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { PageRequest, SortRequest } from '../../models/search-request';
 
 @Component({
@@ -12,18 +12,28 @@ export class PagerComponent implements OnInit {
   public count: number;
   @Input()
   public take: number;
+  public skip: number;
   @Output()
   public pageChange = new EventEmitter<PageRequest>();
   public totalPages: number;
   public currentPage: number = 1;
+  public pageDisplay: string;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.pageDisplay = this.getPageDisplay();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.count.currentValue != changes.count.previousValue) {
+      this.currentPage = 1;
+      this.totalPages = Math.ceil(this.count / this.take);
+    }
   }
 
   public getPageDisplay() {
-    return this.currentPage + " of " + Math.floor(this.count / this.take);
+    return this.currentPage + " of " + this.totalPages;
   }
 
   public page(pages: number = 0) {

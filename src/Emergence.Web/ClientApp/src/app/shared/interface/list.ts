@@ -43,7 +43,7 @@ export class Listable implements IListable {
             useNGrams: false,
             sortDirection: 0,
             sortBy: null
-            };
+        };
         this.search();            
     }
 
@@ -52,6 +52,11 @@ export class Listable implements IListable {
     }
 
     public search(): void {
+    }
+
+    public searchTerm(): void {
+        this.searchRequest.skip = 0;
+        this.search();
     }
 
     public filtersChange(filterBody: FilterBody): void {

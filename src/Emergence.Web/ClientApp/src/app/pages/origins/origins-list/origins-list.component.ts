@@ -59,5 +59,4 @@ export class OriginsListComponent extends Listable implements OnInit, IListable 
   public search(): void {
     this.loadOrigins();
   }
-
 }

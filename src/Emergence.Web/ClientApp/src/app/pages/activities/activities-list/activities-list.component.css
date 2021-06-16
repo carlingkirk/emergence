@@ -1,0 +1,11 @@
+.check-lg {
+    width: 1.25rem;
+    height: 1.25rem;
+    position: relative;
+    top: 5px;
+    margin-right: 4px;
+}
+
+table.list > tbody > tr > td {
+    padding: .15rem .25rem;
+}

@@ -1,0 +1,82 @@
+<form (ngSubmit)="search()">
+    <div *ngIf="searchRequest">
+        <ng-container *ngIf="showSearch">
+            <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
+            <button class="btn btn-primary" type="button" (click)="searchTerm()">Search</button>
+            <ng-container *ngIf="!forUserId">
+                <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
+                <label for="show-public"> Show Public</label>
+            </ng-container>
+            <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
+            <label for="list-view"> List View</label>
+            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
+            <a [routerLink]='["/activities/edit/0"]'>
+                <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Activity</button>
+            </a>
+        </ng-container>
+        <ng-container *ngIf="listView">
+            <table class="list">
+                <thead app-sortable-headers [columns]="columns" [sortBy]="searchRequest.sortBy" [sortDirection]="searchRequest.sortDirection" (sortChanged)="sortChange($event)">
+                <tbody>
+                    <tr *ngIf="totalCount == 0">
+                        <td><span>No activities found</span></td>
+                    </tr>
+                    <tr *ngFor="let activity of activities">
+                        <td>
+                            <a [routerLink]='["/activities", activity.activityId]'>
+                                <span *ngIf="activity.name" class="link">{{ activity.name }}</span>
+                                <span *ngIf="!activity.name" class="link">(No name)</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span *ngIf="activity.type">{{ activity.type }}</span>
+                        </td>
+                        <td>
+                            <span *ngIf="activity.description">{{ activity.description }}</span>
+                        </td>
+                        <td>
+                            <span *ngIf="activity.location?.cityState">{{activity.location.cityState}}</span>
+                        </td>
+                        <td>
+                            <a *ngIf="activity.uri" [href]="activity.uri" target="_blank" [alt]="'Link for ' + activity.name"><span class="link">{{activity.shortUri}}</span></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-container *ngIf="!listView">
+            <div class="container">
+                <div class="row">
+                    <span *ngIf="totalCount == 0">No activities found</span>
+                    <ng-container *ngFor="let activity of activities">
+                        <content-card class="col-lg-4 col-md-6 col-xs item-card"
+                            [name]="activity.name" [colorSearch]="getColorName(activity)" [photos]="getPhotos(activity)">
+                            <div class="col-12">
+                                <a [routerLink]='["/activities", activity.activityId]'>
+                                    <span *ngIf="activity.name" class="link">{{ activity.name }}</span>
+                                    <span *ngIf="!activity.name" class="link">(No name)</span>
+                                </a>
+                            </div>
+                            <div *ngIf="showScientificName(activity)" class="col-12">
+                                <span>{{activity.specimen.lifeform?.scientificName}}</span>
+                            </div>
+                            <div class="col-12">
+                                <span *ngIf="getActivityType(activity) !== ''" class="link">{{ getActivityType(activity) }}</span>
+                                <span *ngIf="activity.displayDate"> on {{activity.displayDate | date}}</span>
+                            </div>
+                            <div class="col-12">
+                                <span *ngIf="activity.user">by {{activity.user.displayName}}</span>
+                            </div>
+                        </content-card>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div>
+        <app-pager *ngIf="searchResult" [count]="totalCount" [take]="searchRequest.take" (pageChange)="pageChanged($event)"></app-pager>
+        <a [routerLink]='["/activities/edit/0"]'>
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Activity</button>
+        </a>
+    </div>
+</form>

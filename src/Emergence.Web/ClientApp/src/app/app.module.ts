@@ -41,6 +41,10 @@ import { OriginsListComponent } from './pages/origins/origins-list/origins-list.
 import { OriginViewerComponent } from './pages/origins/origin-viewer/origin-viewer.component';
 import { OriginEditComponent } from './pages/origins/origin-edit/origin-edit.component';
 import { OriginPageComponent } from './pages/origins/origin-page/origin-page.component';
+import { ActivitiesListComponent } from './pages/activities/activities-list/activities-list.component';
+import { ActivityEditComponent } from './pages/activities/activity-edit/activity-edit.component';
+import { ActivityPageComponent } from './pages/activities/activity-page/activity-page.component';
+import { ActivityViewerComponent } from './pages/activities/activity-viewer/activity-viewer.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +74,11 @@ import { OriginPageComponent } from './pages/origins/origin-page/origin-page.com
     OriginsListComponent,
     OriginViewerComponent,
     OriginEditComponent,
-    OriginPageComponent
+    OriginPageComponent,
+    ActivitiesListComponent,
+    ActivityEditComponent,
+    ActivityPageComponent,
+    ActivityViewerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -102,7 +110,14 @@ import { OriginPageComponent } from './pages/origins/origin-page/origin-page.com
         { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] }
       ]},
       { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] }, 
-      { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] }
+      { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] },
+      { path: 'activities/list', component: ActivitiesListComponent, canActivate: [AuthorizeGuard],
+      children: [
+        { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] }, 
+        { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] }
+      ]},
+      { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] }, 
+      { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] }
     ],
     { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule,

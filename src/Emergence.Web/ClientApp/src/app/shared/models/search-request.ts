@@ -10,6 +10,7 @@ export class SearchRequest {
     sortBy?: string;
     sortDirection?: number;
     createdBy?: string;
+    contactsOnly?: boolean;
 }
 
 export class SortRequest {
