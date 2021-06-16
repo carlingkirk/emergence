@@ -24,7 +24,7 @@
     <a [routerLink]='["/plantinfos/edit", plantInfo.plantInfoId]'>
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
-    <button type="button" class="btn btn-primary" (click)="removeplantInfo()">Delete</button>
+    <button type="button" class="btn btn-primary" (click)="removePlantInfo()">Delete</button>
 </ng-container>
 
 <ng-container *ngIf="!isOwner">

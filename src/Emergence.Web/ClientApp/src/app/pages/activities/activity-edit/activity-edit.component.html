@@ -1,1 +1,101 @@
-<p>activity-edit works!</p>
+<ng-container *ngIf="activity">
+    <form (ngSubmit)="saveActivity()">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Validation message -->
+                </div>
+                <div class="col-lg-3 col-xs">
+                    <label for="activityType">Type</label>
+                    <select [(ngModel)]="activity.activityType" class="form-control" id="activityType" name="activityType" >
+                        <option *ngFor="let activityType of activityTypes" [value]="activityType">{{activityType}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-9 col-xs">
+                    <label for="specimen">Specimen </label>
+                    <input type="text" class="form-control" name="specimen" style="font-style:italic;"
+                        [(ngModel)]="selectedSpecimen" 
+                        [ngbTypeahead]="specimensTypeahead" 
+                        [resultFormatter]="specimenResultFormatter"
+                        [inputFormatter]="specimenInputFormatter"
+                        [resultTemplate]="specimenResultTemplate" />
+                    <ng-template #specimenResultTemplate let-r="result" let-t="term">
+                        <span>{{r.lifeform.commonName}} </span>
+                        <span style="font-style:italic;">
+                            <ngb-highlight [result]="r.lifeform.scientificName" [term]="t"></ngb-highlight>
+                        </span>
+                    </ng-template>
+                </div>
+                <div *ngIf="activity.activityType == 'Custom'" class="col-lg-3 col-xs">
+                    <label for="custom-type">Custom Type</label>
+                    <input [(ngModel)]="activity.customActivityType" class="form-control" id="custom-type" name="customActivityType" />
+                </div>
+            </div>
+            <div class="row">
+                <ng-container *ngIf="selectedSpecimen">
+                    <div class="col-lg-3 col-xs">
+                        <label for="quantity">Quantity</label>
+                        <input [(ngModel)]="activity.quantity" type="text" class="form-control" id="quantity" name="quantity" />
+                    </div>
+                    <div class="col-lg-3 col-xs">
+                        <label for="visibility">Visibility</label>
+                        <select [(ngModel)]="activity.visibility" class="form-control" id="visibility" name="visibility" >
+                            <option *ngFor="let visibility of visibilities" [value]="visibility">{{visibility}}</option>
+                        </select>
+                    </div>
+                    <div *ngIf="showAutoSpecimen" class="col-lg-6 col-xs">
+                        <label for="update-specimen">Create or update specimen</label>
+                        <div style="display: block;">
+                            <input type="checkbox" [(ngModel)]="updateSpecimen" id="update-specimen" class="check-lg" name="updateSpecimen" />
+                            <ng-container *ngIf="updateSpecimen && activity.quantity > 0">
+                                <label *ngIf="selectedSpecimen.inventoryItem?.quantity == activity.quantity" for="enable-specimen-update">
+                                    Original specimen stage will be updated to {{activity.activityType}}
+                                </label>
+                                <label *ngIf="activity.activityType == 'Collect seeds'" for="enable-specimen-update">
+                                    New Seed specimen will be created
+                                </label>
+                                <label *ngIf="activity.activityType != 'Collect seeds' && selectedSpecimen.inventoryItem?.quantity > activity.quantity" for="enable-specimen-update">
+                                    <span>Original specimen quantity will be reduced</span>
+                                    <span *ngIf="activity.quantity > 0"> to {{selectedSpecimen.inventoryItem.quantity - activity.quantity}}</span>
+                                </label>
+                            </ng-container>
+                            <label *ngIf="!updateSpecimen && activity.quantity > 0" for="enable-specimen-update">Original specimen quantity will not be updated</label>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-xs">
+                    <label for="name">Activity Title</label>
+                    <input [(ngModel)]="activity.name" class="form-control" id="name" (focus)="populateActivityName()" name="name" />
+                </div>
+                <div class="col-lg-12 col-xs">
+                    <label for="description">Description</label>
+                    <textarea [(ngModel)]="activity.description" type="text" class="form-control" id="description" name="description" ></textarea>
+                </div>
+                <div class="col-lg-6 col-xs">
+                    <label for="dateOccurred">Date Occurred</label>
+                    <input type="date" [ngModel]="activity.dateOccurred | date:'yyyy-MM-dd'" class="form-control" id="dateOccurred" name="dateOccurred"
+                        (ngModelChange)="activity.dateOccurred = $event" />
+                </div>
+                <div class="col-lg-6 col-xs">
+                    <label for="dateScheduled">Date Scheduled</label>
+                    <input type="date" [ngModel]="activity.dateScheduled | date:'yyyy-MM-dd'" class="form-control" id="dateScheduled" name="dateScheduled"
+                        (ngModelChange)="activity.dateScheduled = $event"/>
+                </div>
+            </div>
+            <app-upload-photos [(photos)]="uploadedPhotos" [type]="0" (photosChange)="photosChanged($event)" [name]="activity.name" type="Activity"></app-upload-photos>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <ng-container *ngIf="modal">
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancel</button>
+        </ng-container>
+        <ng-container *ngIf="!modal">
+            <button type="button" (click)="cancel()" class="btn btn-secondary" >Cancel</button>
+        </ng-container>
+            <span *ngIf="errorMessage" class="error-message">{{errorMessage}}</span>
+    </form>
+</ng-container>
+<ng-container *ngIf="!activity">
+    <span>Loading...</span>
+</ng-container>

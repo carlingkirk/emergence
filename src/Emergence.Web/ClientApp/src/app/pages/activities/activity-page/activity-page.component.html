@@ -1,1 +1,74 @@
-<p>activity-page works!</p>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="type">Type</label>
+            </div>
+            <div>
+                <span class="text-body">{{activity.activityType}}</span>
+            </div>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="specimen">Specimen</label>
+            </div>
+            <div>
+                <span *ngIf="activity.specimen?.inventoryItem?.name" class="link" 
+                    (click)="showSpecimenModal(activity.specimen.specimenId)">{{activity.specimen.inventoryItem.name}}
+                </span>
+                <span *ngIf="activity.specimen?.specimenId == 0 && activity.specimen.lifeform" class="link" 
+                    (click)="showSpecimenModal(activity.specimen.specimenId)">{{displayName}}
+                </span>&nbsp;
+                <span *ngIf="activity.specimen?.specimenId == 0 && activity.specimen.lifeform" class="text-body font-italic">
+                    {{activity.specimen?.lifeform?.scientificName}}
+                </span>
+            </div>
+        </div>
+        <div *ngIf="activity.user?.displayName" class="col-lg-4 col-xs">
+            <div class="user-display">By {{activity.user?.displayName}}</div>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="quantity">Quantity</label>
+            </div>
+            <div>
+                <span class="text-body">{{activity.quantity}}</span>
+            </div>
+        </div>
+        <div class="col-lg-8 col-xs">
+            <div>
+                <label for="name">Name</label>
+            </div>
+            <div>
+                <span class="text-body">{{activity.name}}</span>
+            </div>
+        </div>
+        <div class="col-lg-12 col-xs">
+            <div>
+                <label for="description">Description</label>
+            </div>
+            <div>
+                <span class="text-body">{{activity.description}}</span>
+            </div>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="date-occurred">Date Occurred</label>
+            </div>
+            <div>
+                <span class="text-body">{{activity.dateOccurred | date}}</span>
+            </div>
+        </div>
+        <div class="col-lg-4 col-xs">
+            <div>
+                <label for="date-scheduled">Date Scheduled</label>
+            </div>
+            <div>
+                <span class="text-body">{{activity.dateScheduled | date}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <app-view-photos *ngIf="activity.photos" [photos]="activity.photos" [name]="activity.name"></app-view-photos>
+</div>

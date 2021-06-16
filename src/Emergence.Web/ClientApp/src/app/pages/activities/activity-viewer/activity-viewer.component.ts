@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { ActivityService } from 'src/app/service/activity-service';
+import { Activity } from 'src/app/shared/models/activity';
 
 @Component({
   selector: 'app-activity-viewer',
@@ -7,9 +12,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActivityViewerComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  public id: number;
+  public activity: Activity;
+  public isEditing: boolean = false;
+  public isOwner: boolean = false;
+  public isAuthenticated: Observable<boolean>;
+  public userName: Observable<string>;
+  public user: IUser;
+  constructor(
+    private authorizeService: AuthorizeService,
+    private readonly activityService: ActivityService,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.params['id'];
+    this.isAuthenticated = this.authorizeService.isAuthenticated();
+    this.authorizeService.getUser().subscribe((user) => {
+      this.user = user;
+      this.user.userId = user["sub"];
+
+      this.activityService.getActivity(this.id).subscribe((activity) => {
+        this.activity = activity;
+        this.isOwner = this.activity.createdBy == this.user.userId;
+      });
+    });
   }
 
+  public removeActivity() {
+    // TODO
+  }
 }

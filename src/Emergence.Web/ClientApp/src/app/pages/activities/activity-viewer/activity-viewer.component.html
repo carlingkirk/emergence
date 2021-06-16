@@ -1,1 +1,33 @@
-<p>activity-viewer works!</p>
+<div class="card-header h3">
+    <a [routerLink]="['/activities/list']">
+        <button type="button" class="btn btn-primary">Back</button>
+    </a>
+    <span class="title">Activity: </span>
+    <ng-container *ngIf="activity && activity.activityId > 0">
+        <span >{{activity.name}} </span>
+    </ng-container>
+    <ng-container *ngIf="activity && activity.activityId == 0">
+        <span class="font-italic">New</span>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isEditing && activity">
+    <app-activity-edit [activity]="activity"></app-activity-edit>>
+</ng-container>
+<ng-container *ngIf="activity">
+    <app-activity-page [activity]="activity"></app-activity-page>
+</ng-container>
+<span *ngIf="!activity">Loading...</span>
+
+<ng-container *ngIf="isOwner && !isEditing && activity && activity.activityId > 0">
+    <a [routerLink]='["/activities/edit", activity.activityId]'>
+        <button type="button" class="btn btn-primary">Edit</button>
+    </a>
+    <button type="button" class="btn btn-primary" (click)="removeActivity()">Delete</button>
+</ng-container>
+
+<ng-container *ngIf="!isOwner">
+    <button type="button" class="btn btn-primary" (click)="showMessageModal()">
+        <span class="oi oi-plus btn-oi"></span>Message
+    </button>
+</ng-container>

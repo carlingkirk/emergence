@@ -55,6 +55,7 @@ export class SpecimenViewerComponent implements OnInit {
   }
 
   public removeSpecimen() {
+    // TODO
   }
 
   public editSpecimen() {

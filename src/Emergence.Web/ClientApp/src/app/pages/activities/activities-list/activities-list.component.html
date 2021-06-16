@@ -29,16 +29,16 @@
                             </a>
                         </td>
                         <td>
-                            <span *ngIf="activity.type">{{ activity.type }}</span>
+                            <span>{{ activity.specimen?.lifeform?.scientificName }}</span>
                         </td>
                         <td>
-                            <span *ngIf="activity.description">{{ activity.description }}</span>
+                            <span>{{ activity.activityType }}</span>
                         </td>
                         <td>
-                            <span *ngIf="activity.location?.cityState">{{activity.location.cityState}}</span>
+                            <span>{{ activity.dateOccurred | date}}</span>
                         </td>
                         <td>
-                            <a *ngIf="activity.uri" [href]="activity.uri" target="_blank" [alt]="'Link for ' + activity.name"><span class="link">{{activity.shortUri}}</span></a>
+                            <span>{{ activity.dateScheduled | date}}</span>
                         </td>
                     </tr>
                 </tbody>

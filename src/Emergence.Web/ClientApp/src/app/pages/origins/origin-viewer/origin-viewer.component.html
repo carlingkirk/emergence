@@ -23,7 +23,7 @@
     <a [routerLink]='["/origins/edit", origin.originId]'>
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
-    <button type="button" class="btn btn-primary" (click)="removeorigin()">Delete</button>
+    <button type="button" class="btn btn-primary" (click)="removeOrigin()">Delete</button>
 </ng-container>
 
 <ng-container *ngIf="!isOwner">

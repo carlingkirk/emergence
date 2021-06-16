@@ -17,12 +17,10 @@ export class PagerComponent implements OnInit {
   public pageChange = new EventEmitter<PageRequest>();
   public totalPages: number;
   public currentPage: number = 1;
-  public pageDisplay: string;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.pageDisplay = this.getPageDisplay();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -30,10 +28,6 @@ export class PagerComponent implements OnInit {
       this.currentPage = 1;
       this.totalPages = Math.ceil(this.count / this.take);
     }
-  }
-
-  public getPageDisplay() {
-    return this.currentPage + " of " + this.totalPages;
   }
 
   public page(pages: number = 0) {

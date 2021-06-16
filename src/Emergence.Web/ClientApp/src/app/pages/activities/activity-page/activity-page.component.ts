@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Activity } from 'src/app/shared/models/activity';
 
 @Component({
   selector: 'app-activity-page',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActivityPageComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  public activity: Activity;
+  public displayName: string;
+  constructor() {
+    this.displayName = this.activity?.specimen?.lifeform?.commonName ?? this.activity?.specimen?.name;
+   }
 
   ngOnInit(): void {
   }
 
+  showSpecimenModal() {
+    // TODO
+  }
 }

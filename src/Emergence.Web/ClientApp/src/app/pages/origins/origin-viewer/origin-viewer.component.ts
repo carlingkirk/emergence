@@ -40,4 +40,8 @@ export class OriginViewerComponent implements OnInit {
       });
     });
   }
+
+  public removeOrigin() {
+    // TODO
+  }
 }

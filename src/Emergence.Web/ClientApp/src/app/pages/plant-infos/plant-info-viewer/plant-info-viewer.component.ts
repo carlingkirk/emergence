@@ -41,4 +41,8 @@ export class PlantInfoViewerComponent implements OnInit {
       });
     });
   }
+
+  public removePlantInfo() {
+    // TODO
+  }
 }
