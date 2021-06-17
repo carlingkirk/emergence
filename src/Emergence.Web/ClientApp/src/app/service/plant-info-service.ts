@@ -32,4 +32,8 @@ export class PlantInfoService {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/plantinfo/find', searchRequest)
         .pipe((searchResult) => { return searchResult });
     }
+
+    public deletePlantInfo(id: number) {
+        return this.httpClient.delete(this.baseUrl + 'api/plantinfo/' + id);
+    }
 }

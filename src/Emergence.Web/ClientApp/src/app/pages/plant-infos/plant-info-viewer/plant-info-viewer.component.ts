@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { PlantInfoService } from 'src/app/service/plant-info-service';
@@ -24,7 +24,8 @@ export class PlantInfoViewerComponent implements OnInit {
   constructor(
     private authorizeService: AuthorizeService,
     private readonly plantInfoService: PlantInfoService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -43,6 +44,8 @@ export class PlantInfoViewerComponent implements OnInit {
   }
 
   public removePlantInfo() {
-    // TODO
+    this.plantInfoService.deletePlantInfo(this.id).subscribe(() => {
+      this.router.navigate(['/plantinfos/list']);
+    });
   }
 }

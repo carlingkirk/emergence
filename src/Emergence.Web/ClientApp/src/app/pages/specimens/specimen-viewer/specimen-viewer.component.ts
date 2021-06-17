@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { SpecimenService } from 'src/app/service/specimen-service';
@@ -28,7 +28,8 @@ export class SpecimenViewerComponent implements OnInit {
   constructor(
     private authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -55,7 +56,9 @@ export class SpecimenViewerComponent implements OnInit {
   }
 
   public removeSpecimen() {
-    // TODO
+    this.specimenService.deleteSpecimen(this.id).subscribe(() => {
+      this.router.navigate(['/specimens/list']);
+    });
   }
 
   public editSpecimen() {

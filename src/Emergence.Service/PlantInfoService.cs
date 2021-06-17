@@ -137,7 +137,6 @@ namespace Emergence.Service
                     }
                     if (filter is RangeFilter<string> rangeFilter)
                     {
-                        var values = aggregation.Values;
                         rangeFilter.FacetValues = rangeFilter.GetFacetValues(aggregation.Values);
                     }
                 }

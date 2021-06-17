@@ -109,34 +109,22 @@ namespace Emergence.Service
 
                     if (filter is SelectFilter<string> selectFilter)
                     {
-                        var values = aggregation.Values;
-                        if (!values.ContainsKey(""))
-                        {
-                            values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-                        }
-
-                        selectFilter.FacetValues = values
-                            .Select(v => new KeyValuePair<string, long?>(v.Key.GetDisplayValue<SpecimenStage>(), v.Value))
-                            .ToDictionary(k => k.Key, v => v.Value);
+                        selectFilter.FacetValues = selectFilter.GetFacetValues(aggregation.Values);
                     }
                     if (filter is SelectRangeFilter<double> selectRangeFilter)
                     {
-                        var values = aggregation.Values.ToDictionary(k => double.Parse(k.Key), v => v.Value).OrderBy(k => k.Key).ToDictionary(k => k.Key, v => v.Value);
                         if (aggregation.Name.Contains("Min"))
                         {
-                            selectRangeFilter.MinFacetValues = values;
+                            selectRangeFilter.MinFacetValues = selectRangeFilter.GetFacetValues(aggregation.Values);
                         }
                         else
                         {
-                            selectRangeFilter.MaxFacetValues = values;
+                            selectRangeFilter.MaxFacetValues = selectRangeFilter.GetFacetValues(aggregation.Values);
                         }
                     }
                     if (filter is RangeFilter<string> rangeFilter)
                     {
-                        var values = aggregation.Values;
-                        values = values.Prepend(new KeyValuePair<string, long?>("", null)).ToDictionary(k => k.Key, v => v.Value);
-
-                        rangeFilter.FacetValues = values;
+                        rangeFilter.FacetValues = rangeFilter.GetFacetValues(aggregation.Values);
                     }
                 }
             }

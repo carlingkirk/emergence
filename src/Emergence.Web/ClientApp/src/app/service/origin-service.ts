@@ -32,4 +32,8 @@ export class OriginService {
         return this.httpClient.put<Origin>(this.baseUrl + 'api/origin/', origin)
         .pipe((origin) => { return origin });
     }
+
+    public deleteOrigin(id: number) {
+        return this.httpClient.delete(this.baseUrl + 'api/origin/' + id);
+    }
 }

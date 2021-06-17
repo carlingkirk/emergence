@@ -32,4 +32,8 @@ export class SpecimenService {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/specimen/find', searchRequest)
         .pipe((searchResult) => { return searchResult });
     }
+
+    public deleteSpecimen(id: number) {
+        return this.httpClient.delete(this.baseUrl + 'api/specimen/' + id);
+    }
 }

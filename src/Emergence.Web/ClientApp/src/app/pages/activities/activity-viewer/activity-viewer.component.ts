@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { ActivityService } from 'src/app/service/activity-service';
@@ -23,7 +23,8 @@ export class ActivityViewerComponent implements OnInit {
   constructor(
     private authorizeService: AuthorizeService,
     private readonly activityService: ActivityService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -40,6 +41,8 @@ export class ActivityViewerComponent implements OnInit {
   }
 
   public removeActivity() {
-    // TODO
+    this.activityService.deleteActivity(this.id).subscribe(() => {
+      this.router.navigate(['/activities/list']);
+    });
   }
 }

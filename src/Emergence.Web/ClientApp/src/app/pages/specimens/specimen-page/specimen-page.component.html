@@ -60,7 +60,7 @@
             <div *ngIf="specimen.inventoryItem?.origin?.name">
                 <span class="text-body">{{specimen.inventoryItem.origin.name}}</span>
             </div>
-            <div *ngIf="!specimen.inventoryItem?.origin?.name">
+            <div *ngIf="specimen.inventoryItem?.origin && !specimen.inventoryItem?.origin.name">
                 <span class="text-body">(No name)</span>
             </div>
         </div>

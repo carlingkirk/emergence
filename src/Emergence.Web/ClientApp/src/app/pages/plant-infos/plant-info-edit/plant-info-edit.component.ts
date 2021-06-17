@@ -11,7 +11,7 @@ import { Effect, LightType, Month, SoilType, StratificationType, Visibility, Wat
 import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Origin } from 'src/app/shared/models/origin';
 import { Photo } from 'src/app/shared/models/photo';
-import { PlantInfo, StratificationStage, WildlifeEffect, Zone } from 'src/app/shared/models/plant-info';
+import { BloomTime, Height, LightRequirements, PlantInfo, Requirements, Spread, StratificationStage, WaterRequirements, WildlifeEffect, Zone, ZoneRequirements } from 'src/app/shared/models/plant-info';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { getZones } from 'src/app/shared/models/zone';
 
@@ -101,6 +101,14 @@ export class PlantInfoEditComponent implements OnInit {
       this.plantInfo.createdBy = this.user.userId;
       this.plantInfo.dateCreated = new Date();
       this.plantInfo.photos = [];
+      this.plantInfo.bloomTime = new BloomTime();
+      this.plantInfo.height = new Height();
+      this.plantInfo.spread = new Spread();
+      this.plantInfo.requirements = new Requirements();
+      this.plantInfo.requirements.lightRequirements = new LightRequirements();
+      this.plantInfo.requirements.waterRequirements = new WaterRequirements();
+      this.plantInfo.requirements.zoneRequirements = new ZoneRequirements();
+      this.plantInfo.requirements.stratificationStages = [];
       this.plantInfo.visibility = this.visibilities[Visibility["Inherit from profile"]];
       this.chosenSoilTypes = [];
     }

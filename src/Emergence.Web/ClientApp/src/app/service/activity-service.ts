@@ -44,4 +44,8 @@ export class ActivityService {
         return this.httpClient.put<Activity>(this.baseUrl + 'api/activity/', activity)
         .pipe((activity) => { return activity });
     }
+
+    public deleteActivity(id: number) {
+        return this.httpClient.delete(this.baseUrl + 'api/activity/' + id);
+    }
 }
