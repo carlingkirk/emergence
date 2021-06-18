@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
@@ -26,11 +27,12 @@ export class SpecimenEditComponent implements OnInit {
   public specimen: Specimen;
   @Input()
   public id: number;
+  @Input()
+  public modal: NgbModalRef;
   public inventoryItemStatuses: InventoryItemStatus[];
   public visibilities: Visibility[];
   public specimenStages: SpecimenStage[];
   public itemTypes: ItemType[];
-  public modal: boolean;
   public searching: boolean;
   public searchFailed: boolean;
   public lifeforms: Lifeform[];
@@ -55,7 +57,9 @@ export class SpecimenEditComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
+    if (!this.id) {
+      this.id = this.route.snapshot.params['id'];
+    }
 
     this.inventoryItemStatuses = Object.keys(InventoryItemStatus).filter(key => !isNaN(Number(key))).map(key => InventoryItemStatus[key]);
     this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
@@ -74,6 +78,12 @@ export class SpecimenEditComponent implements OnInit {
   originInputFormatter = (x: Origin) => x.name;
 
   loadSpecimen() {
+    if (this.specimen) {
+      this.selectedLifeform = this.specimen.lifeform;
+      this.selectedOrigin = this.specimen.inventoryItem.origin;
+      this.uploadedPhotos = this.specimen.photos;
+    }
+    
     if (!this.specimen && this.id > 0) {
       this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
         this.specimen = specimen;
@@ -159,7 +169,7 @@ export class SpecimenEditComponent implements OnInit {
     this.specimen.photos = this.uploadedPhotos;
 
     this.specimenService.saveSpecimen(this.specimen).subscribe(
-      (specimen) => this.router.navigate(['/specimens/', specimen.specimenId]),
+      (specimen) => this.modal ? this.modal.close() : this.router.navigate(['/specimens/', specimen.specimenId]),
       (error) => {
         console.log(error);
         this.errorMessage = "There was an error saving the specimen";
@@ -181,7 +191,7 @@ export class SpecimenEditComponent implements OnInit {
   }
 
   public closeModal(): void {
-    
+    this.modal.dismiss();
   }
 
   onImgError(event, photo: Photo) {

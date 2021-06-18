@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { Photo } from 'src/app/shared/models/photo';
 import { Specimen } from 'src/app/shared/models/specimen';
@@ -15,12 +14,8 @@ export class SpecimenPageComponent implements OnInit {
   public specimen: Specimen;
   public uploadedPhotos: Photo[];
 
-  constructor(
-    private readonly specimenService: SpecimenService
-  ) { 
-  }
+  constructor() { }
 
   ngOnInit(): void {
-    
   }
 }

@@ -1,8 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { SpecimenService } from 'src/app/service/specimen-service';
+import { getSpecimenName, getSpecimenScientificName } from 'src/app/shared/common';
 import { Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
@@ -13,6 +15,10 @@ import { Specimen } from 'src/app/shared/models/specimen';
 export class SpecimenViewerComponent implements OnInit {
   @Input()
   public id: number;
+  @Input()
+  public modal: NgbModalRef;
+  @Output()
+  public onSpecimenLoaded = new EventEmitter<Specimen>();
   public specimen: Specimen;
   public tabs: any = [ 
     { key: 'specimen', value: 'Specimen'},
@@ -25,6 +31,9 @@ export class SpecimenViewerComponent implements OnInit {
   public isAuthenticated: Observable<boolean>;
   public userName: Observable<string>;
   public user: IUser;
+  public name: string;
+  public scientificName: string;
+
   constructor(
     private authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
@@ -32,7 +41,9 @@ export class SpecimenViewerComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
+    if (!this.id) {
+      this.id = this.route.snapshot.params['id'];
+    }
     this.isAuthenticated = this.authorizeService.isAuthenticated();
     this.authorizeService.getUser().subscribe((user) => {
       this.user = user;
@@ -41,6 +52,9 @@ export class SpecimenViewerComponent implements OnInit {
       this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
         this.specimen = specimen;
         this.isOwner = this.specimen.createdBy == this.user.userId;
+        this.name = getSpecimenName(specimen);
+        this.scientificName = getSpecimenScientificName(specimen);
+        this.onSpecimenLoaded.emit(this.specimen);
       });
     });
   }

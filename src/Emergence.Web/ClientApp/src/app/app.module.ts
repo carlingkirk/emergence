@@ -45,6 +45,7 @@ import { ActivitiesListComponent } from './pages/activities/activities-list/acti
 import { ActivityEditComponent } from './pages/activities/activity-edit/activity-edit.component';
 import { ActivityPageComponent } from './pages/activities/activity-page/activity-page.component';
 import { ActivityViewerComponent } from './pages/activities/activity-viewer/activity-viewer.component';
+import { SpecimenModalComponent } from './pages/specimens/specimen-modal/specimen-modal.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { ActivityViewerComponent } from './pages/activities/activity-viewer/acti
     ActivitiesListComponent,
     ActivityEditComponent,
     ActivityPageComponent,
-    ActivityViewerComponent
+    ActivityViewerComponent,
+    SpecimenModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

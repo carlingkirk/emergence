@@ -1,0 +1,13 @@
+<div class="modal-header card-header h3">
+    <span class="title">Specimen:</span>&nbsp;
+    <ng-container *ngIf="name || scientificName">
+        <span>{{name}} </span>&nbsp;
+        <span class="font-italic">{{scientificName}}</span>
+    </ng-container>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">×</span>
+    </button>
+</div>
+<div class="modal-body">
+    <app-specimen-viewer [id]="specimenId" [modal]="modal" (onSpecimenLoaded)="onSpecimenLoad($event)"></app-specimen-viewer>
+</div>

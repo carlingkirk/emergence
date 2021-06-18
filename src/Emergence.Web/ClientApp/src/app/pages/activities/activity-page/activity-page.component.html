@@ -14,14 +14,17 @@
             </div>
             <div>
                 <span *ngIf="activity.specimen?.inventoryItem?.name" class="link" 
-                    (click)="showSpecimenModal(activity.specimen.specimenId)">{{activity.specimen.inventoryItem.name}}
+                    (click)="showSpecimenModal(modalData)">{{activity.specimen.inventoryItem.name}}
                 </span>
                 <span *ngIf="activity.specimen?.specimenId == 0 && activity.specimen.lifeform" class="link" 
-                    (click)="showSpecimenModal(activity.specimen.specimenId)">{{displayName}}
+                    (click)="showSpecimenModal(modalData)">{{displayName}}
                 </span>&nbsp;
                 <span *ngIf="activity.specimen?.specimenId == 0 && activity.specimen.lifeform" class="text-body font-italic">
                     {{activity.specimen?.lifeform?.scientificName}}
                 </span>
+                <ng-template #modalData let-modal>
+                    <app-specimen-modal [specimenId]="activity.specimen?.specimenId" [modal]="modal"></app-specimen-modal>
+                </ng-template>
             </div>
         </div>
         <div *ngIf="activity.user?.displayName" class="col-lg-4 col-xs">
