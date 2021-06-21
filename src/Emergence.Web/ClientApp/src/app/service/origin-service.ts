@@ -1,15 +1,15 @@
-import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Origin } from "../shared/models/origin";
-import { SearchRequest } from "../shared/models/search-request";
-import { SearchResult } from "../shared/models/search-result";
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Origin } from '../shared/models/origin';
+import { SearchRequest } from '../shared/models/search-request';
+import { SearchResult } from '../shared/models/search-result';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OriginService {
-    
+
     private baseUrl: string;
     private httpClient: HttpClient;
 
@@ -20,17 +20,17 @@ export class OriginService {
 
     public getOrigin(id: number) {
         return this.httpClient.get<Origin>(this.baseUrl + 'api/origin/' + id)
-        .pipe((origin) => { return origin });
+        .pipe((origin) => origin);
     }
 
     public findOrigins(searchRequest: SearchRequest): Observable<SearchResult> {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/origin/find', searchRequest)
-        .pipe((searchResult) => { return searchResult });
+        .pipe((searchResult) => searchResult);
     }
 
     public saveOrigin(origin: Origin) {
         return this.httpClient.put<Origin>(this.baseUrl + 'api/origin/', origin)
-        .pipe((origin) => { return origin });
+        .pipe((originResponse) => originResponse);
     }
 
     public deleteOrigin(id: number) {

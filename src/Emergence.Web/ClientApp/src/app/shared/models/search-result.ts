@@ -1,4 +1,4 @@
-import { FilterBody } from "./filters";
+import { FilterBody } from './filters';
 
 export class SearchResult {
     filters: FilterBody;

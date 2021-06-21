@@ -1,15 +1,15 @@
-import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { PlantInfo } from "../shared/models/plant-info";
-import { SearchRequest } from "../shared/models/search-request";
-import { SearchResult } from "../shared/models/search-result";
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { PlantInfo } from '../shared/models/plant-info';
+import { SearchRequest } from '../shared/models/search-request';
+import { SearchResult } from '../shared/models/search-result';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlantInfoService {
-    
+
     private baseUrl: string;
     private httpClient: HttpClient;
 
@@ -20,17 +20,17 @@ export class PlantInfoService {
 
     public getPlantInfo(id: number) {
         return this.httpClient.get<PlantInfo>(this.baseUrl + 'api/plantinfo/' + id)
-        .pipe((plantInfo) => { return plantInfo });
+        .pipe((plantInfo) => plantInfo);
     }
 
     public savePlantInfo(plantInfo: PlantInfo) {
         return this.httpClient.put<PlantInfo>(this.baseUrl + 'api/plantinfo', plantInfo)
-        .pipe((plantInfo) => { return plantInfo });
+        .pipe((plantInfoResponse) => plantInfoResponse);
     }
 
     public findPlantInfos(searchRequest: SearchRequest): Observable<SearchResult> {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/plantinfo/find', searchRequest)
-        .pipe((searchResult) => { return searchResult });
+        .pipe((searchResult) => searchResult);
     }
 
     public deletePlantInfo(id: number) {

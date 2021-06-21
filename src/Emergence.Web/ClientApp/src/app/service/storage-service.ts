@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { StorageMap } from "@ngx-pwa/local-storage";
-import { of } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { StorageMap } from '@ngx-pwa/local-storage';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -16,9 +16,9 @@ export class StorageService {
                 .pipe(
                     catchError(() => of('red')),
                 ).subscribe((result) => {
-                    resolve(result)
+                    resolve(result);
                 });
-        })
+        });
     }
 
     setItem(item: string, value: any): Promise<boolean> {
@@ -27,8 +27,8 @@ export class StorageService {
                 .pipe(
                     catchError((err) => of('red')),
                 ).subscribe((result) => {
-                    resolve(true)
+                    resolve(true);
                 });
-        })
+        });
     }
 }

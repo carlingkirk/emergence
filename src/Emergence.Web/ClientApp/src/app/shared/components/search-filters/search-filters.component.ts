@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Region } from '../../models/enums';
 import { FilterBody, Filter, DisplayValue, SelectRangeFilter, SelectFilter } from '../../models/filters';
-import { getZones } from '../../models/zone';
 
 @Component({
   selector: 'app-search-filters',
@@ -93,9 +91,9 @@ export class SearchFiltersComponent implements OnInit {
 
   mapSelectFilter(filter: SelectFilter): SelectFilter {
     filter.displayValues = [];
-    for(let key in filter.facetValues) {
-      let value = filter.facetValues[key];
-      filter.displayValues.push({ name: key, value: value, key: key })
+    for (const key of Object.keys(filter.facetValues)) {
+      const value = filter.facetValues[key];
+      filter.displayValues.push({ name: key, value: value, key: key });
     }
     return filter;
   }
@@ -103,10 +101,10 @@ export class SearchFiltersComponent implements OnInit {
   mapSelectRangeFilter(filter: SelectRangeFilter): SelectRangeFilter {
     filter.minDisplayValues = [];
     filter.maxDisplayValues = [];
-    for(let key in filter.facetValues) {
-      let value = filter.facetValues[key];
+    for (const key of Object.keys(filter.facetValues)) {
+      const value = filter.facetValues[key];
       filter.minDisplayValues.push({ name: key, value: value, key: key });
-      filter.maxDisplayValues.push({ name: key, value: value, key: key })
+      filter.maxDisplayValues.push({ name: key, value: value, key: key });
     }
     return filter;
   }
@@ -115,15 +113,15 @@ export class SearchFiltersComponent implements OnInit {
     filter.minDisplayValues = [];
     filter.maxDisplayValues = [];
 
-    for(let key in filter.minFacetValues) {
-      let value = filter.minFacetValues[key];
-      filter.minDisplayValues.push({ name: key, value: value, key: key })
+    for (const key of Object.keys(filter.minFacetValues)) {
+      const value = filter.minFacetValues[key];
+      filter.minDisplayValues.push({ name: key, value: value, key: key });
     }
     filter.minDisplayValues = this.sortDisplayNumValues(filter.minDisplayValues);
 
-    for(let key in filter.maxFacetValues) {
-      let value = filter.maxFacetValues[key];
-      filter.maxDisplayValues.push({ name: key, value: value, key: key })
+    for (const key of Object.keys(filter.maxFacetValues)) {
+      const value = filter.maxFacetValues[key];
+      filter.maxDisplayValues.push({ name: key, value: value, key: key });
     }
     filter.maxDisplayValues = this.sortDisplayNumValues(filter.maxDisplayValues);
 
@@ -136,43 +134,43 @@ export class SearchFiltersComponent implements OnInit {
 
   valueChanged(): void {
     this.filters.forEach((filter) => {
-      if (filter.name === "Stage") {
+      if (filter.name === 'Stage') {
         this.filterBody.stageFilter.displayValues = null;
         this.filterBody.stageFilter.value = filter.value;
       }
-      if (filter.name === "Zone") {
+      if (filter.name === 'Zone') {
         this.filterBody.zoneFilter.displayValues = null;
         this.filterBody.zoneFilter.value = filter.value;
       }
-      if (filter.name === "Region") {
+      if (filter.name === 'Region') {
         this.filterBody.regionFilter.displayValues = null;
         this.filterBody.regionFilter.value = filter.value;
       }
-      if (filter.name === "Bloom") {
+      if (filter.name === 'Bloom') {
         this.filterBody.bloomFilter.displayValues = null;
         this.filterBody.bloomFilter.value = filter.value;
       }
-      if (filter.name === "Height") {
+      if (filter.name === 'Height') {
         this.filterBody.heightFilter.minDisplayValues = null;
         this.filterBody.heightFilter.maxDisplayValues = null;
         this.filterBody.heightFilter.value = filter.value;
       }
-      if (filter.name === "Spread") {
+      if (filter.name === 'Spread') {
         this.filterBody.spreadFilter.minDisplayValues = null;
         this.filterBody.spreadFilter.maxDisplayValues = null;
         this.filterBody.spreadFilter.value = filter.value;
       }
-      if (filter.name === "Light") {
+      if (filter.name === 'Light') {
         this.filterBody.lightFilter.minDisplayValues = null;
         this.filterBody.lightFilter.maxDisplayValues = null;
         this.filterBody.lightFilter.value = filter.value;
       }
-      if (filter.name === "Water") {
+      if (filter.name === 'Water') {
         this.filterBody.waterFilter.minDisplayValues = null;
         this.filterBody.waterFilter.maxDisplayValues = null;
         this.filterBody.waterFilter.value = filter.value;
       }
-      if (filter.name === "Native") {
+      if (filter.name === 'Native') {
         this.filterBody.nativeFilter.displayValues = null;
         this.filterBody.nativeFilter.value = filter.value;
       }

@@ -30,7 +30,7 @@
                 <label for="origin">Origin</label>
             </div>
             <div *ngIf="plantInfo?.origin?.name">
-                <span class="text-body">{{plantInfo.origin.name}}</span>
+                <span class="text-body link" (click)="showOriginModal(modalData)">{{plantInfo.origin.name}}</span>
             </div>
             <div *ngIf="!plantInfo.origin?.name">
                 <span class="text-body">(No name)</span>
@@ -38,6 +38,9 @@
             <div>
                 <a [href]="plantInfo.origin?.uri" target="_blank"><span class="link">{{plantInfo.origin?.shortUri}}</span></a>
             </div>
+            <ng-template #modalData let-modal>
+                <app-origin-modal [originId]="plantInfo.origin?.originId" [modal]="modal"></app-origin-modal>
+            </ng-template>
         </div>
         <div *ngIf="plantInfo.user?.displayName" class="col-lg-4 col-xs">
             <div class="user-display">By {{plantInfo.user?.displayName}}</div>

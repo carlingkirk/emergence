@@ -1,7 +1,7 @@
-import { ActivityType } from "./enums";
-import { Photo } from "./photo";
-import { Specimen } from "./specimen";
-import { User } from "./user";
+import { ActivityType } from './enums';
+import { Photo } from './photo';
+import { Specimen } from './specimen';
+import { User } from './user';
 
 export class Activity {
   activityId: number;

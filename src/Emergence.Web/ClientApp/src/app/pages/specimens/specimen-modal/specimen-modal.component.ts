@@ -22,7 +22,7 @@ export class SpecimenModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSpecimenLoad(specimen: Specimen): void {
+  specimenLoad(specimen: Specimen): void {
     this.name = getSpecimenName(specimen);
     this.scientificName = getSpecimenScientificName(specimen);
   }

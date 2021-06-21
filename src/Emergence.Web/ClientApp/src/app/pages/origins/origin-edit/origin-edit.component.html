@@ -60,7 +60,7 @@
                     <input [(ngModel)]="origin.altExternalId" type="text" class="form-control" id="altExternalId" name="altExternalId" />
                 </div>
             </div>
-            <div class="row" >
+            <div *ngIf="origin?.location" class="row" >
                 <div class="col-lg-9 col-xs">
                     <div class="row"><div class="col">
                         <label for="addressLine1">Address Line 1</label>

@@ -11,7 +11,8 @@ import { Effect, LightType, Month, SoilType, StratificationType, Visibility, Wat
 import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Origin } from 'src/app/shared/models/origin';
 import { Photo } from 'src/app/shared/models/photo';
-import { BloomTime, Height, LightRequirements, PlantInfo, Requirements, Spread, StratificationStage, WaterRequirements, WildlifeEffect, Zone, ZoneRequirements } from 'src/app/shared/models/plant-info';
+import { BloomTime, Height, LightRequirements, PlantInfo, Requirements, Spread, StratificationStage,
+  WaterRequirements, WildlifeEffect, Zone, ZoneRequirements } from 'src/app/shared/models/plant-info';
 import { SearchRequest } from 'src/app/shared/models/search-request';
 import { getZones } from 'src/app/shared/models/zone';
 
@@ -49,7 +50,7 @@ export class PlantInfoEditComponent implements OnInit {
   public minimumZoneId: number;
   public maximumZoneId: number;
   public errorMessage: string;
-  
+
   constructor(
     private authorizeService: AuthorizeService,
     private readonly plantInfoService: PlantInfoService,
@@ -75,11 +76,12 @@ export class PlantInfoEditComponent implements OnInit {
     this.effects = Object.keys(Effect).filter(key => !isNaN(Number(key))).map(key => Effect[key]);
     this.soilTypes = Object.keys(SoilType).filter(key => !isNaN(Number(key))).map(key => SoilType[key]);
     this.zones = getZones();
-    
+
     this.authorizeService.getUser().subscribe((user) => {
       this.user = user;
-      this.user.userId = user["sub"];
+      this.user.userId = user['sub'];
       this.loadPlantInfo();
+      return of({});
     });
   }
 
@@ -94,9 +96,10 @@ export class PlantInfoEditComponent implements OnInit {
         this.chosenWildlifeEffects = plantInfo.wildlifeEffects;
         this.chosenSoilTypes = plantInfo.soilTypes ?? [];
       });
+      return of({});
     }
 
-    if (this.id == 0) {
+    if (this.id === 0) {
       this.plantInfo = new PlantInfo();
       this.plantInfo.createdBy = this.user.userId;
       this.plantInfo.dateCreated = new Date();
@@ -109,7 +112,7 @@ export class PlantInfoEditComponent implements OnInit {
       this.plantInfo.requirements.waterRequirements = new WaterRequirements();
       this.plantInfo.requirements.zoneRequirements = new ZoneRequirements();
       this.plantInfo.requirements.stratificationStages = [];
-      this.plantInfo.visibility = this.visibilities[Visibility["Inherit from profile"]];
+      this.plantInfo.visibility = this.visibilities[Visibility['Inherit from profile']];
       this.chosenSoilTypes = [];
     }
   }
@@ -119,7 +122,7 @@ export class PlantInfoEditComponent implements OnInit {
       return of([]);
     }
 
-    let searchRequest: SearchRequest = {
+    const searchRequest: SearchRequest = {
       filters: null,
       searchText: searchText,
       take: 12,
@@ -136,7 +139,7 @@ export class PlantInfoEditComponent implements OnInit {
       return of([]);
     }
 
-    let searchRequest: SearchRequest = {
+    const searchRequest: SearchRequest = {
       filters: null,
       searchText: searchText,
       take: 12,
@@ -154,7 +157,7 @@ export class PlantInfoEditComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
         : this.searchLifeforms(term).pipe((lifeform) => lifeform ))
-    );
+    )
 
   public originsTypeahead: OperatorFunction<string, readonly Origin[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -162,7 +165,7 @@ export class PlantInfoEditComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
         : this.searchOrigins(term).pipe((origin) => origin ))
-    );
+    )
 
   public savePlantInfo(): void {
     this.plantInfo.lifeform = this.selectedLifeform;
@@ -178,7 +181,7 @@ export class PlantInfoEditComponent implements OnInit {
       (plantInfo) => this.router.navigate(['/plantinfos/', plantInfo.plantInfoId]),
       (error) => {
         console.log(error);
-        this.errorMessage = "There was an error saving the plant profile";
+        this.errorMessage = 'There was an error saving the plant profile';
       });
   }
 
@@ -186,10 +189,10 @@ export class PlantInfoEditComponent implements OnInit {
     if (this.plantInfo.plantInfoId) {
       this.router.navigate(['/plantinfos/', this.plantInfo.plantInfoId]);
     } else {
-      this.router.navigate([".."]);
+      this.router.navigate(['..']);
     }
   }
-  
+
   onImgError(event, photo: Photo) {
     onImgError(event, photo);
   }
@@ -206,15 +209,15 @@ export class PlantInfoEditComponent implements OnInit {
     if (!this.chosenStratificationStages) {
       this.chosenStratificationStages = [];
     }
-    this.chosenStratificationStages.push({ 
-        step: this.chosenStratificationStages.length + 1, 
-        dayLength: null, 
+    this.chosenStratificationStages.push({
+        step: this.chosenStratificationStages.length + 1,
+        dayLength: null,
         stratificationType: null
       });
   }
 
   removeStratificationStage(step: number) {
-    this.chosenStratificationStages = this.chosenStratificationStages.filter((stage) => stage.step != step);
+    this.chosenStratificationStages = this.chosenStratificationStages.filter((stage) => stage.step !== step);
     if (this.chosenStratificationStages.length === 0) {
       this.chosenStratificationStages = null;
     }
@@ -224,7 +227,7 @@ export class PlantInfoEditComponent implements OnInit {
     if (!this.chosenWildlifeEffects) {
       this.chosenWildlifeEffects = [];
     }
-    this.chosenWildlifeEffects.push({ 
+    this.chosenWildlifeEffects.push({
         effect: null,
         wildlife: null
       });
@@ -243,7 +246,7 @@ export class PlantInfoEditComponent implements OnInit {
 
   addRemoveSoilType(soilType: SoilType) {
     if (this.isSoilTypeChosen(soilType)) {
-      this.chosenSoilTypes = this.chosenSoilTypes.filter((type) => type != soilType);
+      this.chosenSoilTypes = this.chosenSoilTypes.filter((type) => type !== soilType);
     } else {
       this.chosenSoilTypes.push(soilType);
     }

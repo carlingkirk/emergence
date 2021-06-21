@@ -3,7 +3,7 @@ import { SortDirection } from '../../models/enums';
 import { SortRequest } from '../../models/search-request';
 
 @Component({
-  selector: '[app-sortable-headers]',
+  selector: 'app-sortable-headers',
   templateUrl: './sortable-headers.component.html',
   styleUrls: ['./sortable-headers.component.css']
 })
@@ -22,7 +22,7 @@ export class SortableHeadersComponent implements OnInit {
   }
 
   sort(column: string) {
-    if (this.sortDirection != SortDirection.Ascending) {
+    if (this.sortDirection !== SortDirection.Ascending) {
       this.sortDirection = SortDirection.Ascending;
     } else {
       this.sortDirection = SortDirection.Descending;

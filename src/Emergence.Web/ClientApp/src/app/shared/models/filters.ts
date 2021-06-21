@@ -4,7 +4,7 @@ export class Filter {
     filterType: number;
     inputType: number;
     width: number;
-    sort?: number = 0;
+    sort ? = 0;
 }
 
 export class FilterBody {
@@ -20,15 +20,15 @@ export class FilterBody {
 }
 
 export class SelectFilter extends Filter {
-    facetValues: { [key: string]: number; }
+    facetValues: { [key: string]: number; };
     displayValues: DisplayValue[];
 }
 
 export class SelectRangeFilter extends SelectFilter {
     minimumValue: any;
     maximumValue: any;
-    minFacetValues: { [key: string]: number; }
-    maxFacetValues: { [key: string]: number; }
+    minFacetValues: { [key: string]: number; };
+    maxFacetValues: { [key: string]: number; };
     minDisplayValues: DisplayValue[];
     maxDisplayValues: DisplayValue[];
 }

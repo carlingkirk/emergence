@@ -46,6 +46,7 @@ import { ActivityEditComponent } from './pages/activities/activity-edit/activity
 import { ActivityPageComponent } from './pages/activities/activity-page/activity-page.component';
 import { ActivityViewerComponent } from './pages/activities/activity-viewer/activity-viewer.component';
 import { SpecimenModalComponent } from './pages/specimens/specimen-modal/specimen-modal.component';
+import { OriginModalComponent } from './pages/origins/origin-modal/origin-modal.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { SpecimenModalComponent } from './pages/specimens/specimen-modal/specime
     ActivityEditComponent,
     ActivityPageComponent,
     ActivityViewerComponent,
-    SpecimenModalComponent
+    SpecimenModalComponent,
+    OriginModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -94,31 +96,31 @@ import { SpecimenModalComponent } from './pages/specimens/specimen-modal/specime
       { path: 'about', component: AboutComponent },
       { path: 'specimens/list', component: SpecimensListComponent, canActivate: [AuthorizeGuard],
         children: [
-          { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
+          { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] },
           { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] }
         ]},
-      { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] }, 
+      { path: 'specimens/:id', component: SpecimenViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'specimens/edit/:id', component: SpecimenEditComponent, canActivate: [AuthorizeGuard] },
       { path: 'plantinfos/list', component: PlantInfosListComponent, canActivate: [AuthorizeGuard],
       children: [
-        { path: 'plantinfos/:id', component: PlantInfoViewerComponent, canActivate: [AuthorizeGuard] }, 
+        { path: 'plantinfos/:id', component: PlantInfoViewerComponent, canActivate: [AuthorizeGuard] },
         { path: 'plantinfos/edit/:id', component: PlantInfoEditComponent, canActivate: [AuthorizeGuard] }
       ]},
-      { path: 'plantinfos/:id', component: PlantInfoViewerComponent, canActivate: [AuthorizeGuard] }, 
+      { path: 'plantinfos/:id', component: PlantInfoViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'plantinfos/edit/:id', component: PlantInfoEditComponent, canActivate: [AuthorizeGuard] },
       { path: 'origins/list', component: OriginsListComponent, canActivate: [AuthorizeGuard],
       children: [
-        { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] }, 
+        { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] },
         { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] }
       ]},
-      { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] }, 
+      { path: 'origins/:id', component: OriginViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'origins/edit/:id', component: OriginEditComponent, canActivate: [AuthorizeGuard] },
       { path: 'activities/list', component: ActivitiesListComponent, canActivate: [AuthorizeGuard],
       children: [
-        { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] }, 
+        { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] },
         { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] }
       ]},
-      { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] }, 
+      { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] }
     ],
     { relativeLinkResolution: 'legacy' }),

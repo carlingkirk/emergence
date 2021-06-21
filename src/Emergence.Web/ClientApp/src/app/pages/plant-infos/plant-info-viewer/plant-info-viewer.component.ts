@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { PlantInfoService } from 'src/app/service/plant-info-service';
 import { PlantInfo } from 'src/app/shared/models/plant-info';
@@ -16,8 +16,8 @@ export class PlantInfoViewerComponent implements OnInit {
   public plantInfo: PlantInfo;
   public commonName: string;
   public scientificName: string;
-  public isEditing: boolean = false;
-  public isOwner: boolean = false;
+  public isEditing = false;
+  public isOwner = false;
   public isAuthenticated: Observable<boolean>;
   public userName: Observable<string>;
   public user: IUser;
@@ -32,14 +32,16 @@ export class PlantInfoViewerComponent implements OnInit {
     this.isAuthenticated = this.authorizeService.isAuthenticated();
     this.authorizeService.getUser().subscribe((user) => {
       this.user = user;
-      this.user.userId = user["sub"];
+      this.user.userId = user['sub'];
 
       this.plantInfoService.getPlantInfo(this.id).subscribe((plantInfo) => {
         this.plantInfo = plantInfo;
         this.scientificName = plantInfo.scientificName ?? plantInfo.lifeform.scientificName;
         this.commonName = plantInfo.commonName ?? plantInfo.lifeform.commonName;
-        this.isOwner = this.plantInfo.createdBy == this.user.userId;
+        this.isOwner = this.plantInfo.createdBy === this.user.userId;
+        return of({});
       });
+      return of({});
     });
   }
 

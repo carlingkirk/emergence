@@ -1,0 +1,12 @@
+<div class="modal-header card-header h3">
+    <span class="title">Origin:</span>&nbsp;
+    <ng-container *ngIf="name">
+        <span>{{name}} </span>&nbsp;
+    </ng-container>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">×</span>
+    </button>
+</div>
+<div class="modal-body">
+    <app-origin-viewer [id]="originId" [modal]="modal" (originLoaded)="originLoad($event)"></app-origin-viewer>
+</div>

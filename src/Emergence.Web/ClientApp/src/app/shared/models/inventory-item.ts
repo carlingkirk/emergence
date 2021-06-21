@@ -1,7 +1,7 @@
-import { User } from "./user";
-import { Origin } from "./origin";
-import { Inventory } from "./inventory";
-import { ItemType } from "./enums";
+import { User } from './user';
+import { Origin } from './origin';
+import { Inventory } from './inventory';
+import { ItemType } from './enums';
 
 export class InventoryItem {
   inventoryItemId: number;

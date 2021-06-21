@@ -9,5 +9,5 @@
     </button>
 </div>
 <div class="modal-body">
-    <app-specimen-viewer [id]="specimenId" [modal]="modal" (onSpecimenLoaded)="onSpecimenLoad($event)"></app-specimen-viewer>
+    <app-specimen-viewer [id]="specimenId" [modal]="modal" (specimenLoaded)="specimenLoad($event)"></app-specimen-viewer>
 </div>

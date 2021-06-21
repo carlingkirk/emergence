@@ -5,13 +5,13 @@ import { onImgError } from '../../common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'content-card',
+  selector: 'app-content-card',
   templateUrl: './content-card.component.html',
   styleUrls: ['./content-card.component.css']
 })
 export class ContentCardComponent implements OnInit {
   @Input()
-  public compactView: boolean = false;
+  public compactView = false;
   @Input()
   public photos: Photo[];
   @Input()
@@ -20,21 +20,21 @@ export class ContentCardComponent implements OnInit {
   public colorSearch: string;
   public color: string;
   public mainPhoto: Photo;
-  
+
   constructor(private modalService: NgbModal) { }
 
   private colors = [
-    { name: "black", color: "#333333" },
-    { name: "gray", color: "#ADAFA8" },
-    { name: "red", color: "#E24441" },
-    { name: "orange", color: "#E8AD2E" },
-    { name: "yellow", color: "#EFEF6E" },
-    { name: "green", color: "#94C973" },
-    { name: "blue", color: "#5959FF" },
-    { name: "purple", color: "#963AFF" },
-    { name: "pink", color: "#FF77D6" },
-    { name: "teal", color: "#8EFFD5" },
-    { name: "olive", color: "#3D550C" }
+    { name: 'black', color: '#333333' },
+    { name: 'gray', color: '#ADAFA8' },
+    { name: 'red', color: '#E24441' },
+    { name: 'orange', color: '#E8AD2E' },
+    { name: 'yellow', color: '#EFEF6E' },
+    { name: 'green', color: '#94C973' },
+    { name: 'blue', color: '#5959FF' },
+    { name: 'purple', color: '#963AFF' },
+    { name: 'pink', color: '#FF77D6' },
+    { name: 'teal', color: '#8EFFD5' },
+    { name: 'olive', color: '#3D550C' }
   ];
 
   ngOnInit(): void {
@@ -45,18 +45,17 @@ export class ContentCardComponent implements OnInit {
     }
   }
 
-  getRandomColor (search: string): string
-  {
+  getRandomColor (search: string): string {
       let randomValue = 1;
       if (this.colorSearch) {
-        var random = seedrandom(search);
+        const random = seedrandom(search);
         randomValue = Math.abs(random.int32() % this.colors.length);
       } else {
-        var random = seedrandom();
+        const random = seedrandom();
         randomValue = Math.abs(random.int32() % this.colors.length);
       }
 
-      var colorPick = this.colors[randomValue];
+      const colorPick = this.colors[randomValue];
 
       if (search) {
         this.colors.forEach((color) => {

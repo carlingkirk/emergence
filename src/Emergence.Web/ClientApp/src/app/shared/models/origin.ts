@@ -1,5 +1,5 @@
-import { GeoLocation } from "./location";
-import { User } from "./user";
+import { GeoLocation } from './location';
+import { User } from './user';
 
 export class Origin {
   originId: number;

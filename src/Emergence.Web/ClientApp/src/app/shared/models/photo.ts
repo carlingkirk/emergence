@@ -1,4 +1,4 @@
-import { PhotoType } from "./enums";
+import { PhotoType } from './enums';
 
 export class Photo {
   photoId: number;

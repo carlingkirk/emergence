@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, OperatorFunction } from 'rxjs';
+import { Observable, of, OperatorFunction, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { LifeformService } from 'src/app/service/lifeform-service';
@@ -58,7 +58,7 @@ export class SpecimenEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.id) {
-      this.id = this.route.snapshot.params['id'];
+      this.id = !this.specimen.specimenId ?? this.route.snapshot.params['id'];
     }
 
     this.inventoryItemStatuses = Object.keys(InventoryItemStatus).filter(key => !isNaN(Number(key))).map(key => InventoryItemStatus[key]);
@@ -67,8 +67,9 @@ export class SpecimenEditComponent implements OnInit {
     this.itemTypes = Object.keys(ItemType).filter(key => !isNaN(Number(key))).map((key) => ItemType[key]);
     this.authorizeService.getUser().subscribe((user) => {
       this.user = user;
-      this.user.userId = user["sub"];
+      this.user.userId = user['sub'];
       this.loadSpecimen();
+      return of({});
     });
   }
 
@@ -83,17 +84,21 @@ export class SpecimenEditComponent implements OnInit {
       this.selectedOrigin = this.specimen.inventoryItem.origin;
       this.uploadedPhotos = this.specimen.photos;
     }
-    
+
     if (!this.specimen && this.id > 0) {
-      this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
-        this.specimen = specimen;
-        this.selectedLifeform = specimen.lifeform;
-        this.selectedOrigin = specimen.inventoryItem.origin;
-        this.uploadedPhotos = specimen.photos;
-      });
+      this.specimenService.getSpecimen(this.id).subscribe(
+        (specimen) => {
+          this.specimen = specimen;
+          this.selectedLifeform = specimen.lifeform;
+          this.selectedOrigin = specimen.inventoryItem.origin;
+          this.uploadedPhotos = specimen.photos;
+          return of({});
+        },
+        (error) => console.log(error),
+        () => { console.log('getSpecimen complete!'); });
     }
 
-    if (this.id == 0) {
+    if (this.id === 0) {
       this.specimen = new Specimen();
       this.specimen.createdBy = this.user.userId;
       this.specimen.ownerId = this.user.userId;
@@ -103,11 +108,11 @@ export class SpecimenEditComponent implements OnInit {
       this.specimen.inventoryItem.inventory.createdBy = this.user.userId;
       this.specimen.inventoryItem.inventory.dateCreated = new Date();
       this.specimen.photos = [];
-      this.specimen.inventoryItem.status = this.inventoryItemStatuses[InventoryItemStatus["In Use"]];
+      this.specimen.inventoryItem.status = this.inventoryItemStatuses[InventoryItemStatus['In Use']];
       this.specimen.inventoryItem.createdBy = this.user.userId;
       this.specimen.inventoryItem.dateCreated = new Date();
       this.specimen.inventoryItem.itemType = this.itemTypes[ItemType.Specimen];
-      this.specimen.inventoryItem.visibility = this.visibilities[Visibility["Inherit from profile"]];
+      this.specimen.inventoryItem.visibility = this.visibilities[Visibility['Inherit from profile']];
     }
   }
 
@@ -116,7 +121,7 @@ export class SpecimenEditComponent implements OnInit {
       return of([]);
     }
 
-    let searchRequest: SearchRequest = {
+    const searchRequest: SearchRequest = {
       filters: null,
       searchText: searchText,
       take: 12,
@@ -133,7 +138,7 @@ export class SpecimenEditComponent implements OnInit {
       return of([]);
     }
 
-    let searchRequest: SearchRequest = {
+    const searchRequest: SearchRequest = {
       filters: null,
       searchText: searchText,
       take: 12,
@@ -151,7 +156,7 @@ export class SpecimenEditComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
         : this.searchLifeforms(term).pipe((lifeform) => lifeform ))
-    );
+    )
 
   public originsTypeahead: OperatorFunction<string, readonly Origin[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -159,7 +164,7 @@ export class SpecimenEditComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
         : this.searchOrigins(term).pipe((origin) => origin ))
-    );
+    )
 
   public saveSpecimen(): void {
     this.specimen.lifeform = this.selectedLifeform;
@@ -172,7 +177,7 @@ export class SpecimenEditComponent implements OnInit {
       (specimen) => this.modal ? this.modal.close() : this.router.navigate(['/specimens/', specimen.specimenId]),
       (error) => {
         console.log(error);
-        this.errorMessage = "There was an error saving the specimen";
+        this.errorMessage = 'There was an error saving the specimen';
       });
   }
 
@@ -186,7 +191,7 @@ export class SpecimenEditComponent implements OnInit {
     if (this.specimen.specimenId) {
       this.router.navigate(['/specimens/', this.specimen.specimenId]);
     } else {
-      this.router.navigate([".."]);
+      this.router.navigate(['..']);
     }
   }
 

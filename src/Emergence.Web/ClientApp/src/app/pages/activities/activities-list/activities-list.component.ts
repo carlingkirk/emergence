@@ -15,7 +15,7 @@ import { Specimen } from 'src/app/shared/models/specimen';
 export class ActivitiesListComponent extends Listable implements OnInit, IListable {
 
   @Input()
-  public showSearch: boolean = true;
+  public showSearch = true;
   @Input()
   public upcoming: boolean;
   @Input()
@@ -40,9 +40,9 @@ export class ActivitiesListComponent extends Listable implements OnInit, IListab
   ];
 
   ngOnInit(): void {
-    let searchType = this.contactsOnly ? "-contacts" : this.upcoming ? "-upcoming" : "";
+    const searchType = this.contactsOnly ? '-contacts' : this.upcoming ? '-upcoming' : '';
     if (!this.specimen && !this.contactsOnly && !this.upcoming) {
-      this.storageService.getItem("activity-search" + searchType).then((searchRequest) => {
+      this.storageService.getItem('activity-search' + searchType).then((searchRequest) => {
         if (!searchRequest) {
           this.resetSearch();
         } else {
@@ -69,7 +69,7 @@ export class ActivitiesListComponent extends Listable implements OnInit, IListab
   }
 
   getColorName(activity: Activity) {
-    return activity.specimen?.lifeform?.commonName ?? activity.name
+    return activity.specimen?.lifeform?.commonName ?? activity.name;
   }
 
   showScientificName(activity: Activity) {
@@ -77,7 +77,7 @@ export class ActivitiesListComponent extends Listable implements OnInit, IListab
   }
 
   getActivityType(activity: Activity) {
-    var activityType = activity.activityType == ActivityType.Custom ? activity.customActivityType : activity.activityType.toString();
+    const activityType = activity.activityType === ActivityType.Custom ? activity.customActivityType : activity.activityType.toString();
     return activity.name.includes(activityType) ? null : activityType;
   }
 
@@ -90,7 +90,7 @@ export class ActivitiesListComponent extends Listable implements OnInit, IListab
   }
 
   loadActivities() {
-    this.storageService.setItem("activity-search", this.searchRequest).then((result) => {
+    this.storageService.setItem('activity-search', this.searchRequest).then((result) => {
       this.activityService.findActivities(this.searchRequest).subscribe(
         (searchResult) => {
           this.searchResult = searchResult;

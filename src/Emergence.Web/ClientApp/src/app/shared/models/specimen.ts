@@ -1,6 +1,6 @@
-import { InventoryItem } from "./inventory-item";
-import { Lifeform } from "./lifeform";
-import { Photo } from "./photo";
+import { InventoryItem } from './inventory-item';
+import { Lifeform } from './lifeform';
+import { Photo } from './photo';
 
 export class Specimen {
   name: string;

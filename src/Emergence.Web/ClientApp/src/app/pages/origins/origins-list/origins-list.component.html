@@ -57,7 +57,7 @@
                 <div class="row">
                     <span *ngIf="totalCount == 0">No origins found</span>
                     <ng-container *ngFor="let origin of origins">
-                        <content-card class="col-lg-4 col-md-6 col-xs item-card"
+                        <app-content-card class="col-lg-4 col-md-6 col-xs item-card"
                             [name]="origin.name" 
                             [colorSearch]="origin.name" >
                             <div class="col-12">
@@ -78,7 +78,7 @@
                             <div class="col-12">
                                 <span *ngIf="origin.user">by {{origin.user.displayName}}</span>
                             </div>
-                        </content-card>
+                        </app-content-card>
                     </ng-container>
                 </div>
             </div>

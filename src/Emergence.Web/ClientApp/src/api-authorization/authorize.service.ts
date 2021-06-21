@@ -50,7 +50,7 @@ export class AuthorizeService {
   }
 
   public getUser(): Observable<IUser | null> {
-    var user = concat(
+    const user = concat(
       this.userSubject.pipe(take(1), filter(u => !!u)),
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { getElementId } from 'src/app/shared/common';
 import { ConservationStatus } from 'src/app/shared/models/enums';
 import { Photo } from 'src/app/shared/models/photo';
@@ -17,7 +18,8 @@ export class PlantInfoPageComponent implements OnInit {
   public commonName: string;
   public scientificName: string;
   public conservationGroups: [{ conservationStatus: ConservationStatus, countryGroups: [{ country: string, states: string[]}] }];
-  constructor() { }
+
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.scientificName = this.plantInfo.scientificName ?? this.plantInfo.lifeform.scientificName;
@@ -28,31 +30,31 @@ export class PlantInfoPageComponent implements OnInit {
 
   initializeGroups() {
     this.plantInfo.locations.forEach(location => {
-      if (location.status.toString() === "Native") {
+      if (location.status.toString() === 'Native') {
         if (!this.conservationGroups) {
-          this.conservationGroups = [{ 
-            conservationStatus: location.conservationStatus, 
+          this.conservationGroups = [{
+            conservationStatus: location.conservationStatus,
             countryGroups: [{
-              country: location.location.country, 
-              states: [ location.location.stateOrProvince ?? "Federal" ] 
+              country: location.location.country,
+              states: [ location.location.stateOrProvince ?? 'Federal' ]
             }]
           }];
         } else {
-          let group = this.conservationGroups.find(group => group.conservationStatus == location.conservationStatus );
+          const group = this.conservationGroups.find(cGroup => cGroup.conservationStatus === location.conservationStatus );
           if (!group) {
-              this.conservationGroups.push({ 
-                conservationStatus: location.conservationStatus, 
+              this.conservationGroups.push({
+                conservationStatus: location.conservationStatus,
                 countryGroups: [{
-                  country: location.location.country, 
-                  states: [ location.location.stateOrProvince ] 
+                  country: location.location.country,
+                  states: [ location.location.stateOrProvince ]
               }]
             });
           } else {
-            var subGroup = group.countryGroups.find(group => group.country == location.location.country);
+            const subGroup = group.countryGroups.find((countryGroup) => countryGroup.country === location.location.country);
             if (!subGroup) {
               group.countryGroups.push({ country: location.location.country, states: [location.location.stateOrProvince]});
             } else {
-              subGroup.states.push(location.location.stateOrProvince === "" ? "Federal" : location.location.stateOrProvince);
+              subGroup.states.push(location.location.stateOrProvince === '' ? 'Federal' : location.location.stateOrProvince);
             }
           }
         }
@@ -60,13 +62,11 @@ export class PlantInfoPageComponent implements OnInit {
     });
   }
 
-  displayRange(start: string, end: string, unit: string = "") {
+  displayRange(start: string, end: string, unit: string = '') {
     let range = null;
-    if (!end)
-    {
+    if (!end) {
         range = start + unit;
-    } else if (start)
-    {
+    } else if (start) {
         range = `${start} - ${end + unit}`;
     }
 
@@ -75,5 +75,9 @@ export class PlantInfoPageComponent implements OnInit {
 
   getElementId(element: string, id: string) {
     return getElementId(element, id);
+  }
+
+  showOriginModal(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
   }
 }

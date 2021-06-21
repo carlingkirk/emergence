@@ -1,14 +1,14 @@
-import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { SearchRequest } from "../shared/models/search-request";
-import { SearchResult } from "../shared/models/search-result";
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { SearchRequest } from '../shared/models/search-request';
+import { SearchResult } from '../shared/models/search-result';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LifeformService {
-    
+
     private baseUrl: string;
     private httpClient: HttpClient;
 
@@ -19,6 +19,6 @@ export class LifeformService {
 
     public findLifeforms(searchRequest: SearchRequest): Observable<SearchResult> {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/lifeform/find', searchRequest)
-        .pipe((searchResult) => { return searchResult });
+        .pipe((searchResult) => searchResult);
     }
 }

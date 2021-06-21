@@ -1,5 +1,5 @@
-import { Photo } from "./models/photo";
-import { Specimen } from "./models/specimen";
+import { Photo } from './models/photo';
+import { Specimen } from './models/specimen';
 
 export function onImgError(event, photo: Photo) {
     if (event.target.srcset) {
@@ -15,7 +15,7 @@ export function onImgError(event, photo: Photo) {
 }
 
 export function getElementId(element: string, id: string) {
-    return element + "-" + id;
+    return element + '-' + id;
 }
 
 export function getSpecimenName(specimen: Specimen) {
@@ -23,5 +23,5 @@ export function getSpecimenName(specimen: Specimen) {
 }
 
 export function getSpecimenScientificName(specimen: Specimen) {
-    return specimen.lifeform?.scientificName ?? "New";
+    return specimen.lifeform?.scientificName ?? 'New';
 }

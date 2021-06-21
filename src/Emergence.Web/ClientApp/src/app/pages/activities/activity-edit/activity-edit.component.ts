@@ -49,11 +49,12 @@ export class ActivityEditComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
     this.activityTypes = Object.keys(ActivityType).filter(key => !isNaN(Number(key))).map(key => ActivityType[key]);
-    
+
     this.authorizeService.getUser().subscribe((user) => {
       this.user = user;
-      this.user.userId = user["sub"];
+      this.user.userId = user['sub'];
       this.loadActivity();
+      return of({});
     });
   }
 
@@ -63,15 +64,16 @@ export class ActivityEditComponent implements OnInit {
         this.activity = activity;
         this.selectedSpecimen = activity.specimen;
         this.uploadedPhotos = activity.photos;
+        return of({});
       });
     }
 
-    if (this.id == 0) {
+    if (this.id === 0) {
       this.activity = new Activity();
       this.activity.createdBy = this.user.userId;
       this.activity.dateCreated = new Date();
       this.activity.photos = [];
-      this.activity.visibility = this.visibilities[Visibility["Inherit from profile"]];
+      this.activity.visibility = this.visibilities[Visibility['Inherit from profile']];
     }
   }
 
@@ -80,7 +82,7 @@ export class ActivityEditComponent implements OnInit {
       return of([]);
     }
 
-    let searchRequest: SearchRequest = {
+    const searchRequest: SearchRequest = {
       filters: null,
       searchText: searchText,
       take: 12,
@@ -97,23 +99,23 @@ export class ActivityEditComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
-        : this.searchSpecimens(term).pipe((specimen) => specimen )));
+        : this.searchSpecimens(term).pipe((specimen) => specimen )))
 
   public showAutoSpecimen() {
-    return this.activity.activityId == 0 && !this.isNewSpecimen &&
-      (this.activity.activityType == ActivityType["Plant in ground"] ||
-      this.activity.activityType == ActivityType.Germinate ||
-      this.activity.activityType == ActivityType.Stratify ||
-      this.activity.activityType == ActivityType["Collect seeds"])
+    return this.activity.activityId === 0 && !this.isNewSpecimen &&
+      (this.activity.activityType === ActivityType['Plant in ground'] ||
+      this.activity.activityType === ActivityType.Germinate ||
+      this.activity.activityType === ActivityType.Stratify ||
+      this.activity.activityType === ActivityType['Collect seeds']);
   }
 
   public populateActivityName() {
     if (!this.activity.name) {
-      var name = this.selectedSpecimen?.lifeform?.scientificName ?? this.selectedSpecimen.name ?? "";
-      if (this.activity.activityType != ActivityType.Custom){
-          this.activity.name = this.activity.activityType + ": " + name;
+      const name = this.selectedSpecimen?.lifeform?.scientificName ?? this.selectedSpecimen.name ?? '';
+      if (this.activity.activityType !== ActivityType.Custom) {
+          this.activity.name = this.activity.activityType + ': ' + name;
       } else {
-        this.activity.name = this.activity.customActivityType + ": " + name;
+        this.activity.name = this.activity.customActivityType + ': ' + name;
       }
     }
   }
@@ -126,7 +128,7 @@ export class ActivityEditComponent implements OnInit {
       (activity) => this.router.navigate(['/activities/', activity.activityId]),
       (error) => {
         console.log(error);
-        this.errorMessage = "There was an error saving the activity";
+        this.errorMessage = 'There was an error saving the activity';
       });
   }
 
@@ -134,10 +136,10 @@ export class ActivityEditComponent implements OnInit {
     if (this.activity.activityId) {
       this.router.navigate(['/activities/', this.activity.activityId]);
     } else {
-      this.router.navigate([".."]);
+      this.router.navigate(['..']);
     }
   }
-  
+
   onImgError(event, photo: Photo) {
     onImgError(event, photo);
   }

@@ -25,7 +25,7 @@ export class UploadPhotosComponent implements OnInit {
   }
 
   uploadPhoto(event) {
-      let file = event.target.files[0];
+      const file = event.target.files[0];
 
       this.photoService.uploadPhoto(this.type, file)
         .subscribe(
@@ -36,7 +36,7 @@ export class UploadPhotosComponent implements OnInit {
             this.photos.push(photo);
             }
             this.photosChange.emit(this.photos);
-          }, 
+          },
           (error) => console.log(error));
   }
 

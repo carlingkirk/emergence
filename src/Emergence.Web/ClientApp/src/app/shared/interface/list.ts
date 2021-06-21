@@ -1,7 +1,7 @@
-import { Column } from "../components/sortable-headers/sortable-headers.component";
-import { FilterBody } from "../models/filters";
-import { PageRequest, SearchRequest, SortRequest } from "../models/search-request";
-import { SearchResult } from "../models/search-result";
+import { Column } from '../components/sortable-headers/sortable-headers.component';
+import { FilterBody } from '../models/filters';
+import { PageRequest, SearchRequest, SortRequest } from '../models/search-request';
+import { SearchResult } from '../models/search-result';
 
 export interface IListable {
     searchRequest: SearchRequest;
@@ -13,7 +13,7 @@ export interface IListable {
     showPublic: boolean;
     listView: boolean;
     showFilters: boolean;
-    columns: Column[]
+    columns: Column[];
 
     resetSearch(): void;
     toggleFilters(): void;
@@ -44,7 +44,7 @@ export class Listable implements IListable {
             sortDirection: 0,
             sortBy: null
         };
-        this.search();            
+        this.search();
     }
 
     public toggleFilters(): void {

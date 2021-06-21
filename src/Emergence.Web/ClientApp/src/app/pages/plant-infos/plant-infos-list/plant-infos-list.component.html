@@ -87,7 +87,7 @@
                 <div class="row">
                     <span *ngIf="totalCount == 0">No plant profiles found</span>
                     <ng-container *ngFor="let plantInfo of plantInfos">
-                        <content-card class="col-lg-4 col-md-6 col-xs item-card"
+                        <app-content-card class="col-lg-4 col-md-6 col-xs item-card"
                             [name]="plantInfo.lifeform?.scientificName" 
                             [colorSearch]="plantInfo.lifeform?.commonName" 
                             [photos]="plantInfo.photos" >
@@ -129,7 +129,7 @@
                                 <span *ngIf="!plantInfo.User">from {{plantInfo.origin.name.substring(0,20)}}</span>
                                 <span *ngIf="plantInfo.User">from {{plantInfo.user.displayName}}</span>
                             </div>
-                        </content-card>
+                        </app-content-card>
                     </ng-container>
                 </div>
             </div>

@@ -1,13 +1,13 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
-import { Photo } from "../shared/models/photo";
-import { PhotoType } from "../shared/models/enums";
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { PhotoType } from '../shared/models/enums';
+import { Photo } from '../shared/models/photo';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PhotoService {
-    
+
     private baseUrl: string;
     private httpClient: HttpClient;
 
@@ -17,26 +17,26 @@ export class PhotoService {
     }
 
     public uploadPhotos(type: PhotoType) {
-        var typeNum = PhotoType[type];
-        var content = {};
+        const typeNum = PhotoType[type];
+        const content = {};
         return this.httpClient.post<Photo>(this.baseUrl + `api/photo/${typeNum}/upload`, content)
-        .pipe((photo) => { return photo });
+        .pipe((photo) => photo);
     }
 
     public uploadPhoto(type: PhotoType, file: File) {
-        var formData: any = new FormData();
-        formData.append("photo", file);
+        const formData: any = new FormData();
+        formData.append('photo', file);
 
         return this.httpClient.post<Photo>(this.baseUrl + `api/photo/${type}/upload`, formData)
-            .pipe((photo) => { return photo });
+            .pipe((photo) => photo);
     }
 
     public addExternalPhoto(type: PhotoType, url: string) {
-        var typeNum = PhotoType[type];
-        var photo = { externalUrl: url };
+        const typeNum = PhotoType[type];
+        const externalPhoto = { externalUrl: url };
 
-        return this.httpClient.post<Photo>(this.baseUrl + `api/photo/${typeNum}/addexternal`, photo)
-        .pipe((photo) => { return photo });
+        return this.httpClient.post<Photo>(this.baseUrl + `api/photo/${typeNum}/addexternal`, externalPhoto)
+        .pipe(photo => photo);
     }
 
     public removePhoto(id: number) {

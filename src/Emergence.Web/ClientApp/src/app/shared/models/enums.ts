@@ -49,28 +49,28 @@ export enum SortDirection {
 }
 
 export enum Unit {
-    "",
-    "ft",
-    "in",
-    "m",
-    "cm"
+    '',
+    'ft',
+    'in',
+    'm',
+    'cm'
 }
 
 export enum WaterType {
-    "",
+    '',
     Dry,
-    "Medium Dry",
+    'Medium Dry',
     Medium,
-    "Medium Wet",
+    'Medium Wet',
     Wet
 }
 
 export enum LightType {
-    "",
-    "Full Shade",
-    "Part Shade",
-    "Part Sun",
-    "Full Sun"
+    '',
+    'Full Shade',
+    'Part Shade',
+    'Part Sun',
+    'Full Sun'
 }
 
 export enum SoilType {
@@ -84,22 +84,22 @@ export enum SoilType {
 }
 
 export enum StratificationType {
-    "Refrigerate seed for storage",
-    "Sand scarification",
-    "Nick scarification",
-    "Hot water treatment",
-    "Cold moist stratification",
-    "Warm moist stratification",
-    "Needs light to germinate",
-    "Sow in late fall",
-    "Sow outdoors in fall",
-    "Requires inoculum",
-    "Requires host plant",
-    "Fern spores"
+    'Refrigerate seed for storage',
+    'Sand scarification',
+    'Nick scarification',
+    'Hot water treatment',
+    'Cold moist stratification',
+    'Warm moist stratification',
+    'Needs light to germinate',
+    'Sow in late fall',
+    'Sow outdoors in fall',
+    'Requires inoculum',
+    'Requires host plant',
+    'Fern spores'
 }
 
 export enum Month {
-    "",
+    '',
     Jan,
     Feb,
     Mar,
@@ -115,26 +115,26 @@ export enum Month {
 }
 
 export enum ConservationStatus {
-    "" = 0,
-    "Critically Endangered" = 1,
-    "Endangered" = 2,
-    "Vulnerable" = 3,
-    "Near Threatened" = 4,
-    "Least Concern" = 5,
-    "Possibly Extirpated" = 6,
-    "Presumed Extirpated" = 7,
-    "Not Evaluated" = 97,
-    "Not Applicable" = 98,
-    "Data Deficient" = 99
+    '' = 0,
+    'Critically Endangered' = 1,
+    'Endangered' = 2,
+    'Vulnerable' = 3,
+    'Near Threatened' = 4,
+    'Least Concern' = 5,
+    'Possibly Extirpated' = 6,
+    'Presumed Extirpated' = 7,
+    'Not Evaluated' = 97,
+    'Not Applicable' = 98,
+    'Data Deficient' = 99
 }
 
 export enum LocationStatus {
-    "",
-    "Native",
-    "Introduced",
-    "Incidental",
-    "Native & Introduced",
-    "Native & Extirpated"
+    '',
+    'Native',
+    'Introduced',
+    'Incidental',
+    'Native & Introduced',
+    'Native & Extirpated'
 }
 
 export enum Wildlife {
@@ -146,31 +146,31 @@ export enum Wildlife {
     Moths,
     Wasps
   }
-  
+
   export enum Effect {
     Food,
     Host
   }
 
 export enum ActivityType {
-    "",
-    "Germinate",
-    "Stratify",
-    "Divide",
-    "Take cutting",
-    "Collect seeds",
-    "Progress check",
-    "Plant in ground",
-    "Repot",
-    "Water",
-    "Fertilize",
+    '',
+    'Germinate',
+    'Stratify',
+    'Divide',
+    'Take cutting',
+    'Collect seeds',
+    'Progress check',
+    'Plant in ground',
+    'Repot',
+    'Water',
+    'Fertilize',
     Custom,
-    "Add to wishlist",
+    'Add to wishlist',
     Purchase
 }
 
 export enum OriginType {
-    "",
+    '',
     Nursery,
     Store,
     Location,
@@ -185,15 +185,15 @@ export enum OriginType {
 
 export enum Region {
     Africa,
-    "Antarctica/Southern Ocean",
+    'Antarctica/Southern Ocean',
     Australia,
     Caribbean,
-    "Europe & Northern Asia (excluding China)",
-    "Middle America",
-    "North America",
-    "Oceania",
-    "South America",
-    "Southern Asia",
+    'Europe & Northern Asia (excluding China)',
+    'Middle America',
+    'North America',
+    'Oceania',
+    'South America',
+    'Southern Asia',
 }
 
 export function getSortDirectionValues() {
