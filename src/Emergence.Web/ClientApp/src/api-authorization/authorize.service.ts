@@ -55,6 +55,7 @@ export class AuthorizeService {
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());
     console.log('getUser called');
+    user.pipe(take(1)).subscribe(() => console.log("user found"));
     return user;
   }
 

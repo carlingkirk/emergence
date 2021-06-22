@@ -82,20 +82,20 @@ export class SpecimenViewerComponent implements OnInit, OnDestroy {
     //     return of({});
     // });
 
-    // forkJoin([
-    //   this.authorizeService.getUser(),
-    //   this.specimenService.getSpecimen(this.id)
-    // ]).subscribe(([user, specimen]) => {
-    //     this.user = user;
-    //     this.user.userId = this.user['sub'];
-    //     this.specimen = specimen;
-    //     this.isOwner = this.specimen.createdBy == this.user.userId;
-    //     this.name = getSpecimenName(this.specimen);
-    //     this.scientificName = getSpecimenScientificName(this.specimen);
-    //     this.specimenLoaded.emit(this.specimen);
-    //   },
-    //   error => console.log(error),
-    //   () => console.log("getSpecimen complete"));
+    forkJoin([
+      this.authorizeService.getUser(),
+      this.specimenService.getSpecimen(this.id)
+    ]).subscribe(([user, specimen]) => {
+        this.user = user;
+        this.user.userId = this.user['sub'];
+        this.specimen = specimen;
+        this.isOwner = this.specimen.createdBy == this.user.userId;
+        this.name = getSpecimenName(this.specimen);
+        this.scientificName = getSpecimenScientificName(this.specimen);
+        this.specimenLoaded.emit(this.specimen);
+      },
+      error => console.log(error),
+      () => console.log("getSpecimen complete"));
   }
 
   public switchTab(tab: string) {
