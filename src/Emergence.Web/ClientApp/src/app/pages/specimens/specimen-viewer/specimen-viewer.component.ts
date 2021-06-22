@@ -85,11 +85,10 @@ export class SpecimenViewerComponent implements OnInit, OnDestroy {
     // forkJoin([
     //   this.authorizeService.getUser(),
     //   this.specimenService.getSpecimen(this.id)
-    // ]).subscribe(
-    //   results => {
-    //     this.user = results[0];
+    // ]).subscribe(([user, specimen]) => {
+    //     this.user = user;
     //     this.user.userId = this.user['sub'];
-    //     this.specimen = results[1];
+    //     this.specimen = specimen;
     //     this.isOwner = this.specimen.createdBy == this.user.userId;
     //     this.name = getSpecimenName(this.specimen);
     //     this.scientificName = getSpecimenScientificName(this.specimen);
