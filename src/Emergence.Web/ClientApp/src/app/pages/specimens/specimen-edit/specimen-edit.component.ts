@@ -58,7 +58,7 @@ export class SpecimenEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.id) {
-      this.id = !this.specimen.specimenId ?? this.route.snapshot.params['id'];
+      this.id = this.specimen?.specimenId ?? this.route.snapshot.params['id'];
     }
 
     this.inventoryItemStatuses = Object.keys(InventoryItemStatus).filter(key => !isNaN(Number(key))).map(key => InventoryItemStatus[key]);

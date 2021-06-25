@@ -20,8 +20,7 @@ export class SpecimenService {
 
     public getSpecimen(id: number) {
         return this.httpClient.get<Specimen>(this.baseUrl + 'api/specimen/' + id)
-       // .pipe((specimen) => { return specimen });
-        .pipe(specimen => specimen );
+        .pipe(specimen => specimen);
     }
 
     public saveSpecimen(specimen: Specimen) {

@@ -3,9 +3,9 @@
         <button type="button" class="btn btn-primary">Back</button>
     </a>
     <span class="title">Specimen: </span>
-    <ng-container *ngIf="specimen && specimen.specimenId == 0">
+    <ng-container *ngIf="specimen">
         <span *ngIf="name">{{name}} </span>
-        <span class="font-italic">{{scientificName}</span>
+        <span class="font-italic">{{scientificName}}</span>
     </ng-container>
 </div>
 
@@ -25,7 +25,7 @@
     </ng-container>
     <span *ngIf="!specimen">Loading...</span>
 
-    <ng-container *ngIf="isOwner && !isEditing && specimen && specimen.specimenId > 0">
+    <ng-container *ngIf="specimen && userId == specimen.createdBy && !isEditing && specimen && specimen.specimenId > 0">
         <a *ngIf="!modal" [routerLink]='["/specimens/edit", specimen.specimenId]'>
             <button type="button" class="btn btn-primary">Edit</button>
         </a>
@@ -33,7 +33,7 @@
         <button type="button" class="btn btn-primary" (click)="removeSpecimen()">Delete</button>
     </ng-container>
 
-    <ng-container *ngIf="!isOwner">
+    <ng-container *ngIf="specimen && userId != specimen.createdBy">
         <button type="button" class="btn btn-primary" (click)="showMessageModal()">
             <span class="oi oi-plus btn-oi"></span>Message
         </button>

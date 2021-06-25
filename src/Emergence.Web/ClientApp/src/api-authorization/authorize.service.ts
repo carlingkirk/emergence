@@ -54,8 +54,6 @@ export class AuthorizeService {
       this.userSubject.pipe(take(1), filter(u => !!u)),
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());
-    console.log('getUser called');
-    user.pipe(take(1)).subscribe(() => console.log("user found"));
     return user;
   }
 
@@ -63,6 +61,10 @@ export class AuthorizeService {
     return from(this.ensureUserManagerInitialized())
       .pipe(mergeMap(() => from(this.userManager.getUser())),
         map(user => user && user.access_token));
+  }
+
+  public getUserId(): Observable<string> {
+    return this.userSubject.asObservable().pipe(map(u => u && u['sub']));
   }
 
   // We try to authenticate the user in three different ways:

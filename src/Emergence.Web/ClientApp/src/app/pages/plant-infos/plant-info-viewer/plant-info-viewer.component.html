@@ -20,14 +20,14 @@
 </ng-container>
 <span *ngIf="!plantInfo">Loading...</span>
 
-<ng-container *ngIf="isOwner && !isEditing && plantInfo && plantInfo.plantInfoId > 0">
+<ng-container *ngIf="plantInfo  && !isEditing && plantInfo && plantInfo.plantInfoId > 0">
     <a [routerLink]='["/plantinfos/edit", plantInfo.plantInfoId]'>
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
     <button type="button" class="btn btn-primary" (click)="removePlantInfo()">Delete</button>
 </ng-container>
 
-<ng-container *ngIf="!isOwner">
+<ng-container *ngIf="plantInfo ">
     <button type="button" class="btn btn-primary" (click)="showMessageModal()">
         <span class="oi oi-plus btn-oi"></span>Message
     </button>
