@@ -29,7 +29,7 @@
         <a *ngIf="!modal" [routerLink]='["/specimens/edit", specimen.specimenId]'>
             <button type="button" class="btn btn-primary">Edit</button>
         </a>
-        <button type="button" *ngIf="modal" (click)="editSpecimen()" class="btn btn-primary">Edit</button>
+        <button type="button" *ngIf="modal" (click)="edit()" class="btn btn-primary">Edit</button>
         <button type="button" class="btn btn-primary" (click)="removeSpecimen()">Delete</button>
     </ng-container>
 

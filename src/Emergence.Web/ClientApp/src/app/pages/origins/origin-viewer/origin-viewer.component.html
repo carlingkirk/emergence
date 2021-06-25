@@ -19,15 +19,15 @@
 </ng-container>
 <span *ngIf="!origin">Loading...</span>
 
-<ng-container *ngIf="isOwner && !isEditing && origin && origin.originId > 0">
+<ng-container *ngIf="origin && userId === origin.createdBy && !isEditing && origin && origin.originId > 0">
     <a *ngIf="!modal" [routerLink]='["/origins/edit", origin.originId]'>
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
-    <button type="button" *ngIf="modal" (click)="editOrigin()" class="btn btn-primary">Edit</button>
+    <button type="button" *ngIf="modal" (click)="edit()" class="btn btn-primary">Edit</button>
     <button type="button" class="btn btn-primary" (click)="removeOrigin()">Delete</button>
 </ng-container>
 
-<ng-container *ngIf="!isOwner">
+<ng-container *ngIf="origin && userId !== origin.createdBy">
     <button type="button" class="btn btn-primary" (click)="showMessageModal()">
         <span class="oi oi-plus btn-oi"></span>Message
     </button>

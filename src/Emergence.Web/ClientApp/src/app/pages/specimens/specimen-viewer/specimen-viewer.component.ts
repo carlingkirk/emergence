@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { getSpecimenName, getSpecimenScientificName } from 'src/app/shared/common';
+import { Viewer } from 'src/app/shared/interface/viewer';
 import { Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
@@ -13,9 +14,7 @@ import { Specimen } from 'src/app/shared/models/specimen';
   templateUrl: './specimen-viewer.component.html',
   styleUrls: ['./specimen-viewer.component.css']
 })
-export class SpecimenViewerComponent implements OnInit, OnDestroy {
-  @Input()
-  public id: number;
+export class SpecimenViewerComponent extends Viewer {
   @Input()
   public modal: NgbModalRef;
   @Output()
@@ -27,26 +26,20 @@ export class SpecimenViewerComponent implements OnInit, OnDestroy {
     { key: 'plant-infos', value: 'Plant Profiles'}
   ];
   public currentTab = 'specimen';
-  public isEditing = false;
   public isAuthenticated: Observable<boolean>;
-  public userId: string;
-  public getUserSub: Subscription;
-  public isOwner: boolean;
   public name: string;
   public scientificName: string;
 
   constructor(
-    private authorizeService: AuthorizeService,
+    authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
-    private route: ActivatedRoute,
-    private router: Router) { }
-
-  ngOnInit(): void {
-    if (!this.id) {
-      this.id = this.route.snapshot.params['id'];
+    route: ActivatedRoute,
+    private router: Router) {
+      super(authorizeService, route);
     }
 
-    this.getUserSub = this.authorizeService.getUserId().pipe(tap(u => this.userId = u)).subscribe();
+  ngOnInit(): void {
+    super.ngOnInit();
 
     this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
       this.specimen = specimen;
@@ -73,11 +66,7 @@ export class SpecimenViewerComponent implements OnInit, OnDestroy {
     });
   }
 
-  public editSpecimen() {
+  public edit() {
     this.isEditing = true;
-  }
-
-  ngOnDestroy(): void {
-    this.getUserSub.unsubscribe();
   }
 }

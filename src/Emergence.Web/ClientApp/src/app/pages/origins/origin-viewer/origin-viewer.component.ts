@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
-import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { OriginService } from 'src/app/service/origin-service';
+import { Viewer } from 'src/app/shared/interface/viewer';
 import { Origin } from 'src/app/shared/models/origin';
 
 @Component({
@@ -11,10 +12,7 @@ import { Origin } from 'src/app/shared/models/origin';
   templateUrl: './origin-viewer.component.html',
   styleUrls: ['./origin-viewer.component.css']
 })
-export class OriginViewerComponent implements OnInit {
-
-  @Input()
-  public id: number;
+export class OriginViewerComponent extends Viewer {
   @Input()
   public modal: NgbModalRef;
   @Output()
@@ -22,32 +20,22 @@ export class OriginViewerComponent implements OnInit {
   public origin: Origin;
   public commonName: string;
   public scientificName: string;
-  public isEditing = false;
-  public isOwner = false;
   public isAuthenticated: Observable<boolean>;
-  public userName: Observable<string>;
-  public user: IUser;
+  
   constructor(
-    private authorizeService: AuthorizeService,
+    authorizeService: AuthorizeService,
     private readonly originService: OriginService,
-    private route: ActivatedRoute,
-    private router: Router) { }
+    route: ActivatedRoute,
+    private router: Router) {
+      super(authorizeService, route);
+     }
 
   ngOnInit(): void {
-    if (!this.id) {
-      this.id = this.route.snapshot.params['id'];
-    }
-    this.isAuthenticated = this.authorizeService.isAuthenticated();
-    this.authorizeService.getUser().subscribe((user) => {
-      this.user = user;
-      this.user.userId = user['sub'];
+    super.ngOnInit();
 
-      this.originService.getOrigin(this.id).subscribe((origin) => {
-        this.origin = origin;
-        this.isOwner = this.origin.createdBy === this.user.userId;
-        this.originLoaded.emit(this.origin);
-        return of({});
-      });
+    this.originService.getOrigin(this.id).subscribe((origin) => {
+      this.origin = origin;
+      this.originLoaded.emit(this.origin);
       return of({});
     });
   }
@@ -56,9 +44,5 @@ export class OriginViewerComponent implements OnInit {
     this.originService.deleteOrigin(this.id).subscribe(() => {
       this.router.navigate(['/origins/list']);
     });
-  }
-
-  public editOrigin() {
-    this.isEditing = true;
   }
 }

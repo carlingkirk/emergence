@@ -19,14 +19,14 @@
 </ng-container>
 <span *ngIf="!activity">Loading...</span>
 
-<ng-container *ngIf="isOwner && !isEditing && activity && activity.activityId > 0">
+<ng-container *ngIf="activity && userId == activity.createdBy && !isEditing && activity && activity.activityId > 0">
     <a [routerLink]='["/activities/edit", activity.activityId]'>
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
     <button type="button" class="btn btn-primary" (click)="removeActivity()">Delete</button>
 </ng-container>
 
-<ng-container *ngIf="!isOwner">
+<ng-container *ngIf="activity && userId != activity.createdBy">
     <button type="button" class="btn btn-primary" (click)="showMessageModal()">
         <span class="oi oi-plus btn-oi"></span>Message
     </button>
