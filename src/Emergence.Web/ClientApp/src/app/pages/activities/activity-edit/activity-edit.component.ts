@@ -1,11 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { ActivityService } from 'src/app/service/activity-service';
 import { SpecimenService } from 'src/app/service/specimen-service';
-import { getElementId, onImgError } from 'src/app/shared/common';
+import { onImgError } from 'src/app/shared/common';
+import { Editor } from 'src/app/shared/interface/editor';
 import { Activity } from 'src/app/shared/models/activity';
 import { ActivityType, Visibility } from 'src/app/shared/models/enums';
 import { Photo } from 'src/app/shared/models/photo';
@@ -17,45 +19,37 @@ import { Specimen } from 'src/app/shared/models/specimen';
   templateUrl: './activity-edit.component.html',
   styleUrls: ['./activity-edit.component.css']
 })
-export class ActivityEditComponent implements OnInit {
+export class ActivityEditComponent extends Editor {
 
   @Input()
   public activity: Activity;
-  @Input()
-  public id: number;
-  public visibilities: Visibility[];
   public searching: boolean;
   public searchFailed: boolean;
   public specimens: Specimen[];
   public selectedSpecimen: Specimen;
-  public user: IUser;
   public uploadedPhotos: Photo[];
   public activityTypes: ActivityType[];
   public isNewSpecimen: boolean;
   public updateSpecimen: boolean;
-  public errorMessage: string;
 
   constructor(
-    private authorizeService: AuthorizeService,
+    authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
     private readonly activityService: ActivityService,
     private router: Router,
-    private route: ActivatedRoute) { }
+    route: ActivatedRoute,
+    private location: Location
+    ) {
+      super(authorizeService, route);
+     }
 
   specimenResultFormatter = (result: Specimen) => result.lifeform.scientificName;
   specimenInputFormatter = (x: Specimen) => x.lifeform.scientificName;
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-    this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
     this.activityTypes = Object.keys(ActivityType).filter(key => !isNaN(Number(key))).map(key => ActivityType[key]);
 
-    this.authorizeService.getUser().subscribe((user) => {
-      this.user = user;
-      this.user.userId = user['sub'];
-      this.loadActivity();
-      return of({});
-    });
+    this.loadActivity();
   }
 
   loadActivity() {
@@ -68,9 +62,9 @@ export class ActivityEditComponent implements OnInit {
       });
     }
 
-    if (this.id === 0) {
+    if (this.id == 0) {
       this.activity = new Activity();
-      this.activity.createdBy = this.user.userId;
+      this.activity.createdBy = this.userId;
       this.activity.dateCreated = new Date();
       this.activity.photos = [];
       this.activity.visibility = this.visibilities[Visibility['Inherit from profile']];
@@ -136,7 +130,7 @@ export class ActivityEditComponent implements OnInit {
     if (this.activity.activityId) {
       this.router.navigate(['/activities/', this.activity.activityId]);
     } else {
-      this.router.navigate(['..']);
+      this.location.back();
     }
   }
 
@@ -146,9 +140,5 @@ export class ActivityEditComponent implements OnInit {
 
    photosChanged(photos: Photo[]) {
     this.uploadedPhotos = photos;
-  }
-
-  getElementId(element: string, id: string) {
-    return getElementId(element, id);
   }
 }

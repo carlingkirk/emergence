@@ -1,10 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { OriginService } from 'src/app/service/origin-service';
+import { Editor } from 'src/app/shared/interface/editor';
 import { OriginType, Visibility } from 'src/app/shared/models/enums';
 import { GeoLocation } from 'src/app/shared/models/location';
 import { Origin } from 'src/app/shared/models/origin';
@@ -15,45 +17,33 @@ import { SearchRequest } from 'src/app/shared/models/search-request';
   templateUrl: './origin-edit.component.html',
   styleUrls: ['./origin-edit.component.css']
 })
-export class OriginEditComponent implements OnInit {
+export class OriginEditComponent extends Editor {
 
   @Input()
   public origin: Origin;
-  @Input()
-  public id: number;
   @Input()
   public modal: NgbModalRef;
   public origins: Origin[];
   public selectedParentOrigin: Origin;
   public originTypes: OriginType[];
-  public visibilities: Visibility[];
-  public user: IUser;
-  public errorMessage: string;
 
   constructor(
-    private authorizeService: AuthorizeService,
+    authorizeService: AuthorizeService,
     private readonly originService: OriginService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    route: ActivatedRoute,
+    private location: Location
+  ) {
+    super(authorizeService, route);
+   }
 
   originResultFormatter = (result: Origin) => result.name;
   originInputFormatter = (x: Origin) => x.name;
 
   ngOnInit(): void {
-    if (!this.id) {
-      this.id = this.origin?.originId ?? this.route.snapshot.params['id'];
-    }
-
     this.originTypes = Object.keys(OriginType).filter(key => !isNaN(Number(key))).map(key => OriginType[key]);
-    this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
 
-    this.authorizeService.getUser().subscribe((user) => {
-      this.user = user;
-      this.user.userId = user['sub'];
-      this.loadOrigin();
-      return of({});
-    });
+    this.loadOrigin();
   }
 
   loadOrigin() {
@@ -77,9 +67,9 @@ export class OriginEditComponent implements OnInit {
       });
     }
 
-    if (this.id === 0) {
+    if (this.id == 0) {
       this.origin = new Origin();
-      this.origin.createdBy = this.user.userId;
+      this.origin.createdBy = this.userId;
       this.origin.dateCreated = new Date();
       this.origin.visibility = this.visibilities[Visibility['Inherit from profile']];
       this.origin.location = new GeoLocation();
@@ -130,7 +120,7 @@ export class OriginEditComponent implements OnInit {
     if (this.origin.originId) {
       this.router.navigate(['/origins/', this.origin.originId]);
     } else {
-      this.router.navigate(['..']);
+      this.location.back();
     }
   }
 

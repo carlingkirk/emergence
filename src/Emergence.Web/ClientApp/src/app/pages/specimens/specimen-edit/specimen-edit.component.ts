@@ -1,13 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, OperatorFunction, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
-import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { Observable, of, OperatorFunction } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { LifeformService } from 'src/app/service/lifeform-service';
 import { OriginService } from 'src/app/service/origin-service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { onImgError } from 'src/app/shared/common';
+import { Editor } from 'src/app/shared/interface/editor';
 import { InventoryItemStatus, ItemType, SpecimenStage, Visibility } from 'src/app/shared/models/enums';
 import { Inventory } from 'src/app/shared/models/inventory';
 import { InventoryItem } from 'src/app/shared/models/inventory-item';
@@ -22,15 +24,12 @@ import { Specimen } from 'src/app/shared/models/specimen';
   templateUrl: './specimen-edit.component.html',
   styleUrls: ['./specimen-edit.component.css']
 })
-export class SpecimenEditComponent implements OnInit {
+export class SpecimenEditComponent extends Editor {
   @Input()
   public specimen: Specimen;
   @Input()
-  public id: number;
-  @Input()
   public modal: NgbModalRef;
   public inventoryItemStatuses: InventoryItemStatus[];
-  public visibilities: Visibility[];
   public specimenStages: SpecimenStage[];
   public itemTypes: ItemType[];
   public searching: boolean;
@@ -39,38 +38,30 @@ export class SpecimenEditComponent implements OnInit {
   public selectedLifeform: Lifeform;
   public origins: Origin[];
   public selectedOrigin: Origin;
-  public user: IUser;
   public uploadedPhotos: Photo[];
   public itemTypeEnum = ItemType;
   public specimenStageEnum = SpecimenStage;
   public statusEnum = InventoryItemStatus;
   public visibilityEnum = Visibility;
-  public errorMessage: string;
 
   constructor(
-    private authorizeService: AuthorizeService,
+    authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
     private readonly lifeformService: LifeformService,
     private readonly originService: OriginService,
     private router: Router,
-    private route: ActivatedRoute
-    ) { }
+    route: ActivatedRoute,
+    private location: Location
+    ) {
+      super(authorizeService, route);
+     }
 
   ngOnInit(): void {
-    if (!this.id) {
-      this.id = this.specimen?.specimenId ?? this.route.snapshot.params['id'];
-    }
-
     this.inventoryItemStatuses = Object.keys(InventoryItemStatus).filter(key => !isNaN(Number(key))).map(key => InventoryItemStatus[key]);
-    this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
     this.specimenStages = Object.keys(SpecimenStage).filter(key => !isNaN(Number(key))).map(key => SpecimenStage[key]);
     this.itemTypes = Object.keys(ItemType).filter(key => !isNaN(Number(key))).map((key) => ItemType[key]);
-    this.authorizeService.getUser().subscribe((user) => {
-      this.user = user;
-      this.user.userId = user['sub'];
-      this.loadSpecimen();
-      return of({});
-    });
+
+    this.loadSpecimen();
   }
 
   lifeformResultFormatter = (result: Lifeform) => result.scientificName;
@@ -98,18 +89,18 @@ export class SpecimenEditComponent implements OnInit {
         () => { console.log('getSpecimen complete!'); });
     }
 
-    if (this.id === 0) {
+    if (this.id == 0) {
       this.specimen = new Specimen();
-      this.specimen.createdBy = this.user.userId;
-      this.specimen.ownerId = this.user.userId;
+      this.specimen.createdBy = this.userId;
+      this.specimen.ownerId = this.userId;
       this.specimen.dateCreated = new Date();
       this.specimen.inventoryItem = new InventoryItem();
       this.specimen.inventoryItem.inventory = new Inventory();
-      this.specimen.inventoryItem.inventory.createdBy = this.user.userId;
+      this.specimen.inventoryItem.inventory.createdBy = this.userId;
       this.specimen.inventoryItem.inventory.dateCreated = new Date();
       this.specimen.photos = [];
       this.specimen.inventoryItem.status = this.inventoryItemStatuses[InventoryItemStatus['In Use']];
-      this.specimen.inventoryItem.createdBy = this.user.userId;
+      this.specimen.inventoryItem.createdBy = this.userId;
       this.specimen.inventoryItem.dateCreated = new Date();
       this.specimen.inventoryItem.itemType = this.itemTypes[ItemType.Specimen];
       this.specimen.inventoryItem.visibility = this.visibilities[Visibility['Inherit from profile']];
@@ -191,7 +182,7 @@ export class SpecimenEditComponent implements OnInit {
     if (this.specimen.specimenId) {
       this.router.navigate(['/specimens/', this.specimen.specimenId]);
     } else {
-      this.router.navigate(['..']);
+      this.location.back();
     }
   }
 

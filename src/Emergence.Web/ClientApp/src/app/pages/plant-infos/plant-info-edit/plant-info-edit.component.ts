@@ -1,12 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { LifeformService } from 'src/app/service/lifeform-service';
 import { OriginService } from 'src/app/service/origin-service';
 import { PlantInfoService } from 'src/app/service/plant-info-service';
-import { getElementId, onImgError } from 'src/app/shared/common';
+import { onImgError } from 'src/app/shared/common';
+import { Editor } from 'src/app/shared/interface/editor';
 import { Effect, LightType, Month, SoilType, StratificationType, Visibility, WaterType, Wildlife } from 'src/app/shared/models/enums';
 import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Origin } from 'src/app/shared/models/origin';
@@ -21,20 +23,15 @@ import { getZones } from 'src/app/shared/models/zone';
   templateUrl: './plant-info-edit.component.html',
   styleUrls: ['./plant-info-edit.component.css']
 })
-export class PlantInfoEditComponent implements OnInit {
-
+export class PlantInfoEditComponent extends Editor {
   @Input()
   public plantInfo: PlantInfo;
-  @Input()
-  public id: number;
-  public visibilities: Visibility[];
   public searching: boolean;
   public searchFailed: boolean;
   public lifeforms: Lifeform[];
   public selectedLifeform: Lifeform;
   public origins: Origin[];
   public selectedOrigin: Origin;
-  public user: IUser;
   public uploadedPhotos: Photo[];
   public chosenStratificationStages: StratificationStage[];
   public chosenWildlifeEffects: WildlifeEffect[];
@@ -49,16 +46,18 @@ export class PlantInfoEditComponent implements OnInit {
   public soilTypes: SoilType[];
   public minimumZoneId: number;
   public maximumZoneId: number;
-  public errorMessage: string;
 
   constructor(
-    private authorizeService: AuthorizeService,
+    authorizeService: AuthorizeService,
     private readonly plantInfoService: PlantInfoService,
     private readonly lifeformService: LifeformService,
     private readonly originService: OriginService,
     private router: Router,
-    private route: ActivatedRoute
-    ) { }
+    route: ActivatedRoute,
+    private location: Location
+    ) {
+      super(authorizeService, route);
+  }
 
   lifeformResultFormatter = (result: Lifeform) => result.scientificName;
   lifeformInputFormatter = (x: Lifeform) => x.scientificName;
@@ -66,8 +65,8 @@ export class PlantInfoEditComponent implements OnInit {
   originInputFormatter = (x: Origin) => x.name;
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-    this.visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
+    super.ngOnInit();
+
     this.lightTypes = Object.keys(LightType).filter(key => !isNaN(Number(key))).map(key => LightType[key]);
     this.waterTypes = Object.keys(WaterType).filter(key => !isNaN(Number(key))).map(key => WaterType[key]);
     this.months = Object.keys(Month).filter(key => !isNaN(Number(key))).map(key => Month[key]);
@@ -77,12 +76,7 @@ export class PlantInfoEditComponent implements OnInit {
     this.soilTypes = Object.keys(SoilType).filter(key => !isNaN(Number(key))).map(key => SoilType[key]);
     this.zones = getZones();
 
-    this.authorizeService.getUser().subscribe((user) => {
-      this.user = user;
-      this.user.userId = user['sub'];
-      this.loadPlantInfo();
-      return of({});
-    });
+    this.loadPlantInfo();
   }
 
   loadPlantInfo() {
@@ -99,9 +93,9 @@ export class PlantInfoEditComponent implements OnInit {
       return of({});
     }
 
-    if (this.id === 0) {
+    if (this.id == 0) {
       this.plantInfo = new PlantInfo();
-      this.plantInfo.createdBy = this.user.userId;
+      this.plantInfo.createdBy = this.userId;
       this.plantInfo.dateCreated = new Date();
       this.plantInfo.photos = [];
       this.plantInfo.bloomTime = new BloomTime();
@@ -189,7 +183,7 @@ export class PlantInfoEditComponent implements OnInit {
     if (this.plantInfo.plantInfoId) {
       this.router.navigate(['/plantinfos/', this.plantInfo.plantInfoId]);
     } else {
-      this.router.navigate(['..']);
+      this.location.back();
     }
   }
 
@@ -199,10 +193,6 @@ export class PlantInfoEditComponent implements OnInit {
 
    photosChanged(photos: Photo[]) {
     this.uploadedPhotos = photos;
-  }
-
-  getElementId(element: string, id: string) {
-    return getElementId(element, id);
   }
 
   addStratificationStage() {
