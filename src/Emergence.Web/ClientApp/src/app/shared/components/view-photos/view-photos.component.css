@@ -2,3 +2,13 @@
     object-fit: scale-down;
     max-width: 100%;
 }
+
+button.link {
+    background:none!important;
+    border:none; 
+    padding:0!important;
+    color: #0056b3;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: transparent;
+}

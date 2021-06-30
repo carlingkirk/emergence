@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { getSpecimenName, getSpecimenScientificName } from 'src/app/shared/common';
+import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
@@ -11,19 +12,18 @@ import { Specimen } from 'src/app/shared/models/specimen';
 export class SpecimenModalComponent implements OnInit {
 
   @Input()
-  public specimenId: number;
-  @Input()
   public modal: NgbModalRef;
+  @Input()
+  public specimen: Specimen;
+  @Input()
+  public isEditing: boolean;
   public name: string;
   public scientificName: string;
 
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  specimenLoad(specimen: Specimen): void {
-    this.name = getSpecimenName(specimen);
-    this.scientificName = getSpecimenScientificName(specimen);
+    this.name = getSpecimenName(this.specimen);
+    this.scientificName = getSpecimenScientificName(this.specimen);
   }
 }

@@ -26,6 +26,8 @@ import { getZones } from 'src/app/shared/models/zone';
 export class PlantInfoEditComponent extends Editor {
   @Input()
   public plantInfo: PlantInfo;
+  @Input()
+  public id: number;
   public searching: boolean;
   public searchFailed: boolean;
   public lifeforms: Lifeform[];

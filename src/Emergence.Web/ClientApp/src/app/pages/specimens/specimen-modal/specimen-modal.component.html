@@ -1,6 +1,6 @@
 <div class="modal-header card-header h3">
     <span class="title">Specimen:</span>&nbsp;
-    <ng-container *ngIf="name || scientificName">
+    <ng-container>
         <span>{{name}} </span>&nbsp;
         <span class="font-italic">{{scientificName}}</span>
     </ng-container>
@@ -8,6 +8,9 @@
       <span aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <app-specimen-viewer [id]="specimenId" [modal]="modal" (specimenLoaded)="specimenLoad($event)"></app-specimen-viewer>
+<div *ngIf="isEditing" class="modal-body">
+    <app-specimen-edit [modal]="modal" [specimen]="specimen"></app-specimen-edit>
+</div>
+<div *ngIf="!isEditing" class="modal-body">
+    <app-specimen-viewer [modal]="modal" [specimen]="specimen"></app-specimen-viewer>
 </div>

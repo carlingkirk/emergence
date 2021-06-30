@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SpecimenService } from 'src/app/service/specimen-service';
 import { Photo } from 'src/app/shared/models/photo';
 import { Specimen } from 'src/app/shared/models/specimen';
 

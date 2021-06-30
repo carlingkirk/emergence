@@ -17,6 +17,8 @@ import { Specimen } from 'src/app/shared/models/specimen';
 export class SpecimenViewerComponent extends Viewer {
   @Input()
   public modal: NgbModalRef;
+  @Input()
+  public id: number;
   @Output()
   public specimenLoaded = new EventEmitter<Specimen>();
   public specimen: Specimen;

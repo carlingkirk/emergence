@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
@@ -12,6 +12,8 @@ import { PlantInfo } from 'src/app/shared/models/plant-info';
   styleUrls: ['./plant-info-viewer.component.css']
 })
 export class PlantInfoViewerComponent extends Viewer {
+  @Input()
+  public id: number;
   public plantInfo: PlantInfo;
   public commonName: string;
   public scientificName: string;

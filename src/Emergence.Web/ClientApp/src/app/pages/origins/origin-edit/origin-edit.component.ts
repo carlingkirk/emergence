@@ -23,6 +23,8 @@ export class OriginEditComponent extends Editor {
   public origin: Origin;
   @Input()
   public modal: NgbModalRef;
+  @Input()
+  public id: number;
   public origins: Origin[];
   public selectedParentOrigin: Origin;
   public originTypes: OriginType[];
@@ -41,6 +43,8 @@ export class OriginEditComponent extends Editor {
   originInputFormatter = (x: Origin) => x.name;
 
   ngOnInit(): void {
+    super.ngOnInit();
+    
     this.originTypes = Object.keys(OriginType).filter(key => !isNaN(Number(key))).map(key => OriginType[key]);
 
     this.loadOrigin();

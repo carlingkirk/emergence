@@ -5,9 +5,9 @@
             [srcset]="photo.largeUri + ' 3x, ' + photo.mediumUri + ' 2x, ' + photo.thumbnailUri + ' 1x'"
             (error)="onImgError($event, photo)" [alt]="'Uploaded photo of ' + photo.type" />
         <ng-container *ngIf="photo.externalUrl">
-            <a href="" (click)="showPhotoModal(modalData)" >
+            <button class="link" a href="" (click)="showPhotoModal(modalData)" >
                 <img [src]="photo.externalUrl"  class="img-contain" [alt]="'Uploaded photo of ' + photo.type" />
-            </a>
+            </button>
             <span *ngIf="photo.urlBroken">The URL is not accessible. Please try another URL or upload an image.</span>
         </ng-container>
         <div *ngIf="isEditing" class="col">

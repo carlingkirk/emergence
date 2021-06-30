@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, OperatorFunction } from 'rxjs';
@@ -11,13 +11,11 @@ import { SpecimenService } from 'src/app/service/specimen-service';
 import { onImgError } from 'src/app/shared/common';
 import { Editor } from 'src/app/shared/interface/editor';
 import { InventoryItemStatus, ItemType, SpecimenStage, Visibility } from 'src/app/shared/models/enums';
-import { Inventory } from 'src/app/shared/models/inventory';
-import { InventoryItem } from 'src/app/shared/models/inventory-item';
 import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Origin } from 'src/app/shared/models/origin';
 import { Photo } from 'src/app/shared/models/photo';
 import { SearchRequest } from 'src/app/shared/models/search-request';
-import { Specimen } from 'src/app/shared/models/specimen';
+import { newSpecimen, Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
   selector: 'app-specimen-edit',
@@ -29,6 +27,10 @@ export class SpecimenEditComponent extends Editor {
   public specimen: Specimen;
   @Input()
   public modal: NgbModalRef;
+  @Input()
+  public lifeform: Lifeform;
+  @Input()
+  public id: number;
   public inventoryItemStatuses: InventoryItemStatus[];
   public specimenStages: SpecimenStage[];
   public itemTypes: ItemType[];
@@ -57,6 +59,8 @@ export class SpecimenEditComponent extends Editor {
      }
 
   ngOnInit(): void {
+    super.ngOnInit();
+
     this.inventoryItemStatuses = Object.keys(InventoryItemStatus).filter(key => !isNaN(Number(key))).map(key => InventoryItemStatus[key]);
     this.specimenStages = Object.keys(SpecimenStage).filter(key => !isNaN(Number(key))).map(key => SpecimenStage[key]);
     this.itemTypes = Object.keys(ItemType).filter(key => !isNaN(Number(key))).map((key) => ItemType[key]);
@@ -90,20 +94,8 @@ export class SpecimenEditComponent extends Editor {
     }
 
     if (this.id == 0) {
-      this.specimen = new Specimen();
-      this.specimen.createdBy = this.userId;
-      this.specimen.ownerId = this.userId;
-      this.specimen.dateCreated = new Date();
-      this.specimen.inventoryItem = new InventoryItem();
-      this.specimen.inventoryItem.inventory = new Inventory();
-      this.specimen.inventoryItem.inventory.createdBy = this.userId;
-      this.specimen.inventoryItem.inventory.dateCreated = new Date();
-      this.specimen.photos = [];
-      this.specimen.inventoryItem.status = this.inventoryItemStatuses[InventoryItemStatus['In Use']];
-      this.specimen.inventoryItem.createdBy = this.userId;
-      this.specimen.inventoryItem.dateCreated = new Date();
-      this.specimen.inventoryItem.itemType = this.itemTypes[ItemType.Specimen];
-      this.specimen.inventoryItem.visibility = this.visibilities[Visibility['Inherit from profile']];
+      this.specimen = newSpecimen(this.userId, this.lifeform);
+      this.selectedLifeform = this.lifeform;
     }
   }
 
@@ -165,7 +157,7 @@ export class SpecimenEditComponent extends Editor {
     this.specimen.photos = this.uploadedPhotos;
 
     this.specimenService.saveSpecimen(this.specimen).subscribe(
-      (specimen) => this.modal ? this.modal.close() : this.router.navigate(['/specimens/', specimen.specimenId]),
+      (specimen) => this.modal ? this.modal.close(specimen) : this.router.navigate(['/specimens/', specimen.specimenId]),
       (error) => {
         console.log(error);
         this.errorMessage = 'There was an error saving the specimen';

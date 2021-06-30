@@ -17,9 +17,9 @@ export class OriginViewerComponent extends Viewer {
   public modal: NgbModalRef;
   @Output()
   public originLoaded = new EventEmitter<Origin>();
+  @Input()
+  public id: number;
   public origin: Origin;
-  public commonName: string;
-  public scientificName: string;
   public isAuthenticated: Observable<boolean>;
   
   constructor(

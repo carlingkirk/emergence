@@ -1,18 +1,21 @@
 import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, OperatorFunction } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { combineLatest, concat, forkJoin, merge, Observable, of, OperatorFunction } from 'rxjs';
+import { combineAll, concatMap, debounceTime, distinctUntilChanged, map, mapTo, mergeMap, reduce, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { ActivityService } from 'src/app/service/activity-service';
+import { LifeformService } from 'src/app/service/lifeform-service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { onImgError } from 'src/app/shared/common';
 import { Editor } from 'src/app/shared/interface/editor';
 import { Activity } from 'src/app/shared/models/activity';
 import { ActivityType, Visibility } from 'src/app/shared/models/enums';
+import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Photo } from 'src/app/shared/models/photo';
 import { SearchRequest } from 'src/app/shared/models/search-request';
-import { Specimen } from 'src/app/shared/models/specimen';
+import { newSpecimen, Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
   selector: 'app-activity-edit',
@@ -23,6 +26,9 @@ export class ActivityEditComponent extends Editor {
 
   @Input()
   public activity: Activity;
+  @Input()
+  public id: number;
+  public searchText: string;
   public searching: boolean;
   public searchFailed: boolean;
   public specimens: Specimen[];
@@ -36,9 +42,11 @@ export class ActivityEditComponent extends Editor {
     authorizeService: AuthorizeService,
     private readonly specimenService: SpecimenService,
     private readonly activityService: ActivityService,
+    private readonly lifeformService: LifeformService,
     private router: Router,
     route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private modalService: NgbModal
     ) {
       super(authorizeService, route);
      }
@@ -47,6 +55,8 @@ export class ActivityEditComponent extends Editor {
   specimenInputFormatter = (x: Specimen) => x.lifeform.scientificName;
 
   ngOnInit(): void {
+    super.ngOnInit();
+    
     this.activityTypes = Object.keys(ActivityType).filter(key => !isNaN(Number(key))).map(key => ActivityType[key]);
 
     this.loadActivity();
@@ -84,16 +94,44 @@ export class ActivityEditComponent extends Editor {
       useNGrams: false
     };
 
-    return this.specimenService.findSpecimens(searchRequest).pipe(map(
+    return this.specimenService.findSpecimens(searchRequest).pipe(
+      map((searchResult) => searchResult.results.map((specimen) => specimen as Specimen)));
+  }
+
+  searchLifeforms(searchText: string): Observable<Lifeform[]> {
+    if (searchText === '') {
+      return of([]);
+    }
+
+    const searchRequest: SearchRequest = {
+      filters: null,
+      searchText: searchText,
+      take: 3,
+      skip: 0,
+      useNGrams: false
+    };
+
+    return this.lifeformService.findLifeforms(searchRequest).pipe(map(
       (searchResult) => searchResult.results));
+  }
+
+  searchSpecimensAndLifeforms(searchText: string): Observable<Specimen[]> {
+    this.searchText = searchText;
+    let specimens = combineLatest([
+      this.searchSpecimens(searchText),
+      this.searchLifeforms(searchText)
+        .pipe(map((searchResult) => searchResult.map((lifeform) => newSpecimen(this.userId, lifeform))))]
+    ).pipe(map(([specimens, lifeforms]) => specimens.concat(lifeforms)));
+
+    return specimens;
   }
 
   public specimensTypeahead: OperatorFunction<string, readonly Specimen[]> = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(term => term.length < 2 ? []
-        : this.searchSpecimens(term).pipe((specimen) => specimen )))
+      concatMap(term => term.length < 2 ? []
+        : this.searchSpecimensAndLifeforms(term).pipe((specimen) => specimen )))
 
   public showAutoSpecimen() {
     return this.activity.activityId === 0 && !this.isNewSpecimen &&
@@ -114,7 +152,7 @@ export class ActivityEditComponent extends Editor {
     }
   }
 
-  public saveActivity(): void {
+  saveActivity(): void {
     this.activity.specimen = this.selectedSpecimen;
     this.activity.photos = this.uploadedPhotos;
 
@@ -126,7 +164,15 @@ export class ActivityEditComponent extends Editor {
       });
   }
 
-  public cancel(): void {
+  showSpecimenModal(content, lifeform) {
+    this.selectedSpecimen = newSpecimen(this.userId, lifeform);
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'})
+      .result.then((specimen) => {
+      this.selectedSpecimen = specimen;
+    });
+  }
+
+  cancel(): void {
     if (this.activity.activityId) {
       this.router.navigate(['/activities/', this.activity.activityId]);
     } else {

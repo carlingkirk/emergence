@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
@@ -13,6 +13,8 @@ import { Activity } from 'src/app/shared/models/activity';
 })
 export class ActivityViewerComponent extends Viewer {
 
+  @Input()
+  public id: number;
   public activity: Activity;
   public isAuthenticated: Observable<boolean>;
 
