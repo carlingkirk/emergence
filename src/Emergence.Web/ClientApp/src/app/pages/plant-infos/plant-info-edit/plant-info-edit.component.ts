@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
@@ -48,6 +49,7 @@ export class PlantInfoEditComponent extends Editor {
   public soilTypes: SoilType[];
   public minimumZoneId: number;
   public maximumZoneId: number;
+  public editingOrigin: boolean;
 
   constructor(
     authorizeService: AuthorizeService,
@@ -56,7 +58,8 @@ export class PlantInfoEditComponent extends Editor {
     private readonly originService: OriginService,
     private router: Router,
     route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private modalService: NgbModal
     ) {
       super(authorizeService, route);
   }
@@ -144,7 +147,14 @@ export class PlantInfoEditComponent extends Editor {
     };
 
     return this.originService.findOrigins(searchRequest).pipe(map(
-      (searchResult) => searchResult.results));
+      (searchResult) => {
+        let newOrigin = new Origin();
+        newOrigin.originId = 0;
+        newOrigin.name = searchText;
+        let results = searchResult.results as Origin[];
+        results.push(newOrigin);
+        return searchResult.results;
+      }));
   }
 
   public lifeformsTypeahead: OperatorFunction<string, readonly Lifeform[]> = (text$: Observable<string>) =>
@@ -187,6 +197,30 @@ export class PlantInfoEditComponent extends Editor {
     } else {
       this.location.back();
     }
+  }
+
+  showOriginModal(content, name) {
+    if (name) {
+      this.selectedOrigin = new Origin();
+      this.selectedOrigin.name = name;
+    }
+    
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'})
+      .result.then((origin) => {
+      this.selectedOrigin = origin;
+      this.editingOrigin = false;
+    });
+  }
+
+  editOrigin() {
+    this.editingOrigin = true;
+  }
+
+  cancelEditOrigin(clear: boolean) {
+    if (clear) {
+      this.selectedOrigin = null;
+    }
+    this.editingOrigin = false;
   }
 
   onImgError(event, photo: Photo) {

@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-lg-9 col-xs">
                     <label for="specimen" class="select-label">Specimen </label>
-                    <div *ngIf="!editingSpecimen">
+                    <div *ngIf="!editingSpecimen" class="select-container">
                         <span class="link" (click)="showSpecimenModal(modalData)">{{selectedSpecimen?.name}} </span>
                         <span class="oi oi-pencil action" (click)="editSpecimen()"></span>
                     </div>

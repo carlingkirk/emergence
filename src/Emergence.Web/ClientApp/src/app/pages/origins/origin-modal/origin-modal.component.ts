@@ -12,14 +12,15 @@ export class OriginModalComponent implements OnInit {
   public originId: number;
   @Input()
   public modal: NgbModalRef;
+  @Input()
+  public origin: Origin;
+  @Input()
+  public isEditing: boolean;
   public name: string;
 
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  originLoad(origin: Origin): void {
-    this.name = origin.name;
+    this.name = this.origin.name;
   }
 }

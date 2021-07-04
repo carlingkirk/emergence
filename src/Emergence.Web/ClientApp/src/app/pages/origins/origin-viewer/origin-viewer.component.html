@@ -24,7 +24,7 @@
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
     <button type="button" *ngIf="modal" (click)="edit()" class="btn btn-primary">Edit</button>
-    <button type="button" class="btn btn-primary" (click)="removeOrigin()">Delete</button>
+    <button type="button" *ngIf="!modal" class="btn btn-primary" (click)="removeOrigin()">Delete</button>
 </ng-container>
 
 <ng-container *ngIf="origin && userId !== origin.createdBy">

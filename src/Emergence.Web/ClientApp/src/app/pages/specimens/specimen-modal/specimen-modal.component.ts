@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { getSpecimenName, getSpecimenScientificName } from 'src/app/shared/common';
-import { Lifeform } from 'src/app/shared/models/lifeform';
 import { Specimen } from 'src/app/shared/models/specimen';
 
 @Component({

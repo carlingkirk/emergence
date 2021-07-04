@@ -39,7 +39,7 @@
                 <a [href]="plantInfo.origin?.uri" target="_blank"><span class="link">{{plantInfo.origin?.shortUri}}</span></a>
             </div>
             <ng-template #modalData let-modal>
-                <app-origin-modal [originId]="plantInfo.origin?.originId" [modal]="modal"></app-origin-modal>
+                <app-origin-modal [origin]="plantInfo.origin" [modal]="modal"></app-origin-modal>
             </ng-template>
         </div>
         <div *ngIf="plantInfo.user?.displayName" class="col-lg-4 col-xs">

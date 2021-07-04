@@ -7,6 +7,9 @@
       <span aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <app-origin-viewer [id]="originId" [modal]="modal" (originLoaded)="originLoad($event)"></app-origin-viewer>
+<div *ngIf="isEditing" class="modal-body">
+    <app-origin-edit [modal]="modal" [origin]="origin"></app-origin-edit>
+</div>
+<div *ngIf="!isEditing" class="modal-body">
+    <app-origin-viewer [modal]="modal" [origin]="origin"></app-origin-viewer>
 </div>

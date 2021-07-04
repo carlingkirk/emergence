@@ -15,10 +15,9 @@ import { Origin } from 'src/app/shared/models/origin';
 export class OriginViewerComponent extends Viewer {
   @Input()
   public modal: NgbModalRef;
-  @Output()
-  public originLoaded = new EventEmitter<Origin>();
   @Input()
   public id: number;
+  @Input()
   public origin: Origin;
   public isAuthenticated: Observable<boolean>;
   
@@ -33,11 +32,14 @@ export class OriginViewerComponent extends Viewer {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.originService.getOrigin(this.id).subscribe((origin) => {
-      this.origin = origin;
-      this.originLoaded.emit(this.origin);
-      return of({});
-    });
+    if (this.id > 0 && !this.origin) {
+      this.originService.getOrigin(this.id).subscribe((origin) => {
+        this.origin = origin;
+        return of({});
+      });
+    } else {
+      this.id = this.origin.originId;
+    }
   }
 
   public removeOrigin() {

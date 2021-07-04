@@ -29,3 +29,7 @@ span.action {
     width: 90%;
     display: inline-block;
 }
+
+.select-container {
+    line-height: 2.25em;
+}

@@ -49,7 +49,7 @@ export class SpecimenViewerComponent extends Viewer {
         return of({});
       });
     } else {
-      this.id = this.specimen.specimenId
+      this.id = this.specimen.specimenId;
       this.name = getSpecimenName(this.specimen);
       this.scientificName = getSpecimenScientificName(this.specimen);
     }

@@ -113,7 +113,7 @@ export class OriginEditComponent extends Editor {
     }
 
     this.originService.saveOrigin(this.origin).subscribe(
-      (origin) => this.router.navigate(['/origins/', origin.originId]),
+      (origin) => this.modal ? this.modal.close(origin) : this.router.navigate(['/origins/', origin.originId]),
       (error) => {
         console.log(error);
         this.errorMessage = 'There was an error saving the origin';
