@@ -79,8 +79,9 @@ export class ActivityEditComponent extends Editor {
       this.activity.dateCreated = new Date();
       this.activity.photos = [];
       this.activity.visibility = this.visibilities[Visibility['Inherit from profile']];
-      this.editingSpecimen = true;
     }
+
+    this.editingSpecimen = true;
   }
 
   searchSpecimens(searchText: string): Observable<Specimen[]> {
@@ -182,12 +183,11 @@ export class ActivityEditComponent extends Editor {
     this.editingSpecimen = true;
   }
 
-  cancelEditSpecimen(status: boolean) {
-    if (status) {
-      this.editingSpecimen = false;
-    } else {
+  cancelEditSpecimen(clear: boolean) {
+    if (clear) {
       this.selectedSpecimen = null;
     }
+    this.editingSpecimen = false;
   }
 
   cancel(): void {

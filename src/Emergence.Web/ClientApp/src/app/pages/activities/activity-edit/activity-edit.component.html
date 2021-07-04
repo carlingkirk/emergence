@@ -13,8 +13,8 @@
                 </div>
                 <div class="col-lg-9 col-xs">
                     <label for="specimen" class="select-label">Specimen </label>
-                    <div *ngIf="selectedSpecimen && !editingSpecimen">
-                        <span class="link" (click)="showSpecimenModal(modalData)">{{selectedSpecimen.name}} </span>
+                    <div *ngIf="!editingSpecimen">
+                        <span class="link" (click)="showSpecimenModal(modalData)">{{selectedSpecimen?.name}} </span>
                         <span class="oi oi-pencil action" (click)="editSpecimen()"></span>
                     </div>
                     <input *ngIf="editingSpecimen" type="text" class="form-control select-input" name="specimen" style="font-style:italic;"
@@ -23,8 +23,10 @@
                         [resultFormatter]="specimenResultFormatter"
                         [inputFormatter]="specimenInputFormatter"
                         [resultTemplate]="specimenResultTemplate" />
-                    <span *ngIf="selectedSpecimen && editingSpecimen" class="oi oi-check action" (click)="cancelEditSpecimen(true)"></span>
-                    <span *ngIf="selectedSpecimen && editingSpecimen" class="oi oi-x action" (click)="cancelEditSpecimen(false)"></span>
+                    <ng-container *ngIf="selectedSpecimen && editingSpecimen">
+                        <span class="oi oi-check action" (click)="cancelEditSpecimen(false)"></span>
+                        <span class="oi oi-trash action" (click)="cancelEditSpecimen(true)"></span>
+                    </ng-container>
                     <ng-template #specimenResultTemplate let-r="result" let-t="term">
                         <ng-container *ngIf="r.specimenId">
                             <span>{{r.lifeform.commonName}} </span>
