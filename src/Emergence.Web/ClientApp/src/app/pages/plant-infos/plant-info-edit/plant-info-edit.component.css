@@ -1,3 +1,8 @@
+.error-message {
+    color: red;
+    padding-left: 5px;
+}
+
 li > label {
     padding-left: .5rem;
 }

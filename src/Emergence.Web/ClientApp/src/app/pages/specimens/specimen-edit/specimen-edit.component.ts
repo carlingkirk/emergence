@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
@@ -45,6 +45,8 @@ export class SpecimenEditComponent extends Editor {
   public specimenStageEnum = SpecimenStage;
   public statusEnum = InventoryItemStatus;
   public visibilityEnum = Visibility;
+  public editingLifeform: boolean;
+  public editingOrigin: boolean;
 
   constructor(
     authorizeService: AuthorizeService,
@@ -53,7 +55,8 @@ export class SpecimenEditComponent extends Editor {
     private readonly originService: OriginService,
     private router: Router,
     route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private modalService: NgbModal
     ) {
       super(authorizeService, route);
      }
@@ -90,7 +93,7 @@ export class SpecimenEditComponent extends Editor {
           return of({});
         },
         (error) => console.log(error),
-        () => { console.log('getSpecimen complete!'); });
+        () => {});
     }
 
     if (this.id == 0 && !this.specimen) {
@@ -182,8 +185,43 @@ export class SpecimenEditComponent extends Editor {
     }
   }
 
+  showOriginModal(content, name) {
+    if (name) {
+      this.selectedOrigin = new Origin();
+      this.selectedOrigin.name = name;
+    }
+    
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'})
+      .result.then((origin) => {
+      this.selectedOrigin = origin;
+      this.editingOrigin = false;
+    });
+  }
+
   public closeModal(): void {
     this.modal.dismiss();
+  }
+
+  editOrigin() {
+    this.editingOrigin = true;
+  }
+
+  cancelEditOrigin(clear: boolean) {
+    if (clear) {
+      this.selectedOrigin = null;
+    }
+    this.editingOrigin = false;
+  }
+
+  editLifeform() {
+    this.editingLifeform = true;
+  }
+
+  cancelEditLifeform(clear: boolean) {
+    if (clear) {
+      this.selectedLifeform = null;
+    }
+    this.editingLifeform = false;
   }
 
   onImgError(event, photo: Photo) {

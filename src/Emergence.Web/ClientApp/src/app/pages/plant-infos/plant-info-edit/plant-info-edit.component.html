@@ -7,12 +7,20 @@
                 </div>
                 <div class="col-lg-4 col-xs">
                     <label for="lifeform">Plant Name </label>
-                    <input type="text" class="form-control" name="scientificName" style="font-style:italic;"
+                    <div *ngIf="!editingLifeform" class="select-container">
+                        <span>{{selectedLifeform?.commonName}}</span>&nbsp;<span style="font-style:italic;">{{selectedLifeform?.scientificName}}</span>
+                        <span class="oi oi-pencil action" (click)="editLifeform()"></span>
+                    </div>
+                    <input *ngIf="editingLifeform" type="text" class="form-control select-input" name="scientificName" style="font-style:italic;"
                         [(ngModel)]="selectedLifeform" 
                         [ngbTypeahead]="lifeformsTypeahead" 
                         [resultFormatter]="lifeformResultFormatter"
                         [inputFormatter]="lifeformInputFormatter"
                         [resultTemplate]="lifeformResultTemplate" />
+                    <ng-container *ngIf="selectedLifeform && editingLifeform">
+                        <span class="oi oi-check action" (click)="cancelEditLifeform(false)"></span>
+                        <span class="oi oi-trash action" (click)="cancelEditLifeform(true)"></span>
+                    </ng-container>
                     <ng-template #lifeformResultTemplate let-r="result" let-t="term">
                         <span>{{r.commonName}} </span>
                         <span style="font-style:italic;">

@@ -5,19 +5,59 @@
                 <div class="col-12">
                     <div id="validation-summary"></div>
                 </div>
-                <div class="col">
+                <div class="col-lg-4 col-xs">
                     <label for="lifeform">Plant Name </label>
-                    <input type="text" class="form-control" name="scientificName" style="font-style:italic;"
+                    <div *ngIf="!editingLifeform" class="select-container">
+                        <span>{{selectedLifeform?.commonName}}</span>&nbsp;<span style="font-style:italic;">{{selectedLifeform?.scientificName}}</span>
+                        <span class="oi oi-pencil action" (click)="editLifeform()"></span>
+                    </div>
+                    <input *ngIf="editingLifeform" type="text" class="form-control select-input" name="scientificName" style="font-style:italic;"
                         [(ngModel)]="selectedLifeform" 
                         [ngbTypeahead]="lifeformsTypeahead" 
                         [resultFormatter]="lifeformResultFormatter"
                         [inputFormatter]="lifeformInputFormatter"
                         [resultTemplate]="lifeformResultTemplate" />
+                    <ng-container *ngIf="selectedLifeform && editingLifeform">
+                        <span class="oi oi-check action" (click)="cancelEditLifeform(false)"></span>
+                        <span class="oi oi-trash action" (click)="cancelEditLifeform(true)"></span>
+                    </ng-container>
                     <ng-template #lifeformResultTemplate let-r="result" let-t="term">
                         <span>{{r.commonName}} </span>
                         <span style="font-style:italic;">
                             <ngb-highlight [result]="r.scientificName" [term]="t"></ngb-highlight>
                         </span>
+                    </ng-template>
+                </div>
+                <div class="col-lg-4 col-xs">
+                    <label class="select-label" for="origin">Origin</label>
+                    <div *ngIf="!editingOrigin" class="select-container">
+                        <span class="link" (click)="showOriginModal(modalData)">{{selectedOrigin?.name}} </span>
+                        <span class="oi oi-pencil action" (click)="editOrigin()"></span>
+                    </div>
+                    <input *ngIf="editingOrigin" type="text" class="form-control select-input" name="origin" 
+                        [(ngModel)]="selectedOrigin" 
+                        [ngbTypeahead]="originsTypeahead" 
+                        [resultFormatter]="originResultFormatter"
+                        [inputFormatter]="originInputFormatter"
+                        [resultTemplate]="originResultTemplate" />
+                    <ng-container *ngIf="selectedOrigin && editingOrigin">
+                        <span class="oi oi-check action" (click)="cancelEditOrigin(false)"></span>
+                        <span class="oi oi-trash action" (click)="cancelEditOrigin(true)"></span>
+                    </ng-container>
+                    <ng-template #originResultTemplate let-r="result" let-t="term">
+                        <ng-container *ngIf="r.originId">
+                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        </ng-container>
+                        <ng-container *ngIf="!r.originId">
+                            <button class="link" (click)="showOriginModal(modalData)">
+                                <span>Add new </span>
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </button>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template #modalData let-modal>
+                        <app-origin-modal [modal]="modal" [origin]="selectedOrigin" [isEditing]="selectedOrigin.originId == 0" >
+                        </app-origin-modal>
                     </ng-template>
                 </div>
             </div>
@@ -61,20 +101,6 @@
                     <select [(ngModel)]="specimen.inventoryItem.itemType" class="form-control" id="type" name="itemType" >
                         <option *ngFor="let itemType of itemTypes" [value]="itemType">{{itemType}}</option>
                     </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label for="origin">Origin</label>
-                    <input type="text" class="form-control" name="origin" 
-                        [(ngModel)]="selectedOrigin" 
-                        [ngbTypeahead]="originsTypeahead" 
-                        [resultFormatter]="originResultFormatter"
-                        [inputFormatter]="originInputFormatter"
-                        [resultTemplate]="originResultTemplate" />
-                    <ng-template #originResultTemplate let-r="result" let-t="term">
-                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
-                    </ng-template>
                 </div>
             </div>
             <app-upload-photos [(photos)]="uploadedPhotos" [type]="1" (photosChange)="photosChanged($event)" [name]="specimen.name" type="Specimen"></app-upload-photos>

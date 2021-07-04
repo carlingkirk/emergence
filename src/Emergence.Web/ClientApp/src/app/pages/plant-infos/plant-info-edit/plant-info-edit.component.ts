@@ -50,6 +50,7 @@ export class PlantInfoEditComponent extends Editor {
   public minimumZoneId: number;
   public maximumZoneId: number;
   public editingOrigin: boolean;
+  public editingLifeform: boolean;
 
   constructor(
     authorizeService: AuthorizeService,
@@ -221,6 +222,17 @@ export class PlantInfoEditComponent extends Editor {
       this.selectedOrigin = null;
     }
     this.editingOrigin = false;
+  }
+
+  editLifeform() {
+    this.editingLifeform = true;
+  }
+
+  cancelEditLifeform(clear: boolean) {
+    if (clear) {
+      this.selectedLifeform = null;
+    }
+    this.editingLifeform = false;
   }
 
   onImgError(event, photo: Photo) {
