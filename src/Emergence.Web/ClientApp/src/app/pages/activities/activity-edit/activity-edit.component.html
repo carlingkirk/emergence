@@ -12,13 +12,19 @@
                     </select>
                 </div>
                 <div class="col-lg-9 col-xs">
-                    <label for="specimen">Specimen </label>
-                    <input type="text" class="form-control" name="specimen" style="font-style:italic;"
+                    <label for="specimen" class="select-label">Specimen </label>
+                    <div *ngIf="selectedSpecimen && !editingSpecimen">
+                        <span class="link" (click)="showSpecimenModal(modalData)">{{selectedSpecimen.name}} </span>
+                        <span class="oi oi-pencil action" (click)="editSpecimen()"></span>
+                    </div>
+                    <input *ngIf="editingSpecimen" type="text" class="form-control select-input" name="specimen" style="font-style:italic;"
                         [(ngModel)]="selectedSpecimen" 
                         [ngbTypeahead]="specimensTypeahead" 
                         [resultFormatter]="specimenResultFormatter"
                         [inputFormatter]="specimenInputFormatter"
                         [resultTemplate]="specimenResultTemplate" />
+                    <span *ngIf="selectedSpecimen && editingSpecimen" class="oi oi-check action" (click)="cancelEditSpecimen(true)"></span>
+                    <span *ngIf="selectedSpecimen && editingSpecimen" class="oi oi-x action" (click)="cancelEditSpecimen(false)"></span>
                     <ng-template #specimenResultTemplate let-r="result" let-t="term">
                         <ng-container *ngIf="r.specimenId">
                             <span>{{r.lifeform.commonName}} </span>
@@ -34,7 +40,7 @@
                         </ng-container>
                     </ng-template>
                     <ng-template #modalData let-modal>
-                        <app-specimen-modal [modal]="modal" [specimen]="selectedSpecimen" [isEditing]="true" >
+                        <app-specimen-modal [modal]="modal" [specimen]="selectedSpecimen" [isEditing]="selectedSpecimen.specimenId == 0" >
                         </app-specimen-modal>
                     </ng-template>
                 </div>

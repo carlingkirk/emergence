@@ -23,7 +23,7 @@
                     {{activity.specimen?.lifeform?.scientificName}}
                 </span>
                 <ng-template #modalData let-modal>
-                    <app-specimen-modal [specimenId]="activity.specimen?.specimenId" [modal]="modal"></app-specimen-modal>
+                    <app-specimen-modal [specimen]="activity.specimen" [modal]="modal"></app-specimen-modal>
                 </ng-template>
             </div>
         </div>

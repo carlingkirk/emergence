@@ -34,6 +34,6 @@ export class SpecimenService {
     }
 
     public deleteSpecimen(id: number) {
-        return this.httpClient.delete(this.baseUrl + 'api/plantinfo/' + id);
+        return this.httpClient.delete(this.baseUrl + 'api/specimen/' + id);
     }
 }

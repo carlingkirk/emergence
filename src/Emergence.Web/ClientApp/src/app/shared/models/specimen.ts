@@ -26,6 +26,7 @@ export function newSpecimen(userId: string, lifeform: Lifeform): Specimen {
   let itemTypes = Object.keys(ItemType).filter(key => !isNaN(Number(key))).map((key) => ItemType[key]);
   let visibilities = Object.keys(Visibility).filter(key => !isNaN(Number(key))).map(key => Visibility[key]);
 
+  specimen.specimenId = 0;
   specimen.lifeform = lifeform;
   specimen.createdBy = userId;
   specimen.ownerId = userId;

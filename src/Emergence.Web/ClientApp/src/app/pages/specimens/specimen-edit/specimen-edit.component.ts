@@ -93,7 +93,7 @@ export class SpecimenEditComponent extends Editor {
         () => { console.log('getSpecimen complete!'); });
     }
 
-    if (this.id == 0) {
+    if (this.id == 0 && !this.specimen) {
       this.specimen = newSpecimen(this.userId, this.lifeform);
       this.selectedLifeform = this.lifeform;
     }
@@ -150,6 +150,7 @@ export class SpecimenEditComponent extends Editor {
     )
 
   public saveSpecimen(): void {
+    this.populateInventoryItemName();
     this.specimen.lifeform = this.selectedLifeform;
     this.specimen.inventoryItem.origin = this.selectedOrigin;
     this.specimen.inventoryItem.quantity = this.specimen.quantity;
@@ -157,7 +158,10 @@ export class SpecimenEditComponent extends Editor {
     this.specimen.photos = this.uploadedPhotos;
 
     this.specimenService.saveSpecimen(this.specimen).subscribe(
-      (specimen) => this.modal ? this.modal.close(specimen) : this.router.navigate(['/specimens/', specimen.specimenId]),
+      (specimen) => {
+        specimen.lifeform = this.selectedLifeform;
+        this.modal ? this.modal.close(specimen) : this.router.navigate(['/specimens/', specimen.specimenId]);
+      },
       (error) => {
         console.log(error);
         this.errorMessage = 'There was an error saving the specimen';

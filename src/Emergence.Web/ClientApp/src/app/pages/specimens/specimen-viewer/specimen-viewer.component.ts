@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
+import { Observable, of } from 'rxjs';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { SpecimenService } from 'src/app/service/specimen-service';
 import { getSpecimenName, getSpecimenScientificName } from 'src/app/shared/common';
 import { Viewer } from 'src/app/shared/interface/viewer';
@@ -19,8 +18,7 @@ export class SpecimenViewerComponent extends Viewer {
   public modal: NgbModalRef;
   @Input()
   public id: number;
-  @Output()
-  public specimenLoaded = new EventEmitter<Specimen>();
+  @Input()
   public specimen: Specimen;
   public tabs: any = [
     { key: 'specimen', value: 'Specimen'},
@@ -43,13 +41,18 @@ export class SpecimenViewerComponent extends Viewer {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
-      this.specimen = specimen;
-      this.name = getSpecimenName(specimen);
-      this.scientificName = getSpecimenScientificName(specimen);
-      this.specimenLoaded.emit(this.specimen);
-      return of({});
-    });
+    if (this.id > 0 && !this.specimen) {
+      this.specimenService.getSpecimen(this.id).subscribe((specimen) => {
+        this.specimen = specimen;
+        this.name = getSpecimenName(specimen);
+        this.scientificName = getSpecimenScientificName(specimen);
+        return of({});
+      });
+    } else {
+      this.id = this.specimen.specimenId
+      this.name = getSpecimenName(this.specimen);
+      this.scientificName = getSpecimenScientificName(this.specimen);
+    }
   }
 
   public switchTab(tab: string) {

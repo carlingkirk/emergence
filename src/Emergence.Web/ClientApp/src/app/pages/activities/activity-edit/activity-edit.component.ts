@@ -37,6 +37,7 @@ export class ActivityEditComponent extends Editor {
   public activityTypes: ActivityType[];
   public isNewSpecimen: boolean;
   public updateSpecimen: boolean;
+  public editingSpecimen: boolean;
 
   constructor(
     authorizeService: AuthorizeService,
@@ -52,7 +53,7 @@ export class ActivityEditComponent extends Editor {
      }
 
   specimenResultFormatter = (result: Specimen) => result.lifeform.scientificName;
-  specimenInputFormatter = (x: Specimen) => x.lifeform.scientificName;
+  specimenInputFormatter = (x: Specimen) => x.name;
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -78,6 +79,7 @@ export class ActivityEditComponent extends Editor {
       this.activity.dateCreated = new Date();
       this.activity.photos = [];
       this.activity.visibility = this.visibilities[Visibility['Inherit from profile']];
+      this.editingSpecimen = true;
     }
   }
 
@@ -165,11 +167,27 @@ export class ActivityEditComponent extends Editor {
   }
 
   showSpecimenModal(content, lifeform) {
-    this.selectedSpecimen = newSpecimen(this.userId, lifeform);
+    if (lifeform) {
+      this.selectedSpecimen = newSpecimen(this.userId, lifeform);
+    }
+    
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'})
       .result.then((specimen) => {
       this.selectedSpecimen = specimen;
+      this.editingSpecimen = false;
     });
+  }
+
+  editSpecimen() {
+    this.editingSpecimen = true;
+  }
+
+  cancelEditSpecimen(status: boolean) {
+    if (status) {
+      this.editingSpecimen = false;
+    } else {
+      this.selectedSpecimen = null;
+    }
   }
 
   cancel(): void {
