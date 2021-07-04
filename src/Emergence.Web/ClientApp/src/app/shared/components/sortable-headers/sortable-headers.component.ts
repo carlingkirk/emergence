@@ -3,7 +3,7 @@ import { SortDirection } from '../../models/enums';
 import { SortRequest } from '../../models/search-request';
 
 @Component({
-  selector: 'app-sortable-headers',
+  selector: '[app-sortable-headers]',
   templateUrl: './sortable-headers.component.html',
   styleUrls: ['./sortable-headers.component.css']
 })
