@@ -133,7 +133,14 @@ export class SpecimenEditComponent extends Editor {
     };
 
     return this.originService.findOrigins(searchRequest).pipe(map(
-      (searchResult) => searchResult.results));
+      (searchResult) => {
+        let newOrigin = new Origin();
+        newOrigin.originId = 0;
+        newOrigin.name = searchText;
+        let results = searchResult.results as Origin[];
+        results.push(newOrigin);
+        return searchResult.results;
+      }));
   }
 
   public lifeformsTypeahead: OperatorFunction<string, readonly Lifeform[]> = (text$: Observable<string>) =>

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Origin } from 'src/app/shared/models/origin';
 
 @Component({
@@ -11,7 +12,7 @@ export class OriginPageComponent implements OnInit {
   @Input()
   public origin: Origin;
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
   }
@@ -26,5 +27,9 @@ export class OriginPageComponent implements OnInit {
         this.origin.location.postalCode ||
         this.origin.location.latLong;
     }
+  }
+
+  showOriginModal(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
   }
 }

@@ -21,7 +21,11 @@
                 <label for="name">Parent Origin</label>
             </div>
             <div>
-                <span class="text-body">{{origin.parentOrigin?.name}}</span>
+                <span class="link" (click)="showOriginModal(modalData)">{{origin.parentOrigin?.name}}</span>
+                <ng-template #modalData let-modal>
+                    <app-origin-modal [modal]="modal" [origin]="origin.parentOrigin" [isEditing]="false" >
+                    </app-origin-modal>
+                </ng-template>
             </div>
         </div>
         <div class="col-lg-3 col-xs">

@@ -1,4 +1,36 @@
 .error-message {
     color: red;
     padding-left: 5px;
-  }
+}
+
+li > label {
+    padding-left: .5rem;
+}
+
+button.link {
+    background:none!important;
+    border:none; 
+    padding:0!important;
+    color: #0056b3;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+span.action {
+    cursor: pointer;
+    padding-left: .5em;
+}
+
+.select-label {
+    display: block;
+}
+
+.select-input {
+    width: 80%;
+    display: inline-block;
+}
+
+.select-container {
+    line-height: 2.25em;
+}

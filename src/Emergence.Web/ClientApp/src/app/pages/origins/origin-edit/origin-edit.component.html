@@ -17,14 +17,34 @@
                 </div>
                 <div class="col-lg-3 col-xs">
                     <label for="origin">Parent Origin</label>
-                    <input type="text" class="form-control" name="parentOrigin" 
+                    <div *ngIf="!editingOrigin" class="select-container">
+                        <span class="link" (click)="showOriginModal(modalData)">{{selectedParentOrigin?.name}} </span>
+                        <span class="oi oi-pencil action" (click)="editOrigin()"></span>
+                    </div>
+                    <input *ngIf="editingOrigin" type="text" class="form-control select-input" name="parentOrigin" 
                         [(ngModel)]="selectedParentOrigin" 
                         [ngbTypeahead]="originsTypeahead" 
                         [resultFormatter]="originResultFormatter"
                         [inputFormatter]="originInputFormatter"
                         [resultTemplate]="originResultTemplate" />
+                    <ng-container *ngIf="selectedParentOrigin && editingOrigin">
+                        <span class="oi oi-check action" (click)="cancelEditOrigin(false)"></span>
+                        <span class="oi oi-trash action" (click)="cancelEditOrigin(true)"></span>
+                    </ng-container>
                     <ng-template #originResultTemplate let-r="result" let-t="term">
-                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        <ng-container *ngIf="r.originId">
+                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        </ng-container>
+                        <ng-container *ngIf="!r.originId">
+                            <button class="link" (click)="showOriginModal(modalData)">
+                                <span>Add new </span>
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </button>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template #modalData let-modal>
+                        <app-origin-modal [modal]="modal" [origin]="selectedParentOrigin" [isEditing]="selectedParentOrigin.originId == 0" >
+                        </app-origin-modal>
                     </ng-template>
                 </div>
                 <div class="col-lg-3 col-xs">

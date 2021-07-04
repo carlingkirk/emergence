@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
@@ -28,13 +28,15 @@ export class OriginEditComponent extends Editor {
   public origins: Origin[];
   public selectedParentOrigin: Origin;
   public originTypes: OriginType[];
+  public editingOrigin: boolean;
 
   constructor(
     authorizeService: AuthorizeService,
     private readonly originService: OriginService,
     private router: Router,
     route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private modalService: NgbModal
   ) {
     super(authorizeService, route);
    }
@@ -94,7 +96,14 @@ export class OriginEditComponent extends Editor {
     };
 
     return this.originService.findOrigins(searchRequest).pipe(map(
-      (searchResult) => searchResult.results));
+      (searchResult) => {
+        let newOrigin = new Origin();
+        newOrigin.originId = 0;
+        newOrigin.name = searchText;
+        let results = searchResult.results as Origin[];
+        results.push(newOrigin);
+        return searchResult.results;
+      }));
   }
 
   public originsTypeahead: OperatorFunction<string, readonly Origin[]> = (text$: Observable<string>) =>
@@ -103,7 +112,31 @@ export class OriginEditComponent extends Editor {
       distinctUntilChanged(),
       switchMap(term => term.length < 2 ? []
         : this.searchOrigins(term).pipe((origin) => origin ))
-    )
+  );
+
+  showOriginModal(content, name) {
+    if (name) {
+      this.selectedParentOrigin = new Origin();
+      this.selectedParentOrigin.name = name;
+    }
+    
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'})
+      .result.then((origin) => {
+      this.selectedParentOrigin = origin;
+      this.editingOrigin = false;
+    });
+  }
+
+  editOrigin() {
+    this.editingOrigin = true;
+  }
+
+  cancelEditOrigin(clear: boolean) {
+    if (clear) {
+      this.selectedParentOrigin = null;
+    }
+    this.editingOrigin = false;
+  }
 
   public saveOrigin(): void {
     if (!this.selectedParentOrigin) {
