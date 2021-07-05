@@ -39,3 +39,29 @@
         </button>
     </ng-container>
 </div>
+<div *ngIf="currentTab === 'activities'" class="group tab-content">
+    <div class="tab-pane fade show active" id="activities" role="tabpanel" aria-labelledby="activities">
+        <div class="group tab-content">
+            <div class="row">
+                <div class="col">
+                    <label for="activities">Activities</label>
+                    <app-activities-list [specimen]="specimen" [showSearch]="false">
+                    </app-activities-list> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="currentTab === 'plant-infos'" class="group tab-content">
+    <div class="tab-pane fade show active" id="plant-infos" role="tabpanel" aria-labelledby="plant-infos">
+        <div class="group tab-content">
+            <div class="row">
+                <div class="col">
+                    <label for="plant-infos">Plant Profiles</label>
+                    <app-plant-infos-list [specimen]="specimen" [showSearch]="false">
+                    </app-plant-infos-list> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

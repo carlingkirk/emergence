@@ -4,6 +4,7 @@ import { StorageService } from 'src/app/service/storage-service';
 import { Column } from 'src/app/shared/components/sortable-headers/sortable-headers.component';
 import { IListable, Listable } from 'src/app/shared/interface/list';
 import { PlantInfo } from 'src/app/shared/models/plant-info';
+import { Specimen } from 'src/app/shared/models/specimen';
 
 @Component({
   selector: 'app-plant-infos-list',
@@ -11,9 +12,12 @@ import { PlantInfo } from 'src/app/shared/models/plant-info';
   styleUrls: ['./plant-infos-list.component.css']
 })
 export class PlantInfosListComponent extends Listable implements OnInit, IListable {
-  public plantInfos: PlantInfo[];
+
+  @Input()
+  public specimen: Specimen;
   @Input()
   public showSearch: boolean = true;
+  public plantInfos: PlantInfo[];
   
   constructor(
     private readonly plantInfoService: PlantInfoService,
@@ -35,30 +39,40 @@ export class PlantInfosListComponent extends Listable implements OnInit, IListab
   ];
 
   ngOnInit(): void {
-    this.storageService.getItem("plant-info-search").then((searchRequest) => {
-      if (!searchRequest) {
-        this.resetSearch();
-      } else {
-        this.searchRequest = searchRequest;
-      }
-      this.loadPlantInfos();
-    });
+    if (!this.specimen) {
+      this.storageService.getItem("plant-info-search").then((searchRequest) => {
+        if (!searchRequest) {
+          this.resetSearch();
+        } else {
+          this.searchRequest = searchRequest;
+        }
+      });
+    }
+    this.loadPlantInfos();
   }
 
   loadPlantInfos() {
-    this.storageService.setItem("plant-info-search", this.searchRequest).then((result) => {
-      this.plantInfoService.findPlantInfos(this.searchRequest).subscribe(
-        (searchResult) => {
-          this.searchResult = searchResult;
-          this.plantInfos = searchResult.results;
-          this.totalCount = searchResult.count;
-
-          this.searchRequest.filters = searchResult.filters;
-        }
-      );
-    });
+    if (!this.specimen) {
+      this.storageService.setItem("plant-info-search", this.searchRequest).then((result) => {
+        this.findPlantInfos();
+      });
+    } else {
+      this.searchRequest.lifeform = this.specimen.lifeform;
+      this.findPlantInfos();
+    }
   }
 
+  findPlantInfos() {
+    this.plantInfoService.findPlantInfos(this.searchRequest).subscribe(
+      (searchResult) => {
+        this.searchResult = searchResult;
+        this.plantInfos = searchResult.results;
+        this.totalCount = searchResult.count;
+        this.searchRequest.filters = searchResult.filters;
+      }
+    );
+  }
+  
   public search(): void {
     this.loadPlantInfos();
   }

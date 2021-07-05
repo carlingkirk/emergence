@@ -1,4 +1,5 @@
 import { FilterBody } from './filters';
+import { Lifeform } from './lifeform';
 
 export class SearchRequest {
     filters?: FilterBody;
@@ -11,6 +12,7 @@ export class SearchRequest {
     sortDirection?: number;
     createdBy?: string;
     contactsOnly?: boolean;
+    lifeform?: Lifeform;
 }
 
 export class SortRequest {
