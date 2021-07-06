@@ -3,18 +3,18 @@
         <ng-container *ngIf="showSearch">
             <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
             <button class="btn btn-primary" type="submit">Search</button>
+            <button type="button" class="btn btn-primary" (click)="toggleFilters()">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
             <ng-container *ngIf="!forUserId">
                 <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
                 <label for="show-public"> Show Public</label>
             </ng-container>
-            <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
-            <label for="list-view"> List View</label>
-            <button type="button" class="btn btn-primary" (click)="toggleFilters()">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
-            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
-            <a [routerLink]='["/specimens/edit/0"]'>
-                <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Specimen</button>
-            </a>
         </ng-container>
+        <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
+            <label for="list-view"> List View</label>
+        <a [routerLink]='["/specimens/edit/0"]'>
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Specimen</button>
+        </a>
         <app-search-filters *ngIf="showFilters && searchResult" (filtersChanged)="filtersChange($event)" [filterBody]="searchResult.filters"></app-search-filters>
         <ng-container *ngIf="listView">
             <table class="list">

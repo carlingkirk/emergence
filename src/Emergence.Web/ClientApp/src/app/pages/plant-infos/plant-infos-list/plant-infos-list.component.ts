@@ -47,6 +47,14 @@ export class PlantInfosListComponent extends Listable implements OnInit, IListab
           this.searchRequest = searchRequest;
         }
       });
+    } else {
+      this.searchRequest = {
+        take: 12,
+        skip: 0,
+        useNGrams: false,
+        sortDirection: 0,
+        lifeform: this.specimen.lifeform
+      };
     }
     this.loadPlantInfos();
   }
@@ -57,7 +65,6 @@ export class PlantInfosListComponent extends Listable implements OnInit, IListab
         this.findPlantInfos();
       });
     } else {
-      this.searchRequest.lifeform = this.specimen.lifeform;
       this.findPlantInfos();
     }
   }

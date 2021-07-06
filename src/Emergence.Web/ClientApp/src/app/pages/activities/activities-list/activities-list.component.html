@@ -3,17 +3,20 @@
         <ng-container *ngIf="showSearch">
             <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
             <button class="btn btn-primary" type="button" (click)="searchTerm()">Search</button>
+            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
             <ng-container *ngIf="!forUserId">
                 <input type="checkbox" class="check-lg" [(ngModel)]="showPublic" name="show-public" />
                 <label for="show-public"> Show Public</label>
             </ng-container>
-            <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
-            <label for="list-view"> List View</label>
-            <button type="button" class="btn btn-primary" (click)="resetSearch()">Reset</button>
-            <a [routerLink]='["/activities/edit/0"]'>
-                <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Activity</button>
-            </a>
         </ng-container>
+        <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
+        <label for="list-view"> List View</label>
+        <a *ngIf="!specimen" [routerLink]='["/activities/edit/0"]' [queryParams]="{ specimenId: specimen?.specimenId }">
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Activity</button>
+        </a>
+        <a *ngIf="specimen" [routerLink]='["/activities/edit/0"]' [queryParams]="{ specimenId: specimen?.specimenId }">
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Activity</button>
+        </a>
         <ng-container *ngIf="listView">
             <table class="list">
                 <thead app-sortable-headers [columns]="columns" [sortBy]="searchRequest.sortBy" [sortDirection]="searchRequest.sortDirection" (sortChanged)="sortChange($event)">

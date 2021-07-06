@@ -28,6 +28,8 @@ export class ActivityEditComponent extends Editor {
   public activity: Activity;
   @Input()
   public id: number;
+  @Input()
+  public specimenId: number;
   public searchText: string;
   public searching: boolean;
   public searchFailed: boolean;
@@ -80,8 +82,19 @@ export class ActivityEditComponent extends Editor {
       this.activity.photos = [];
       this.activity.visibility = this.visibilities[Visibility['Inherit from profile']];
     }
+    
+    if (!this.specimenId) {
+      this.specimenId = this.route.snapshot.queryParams['specimenId'];
+    }
 
-    this.editingSpecimen = true;
+    if (this.specimenId) {
+      this.specimenService.getSpecimen(this.specimenId).subscribe((specimen) => {
+        this.selectedSpecimen = specimen;
+        return of({});
+      });
+    } else {
+      this.editingSpecimen = true;
+    }
   }
 
   searchSpecimens(searchText: string): Observable<Specimen[]> {

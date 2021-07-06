@@ -29,7 +29,7 @@ export class ActivityService {
     }
 
     public findSpecimenActivities(searchRequest: SearchRequest, specimenId: number): Observable<SearchResult> {
-        return this.httpClient.post<SearchResult>(this.baseUrl + `/api/activity/find?specimenId=${specimenId}`, searchRequest)
+        return this.httpClient.post<SearchResult>(this.baseUrl + `api/activity/find?specimenId=${specimenId}`, searchRequest)
         .pipe((searchResult) => searchResult);
     }
 
@@ -37,7 +37,7 @@ export class ActivityService {
         const utcDate =  Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(),
             date.getUTCMinutes(), date.getUTCSeconds());
         const ticks = new Date(utcDate).getTime() * 10000;
-        return this.httpClient.post<SearchResult>(this.baseUrl + `/api/activity/find/scheduled?date=${ticks}`, searchRequest)
+        return this.httpClient.post<SearchResult>(this.baseUrl + `api/activity/find/scheduled?date=${ticks}`, searchRequest)
         .pipe((searchResult) => searchResult);
     }
 

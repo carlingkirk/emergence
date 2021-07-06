@@ -23,7 +23,7 @@ export abstract class Editor implements IEditor, OnInit, OnDestroy {
 
     constructor(
         private authorizeService: AuthorizeService,
-        private route: ActivatedRoute
+        protected route: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
