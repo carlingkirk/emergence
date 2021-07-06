@@ -29,6 +29,8 @@ export class PlantInfoEditComponent extends Editor {
   public plantInfo: PlantInfo;
   @Input()
   public id: number;
+  @Input()
+  public lifeformId: number;
   public searching: boolean;
   public searchFailed: boolean;
   public lifeforms: Lifeform[];
@@ -114,6 +116,19 @@ export class PlantInfoEditComponent extends Editor {
       this.plantInfo.requirements.stratificationStages = [];
       this.plantInfo.visibility = this.visibilities[Visibility['Inherit from profile']];
       this.chosenSoilTypes = [];
+    }
+
+    if (!this.lifeformId) {
+      this.lifeformId = this.route.snapshot.queryParams['lifeformId'];
+    }
+
+    if (this.lifeformId) {  
+      this.lifeformService.getLifeform(this.lifeformId).subscribe((lifeform) => {
+        this.selectedLifeform = lifeform;
+        return of({});
+      });
+    } else {
+      this.editingLifeform = true;
     }
   }
 

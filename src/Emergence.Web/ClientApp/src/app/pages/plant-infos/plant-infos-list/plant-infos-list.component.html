@@ -12,7 +12,10 @@
         </ng-container>
         <input type="checkbox" class="check-lg" [(ngModel)]="listView" name="list-view" />
             <label for="list-view"> List View</label>
-        <a [routerLink]='["/plantinfos/edit/0"]'>
+        <a *ngIf="specimen" [routerLink]='["/plantinfos/edit/0"]' [queryParams]="{ lifeformId: specimen.lifeform.lifeformId }">
+            <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Plant Profile</button>
+        </a>
+        <a *ngIf="!specimen" [routerLink]='["/plantinfos/edit/0"]'>
             <button type="button" class="btn btn-primary"><span class="oi oi-plus btn-oi"></span>Plant Profile</button>
         </a>
         <app-search-filters *ngIf="showFilters && searchResult" (filtersChanged)="filtersChange($event)" [filterBody]="searchResult.filters"></app-search-filters>
