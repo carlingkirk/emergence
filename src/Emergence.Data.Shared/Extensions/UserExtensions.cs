@@ -35,6 +35,15 @@ namespace Emergence.Data.Shared.Extensions
             Visibility = source.ProfileVisibility
         };
 
+        public static Models.UserSummary AsSummaryModel(this Models.User source) => new Models.UserSummary
+        {
+            Id = source.Id,
+            DisplayName = source.DisplayName,
+            PhotoId = source.Photo?.PhotoId,
+            PhotoThumbnailUri = source.Photo?.ThumbnailUri,
+            Visibility = source.ProfileVisibility
+        };
+
         public static User AsStore(this Models.User source) => new User
         {
             Id = source.Id,

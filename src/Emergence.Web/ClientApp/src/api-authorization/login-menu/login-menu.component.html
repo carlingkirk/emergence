@@ -1,9 +1,18 @@
 <ul class="navbar-nav" *ngIf="isAuthenticated | async">
     <li class="nav-item">
-        <a  class="nav-link text-dark" [routerLink]='["/authentication/profile"]' title="Manage">Hello {{ userName | async }}</a>
+        <ng-container *ngIf="userSummary && userSummary.photoThumbnailUri">
+            <a [routerLink]='["/authentication/profile"]' title="Manage profile">
+                <img [src]="userSummary.photoThumbnailUri" class="shadow-sm align-center avatar" alt="My profile photo" />
+            </a>
+        </ng-container>
+        <ng-container *ngIf="!userSummary || !userSummary.photoThumbnailUri">
+            <a [routerLink]='["/authentication/profile"]' title="Manage profile">
+                <span class="oi oi-person manage"></span>
+            </a>
+        </ng-container>
     </li>
     <li class="nav-item">
-        <a  class="nav-link text-dark" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">Logout</a>
+        <a class="nav-link text-dark" style="padding-top: 10px;" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">Logout</a>
     </li>
 </ul>
 <ul class="navbar-nav" *ngIf="!(isAuthenticated | async)">

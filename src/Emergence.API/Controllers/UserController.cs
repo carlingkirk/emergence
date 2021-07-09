@@ -28,6 +28,16 @@ namespace Emergence.API.Controllers
         [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
         public async Task<User> Get(string userId) => await _userService.GetUserAsync(userId);
 
+        [HttpGet]
+        [Route("summary/{userId}")]
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
+        public async Task<UserSummary> GetUserSummary(string userId)
+        {
+            var user = await _userService.GetUserAsync(userId);
+
+            return user.AsSummaryModel();
+        }
+
         [AllowAnonymous]
         [HttpGet]
         [Route("get")]

@@ -64,7 +64,9 @@ export class AuthorizeService {
   }
 
   public getUserId(): Observable<string> {
-    return this.userSubject.asObservable().pipe(map(u => u && u['sub']));
+    return from(this.ensureUserManagerInitialized())
+      .pipe(mergeMap(() => from(this.userManager.getUser())),
+        map(user => user && user.profile.sub));
   }
 
   // We try to authenticate the user in three different ways:
