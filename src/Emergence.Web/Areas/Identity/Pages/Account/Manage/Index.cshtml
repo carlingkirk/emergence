@@ -1,0 +1,159 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-xs">
+                        <div class="form-group">
+                            <label asp-for="Username"></label>
+                            <input asp-for="Username" class="form-control" disabled />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.DisplayName"></label>
+                            <input asp-for="Input.DisplayName" class="form-control" />
+                            <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.FirstName"></label>
+                            <input asp-for="Input.FirstName" class="form-control" maxlength="36" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.LastName"></label>
+                            <input asp-for="Input.LastName" class="form-control" maxlength="36" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.PhoneNumber"></label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.Bio"></label>
+                            <textarea asp-for="Input.Bio" class="form-control" maxlength="500" rows="10"></textarea>
+                            <span asp-validation-for="Input.Bio" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-xs">
+                        <label asp-for="Input.ProfilePhotoFile"></label><br />
+                        @if (Model.ProfilePhoto != null)
+                        {
+                            <img srcset="@(Model.ProfilePhoto.LargeUri) 2x, @(Model.ProfilePhoto.MediumUri) 1x" src="@(Model.ProfilePhoto.OriginalUri)"
+                                 onerror="this.onerror=null;this.srcset='';this.src='@(Model.ProfilePhoto.OriginalUri)'" alt="Uploaded photo of @(Model.ProfilePhoto.Type)"
+                                 style="max-width:275px;max-height:275px" class="shadow-sm align-center" />
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="275" height="275" viewBox="0 0 275 275">
+                                <rect fill="#FFF" width="275" height="275" />
+                                <text fill="#000" font-family="Arial" font-size="1em" dy="1" font-weight="bold" x="50%" y="50%" text-anchor="middle">No photo</text>
+                            </svg>
+                        }
+                        <br />
+                        <div class="form-group custom-file">
+                            <div style="width:100%;">
+                                <div class="btn btn-light btn-sm">
+                                    <input asp-for="Input.ProfilePhotoFile" type="file" id="ProfilePhotoFile">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <a href="/user/@(Model.Input.DisplayName ?? Model.Input.Id.ToString())"><span>View Public Profile</span></a>
+                        </div>
+                        <div class="col">
+                            <label asp-for="Input.ProfileVisibility"></label>
+                            <select asp-for="Input.ProfileVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.ProfileVisibility>()" class="form-control"></select>
+                        </div>
+                        <div class="col">
+                            <label asp-for="Input.InventoryItemVisibility"></label>
+                            <select asp-for="Input.InventoryItemVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()" class="form-control"></select>
+                        </div>
+                        <div class="col">
+                            <label asp-for="Input.PlantInfoVisibility"></label>
+                            <select asp-for="Input.PlantInfoVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()" class="form-control"></select>
+                        </div>
+                        <div class="col">
+                            <label asp-for="Input.OriginVisibility"></label>
+                            <select asp-for="Input.OriginVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()" class="form-control"></select>
+                        </div>
+                        <div class="col">
+                            <label asp-for="Input.ActivityVisibility"></label>
+                            <select asp-for="Input.ActivityVisibility" asp-items="Html.GetEnumSelectList<Emergence.Data.Shared.Visibility>()" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 col-xs">
+                                <div class="row">
+                                    <div class="col-lg-12 col-xs">
+                                        <label asp-for="Input.AddressLine1"></label>
+                                        <input asp-for="Input.AddressLine1" class="form-control" maxlength="200" />
+                                        <span asp-validation-for="Input.AddressLine1" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-12 col-xs">
+                                        <label asp-for="Input.AddressLine2"></label>
+                                        <input asp-for="Input.AddressLine2" class="form-control" maxlength="200" />
+                                        <span asp-validation-for="Input.AddressLine2" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-8 col-xs">
+                                        <label asp-for="Input.City"></label>
+                                        <input asp-for="Input.City" class="form-control" maxlength="200" />
+                                        <span asp-validation-for="Input.City" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-xs">
+                                        <label asp-for="Input.StateOrProvince"></label>
+                                        <input asp-for="Input.StateOrProvince" class="form-control" maxlength="10" />
+                                        <span asp-validation-for="Input.StateOrProvince" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-xs">
+                                        <label asp-for="Input.PostalCode"></label>
+                                        <input asp-for="Input.PostalCode" class="form-control" maxlength="10" />
+                                        <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-8 col-xs">
+                                        <label asp-for="Input.Country"></label>
+                                        <input asp-for="Input.Country" class="form-control" maxlength="100" />
+                                        <span asp-validation-for="Input.Country" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xs" style="padding:0">
+                                <div class="col">
+                                    <label asp-for="Input.EmailUpdates"></label>
+                                    <input asp-for="Input.EmailUpdates" class="form-control" type="checkbox" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
+                                    <span asp-validation-for="Input.EmailUpdates" class="text-danger"></span>
+                                </div>
+                                <div class="col">
+                                    <label asp-for="Input.SocialUpdates"></label>
+                                    <input asp-for="Input.SocialUpdates" class="form-control" type="checkbox" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
+                                    <span asp-validation-for="Input.SocialUpdates" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group" style="margin-top: 1rem;">
+                    <div class="col-lg-6 col-xs">
+                        <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
