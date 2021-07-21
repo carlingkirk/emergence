@@ -8,7 +8,7 @@
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col">
         <form id="profile-form" method="post" enctype="multipart/form-data">
             <div class="container">
                 <div class="row">
@@ -130,12 +130,12 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 col-xs" style="padding:0">
-                                <div class="col">
+                                <div class="col" style="margin-bottom: .5rem;">
                                     <label asp-for="Input.EmailUpdates"></label>
                                     <input asp-for="Input.EmailUpdates" class="form-control" type="checkbox" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
                                     <span asp-validation-for="Input.EmailUpdates" class="text-danger"></span>
                                 </div>
-                                <div class="col">
+                                <div class="col" style="margin-bottom: .5rem;">
                                     <label asp-for="Input.SocialUpdates"></label>
                                     <input asp-for="Input.SocialUpdates" class="form-control" type="checkbox" style="width:1.25em;height:1.25em;position:relative;top:5px;" />
                                     <span asp-validation-for="Input.SocialUpdates" class="text-danger"></span>

@@ -1,15 +1,24 @@
 @using Microsoft.AspNetCore.Identity
-@using Emergence.Data.Identity;
+@using Emergence.Data.Identity
+@using Emergence.Service.Interfaces
+@using Emergence.Data.Shared.Models
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IUserService UserService
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    string returnUrl = null;
-    var query = ViewContext.HttpContext.Request.Query;
-    if (query.ContainsKey("returnUrl"))
+    var returnUrl = "/";
+    if (Context.Request.Query.TryGetValue("returnUrl", out var existingUrl))
     {
-        returnUrl = query["returnUrl"];
+        returnUrl = existingUrl;
+    }
+    User userProfile = null;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        userProfile = await UserService.GetUserAsync(user.Id);
     }
 }
 
@@ -17,21 +26,32 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+            @if (userProfile != null && userProfile.Photo != null)
+            {
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                    <img srcset="@(userProfile.Photo.LargeUri) 3x, @(userProfile.Photo.MediumUri) 2x, @(userProfile.Photo.ThumbnailUri) 1x" src="@(userProfile.Photo.OriginalUri)"
+                         onerror="this.onerror=null;this.srcset='';this.src='@(userProfile.Photo.OriginalUri)'" alt="Profile photo of @(userProfile?.FirstName ?? User.Identity.Name)"
+                         class="shadow-sm align-center avatar" />
+                </a>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello, @(userProfile?.FirstName ?? User.Identity.Name)!</a>
+            }
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
-                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register" asp-route-returnUrl="@returnUrl">Register</a>
+            <a class="nav-link btn btn-primary" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@returnUrl">Login</a>
+            <a class="nav-link btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
 </ul>

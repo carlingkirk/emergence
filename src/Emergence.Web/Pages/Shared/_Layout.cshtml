@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.ViewEngines
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
@@ -10,12 +10,13 @@
     <title>@ViewData["Title"] - Emergence</title>
     <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/Identity/css/site.css" />
+    <link rel="stylesheet" href="~/styles.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-light navbar-toggleable-sm bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" href="~/">Emergence</a>
+                <a class="navbar-brand" href="~/"><img src="~/logo.png" alt="Emergence" /></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,10 +31,31 @@
                     }
                     else
                     {
-                        throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
-                            "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
-                            $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
+                        throw new InvalidOperationException("Missing LoginPartial");
                     }
+                    <ul class="navbar-nav flex-grow">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="~/about">About</a>
+                        </li>
+                        <li class="nav-item" [routerLinkActive]="['link-active']">
+                            <a class="nav-link text-dark" href="~/specimens/list">Specimens</a>
+                        </li>
+                        <li class="nav-item" [routerLinkActive]="['link-active']">
+                            <a class="nav-link text-dark" href="~/plantinfos/list">Plant Profiles</a>
+                        </li>
+                        <li class="nav-item" [routerLinkActive]="['link-active']">
+                            <a class="nav-link text-dark" href="~/origins/list">Origins</a>
+                        </li>
+                        <li class="nav-item" [routerLinkActive]="['link-active']">
+                            <a class="nav-link text-dark" href="~/activities/list">Activities</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://store.emergence.app/" target="_blank">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://checkout.square.site/merchant/ML3TGX0GC0B6X/checkout/LSRPPPTKY57TBF3Z6NYG4E7U" target="_blank">Donate</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
