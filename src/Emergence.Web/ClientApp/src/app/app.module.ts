@@ -48,6 +48,11 @@ import { ActivityViewerComponent } from './pages/activities/activity-viewer/acti
 import { SpecimenModalComponent } from './pages/specimens/specimen-modal/specimen-modal.component';
 import { OriginModalComponent } from './pages/origins/origin-modal/origin-modal.component';
 import { UserPageComponent } from './pages/users/user-page/user-page.component';
+import { ContactsPageComponent } from './pages/contacts/contacts-page/contacts-page.component';
+import { ContactsListComponent } from './pages/contacts/contacts-list/contacts-list.component';
+import { RequestsListComponent } from './pages/contacts/requests-list/requests-list.component';
+import { InboxListComponent } from './pages/messages/inbox-list/inbox-list.component';
+import { SentListComponent } from './pages/messages/sent-list/sent-list.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +89,12 @@ import { UserPageComponent } from './pages/users/user-page/user-page.component';
     ActivityViewerComponent,
     SpecimenModalComponent,
     OriginModalComponent,
-    UserPageComponent
+    UserPageComponent,
+    ContactsPageComponent,
+    ContactsListComponent,
+    RequestsListComponent,
+    InboxListComponent,
+    SentListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -125,6 +135,7 @@ import { UserPageComponent } from './pages/users/user-page/user-page.component';
       { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] },
       { path: 'user/:userName', component: UserPageComponent, canActivate: [AuthorizeGuard] },
+      { path: 'contacts/list', component: ContactsListComponent, canActivate: [AuthorizeGuard] },
     ],
     { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule,
