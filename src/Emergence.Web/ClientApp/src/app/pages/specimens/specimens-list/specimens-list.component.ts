@@ -14,6 +14,8 @@ export class SpecimensListComponent extends Listable implements OnInit, IListabl
   public specimens: Specimen[];
   @Input()
   public showSearch: boolean = true;
+  @Input()
+  public forUserId: string;
 
   constructor(
     private readonly specimenService: SpecimenService,
@@ -32,18 +34,42 @@ export class SpecimensListComponent extends Listable implements OnInit, IListabl
   ];
 
   ngOnInit(): void {
-    this.storageService.getItem("specimen-search").then((searchRequest) => {
-      if (!searchRequest) {
-        this.resetSearch();
-      } else {
-        this.searchRequest = searchRequest;
-      }
-      this.loadSpecimens();
-    });
+    if (!this.forUserId) {
+      this.storageService.getItem("specimen-search").then((searchRequest) => {
+        if (!searchRequest) {
+          this.resetSearch();
+        } else {
+          this.searchRequest = searchRequest;
+        }
+      });
+    } else {
+      this.searchRequest = {
+        filters: null,
+        take: 12,
+        skip: 0,
+        useNGrams: false,
+        sortDirection: 0,
+        sortBy: null,
+        createdBy: this.forUserId
+      };
+    }
+    this.loadSpecimens();
   }
 
   loadSpecimens() {
-    this.storageService.setItem("specimen-search", this.searchRequest).then((result) => {
+    if (!this.forUserId) {
+      this.storageService.setItem("specimen-search", this.searchRequest).then((result) => {
+        this.specimenService.findSpecimens(this.searchRequest).subscribe(
+          (searchResult) => {
+            this.searchResult = searchResult;
+            this.specimens = searchResult.results;
+            this.totalCount = searchResult.count;
+
+            this.searchRequest.filters = searchResult.filters;
+          }
+        );
+      });
+    } else {
       this.specimenService.findSpecimens(this.searchRequest).subscribe(
         (searchResult) => {
           this.searchResult = searchResult;
@@ -53,7 +79,7 @@ export class SpecimensListComponent extends Listable implements OnInit, IListabl
           this.searchRequest.filters = searchResult.filters;
         }
       );
-    });
+    }
   }
 
   public search(): void {

@@ -47,6 +47,7 @@ import { ActivityPageComponent } from './pages/activities/activity-page/activity
 import { ActivityViewerComponent } from './pages/activities/activity-viewer/activity-viewer.component';
 import { SpecimenModalComponent } from './pages/specimens/specimen-modal/specimen-modal.component';
 import { OriginModalComponent } from './pages/origins/origin-modal/origin-modal.component';
+import { UserPageComponent } from './pages/users/user-page/user-page.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { OriginModalComponent } from './pages/origins/origin-modal/origin-modal.
     ActivityPageComponent,
     ActivityViewerComponent,
     SpecimenModalComponent,
-    OriginModalComponent
+    OriginModalComponent,
+    UserPageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -121,7 +123,8 @@ import { OriginModalComponent } from './pages/origins/origin-modal/origin-modal.
         { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] }
       ]},
       { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] },
-      { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] }
+      { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] },
+      { path: 'user/:userName', component: UserPageComponent, canActivate: [AuthorizeGuard] },
     ],
     { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule,

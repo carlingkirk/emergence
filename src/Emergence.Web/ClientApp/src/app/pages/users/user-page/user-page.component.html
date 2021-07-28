@@ -1,0 +1,73 @@
+<ng-container *ngIf="user">
+    <div class="card-header h3">
+        <div class="row">
+            <div class="col-lg-8 col-xs">
+                <span class="font-italic">{{user.displayName}}</span>
+            </div>
+            <div *ngIf="isAuthenticated && userId" class="col-lg-4 col-xs" style="text-align: right;">
+                <span *ngIf="userIsSelf()" class="text-body">Your profile</span>
+                <span *ngIf="user.isViewerContact" class="text-body">You are a contact</span>
+                <span *ngIf="user.isViewerContactRequested" class="text-body">Contact request sent</span>
+                <button *ngIf="!user.isViewerContactRequested && !user.isViewerContact && !userIsSelf()" (click)="addContactRequestAsync()" type="button" class="btn btn-primary">
+                    <span class="oi oi-plus btn-oi"></span>Contact
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="group">
+        <div class="row">
+            <div class="col-lg-6 col-xs">
+                <div>
+                    <label for="name">Name</label>
+                </div>
+                <div>
+                    <span class="text-body">{{user.displayName}}</span>
+                </div>
+            </div>
+            <div *ngIf="contactsViewable()" class="col-lg-12 col-xs" style="padding: 1em; text-align: center;">
+                <span class="text-body">This profile is visible to {{user.displayName}}'s contacts only.</span>
+            </div>
+            <div *ngIf="profileHidden()" class="col-lg-12 col-xs" style="padding: 1em; text-align: center;">
+                <span class="text-body">This profile is set to hidden.</span>
+            </div>
+            <div *ngIf="!contactsViewable() && !profileHidden() && user.location?.cityState" class="col-lg-6 col-xs">
+                <div>
+                    <label for="name">Location</label>
+                </div>
+                <div>
+                    <span class="text-body">{{user.location.cityState}}</span>
+                </div>
+            </div>
+            <div *ngIf="user.bio" class="col-lg-6 col-xs">
+                <div>
+                    <label for="name">Bio</label>
+                </div>
+                <div style="overflow: auto; width: 100%;">
+                    <span class="text-body">{{user.bio}}</span>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xs">
+                <div style="padding-top: 1em;">
+                    <img *ngIf="user.photo" [src]="user.photo.originalUri" [srcset]="user.photo.largeUri + ' 2x, ' + user.photo.mediumUri + ' 1x'"
+                        [alt]="'Uploaded photo of ' + user.displayName"
+                        (error)="onImgError($event, photo)" style="max-width:275px;max-height:275px" class="shadow-sm align-center"  />
+
+                    <svg *ngIf="!user.photo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 275 275" style="max-width:275px;max-height:275px" class="shadow-sm align-center">
+                        <rect fill="#FFF" width="275" height="275" />
+                        <text fill="#000" font-family="Arial" font-size="1em" dy="1" font-weight="bold" x="50%" y="50%" text-anchor="middle">No photo</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="group">
+        <div class="row">
+            <div class="form-group">
+                <div class="col">
+                    <label for="specimens">{{user.displayName}}'s Specimens</label>
+                    <app-specimens-list [forUserId]="user.userId"></app-specimens-list>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

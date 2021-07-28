@@ -20,7 +20,7 @@ export abstract class Viewer implements IViewer, OnInit, OnDestroy {
 
     constructor(
         private authorizeService: AuthorizeService,
-        private route: ActivatedRoute
+        protected route: ActivatedRoute
     ) { }
 
     ngOnInit(): void {

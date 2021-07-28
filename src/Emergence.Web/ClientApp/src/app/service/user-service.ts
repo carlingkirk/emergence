@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SearchRequest } from '../shared/models/search-request';
 import { SearchResult } from '../shared/models/search-result';
-import { UserSummary } from '../shared/models/user';
+import { User, UserSummary } from '../shared/models/user';
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +16,16 @@ export class UserService {
     constructor(httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string) {
         this.baseUrl = baseUrl;
         this.httpClient = httpClient;
+    }
+
+    public getUserAsync(id: number) {
+        return this.httpClient.get<User>(this.baseUrl + 'api/user/get?id=' + id)
+            .pipe((user) => user);
+    }
+
+    public getUserByNameAsync(userName: string) {
+        return this.httpClient.get<User>(this.baseUrl + 'api/user/get?name=' + userName)
+            .pipe((user) => user);
     }
 
     public getUserSummary(id: string) {

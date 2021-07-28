@@ -1,9 +1,21 @@
+import { Visibility } from "./enums";
+import { GeoLocation } from "./location";
+
 export interface User {
   id: number;
+  userId: string;
   displayName: string;
   photoId: number;
   photoThumbnailUri: string;
-  visibility: number;
+  location: GeoLocation;
+  bio: string;
+  profileVisibility: Visibility;
+  inventoryItemVisibility: Visibility;
+  plantInfoVisibility: Visibility;
+  originVisibility: Visibility;
+  activityVisibility: Visibility;
+  isViewerContact: boolean;
+  isViewerContactRequested: boolean;
 }
 
 export interface UserSummary {
@@ -11,5 +23,9 @@ export interface UserSummary {
   displayName: string;
   photoId: number;
   photoThumbnailUri: string;
-  visibility: number;
+  profileVisibility: Visibility;
+  inventoryItemVisibility: Visibility;
+  plantInfoVisibility: Visibility;
+  originVisibility: Visibility;
+  activityVisibility: Visibility;
 }
