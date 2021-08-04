@@ -1,1 +1,43 @@
-<p>contacts-list works!</p>
+<form (ngSubmit)="search()">
+    <div *ngIf="searchRequest">
+        <input type="text" [(ngModel)]="searchRequest.searchText" name="search" />
+        <button class="btn btn-primary" type="submit">Search</button>
+        <div class="group">
+            <table class="list">
+                <thead app-sortable-headers [columns]="columns" [sortBy]="searchRequest.sortBy" [sortDirection]="searchRequest.sortDirection" (sortChanged)="sortChange($event)">
+                <tbody>
+                    <tr *ngIf="totalCount == 0">
+                        <td><span>No contacts found</span></td>
+                    </tr>
+                    <tr *ngFor="let contact of contacts">
+                        <td style="padding: .5rem;">
+                            <div class="link" (click)="showUserModal(contact.contactUser)"> 
+                                <a [href]="'/user/' + contact.contactUser.displayName">
+                                    <img *ngIf="contact.contactUser.photoThumbnailUri" [src]="contact.contactUser.photoThumbnailUri" 
+                                        [alt]="'Profile photo of ' + contact.contactUser.displayName" class="shadow-sm align-center avatar" />
+                                    <ng-container *ngIf="!contact.contactUser.photoThumbnailUri">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" class="shadow-sm align-center avatar">
+                                            <rect fill="#A9A074" width="35" height="35" />
+                                        </svg>
+                                    </ng-container>
+                                    <span class="text-body" id="user">{{contact.contactUser.displayName}}</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <span>{{contact.dateAccepted | date}}</span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-secondary" (click)="removeContactAsync(contact)">
+                                <span class="oi oi-x btn-oi"></span>Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <app-pager *ngIf="searchResult" [count]="totalCount" [take]="searchRequest.take" (pageChange)="pageChanged($event)"></app-pager>
+    </div>
+</form>
