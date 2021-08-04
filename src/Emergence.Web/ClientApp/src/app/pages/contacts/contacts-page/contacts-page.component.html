@@ -1,1 +1,50 @@
-<p>contacts-page works!</p>
+<ul class="nav nav-tabs">
+    <li *ngFor="let tab of tabs" [ngClass]="'nav-item' + (tab.key == currentTab ? ' active' : '')">
+        <a class="nav-link" id="{{tab.key}}" data-toggle="tab" role="tab" aria-controls="{{tab.key}}"
+            aria-selected="false" (click)="switchTab(tab.key)" style="cursor:pointer">{{tab.value}}</a>
+    </li>
+</ul>
+<div class="tab-content" id="manage-contacts">
+    <!-- <div *ngIf="currentTab === 'specimen'" class="group tab-content">
+    </div> -->
+    <div *ngIf="currentTab === 'contacts'" class="tab-pane fade show active" id="contacts" role="tabpanel" aria-labelledby="contacts">
+        <div class="group">
+            <div class="row">
+                <div class="col">
+                    <label for="specimens">Your Contacts</label>
+                    <app-contacts-list></app-contacts-list>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="currentTab === 'requests'" class="tab-pane fade show active" id="contact-requests" role="tabpanel" aria-labelledby="contact-requests">
+        <div class="group">
+            <div class="row">
+                <div class="col">
+                    <label for="specimens">Your Contact Requests</label>
+                    <app-requests-list></app-requests-list>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="currentTab === 'inbox'" class="tab-pane fade show active" id="my-messages" role="tabpanel" aria-labelledby="my-messages">
+        <div class="group">
+            <div class="row">
+                <div class="col">
+                    <label for="my-message-list">Your Messages</label>
+                    <app-inbox-list></app-inbox-list>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="currentTab === 'sent'" class="tab-pane fade show active" id="sent-messages" role="tabpanel" aria-labelledby="sent-messages">
+        <div class="group">
+            <div class="row">
+                <div class="col">
+                    <label for="sent-message-list">Sent Messages</label>
+                    <app-sent-list></app-sent-list>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

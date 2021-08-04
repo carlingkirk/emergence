@@ -135,7 +135,7 @@ import { SentListComponent } from './pages/messages/sent-list/sent-list.componen
       { path: 'activities/:id', component: ActivityViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'activities/edit/:id', component: ActivityEditComponent, canActivate: [AuthorizeGuard] },
       { path: 'user/:userName', component: UserPageComponent, canActivate: [AuthorizeGuard] },
-      { path: 'contacts/list', component: ContactsListComponent, canActivate: [AuthorizeGuard] },
+      { path: 'contacts', component: ContactsPageComponent, canActivate: [AuthorizeGuard] },
     ],
     { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule,

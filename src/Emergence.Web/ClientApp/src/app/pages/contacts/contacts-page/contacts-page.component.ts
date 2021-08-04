@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactsPageComponent implements OnInit {
 
+  public tabs: any = [
+    { key: 'contacts', value: 'Contacts'},
+    { key: 'requests', value: 'Requests'},
+    { key: 'inbox', value: 'Inbox'},
+    { key: 'sent', value: 'Sent'}
+  ];
+  public currentTab = 'contacts';
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  public switchTab(tab: string) {
+    this.currentTab = tab;
+  }
 }
