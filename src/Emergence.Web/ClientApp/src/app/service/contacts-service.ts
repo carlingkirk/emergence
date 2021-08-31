@@ -22,8 +22,16 @@ export class ContactsService {
         .pipe((searchResult) => searchResult);
     }
 
+    public removeContactAsync(id: number) {
+        return this.httpClient.delete(this.baseUrl + 'api/usercontact/' + id);
+    }
+
     public findContactRequestsAsync(searchRequest: SearchRequest): Observable<SearchResult> {
         return this.httpClient.post<SearchResult>(this.baseUrl + 'api/usercontact/request/find', searchRequest)
         .pipe((searchResult) => searchResult);
+    }
+
+    public removeContactRequestAsync(id: number) {
+        return this.httpClient.delete(this.baseUrl + 'api/usercontact/request/' + id);
     }
 }

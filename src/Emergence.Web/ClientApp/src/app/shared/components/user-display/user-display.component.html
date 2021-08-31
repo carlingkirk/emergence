@@ -1,0 +1,15 @@
+<div class="link" (click)="showUserModal(modalData)"> 
+    <img *ngIf="user.photoThumbnailUri" [src]="user.photoThumbnailUri" 
+        [alt]="'Profile photo of ' + user.displayName" class="shadow-sm align-center avatar" />
+    <ng-container *ngIf="!user.photoThumbnailUri">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" class="shadow-sm align-center avatar">
+            <rect fill="#A9A074" width="35" height="35" />
+        </svg>
+    </ng-container>
+    <a [href]="'/user/' + user.displayName">
+        <span class="text-body" id="user">{{user.displayName}}</span>
+    </a>
+</div>
+<ng-template #modalData let-modal>
+    <app-user-page [id]="user.id" [modal]="modal"></app-user-page>
+</ng-template>

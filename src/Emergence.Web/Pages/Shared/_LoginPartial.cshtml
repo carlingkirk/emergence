@@ -36,7 +36,7 @@
             }
             else
             {
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello, @(userProfile?.FirstName ?? User.Identity.Name)!</a>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><span class="oi oi-person manage" style="color: black; line-height: 1.75rem; padding: 5px;"></span></a>
             }
         </li>
         <li class="nav-item">

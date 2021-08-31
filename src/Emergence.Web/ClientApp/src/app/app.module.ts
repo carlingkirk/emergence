@@ -53,6 +53,7 @@ import { ContactsListComponent } from './pages/contacts/contacts-list/contacts-l
 import { RequestsListComponent } from './pages/contacts/requests-list/requests-list.component';
 import { InboxListComponent } from './pages/messages/inbox-list/inbox-list.component';
 import { SentListComponent } from './pages/messages/sent-list/sent-list.component';
+import { UserDisplayComponent } from './shared/components/user-display/user-display.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { SentListComponent } from './pages/messages/sent-list/sent-list.componen
     ContactsListComponent,
     RequestsListComponent,
     InboxListComponent,
-    SentListComponent
+    SentListComponent,
+    UserDisplayComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

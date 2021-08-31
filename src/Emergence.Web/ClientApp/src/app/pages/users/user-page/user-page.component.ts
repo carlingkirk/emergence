@@ -35,6 +35,10 @@ export class UserPageComponent extends Viewer {
       this.userName = this.route.snapshot.params['userName'];
     }
     
+    if (!isNaN(+this.userName)) {
+      this.id = +this.userName;
+    }
+    
     if (this.id) {
       this.userService.getUserAsync(this.id).subscribe((user) => {
         this.user = user;
