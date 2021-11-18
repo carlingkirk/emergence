@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SearchRequest } from '../shared/models/search-request';
 import { SearchResult } from '../shared/models/search-result';
+import { UserContact, UserContactRequest } from '../shared/models/user-contacts';
 
 @Injectable({
     providedIn: 'root'
@@ -33,5 +34,15 @@ export class ContactsService {
 
     public removeContactRequestAsync(id: number) {
         return this.httpClient.delete(this.baseUrl + 'api/usercontact/request/' + id);
+    }
+
+    public addContactRequestAsync(userContactRequest: UserContactRequest): Observable<UserContactRequest> {
+        return this.httpClient.post<UserContactRequest>(this.baseUrl + 'api/usercontact/request', userContactRequest)
+        .pipe((userContactRequest) => userContactRequest);
+    }
+
+    public addContact(userContactRequest: UserContactRequest): Observable<UserContact> {
+        return this.httpClient.post<UserContact>(this.baseUrl + 'api/usercontact', userContactRequest)
+        .pipe((userContact) => userContact);
     }
 }

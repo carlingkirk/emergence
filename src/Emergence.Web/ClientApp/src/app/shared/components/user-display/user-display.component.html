@@ -6,9 +6,7 @@
             <rect fill="#A9A074" width="35" height="35" />
         </svg>
     </ng-container>
-    <a [href]="'/user/' + user.displayName">
-        <span class="text-body" id="user">{{user.displayName}}</span>
-    </a>
+        <span class="text-body link" id="user">{{user.displayName}}</span>
 </div>
 <ng-template #modalData let-modal>
     <app-user-page [id]="user.id" [modal]="modal"></app-user-page>

@@ -2,12 +2,14 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
+import { ContactsService } from 'src/app/service/contacts-service';
 import { UserService } from 'src/app/service/user-service';
 import { onImgError } from 'src/app/shared/common';
 import { Viewer } from 'src/app/shared/interface/viewer';
 import { Visibility } from 'src/app/shared/models/enums';
 import { Photo } from 'src/app/shared/models/photo';
 import { User } from 'src/app/shared/models/user';
+import { UserContactRequest } from 'src/app/shared/models/user-contacts';
 
 @Component({
   selector: 'app-user-page',
@@ -25,6 +27,7 @@ export class UserPageComponent extends Viewer {
   constructor(
     authorizeService: AuthorizeService,
     private readonly userService: UserService,
+    private readonly contactsService: ContactsService,
     route: ActivatedRoute) {
       super(authorizeService, route);
   }
@@ -54,7 +57,12 @@ export class UserPageComponent extends Viewer {
   }
 
   addContactRequestAsync() {
-
+    var request = new UserContactRequest();
+    request.userId = this.user.id;
+    this.contactsService.addContactRequestAsync(request).subscribe((userContactRequest) => {
+      this.user.isViewerContactRequested = true;  
+      return of({});
+    });
   }
 
   userIsSelf() {

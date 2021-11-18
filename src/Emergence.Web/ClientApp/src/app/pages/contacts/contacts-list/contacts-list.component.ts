@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ContactsService } from 'src/app/service/contacts-service';
 import { Column } from 'src/app/shared/components/sortable-headers/sortable-headers.component';
 import { IListable, Listable } from 'src/app/shared/interface/list';

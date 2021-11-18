@@ -18,8 +18,7 @@
             </div>
         </div>
         <div *ngIf="specimen.inventoryItem.user?.displayName" class="col-lg-4 col-xs">
-            <div class="user-display">By {{specimen.inventoryItem.user?.displayName}}</div>
-            <!-- <UserDisplay Label="By" User="Specimen.InventoryItem.User" /> -->
+            <app-user-display [user]="specimen.inventoryItem.user"></app-user-display>
         </div>
         <div class="col-lg-4 col-xs">
             <div>

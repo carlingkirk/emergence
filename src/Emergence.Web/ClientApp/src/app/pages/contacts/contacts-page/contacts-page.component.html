@@ -5,8 +5,6 @@
     </li>
 </ul>
 <div class="tab-content" id="manage-contacts">
-    <!-- <div *ngIf="currentTab === 'specimen'" class="group tab-content">
-    </div> -->
     <div *ngIf="currentTab === 'contacts'" class="tab-pane fade show active" id="contacts" role="tabpanel" aria-labelledby="contacts">
         <div class="group">
             <div class="row">
@@ -22,7 +20,7 @@
             <div class="row">
                 <div class="col">
                     <label for="specimens">Your Contact Requests</label>
-                    <app-requests-list></app-requests-list>
+                    <app-requests-list (contactsChanged)="switchTab('contacts')"></app-requests-list>
                 </div>
             </div>
         </div>

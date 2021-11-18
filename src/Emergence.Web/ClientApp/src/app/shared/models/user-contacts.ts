@@ -1,20 +1,20 @@
 import { UserSummary } from "./user";
 
 export class UserContactRequest {
-    id: string;
-    userId: string;
-    contactUserId: string;
-    dateRequested: string;
+    id: number;
+    userId: number;
+    contactUserId: number;
+    dateRequested: Date;
     user: UserSummary;
     contactUser: UserSummary;
 }
 
 export class UserContact {
-    id: string;
-    userId: string;
-    contactUserId: string;
-    dateRequested: string;
-    dateAccepted: string;
+    id: number;
+    userId: number;
+    contactUserId: number;
+    dateRequested: Date;
+    dateAccepted: Date;
     user: UserSummary;
     contactUser: UserSummary;
 }
